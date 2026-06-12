@@ -226,6 +226,15 @@
           const names = p.skeleton.data.animations.map(a => a.name);
           const first = names.includes(costume.anim) ? costume.anim : names[0];
           renderAnimList(animBox, names, first);
+          // 串联播放时，菜单高亮跟随轨道0当前正在播的片段
+          p.animationState.addListener({
+            start: (entry) => {
+              if (entry.trackIndex !== 0 || !entry.animation) return;
+              const nm = entry.animation.name;
+              animBox.querySelectorAll(".body-anim").forEach(x =>
+                x.classList.toggle("active", x.textContent === nm));
+            },
+          });
           if (first) { try { player.setAnimation(first, true); player.play(); } catch (e) {} }
         },
         error: (_p, reason) => {
@@ -251,17 +260,22 @@
       const baseLoop = bodies.includes(current) && isLoopName(current)
         ? current : bodies.find(isLoopName);
 
-      // 一次性动作播完后接哪个循环：
-      //  1) 有同名配对（cut_1 → cut_1_idle / xxx_loop）优先
-      //  2) 否则若骨骼里紧跟其后的动画是循环（作者排序即播放顺序），接它
-      //  3) 否则回默认循环
-      const chainTarget = (name) => {
+      // 一次性动作播完后串联哪些动画（按骨骼内作者排序＝播放顺序）：
+      //  1) 有同名配对（cut_1 → cut_1_idle / xxx_loop）就只接它
+      //  2) 否则把后续片段依次排队（cut_1 → cut_2 → cut_3 → …），直到第一个循环为止
+      //  3) 后面没有循环则回默认循环
+      const chainQueue = (name) => {
         for (const suf of ["_idle", "_loop"]) {
-          if (bodies.includes(name + suf)) return name + suf;
+          if (bodies.includes(name + suf)) return [name + suf];
         }
-        const i = bodies.indexOf(name);
-        if (i >= 0 && i + 1 < bodies.length && isLoopName(bodies[i + 1])) return bodies[i + 1];
-        return baseLoop;
+        const queue = [];
+        for (let j = bodies.indexOf(name) + 1; j < bodies.length; j++) {
+          const n = bodies[j];
+          if (n.endsWith("_ef")) continue; // 特效片段是叠加用的，不串进主序列
+          queue.push(n);
+          if (isLoopName(n)) return queue;
+        }
+        return baseLoop && baseLoop !== name ? [baseLoop] : [];
       };
 
       bodies.forEach(name => {
@@ -275,9 +289,10 @@
             const loop = isLoopName(name);
             player.setAnimation(name, loop);
             if (!loop) {
-              const next = chainTarget(name);
-              // 一次性动作播完自动衔接对应的循环
-              if (next && next !== name) player.animationState.addAnimation(0, next, true, 0);
+              // 后续片段依次排队，最后一个若是循环则循环住
+              chainQueue(name).forEach((n, i, q) => {
+                player.animationState.addAnimation(0, n, i === q.length - 1 && isLoopName(n), 0);
+              });
             }
             player.play();
             animBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
