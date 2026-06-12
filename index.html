@@ -196,10 +196,7 @@
       setTimeout(() => (toast.style.display = "none"), 6000);
     }
 
-    let loadSeq = 0; // 防止快速连点时旧的异步加载覆盖新的
-
-    async function loadCostume(costume, btn, animBox) {
-      const seq = ++loadSeq;
+    function loadCostume(costume, btn, animBox) {
       if (player) { player.dispose(); player = null; }
       stage.innerHTML = "";
 
@@ -209,23 +206,23 @@
       activeAnimBox = animBox;
       animBox.innerHTML = '<button class="item disabled">加载中…</button>';
 
-      // 贴图 alpha 模式必须和素材实际导出一致，否则边缘会出现白边/黑边。
-      // 不同来源导出不同（gamekee 为 pma，myssal 为直通），从 atlas 自身的标记判断。
-      let pma = false;
-      try {
-        const atlasText = await (await fetch(ASSET_BASE + costume.atlas)).text();
-        pma = /^pma:\s*true$/m.test(atlasText);
-      } catch (e) { /* 取不到就按直通 alpha 处理，播放器稍后会报真正的加载错误 */ }
-      if (seq !== loadSeq) return; // 期间用户已点了别的服装
-
       const config = {
         atlasUrl: ASSET_BASE + costume.atlas,
         showControls: false,
         showLoading: false,
         alpha: true,
-        premultipliedAlpha: pma,
+        premultipliedAlpha: false, // 占位，加载完成后按 atlas 实际标记修正（见 success）
         viewport: { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
         success: (p) => {
+          // 贴图 alpha 模式必须和素材导出一致，否则边缘出现白边/黑边。
+          // 不同来源导出不同（gamekee 为 pma，myssal 为直通），从播放器
+          // 解析好的 atlas 页标记读取（pma 只影响逐帧混合，运行时改即生效）。
+          try {
+            const atlas = Object.entries(p.assetManager.assets)
+              .find(([k]) => k.endsWith(".atlas"))[1];
+            p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
+          } catch (e) { /* 读不到则保持 false（直通） */ }
+
           const names = p.skeleton.data.animations.map(a => a.name);
           const first = names.includes(costume.anim) ? costume.anim : names[0];
           renderAnimList(animBox, names, first);
@@ -254,6 +251,19 @@
       const baseLoop = bodies.includes(current) && isLoopName(current)
         ? current : bodies.find(isLoopName);
 
+      // 一次性动作播完后接哪个循环：
+      //  1) 有同名配对（cut_1 → cut_1_idle / xxx_loop）优先
+      //  2) 否则若骨骼里紧跟其后的动画是循环（作者排序即播放顺序），接它
+      //  3) 否则回默认循环
+      const chainTarget = (name) => {
+        for (const suf of ["_idle", "_loop"]) {
+          if (bodies.includes(name + suf)) return name + suf;
+        }
+        const i = bodies.indexOf(name);
+        if (i >= 0 && i + 1 < bodies.length && isLoopName(bodies[i + 1])) return bodies[i + 1];
+        return baseLoop;
+      };
+
       bodies.forEach(name => {
         const b = document.createElement("button");
         b.className = "item" + (name === current ? " active" : "");
@@ -264,9 +274,10 @@
             player.animationState.data.defaultMix = 0.3; // 动作间平滑过渡
             const loop = isLoopName(name);
             player.setAnimation(name, loop);
-            if (!loop && baseLoop && baseLoop !== name) {
-              // 一次性动作播完自动回到循环待机
-              player.animationState.addAnimation(0, baseLoop, true, 0);
+            if (!loop) {
+              const next = chainTarget(name);
+              // 一次性动作播完自动衔接对应的循环
+              if (next && next !== name) player.animationState.addAnimation(0, next, true, 0);
             }
             player.play();
             animBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
