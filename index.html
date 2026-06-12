@@ -226,13 +226,16 @@
           const names = p.skeleton.data.animations.map(a => a.name);
           const first = names.includes(costume.anim) ? costume.anim : names[0];
           renderAnimList(animBox, names, first);
-          // 串联播放时，菜单高亮跟随轨道0当前正在播的片段
+          // 串联播放时，菜单高亮跟随轨道0当前正在播的片段所属的条目
           p.animationState.addListener({
             start: (entry) => {
               if (entry.trackIndex !== 0 || !entry.animation) return;
               const nm = entry.animation.name;
-              animBox.querySelectorAll(".body-anim").forEach(x =>
-                x.classList.toggle("active", x.textContent === nm));
+              const btns = [...animBox.querySelectorAll(".body-anim")];
+              // 链头精确匹配优先（避免链尾 loop 和独立 loop 条目同时高亮）
+              const heads = btns.filter(x => (x.dataset.seq || "").split("|")[0] === nm);
+              btns.forEach(x => x.classList.toggle("active",
+                heads.length ? heads.includes(x) : (x.dataset.seq || "").split("|").includes(nm)));
             },
           });
           if (first) { try { player.setAnimation(first, true); player.play(); } catch (e) {} }
@@ -278,28 +281,42 @@
         return baseLoop && baseLoop !== name ? [baseLoop] : [];
       };
 
+      // 把整条链整合成一个条目：中间片段（cut_2、cut_3）和同名配对的收尾
+      // 循环（cut_1_idle）折叠进链头，不再单独列出；通用循环（loop 等）保留。
+      const entries = [];
+      const consumed = new Set();
       bodies.forEach(name => {
+        if (consumed.has(name)) return;
+        if (isLoopName(name)) { entries.push([name]); return; }
+        const seq = [name, ...chainQueue(name)];
+        seq.slice(1).forEach(n => {
+          const paired = n === name + "_idle" || n === name + "_loop";
+          if (!isLoopName(n) || paired) consumed.add(n); // 通用循环不折叠
+        });
+        entries.push(seq);
+      });
+
+      entries.forEach(seq => {
+        const head = seq[0], tail = seq[seq.length - 1];
         const b = document.createElement("button");
-        b.className = "item" + (name === current ? " active" : "");
-        b.textContent = name;
+        b.className = "item body-anim" + (seq[0] === current ? " active" : "");
+        b.textContent = seq.length === 1 ? head
+          : seq.length === 2 ? `${head} ▸ ${tail}`
+          : `${head} ▸▸ ${tail}（${seq.length}段）`;
+        b.dataset.seq = seq.join("|");
         b.onclick = () => {
           if (!player) return;
           try {
-            player.animationState.data.defaultMix = 0.3; // 动作间平滑过渡
-            const loop = isLoopName(name);
-            player.setAnimation(name, loop);
-            if (!loop) {
-              // 后续片段依次排队，最后一个若是循环则循环住
-              chainQueue(name).forEach((n, i, q) => {
-                player.animationState.addAnimation(0, n, i === q.length - 1 && isLoopName(n), 0);
-              });
-            }
+            player.animationState.data.defaultMix = 0.3; // 片段间平滑过渡
+            player.setAnimation(head, seq.length === 1 && isLoopName(head));
+            seq.slice(1).forEach((n, i) => {
+              player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
+            });
             player.play();
             animBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
             b.classList.add("active");
           } catch (e) { showError("切换动作失败：" + e.message); }
         };
-        b.classList.add("body-anim");
         animBox.appendChild(b);
       });
 
