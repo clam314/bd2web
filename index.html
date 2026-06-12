@@ -389,8 +389,11 @@
       .then(roster => {
         buildTree(roster);
         const n = roster.characters.length;
+        // document.lastModified 来自服务器 Last-Modified 头＝页面部署时间，
+        // 用于一眼区分「看到的是新版还是缓存的旧版」
+        const built = new Date(document.lastModified).toLocaleString("zh-CN", { hour12: false });
         document.getElementById("footer").innerHTML =
-          `${n} 个角色 · ${roster.source}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
+          `${n} 个角色 · ${roster.source}<br>页面版本：${built}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
         // 默认加载第一个角色的第一套服装
         const firstChar = tree.querySelector(".char");
         if (firstChar) {
