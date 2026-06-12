@@ -196,7 +196,10 @@
       setTimeout(() => (toast.style.display = "none"), 6000);
     }
 
-    function loadCostume(costume, btn, animBox) {
+    let loadSeq = 0; // 防止快速连点时旧的异步加载覆盖新的
+
+    async function loadCostume(costume, btn, animBox) {
+      const seq = ++loadSeq;
       if (player) { player.dispose(); player = null; }
       stage.innerHTML = "";
 
@@ -206,12 +209,21 @@
       activeAnimBox = animBox;
       animBox.innerHTML = '<button class="item disabled">加载中…</button>';
 
+      // 贴图 alpha 模式必须和素材实际导出一致，否则边缘会出现白边/黑边。
+      // 不同来源导出不同（gamekee 为 pma，myssal 为直通），从 atlas 自身的标记判断。
+      let pma = false;
+      try {
+        const atlasText = await (await fetch(ASSET_BASE + costume.atlas)).text();
+        pma = /^pma:\s*true$/m.test(atlasText);
+      } catch (e) { /* 取不到就按直通 alpha 处理，播放器稍后会报真正的加载错误 */ }
+      if (seq !== loadSeq) return; // 期间用户已点了别的服装
+
       const config = {
         atlasUrl: ASSET_BASE + costume.atlas,
         showControls: false,
         showLoading: false,
         alpha: true,
-        premultipliedAlpha: true,
+        premultipliedAlpha: pma,
         viewport: { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
         success: (p) => {
           const names = p.skeleton.data.animations.map(a => a.name);
