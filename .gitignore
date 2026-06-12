@@ -1,0 +1,6 @@
+# 素材不进 git：本地/主机由 tools/sync.sh 克隆，Pages 用 jsDelivr CDN
+upstream/
+assets/
+sync.log
+.DS_Store
+.claude/

@@ -1,0 +1,39 @@
+name: Sync upstream roster
+
+# 每周五 21:00 UTC（周六早晨北京时间）检查上游素材仓库，
+# 有新内容则重新生成 roster.json、更新 index.html 里钉住的 commit 并提交，
+# Pages 随提交自动重新部署。也可在 Actions 页面手动触发（workflow_dispatch）。
+on:
+  schedule:
+    - cron: "0 21 * * 5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Regenerate roster from upstream listing
+        run: python3 tools/gen_roster.py --remote
+
+      - name: Pin upstream commit in index.html
+        run: |
+          SHA=$(python3 -c "import json; print(json.load(open('data/roster.json'))['commit'])")
+          sed -i -E "s/const UPSTREAM_COMMIT = \"[0-9a-f]+\";/const UPSTREAM_COMMIT = \"$SHA\";/" index.html
+          grep -q "UPSTREAM_COMMIT = \"$SHA\"" index.html  # sed 没匹配上就让任务失败
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/roster.json index.html
+          if git diff --cached --quiet; then
+            echo "上游无变化，跳过提交"
+          else
+            git commit -m "chore: sync roster with upstream $(python3 -c "import json; print(json.load(open('data/roster.json'))['commit'])")"
+            git push
+          fi

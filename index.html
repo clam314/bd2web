@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BD2 Spine 动画播放器</title>
+
+  <!-- Spine 官方 Web Player（本地化，零外网依赖；素材为 4.1.x 导出需用 4.1 运行时） -->
+  <link rel="stylesheet" href="./vendor/spine-player-4.1.56.css" />
+  <script src="./vendor/spine-player-4.1.56.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: rgba(22, 25, 33, 0.92);
+      --text: #e6e8ee;
+      --muted: #8b90a0;
+      --accent: #6aa6ff;
+      --line: rgba(255, 255, 255, 0.07);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+    body.idle { cursor: none; }
+
+    /* ── 全屏舞台 ── */
+    #stage { position: fixed; inset: 0; }
+    #stage .spine-player { background: transparent !important; }
+
+    /* ── 左侧滑出抽屉 ── */
+    #drawer {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 300px;
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-right: 1px solid var(--line);
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #drawer.open { transform: translateX(0); }
+
+    #edge-hotzone {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 16px;
+      z-index: 19;
+    }
+
+    #handle {
+      position: fixed;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+      width: 4px; height: 72px;
+      border-radius: 0 4px 4px 0;
+      background: rgba(255, 255, 255, 0.28);
+      z-index: 18;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    body.mouse-active #handle { opacity: 1; }
+    #drawer.open ~ #handle { opacity: 0; }
+
+    #drawer header {
+      padding: 14px 14px 10px;
+      flex-shrink: 0;
+    }
+    #search {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    #search:focus { border-color: var(--accent); }
+    #search::placeholder { color: var(--muted); }
+
+    #drawer .scroll {
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 12px 18px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.15) transparent;
+    }
+
+    .item {
+      display: block; width: 100%; text-align: left;
+      padding: 8px 12px; margin-bottom: 3px;
+      background: transparent; color: var(--text);
+      border: none; border-radius: 8px;
+      cursor: pointer; font-size: 14px;
+      transition: background 0.15s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .item:hover { background: rgba(255, 255, 255, 0.07); }
+    .item.active { background: var(--accent); color: #0b1220; font-weight: 600; }
+
+    .char.hidden { display: none; }
+    .char > .item { font-weight: 600; }
+    .char > .item::before {
+      content: "▸"; display: inline-block;
+      margin-right: 8px; color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .char.expanded > .item::before { transform: rotate(90deg); }
+    .char.expanded > .item { color: var(--accent); }
+
+    .sub {
+      display: none;
+      margin-left: 10px;
+      border-left: 1px solid var(--line);
+      padding-left: 8px;
+    }
+    .char.expanded .sub { display: block; }
+
+    .sub-label {
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin: 10px 0 4px 12px;
+    }
+    .sub .item { font-size: 13px; padding: 6px 12px; }
+    .sub .item.disabled { color: var(--muted); cursor: default; }
+
+    #drawer footer {
+      flex-shrink: 0;
+      padding: 10px 16px 13px;
+      font-size: 11px; color: var(--muted);
+      border-top: 1px solid var(--line);
+      line-height: 1.7;
+    }
+
+    #error-toast {
+      position: fixed; left: 50%; bottom: 32px;
+      transform: translateX(-50%);
+      background: #3a1d22; color: #ff9d9d;
+      padding: 10px 18px; border-radius: 10px;
+      font-size: 13px; z-index: 30;
+      display: none;
+      max-width: 80vw;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+
+  <div id="edge-hotzone"></div>
+  <nav id="drawer">
+    <header>
+      <input id="search" type="text" placeholder="搜索角色…" autocomplete="off" />
+    </header>
+    <div class="scroll" id="char-tree"></div>
+    <footer id="footer">双击画面切换全屏 · 鼠标移到左缘呼出菜单</footer>
+  </nav>
+  <div id="handle"></div>
+  <div id="error-toast"></div>
+
+  <script>
+    // 素材根目录：本地/家庭主机直接用 upstream/ 克隆；
+    // 跑在 GitHub Pages（*.github.io）上时自动切到 jsDelivr CDN（钉死上游 commit，
+    // 上游更新后改这一个常量即可——或由 Actions 定时工作流自动改）。
+    const UPSTREAM_COMMIT = "c22400c07bfd";
+    const useCdn = location.hostname.endsWith("github.io")   // Pages 上自动走 CDN
+      || new URLSearchParams(location.search).has("cdn");    // 本地加 ?cdn=1 可模拟
+    const ASSET_BASE = useCdn
+      ? `https://cdn.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`
+      : "./upstream/";
+
+    const stage = document.getElementById("stage");
+    const drawer = document.getElementById("drawer");
+    const tree = document.getElementById("char-tree");
+    const toast = document.getElementById("error-toast");
+    const search = document.getElementById("search");
+
+    let player = null;
+    let activeCostumeBtn = null;
+    let activeAnimBox = null;
+
+    function showError(msg) {
+      toast.textContent = msg;
+      toast.style.display = "block";
+      setTimeout(() => (toast.style.display = "none"), 6000);
+    }
+
+    function loadCostume(costume, btn, animBox) {
+      if (player) { player.dispose(); player = null; }
+      stage.innerHTML = "";
+
+      if (activeCostumeBtn) activeCostumeBtn.classList.remove("active");
+      activeCostumeBtn = btn;
+      btn.classList.add("active");
+      activeAnimBox = animBox;
+      animBox.innerHTML = '<button class="item disabled">加载中…</button>';
+
+      const config = {
+        atlasUrl: ASSET_BASE + costume.atlas,
+        showControls: false,
+        showLoading: false,
+        alpha: true,
+        premultipliedAlpha: true,
+        viewport: { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
+        success: (p) => {
+          const names = p.skeleton.data.animations.map(a => a.name);
+          const first = names.includes(costume.anim) ? costume.anim : names[0];
+          renderAnimList(animBox, names, first);
+          if (first) { try { player.setAnimation(first, true); player.play(); } catch (e) {} }
+        },
+        error: (_p, reason) => {
+          animBox.innerHTML = "";
+          showError("加载失败：" + reason);
+        },
+      };
+      if (costume.skeleton.endsWith(".skel")) config.skelUrl = ASSET_BASE + costume.skeleton;
+      else config.jsonUrl = ASSET_BASE + costume.skeleton;
+
+      player = new spine.SpinePlayer("stage", config);
+    }
+
+    function renderAnimList(animBox, names, current) {
+      animBox.innerHTML = "";
+      names.forEach(name => {
+        const b = document.createElement("button");
+        b.className = "item" + (name === current ? " active" : "");
+        b.textContent = name;
+        b.onclick = () => {
+          if (!player) return;
+          try {
+            player.setAnimation(name, true);
+            player.play();
+            animBox.querySelectorAll(".item").forEach(x => x.classList.remove("active"));
+            b.classList.add("active");
+          } catch (e) { showError("切换动作失败：" + e.message); }
+        };
+        animBox.appendChild(b);
+      });
+    }
+
+    function buildTree(roster) {
+      tree.innerHTML = "";
+      roster.characters.forEach(char => {
+        const wrap = document.createElement("div");
+        wrap.className = "char";
+        wrap.dataset.search = (char.name + " " + char.id).toLowerCase();
+
+        const head = document.createElement("button");
+        head.className = "item";
+        head.textContent = char.name;
+        head.title = "ID " + char.id;
+        head.onclick = () => wrap.classList.toggle("expanded");
+        wrap.appendChild(head);
+
+        const sub = document.createElement("div");
+        sub.className = "sub";
+
+        const costumeLabel = document.createElement("div");
+        costumeLabel.className = "sub-label";
+        costumeLabel.textContent = "服装";
+        sub.appendChild(costumeLabel);
+
+        const animLabel = document.createElement("div");
+        animLabel.className = "sub-label";
+        animLabel.textContent = "动作";
+        const animBox = document.createElement("div");
+
+        const costumeBox = document.createElement("div");
+        char.costumes.forEach(c => {
+          const b = document.createElement("button");
+          b.className = "item";
+          b.textContent = c.label;
+          b.onclick = () => loadCostume(c, b, animBox);
+          costumeBox.appendChild(b);
+        });
+        sub.appendChild(costumeBox);
+        sub.appendChild(animLabel);
+        sub.appendChild(animBox);
+
+        wrap.appendChild(sub);
+        tree.appendChild(wrap);
+      });
+    }
+
+    // ── 搜索过滤 ──
+    search.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      tree.querySelectorAll(".char").forEach(el => {
+        el.classList.toggle("hidden", q && !el.dataset.search.includes(q));
+      });
+    });
+
+    // ── 启动：加载 roster ──
+    fetch("./data/roster.json")
+      .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(roster => {
+        buildTree(roster);
+        const n = roster.characters.length;
+        document.getElementById("footer").innerHTML =
+          `${n} 个角色 · ${roster.source}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
+        // 默认加载第一个角色的第一套服装
+        const firstChar = tree.querySelector(".char");
+        if (firstChar) {
+          firstChar.classList.add("expanded");
+          const firstCostume = firstChar.querySelector(".sub .item");
+          if (firstCostume) firstCostume.click();
+        }
+      })
+      .catch(e => showError("roster.json 加载失败（先运行 tools/sync.sh）：" + e.message));
+
+    // ── 抽屉交互 ──
+    const hotzone = document.getElementById("edge-hotzone");
+    hotzone.addEventListener("mouseenter", () => drawer.classList.add("open"));
+    drawer.addEventListener("mouseleave", () => drawer.classList.remove("open"));
+
+    // ── 鼠标静止后隐藏光标与把手 ──
+    let idleTimer = null;
+    document.addEventListener("mousemove", () => {
+      document.body.classList.add("mouse-active");
+      document.body.classList.remove("idle");
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        document.body.classList.remove("mouse-active");
+        if (!drawer.classList.contains("open")) document.body.classList.add("idle");
+      }, 2500);
+    });
+
+    // ── 双击全屏 ──
+    stage.addEventListener("dblclick", () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    });
+  </script>
+</body>
+</html>
