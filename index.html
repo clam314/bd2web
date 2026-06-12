@@ -242,23 +242,67 @@
       player = new spine.SpinePlayer("stage", config);
     }
 
+    // 动画的播放逻辑还原游戏内的结构：
+    //  - 身体动画（轨道0）：idle/loop 类循环播放；motion/cut_a 类一次性动作播完
+    //    自动衔接回循环待机，而不是僵住或孤立循环
+    //  - _face* 是表情（轨道1），叠加在身体动画上同时播，可点击开/关
     function renderAnimList(animBox, names, current) {
       animBox.innerHTML = "";
-      names.forEach(name => {
+      const faces = names.filter(n => n.startsWith("_"));
+      const bodies = names.filter(n => !n.startsWith("_"));
+      const isLoopName = n => /idle|loop/i.test(n);
+      const baseLoop = bodies.includes(current) && isLoopName(current)
+        ? current : bodies.find(isLoopName);
+
+      bodies.forEach(name => {
         const b = document.createElement("button");
         b.className = "item" + (name === current ? " active" : "");
         b.textContent = name;
         b.onclick = () => {
           if (!player) return;
           try {
-            player.setAnimation(name, true);
+            player.animationState.data.defaultMix = 0.3; // 动作间平滑过渡
+            const loop = isLoopName(name);
+            player.setAnimation(name, loop);
+            if (!loop && baseLoop && baseLoop !== name) {
+              // 一次性动作播完自动回到循环待机
+              player.animationState.addAnimation(0, baseLoop, true, 0);
+            }
             player.play();
-            animBox.querySelectorAll(".item").forEach(x => x.classList.remove("active"));
+            animBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
             b.classList.add("active");
           } catch (e) { showError("切换动作失败：" + e.message); }
         };
+        b.classList.add("body-anim");
         animBox.appendChild(b);
       });
+
+      if (faces.length) {
+        const label = document.createElement("div");
+        label.className = "sub-label";
+        label.textContent = "表情（叠加，可关）";
+        animBox.appendChild(label);
+        faces.forEach(name => {
+          const b = document.createElement("button");
+          b.className = "item face-anim";
+          b.textContent = name;
+          b.onclick = () => {
+            if (!player) return;
+            try {
+              if (b.classList.contains("active")) {
+                player.animationState.setEmptyAnimation(1, 0.2); // 关闭表情
+                b.classList.remove("active");
+              } else {
+                animBox.querySelectorAll(".face-anim").forEach(x => x.classList.remove("active"));
+                player.animationState.setAnimation(1, name, true);
+                b.classList.add("active");
+              }
+              player.play();
+            } catch (e) { showError("切换表情失败：" + e.message); }
+          };
+          animBox.appendChild(b);
+        });
+      }
     }
 
     function buildTree(roster) {
