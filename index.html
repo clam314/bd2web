@@ -403,8 +403,28 @@
             } catch (e) { /* 退回默认逐动画取景 */ }
           }
 
-          // 预加载额外 bg（第一张已通过 backgroundImage 加载），切动作时换 url 即可
-          cutBgs.slice(1).forEach(b => p.assetManager.loadTexture("./" + b));
+          // 背景是可选装饰（roster 的 char<id>_back<N>）：Pages 上 bg/ 没部署、
+          // 本地未解包也没有。所以单独异步加载、加载成功才挂上——任何一张缺失都只是
+          // 没背景，绝不让整个技能动画加载失败（曾经第一张作为 backgroundImage 是必需
+          // 资源，404 会让整套动画报「Assets could not be loaded」）。
+          p._bgLoaded = new Set();
+          p._bgWant = null;
+          p.applyBg = () => {
+            if (p.disposed) return;
+            const want = p._bgWant;
+            if (want && p._bgLoaded.has(want)) {
+              if (p.config.backgroundImage) p.config.backgroundImage.url = want;
+              else p.config.backgroundImage = { url: want };
+            } else {
+              p.config.backgroundImage = null; // 想要的还没加载好/缺失 → 先不画背景
+            }
+          };
+          cutBgs.forEach(b => {
+            const url = "./" + b;
+            p.assetManager.loadTexture(url,
+              () => { p._bgLoaded.add(url); p.applyBg(); },
+              () => { /* 背景缺失，忽略 */ });
+          });
 
           renderEntries(p, animBox);
         },
@@ -414,11 +434,8 @@
       };
       // 背景：技能动画的场景图（roster 提供，来自游戏资源 char<id>_back<N>），
       // 画在同一镜头里（与人物共享取景）。bg 在 costume 上、数组按动作 1/2 对应。
-      // 第一张通过 backgroundImage 加载，其余在 success 里预加载，切动作时改 url。
+      // 不在这里作为必需资源加载——改在 success 里异步加载（见上），缺失也不致命。
       const cutBgs = isCutscene && Array.isArray(costume.bg) ? costume.bg : [];
-      if (cutBgs.length) {
-        config.backgroundImage = { url: "./" + cutBgs[0] };
-      }
 
       if (src.skeleton.endsWith(".skel")) config.skelUrl = ASSET_BASE + src.skeleton;
       else config.jsonUrl = ASSET_BASE + src.skeleton;
@@ -484,10 +501,10 @@
           seq.slice(1).forEach((n, i) => {
             player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
           });
-          // 切到该动作对应的背景（运行时改 url，下一帧就用新贴图）
-          if (bgs.length && player.config.backgroundImage) {
-            const bg = bgs[entryIdx] || bgs[0];
-            player.config.backgroundImage.url = "./" + bg;
+          // 切到该动作对应的背景（仅当那张已成功加载才显示，缺失则保持无背景、不报错）
+          if (bgs.length && player.applyBg) {
+            player._bgWant = "./" + (bgs[entryIdx] || bgs[0]);
+            player.applyBg();
           }
           player.play();
           entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
