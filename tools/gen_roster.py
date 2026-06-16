@@ -103,13 +103,30 @@ def main():
     paths, charinfo_raw, commit = load_remote() if remote else load_local()
     costume_names, char_names = parse_charinfo(charinfo_raw)
 
+    # 官方中文名（tools/fetch_zh_names.py 抓取）。优先级：中文 > 英文 CharInfo > 编号
+    zh_chars, zh_costumes = {}, {}
+    zh_path = ROOT / "data" / "zh.json"
+    if zh_path.exists():
+        zh = json.loads(zh_path.read_text(encoding="utf-8"))
+        zh_chars, zh_costumes = zh.get("chars", {}), zh.get("costumes", {})
+
+    def char_label(cid):
+        return zh_chars.get(cid) or char_names.get(cid) or f"Char {cid}"
+
+    def costume_label(costume_id):
+        return (zh_costumes.get(costume_id) or costume_names.get(costume_id)
+                or f"服装 {costume_id[4:]}")
+
     # 按目录分组文件名
     dirs = defaultdict(set)
     for p in paths:
         d, _, fname = p.rpartition("/")
         dirs[d].add(fname)
 
+    # 同一套服装的「立绘」（char 待机模型）和「技能动画」（cutscene）合并为一个条目，
+    # 与 gamekee 的服装拆解结构一致：服装 → 立绘 / 技能动画
     chars = {}
+    costumes = {}  # costume_id -> costume dict
 
     for d in sorted(dirs):
         parts = d.split("/")
@@ -118,10 +135,10 @@ def main():
         section, dirname = parts[1], parts[2]
         if section == "char":
             m = DIR_RE.match(dirname)
-            kind, anim, suffix = "idle", "idle", ""
+            part = "idle"
         elif section == "cutscenes" and dirname.startswith("cutscene_"):
             m = DIR_RE.match(dirname[len("cutscene_"):])
-            kind, anim, suffix = "cutscene", "loop", " · Cutscene"
+            part = "cutscene"
         else:
             continue
         if not m:
@@ -130,21 +147,27 @@ def main():
         if not files:
             continue
         cid, costume_id = m.group(1), m.group(1) + m.group(2)
-        entry = chars.setdefault(cid, {
+        char = chars.setdefault(cid, {
             "id": cid,
-            "name": char_names.get(cid, f"Char {cid}"),
+            "name": char_label(cid),
+            "aka": char_names.get(cid, ""),  # 英文名，供搜索
             "costumes": [],
         })
-        label = costume_names.get(costume_id, f"服装 {costume_id[4:]}") + suffix
-        entry["costumes"].append({
-            "label": label, "kind": kind,
-            "skeleton": files[0], "atlas": files[1],
-            "anim": anim,
-        })
+        costume = costumes.get(costume_id)
+        if costume is None:
+            costume = {
+                "label": costume_label(costume_id),
+                "idle": None,
+                "cutscene": None,
+            }
+            costumes[costume_id] = costume
+            char["costumes"].append((costume_id, costume))
+        costume[part] = {"skeleton": files[0], "atlas": files[1]}
 
     roster = sorted(chars.values(), key=lambda c: c["id"])
     for c in roster:
-        c["costumes"].sort(key=lambda x: (x["kind"] != "idle", x["skeleton"]))
+        c["costumes"].sort(key=lambda x: x[0])
+        c["costumes"] = [v for _, v in c["costumes"]]
 
     OUT.parent.mkdir(exist_ok=True)
     OUT.write_text(json.dumps({
