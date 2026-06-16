@@ -33,6 +33,16 @@
     #stage { position: fixed; inset: 0; }
     #stage .spine-player { background: transparent !important; }
 
+    /* 技能动画的游戏化后期：调色（ACES 近似 + 对比/饱和/提亮，参数取自游戏 APK）
+       仅在 cutscene 形态启用 */
+    body.cutscene-fx #stage { filter: brightness(1.06) contrast(1.16) saturate(1.28); }
+    /* 暗角层，仅 cutscene 显示 */
+    #vignette {
+      position: fixed; inset: 0; z-index: 5; pointer-events: none; display: none;
+      background: radial-gradient(ellipse 75% 70% at 50% 42%, transparent 55%, rgba(0,0,0,0.55) 100%);
+    }
+    body.cutscene-fx #vignette { display: block; }
+
     /* ── 左侧滑出抽屉 ── */
     #drawer {
       position: fixed;
@@ -136,6 +146,15 @@
     .sub .item { font-size: 13px; padding: 6px 12px; }
     .sub .item.disabled { color: var(--muted); cursor: default; }
 
+    /* 形态切换：立绘 / 技能动画 并排 */
+    .mode-btn {
+      display: inline-block;
+      width: calc(50% - 2px);
+      text-align: center;
+      border: 1px solid var(--line);
+    }
+    .mode-btn:only-of-type { width: 100%; }
+
     #drawer footer {
       flex-shrink: 0;
       padding: 10px 16px 13px;
@@ -157,6 +176,7 @@
 </head>
 <body>
   <div id="stage"></div>
+  <div id="vignette"></div>
 
   <div id="edge-hotzone"></div>
   <nav id="drawer">
@@ -188,7 +208,12 @@
 
     let player = null;
     let activeCostumeBtn = null;
-    let activeAnimBox = null;
+    let currentCostume = null;
+    let currentPart = null;      // "idle"（立绘）| "cutscene"（技能动画）
+    let currentAnimBox = null;
+
+    // 立绘模型常见动画的友好名（未知的保留原名）
+    const IDLE_LABELS = { idle: "待机", idle_talk: "对话", motion: "互动" };
 
     function showError(msg) {
       toast.textContent = msg;
@@ -196,23 +221,69 @@
       setTimeout(() => (toast.style.display = "none"), 6000);
     }
 
-    function loadCostume(costume, btn, animBox) {
-      if (player) { player.dispose(); player = null; }
-      stage.innerHTML = "";
-
+    function selectCostume(costume, btn, animBox) {
       if (activeCostumeBtn) activeCostumeBtn.classList.remove("active");
       activeCostumeBtn = btn;
       btn.classList.add("active");
-      activeAnimBox = animBox;
-      animBox.innerHTML = '<button class="item disabled">加载中…</button>';
+      currentCostume = costume;
+      currentAnimBox = animBox;
+      loadPart(costume.idle ? "idle" : "cutscene");
+    }
+
+    // 形态切换行：立绘（待机模型）/ 技能动画（cutscene），与 gamekee 的服装拆解一致
+    function renderModeRow(animBox) {
+      animBox.innerHTML = "";
+      const costume = currentCostume;
+      [["idle", "立绘"], ["cutscene", "技能动画"]].forEach(([part, label]) => {
+        if (!costume[part]) return;
+        const b = document.createElement("button");
+        b.className = "item mode-btn" + (part === currentPart ? " active" : "");
+        b.textContent = label;
+        b.onclick = () => { if (part !== currentPart) loadPart(part); };
+        animBox.appendChild(b);
+      });
+      const hint = document.createElement("div");
+      hint.className = "sub-label";
+      hint.textContent = "动作";
+      animBox.appendChild(hint);
+      const box = document.createElement("div");
+      box.className = "entry-box";
+      box.innerHTML = '<button class="item disabled">加载中…</button>';
+      animBox.appendChild(box);
+      return box;
+    }
+
+    // 游戏技能动画的取景：从 APK 提取——显示窗口 1600×720、SkeletonGraphic scale=1
+    // 居中。这里按屏幕比例展开为横带（宽=游戏窗口 1600 骨骼单位，原点居中，略上移），
+    // 自然裁掉腿部、呈现游戏式低机位横屏构图。（逐角色精修 + 运镜曲线列入后续优化）
+    const CUT_WIN = 1600, CUT_CX = 0, CUT_CY = 150;
+    function cutsceneViewport() {
+      const W = CUT_WIN;
+      const h = W * window.innerHeight / window.innerWidth;
+      return { x: CUT_CX - W / 2, y: CUT_CY - h / 2, width: W, height: h };
+    }
+
+    function loadPart(part) {
+      const costume = currentCostume, animBox = currentAnimBox;
+      const src = costume[part];
+      if (!src) return;
+      currentPart = part;
+      if (player) { player.dispose(); player = null; }
+      stage.innerHTML = "";
+      renderModeRow(animBox);
+
+      // 技能动画走「游戏化」呈现：横屏取景 + 后期；立绘走完整人物取景
+      const isCutscene = part === "cutscene";
+      document.body.classList.toggle("cutscene-fx", isCutscene);
 
       const config = {
-        atlasUrl: ASSET_BASE + costume.atlas,
+        atlasUrl: ASSET_BASE + src.atlas,
         showControls: false,
         showLoading: false,
         alpha: true,
         premultipliedAlpha: false, // 占位，加载完成后按 atlas 实际标记修正（见 success）
-        viewport: { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
+        viewport: isCutscene ? cutsceneViewport() :
+          { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
         success: (p) => {
           // 贴图 alpha 模式必须和素材导出一致，否则边缘出现白边/黑边。
           // 不同来源导出不同（gamekee 为 pma，myssal 为直通），从播放器
@@ -223,30 +294,17 @@
             p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
           } catch (e) { /* 读不到则保持 false（直通） */ }
 
-          const names = p.skeleton.data.animations.map(a => a.name);
-          const first = names.includes(costume.anim) ? costume.anim : names[0];
-          renderAnimList(animBox, names, first);
-          // 串联播放时，菜单高亮跟随轨道0当前正在播的片段所属的条目
-          p.animationState.addListener({
-            start: (entry) => {
-              if (entry.trackIndex !== 0 || !entry.animation) return;
-              const nm = entry.animation.name;
-              const btns = [...animBox.querySelectorAll(".body-anim")];
-              // 链头精确匹配优先（避免链尾 loop 和独立 loop 条目同时高亮）
-              const heads = btns.filter(x => (x.dataset.seq || "").split("|")[0] === nm);
-              btns.forEach(x => x.classList.toggle("active",
-                heads.length ? heads.includes(x) : (x.dataset.seq || "").split("|").includes(nm)));
-            },
-          });
-          if (first) { try { player.setAnimation(first, true); player.play(); } catch (e) {} }
+          renderEntries(p, animBox);
         },
         error: (_p, reason) => {
-          animBox.innerHTML = "";
           showError("加载失败：" + reason);
         },
       };
-      if (costume.skeleton.endsWith(".skel")) config.skelUrl = ASSET_BASE + costume.skeleton;
-      else config.jsonUrl = ASSET_BASE + costume.skeleton;
+      // 背景：技能动画若有对应场景图（roster 提供），画在同一镜头里（与人物共享取景）
+      if (isCutscene && src.bg) config.backgroundImage = { url: ASSET_BASE + src.bg };
+
+      if (src.skeleton.endsWith(".skel")) config.skelUrl = ASSET_BASE + src.skeleton;
+      else config.jsonUrl = ASSET_BASE + src.skeleton;
 
       player = new spine.SpinePlayer("stage", config);
     }
@@ -255,13 +313,14 @@
     //  - 身体动画（轨道0）：idle/loop 类循环播放；motion/cut_a 类一次性动作播完
     //    自动衔接回循环待机，而不是僵住或孤立循环
     //  - _face* 是表情（轨道1），叠加在身体动画上同时播，可点击开/关
-    function renderAnimList(animBox, names, current) {
-      animBox.innerHTML = "";
+    //  - 立绘形态的动作用友好名（待机/对话/互动），技能动画形态编号为 动作1、动作2…
+    function renderEntries(p, animBox) {
+      const entryBox = renderModeRow(animBox);
+      const names = p.skeleton.data.animations.map(a => a.name);
       const faces = names.filter(n => n.startsWith("_"));
       const bodies = names.filter(n => !n.startsWith("_"));
       const isLoopName = n => /idle|loop/i.test(n);
-      const baseLoop = bodies.includes(current) && isLoopName(current)
-        ? current : bodies.find(isLoopName);
+      const baseLoop = bodies.find(isLoopName);
 
       // 一次性动作播完后串联哪些动画（按骨骼内作者排序＝播放顺序）：
       //  1) 有同名配对（cut_1 → cut_1_idle / xxx_loop）就只接它
@@ -296,35 +355,40 @@
         entries.push(seq);
       });
 
-      entries.forEach(seq => {
-        const head = seq[0], tail = seq[seq.length - 1];
+      const playSeq = (seq, btn) => {
+        if (!player) return;
+        try {
+          player.animationState.data.defaultMix = 0.3; // 片段间平滑过渡
+          player.setAnimation(seq[0], seq.length === 1 && isLoopName(seq[0]));
+          seq.slice(1).forEach((n, i) => {
+            player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
+          });
+          player.play();
+          entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+          btn.classList.add("active");
+        } catch (e) { showError("切换动作失败：" + e.message); }
+      };
+
+      entryBox.innerHTML = ""; // 清掉「加载中…」占位
+      entries.forEach((seq, idx) => {
         const b = document.createElement("button");
-        b.className = "item body-anim" + (seq[0] === current ? " active" : "");
-        b.textContent = seq.length === 1 ? head
-          : seq.length === 2 ? `${head} ▸ ${tail}`
-          : `${head} ▸▸ ${tail}（${seq.length}段）`;
+        b.className = "item body-anim";
+        // 立绘动作用友好名，技能动画按编号；悬停提示原始动画名
+        b.textContent = currentPart === "cutscene"
+          ? `动作${idx + 1}` + (seq.length > 1 ? `（${seq.length}段连播）` : "")
+          : (IDLE_LABELS[seq[0]] || seq[0]);
+        b.title = seq.join(" → ");
         b.dataset.seq = seq.join("|");
-        b.onclick = () => {
-          if (!player) return;
-          try {
-            player.animationState.data.defaultMix = 0.3; // 片段间平滑过渡
-            player.setAnimation(head, seq.length === 1 && isLoopName(head));
-            seq.slice(1).forEach((n, i) => {
-              player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
-            });
-            player.play();
-            animBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
-            b.classList.add("active");
-          } catch (e) { showError("切换动作失败：" + e.message); }
-        };
-        animBox.appendChild(b);
+        b.onclick = () => playSeq(seq, b);
+        entryBox.appendChild(b);
       });
 
-      if (faces.length) {
+      // 表情只属于立绘模型（叠加在轨道1）
+      if (currentPart === "idle" && faces.length) {
         const label = document.createElement("div");
         label.className = "sub-label";
         label.textContent = "表情（叠加，可关）";
-        animBox.appendChild(label);
+        entryBox.appendChild(label);
         faces.forEach(name => {
           const b = document.createElement("button");
           b.className = "item face-anim";
@@ -336,16 +400,35 @@
                 player.animationState.setEmptyAnimation(1, 0.2); // 关闭表情
                 b.classList.remove("active");
               } else {
-                animBox.querySelectorAll(".face-anim").forEach(x => x.classList.remove("active"));
+                entryBox.querySelectorAll(".face-anim").forEach(x => x.classList.remove("active"));
                 player.animationState.setAnimation(1, name, true);
                 b.classList.add("active");
               }
               player.play();
             } catch (e) { showError("切换表情失败：" + e.message); }
           };
-          animBox.appendChild(b);
+          entryBox.appendChild(b);
         });
       }
+
+      // 串联播放时，高亮跟随轨道0当前正在播的片段所属条目
+      p.animationState.addListener({
+        start: (entry) => {
+          if (entry.trackIndex !== 0 || !entry.animation) return;
+          const nm = entry.animation.name;
+          const btns = [...entryBox.querySelectorAll(".body-anim")];
+          // 链头精确匹配优先（避免链尾 loop 和独立 loop 条目同时高亮）
+          const heads = btns.filter(x => (x.dataset.seq || "").split("|")[0] === nm);
+          btns.forEach(x => x.classList.toggle("active",
+            heads.length ? heads.includes(x) : (x.dataset.seq || "").split("|").includes(nm)));
+        },
+      });
+
+      // 默认播放：立绘＝待机，技能动画＝第一个条目（完整演出）
+      const defIdx = currentPart === "idle"
+        ? Math.max(0, entries.findIndex(seq => seq[0] === "idle"))
+        : 0;
+      if (entries[defIdx]) playSeq(entries[defIdx], entryBox.querySelectorAll(".body-anim")[defIdx]);
     }
 
     function buildTree(roster) {
@@ -353,7 +436,7 @@
       roster.characters.forEach(char => {
         const wrap = document.createElement("div");
         wrap.className = "char";
-        wrap.dataset.search = (char.name + " " + char.id).toLowerCase();
+        wrap.dataset.search = (char.name + " " + (char.aka || "") + " " + char.id).toLowerCase();
 
         const head = document.createElement("button");
         head.className = "item";
@@ -370,9 +453,6 @@
         costumeLabel.textContent = "服装";
         sub.appendChild(costumeLabel);
 
-        const animLabel = document.createElement("div");
-        animLabel.className = "sub-label";
-        animLabel.textContent = "动作";
         const animBox = document.createElement("div");
 
         const costumeBox = document.createElement("div");
@@ -380,11 +460,10 @@
           const b = document.createElement("button");
           b.className = "item";
           b.textContent = c.label;
-          b.onclick = () => loadCostume(c, b, animBox);
+          b.onclick = () => selectCostume(c, b, animBox);
           costumeBox.appendChild(b);
         });
         sub.appendChild(costumeBox);
-        sub.appendChild(animLabel);
         sub.appendChild(animBox);
 
         wrap.appendChild(sub);

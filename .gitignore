@@ -4,3 +4,5 @@ assets/
 sync.log
 .DS_Store
 .claude/
+bg_demo/
+demo.html
