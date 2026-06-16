@@ -75,6 +75,7 @@ index.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cd
 | 中文名 | 角色 + 服装名 | gamekee `/v1/wiki/entry` |
 | 服装合并 | 一套服装 = 立绘 + 技能动画（gamekee 风格） | gen_roster.py 按 costumeId 合并 |
 | 动作命名 | 立绘"待机/对话/互动"，技能"动作1/动作2" | 启发式 |
+| 表情菜单 | 可折叠分组 + 紧凑编号网格（`_faceN`→「表情」、`_faceN_talk`→「说话版」），多于 10 个默认折叠 | `.face-group`，2026-06-17 |
 
 #### 立绘取景锁定（2026-06-16 修，解决「互动比例过小」）
 

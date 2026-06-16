@@ -158,6 +158,41 @@
     .sub .item { font-size: 13px; padding: 6px 12px; }
     .sub .item.disabled { color: var(--muted); cursor: default; }
 
+    /* 表情：可折叠分组 + 紧凑编号网格（角色表情可达 50+，平铺会撑爆菜单）*/
+    .face-head {
+      display: block; width: 100%; text-align: left;
+      background: transparent; border: none; cursor: pointer;
+      color: var(--muted); font-size: 11px;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 10px 12px 4px;
+    }
+    .face-head::before {
+      content: "▸"; display: inline-block;
+      margin-right: 6px; transition: transform 0.2s;
+    }
+    .face-group.open .face-head::before { transform: rotate(90deg); }
+    .face-head:hover { color: var(--text); }
+    .face-head span { text-transform: none; letter-spacing: 0; }
+    .face-body { display: none; }
+    .face-group.open .face-body { display: block; }
+    .face-grid {
+      display: flex; flex-wrap: wrap; gap: 4px;
+      padding: 2px 12px 6px;
+    }
+    .face-chip {
+      min-width: 34px; padding: 5px 6px;
+      text-align: center; font-size: 12px;
+      border: 1px solid var(--line); border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text); cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .face-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .face-chip.active {
+      background: var(--accent); color: #0b1220;
+      font-weight: 600; border-color: var(--accent);
+    }
+
     /* 形态切换：立绘 / 技能动画 并排 */
     .mode-btn {
       display: inline-block;
@@ -474,32 +509,57 @@
         entryBox.appendChild(b);
       });
 
-      // 表情只属于立绘模型（叠加在轨道1）
+      // 表情只属于立绘模型（叠加在轨道1）。数量可能很多（有的角色 _face0.._face26 +
+      // 各自的 _talk 说话版＝50 多个），平铺会把菜单撑爆。所以：可折叠分组 + 紧凑编号网格，
+      // _faceN 归「表情」、_faceN_talk 归「说话版」，芯片只显示编号（hover 看原名）。
       if (currentPart === "idle" && faces.length) {
-        const label = document.createElement("div");
-        label.className = "sub-label";
-        label.textContent = "表情（叠加，可关）";
-        entryBox.appendChild(label);
-        faces.forEach(name => {
-          const b = document.createElement("button");
-          b.className = "item face-anim";
-          b.textContent = name;
-          b.onclick = () => {
-            if (!player) return;
-            try {
-              if (b.classList.contains("active")) {
-                player.animationState.setEmptyAnimation(1, 0.2); // 关闭表情
-                b.classList.remove("active");
-              } else {
-                entryBox.querySelectorAll(".face-anim").forEach(x => x.classList.remove("active"));
-                player.animationState.setAnimation(1, name, true);
-                b.classList.add("active");
-              }
-              player.play();
-            } catch (e) { showError("切换表情失败：" + e.message); }
-          };
-          entryBox.appendChild(b);
-        });
+        const baseFaces = faces.filter(n => !n.endsWith("_talk"));
+        const talkFaces = faces.filter(n => n.endsWith("_talk"));
+
+        // 切表情：点已选的＝关闭（轨道1清空），否则换上（同一时刻只亮一个）
+        const applyFace = (name, chip) => {
+          if (!player) return;
+          try {
+            const wasActive = chip.classList.contains("active");
+            group.querySelectorAll(".face-chip").forEach(x => x.classList.remove("active"));
+            if (wasActive) player.animationState.setEmptyAnimation(1, 0.2);
+            else { player.animationState.setAnimation(1, name, true); chip.classList.add("active"); }
+            player.play();
+          } catch (e) { showError("切换表情失败：" + e.message); }
+        };
+
+        const group = document.createElement("div");
+        // 表情多（>10）默认折叠，少则展开
+        group.className = "face-group" + (faces.length <= 10 ? " open" : "");
+        const head = document.createElement("button");
+        head.className = "face-head";
+        head.innerHTML = `表情 <span>（${faces.length} 个 · 叠加可关）</span>`;
+        head.onclick = () => group.classList.toggle("open");
+        group.appendChild(head);
+
+        const body = document.createElement("div");
+        body.className = "face-body";
+        const addGrid = (list, label) => {
+          if (!list.length) return;
+          const lb = document.createElement("div");
+          lb.className = "sub-label"; lb.textContent = label;
+          body.appendChild(lb);
+          const grid = document.createElement("div");
+          grid.className = "face-grid";
+          list.forEach(name => {
+            const c = document.createElement("button");
+            c.className = "face-chip"; c.dataset.face = name;
+            c.textContent = name.replace(/^_face/, "").replace(/_talk$/, "") || name;
+            c.title = name;
+            c.onclick = () => applyFace(name, c);
+            grid.appendChild(c);
+          });
+          body.appendChild(grid);
+        };
+        addGrid(baseFaces, "表情");
+        addGrid(talkFaces, "说话版");
+        group.appendChild(body);
+        entryBox.appendChild(group);
       }
 
       // 串联播放时，高亮跟随轨道0当前正在播的片段所属条目
