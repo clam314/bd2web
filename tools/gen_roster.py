@@ -155,10 +155,14 @@ def main():
         })
         costume = costumes.get(costume_id)
         if costume is None:
+            # 技能动画背景（tools/extract_bgs.py 从游戏资源导出到 bg/）。
+            # 一套服装可能有 1 张或 2 张背景，与技能动作 1/2 对应。
+            bgs = sorted((ROOT / "bg").glob(f"{costume_id}_*.png"))
             costume = {
                 "label": costume_label(costume_id),
                 "idle": None,
                 "cutscene": None,
+                "bg": [f"bg/{p.name}" for p in bgs] or None,
             }
             costumes[costume_id] = costume
             char["costumes"].append((costume_id, costume))

@@ -87,6 +87,18 @@
       padding: 14px 14px 10px;
       flex-shrink: 0;
     }
+    .nav-link {
+      display: block;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-link:hover { border-color: var(--accent); color: var(--accent); }
     #search {
       width: 100%;
       padding: 8px 12px;
@@ -181,6 +193,7 @@
   <div id="edge-hotzone"></div>
   <nav id="drawer">
     <header>
+      <a class="nav-link" href="./dating.html">心契之约</a>
       <input id="search" type="text" placeholder="搜索角色…" autocomplete="off" />
     </header>
     <div class="scroll" id="char-tree"></div>
@@ -294,14 +307,22 @@
             p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
           } catch (e) { /* 读不到则保持 false（直通） */ }
 
+          // 预加载额外 bg（第一张已通过 backgroundImage 加载），切动作时换 url 即可
+          cutBgs.slice(1).forEach(b => p.assetManager.loadTexture("./" + b));
+
           renderEntries(p, animBox);
         },
         error: (_p, reason) => {
           showError("加载失败：" + reason);
         },
       };
-      // 背景：技能动画若有对应场景图（roster 提供），画在同一镜头里（与人物共享取景）
-      if (isCutscene && src.bg) config.backgroundImage = { url: ASSET_BASE + src.bg };
+      // 背景：技能动画的场景图（roster 提供，来自游戏资源 char<id>_back<N>），
+      // 画在同一镜头里（与人物共享取景）。bg 在 costume 上、数组按动作 1/2 对应。
+      // 第一张通过 backgroundImage 加载，其余在 success 里预加载，切动作时改 url。
+      const cutBgs = isCutscene && Array.isArray(costume.bg) ? costume.bg : [];
+      if (cutBgs.length) {
+        config.backgroundImage = { url: "./" + cutBgs[0] };
+      }
 
       if (src.skeleton.endsWith(".skel")) config.skelUrl = ASSET_BASE + src.skeleton;
       else config.jsonUrl = ASSET_BASE + src.skeleton;
@@ -355,7 +376,11 @@
         entries.push(seq);
       });
 
-      const playSeq = (seq, btn) => {
+      // 当前服装的 cutscene 背景列表（按动作 1/2 对应 bg[0]/bg[1]，缺则共用）
+      const bgs = (currentPart === "cutscene" && Array.isArray(currentCostume.bg))
+        ? currentCostume.bg : [];
+
+      const playSeq = (seq, btn, entryIdx) => {
         if (!player) return;
         try {
           player.animationState.data.defaultMix = 0.3; // 片段间平滑过渡
@@ -363,6 +388,11 @@
           seq.slice(1).forEach((n, i) => {
             player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
           });
+          // 切到该动作对应的背景（运行时改 url，下一帧就用新贴图）
+          if (bgs.length && player.config.backgroundImage) {
+            const bg = bgs[entryIdx] || bgs[0];
+            player.config.backgroundImage.url = "./" + bg;
+          }
           player.play();
           entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
           btn.classList.add("active");
@@ -379,7 +409,7 @@
           : (IDLE_LABELS[seq[0]] || seq[0]);
         b.title = seq.join(" → ");
         b.dataset.seq = seq.join("|");
-        b.onclick = () => playSeq(seq, b);
+        b.onclick = () => playSeq(seq, b, idx);
         entryBox.appendChild(b);
       });
 
@@ -428,7 +458,7 @@
       const defIdx = currentPart === "idle"
         ? Math.max(0, entries.findIndex(seq => seq[0] === "idle"))
         : 0;
-      if (entries[defIdx]) playSeq(entries[defIdx], entryBox.querySelectorAll(".body-anim")[defIdx]);
+      if (entries[defIdx]) playSeq(entries[defIdx], entryBox.querySelectorAll(".body-anim")[defIdx], defIdx);
     }
 
     function buildTree(roster) {
@@ -480,7 +510,7 @@
     });
 
     // ── 启动：加载 roster ──
-    fetch("./data/roster.json")
+    fetch("./data/roster.json?v=" + Date.now())
       .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(roster => {
         buildTree(roster);
