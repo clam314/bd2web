@@ -307,6 +307,26 @@
             p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
           } catch (e) { /* 读不到则保持 false（直通） */ }
 
+          // 立绘形态锁定取景。spine-player 默认对「每个动画整段的并集包围盒」自动取景，
+          // 而互动(motion)动画里常有特效/锚点骨骼甩到 ±4000 单位外（奇迹玫瑰 motion 框
+          // 宽 8144 vs 待机 377），并集框暴涨 → 人物被缩成一点（用户反馈的「比例过小」）。
+          // 游戏里立绘是固定机位（互动在同一画框内演出），所以把整套立绘动作统一锁到
+          // 待机/静止姿势的包围盒：所有动作共享同一取景，比例稳定。仅立绘形态需要——
+          // 技能动画形态本就用固定 1600 窗口(cutsceneViewport)，不受影响。
+          if (part === "idle") {
+            try {
+              const anims = p.skeleton.data.animations;
+              const rest = anims.find(a => /idle/i.test(a.name) && !a.name.startsWith("_"))
+                        || anims.find(a => !a.name.startsWith("_"));
+              if (rest) {
+                const box = {};
+                p.calculateAnimationViewport(rest, box);
+                Object.assign(p.config.viewport, // 设了 x/y/w/h 后 setViewport 对所有动画都用此固定框
+                  { x: box.x, y: box.y, width: box.width, height: box.height });
+              }
+            } catch (e) { /* 退回默认逐动画取景 */ }
+          }
+
           // 预加载额外 bg（第一张已通过 backgroundImage 加载），切动作时换 url 即可
           cutBgs.slice(1).forEach(b => p.assetManager.loadTexture("./" + b));
 

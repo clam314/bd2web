@@ -16,6 +16,9 @@
    - 现在 cutscene 用统一 1600 窗口、原点居中略上移（CUT_WIN/CUT_CX/CUT_CY，见 index.html）。
      这是 Luvencia 调出来的通用值，部分角色（骨骼原点位置不同）可能需要单独偏移。
    - 真实窗口 1600×720 + scale=1 已确认；逐角色差异主要在 spine 原点位置。
+   - **立绘取景已修**（2026-06-16）：立绘形态曾因 spine 自动取景按整段动画并集，互动(motion)
+     特效骨骼甩出导致人物被缩成小点。现已锁定到待机包围盒固定取景（详见 AGENTS.md「立绘取景锁定」）。
+     可选精修：像 cutscene 那样从 APK 角色详情 prefab 的 RectTransform 挖立绘真实机位做像素级对齐。优先级低。
 
 3. **场景背景接入全角色** — 优先级高（视觉影响大）
    - 代码已支持 `costume.bg`（index.html backgroundImage）。缺的是数据：
