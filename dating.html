@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BD2 心契之约 Spine 播放器</title>
+
+  <link rel="stylesheet" href="./vendor/spine-player-4.1.56.css" />
+  <script src="./vendor/spine-player-4.1.56.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: rgba(22, 25, 33, 0.92);
+      --text: #e6e8ee;
+      --muted: #8b90a0;
+      --accent: #6aa6ff;
+      --line: rgba(255, 255, 255, 0.07);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 72% 18%, rgba(106, 166, 255, 0.12), transparent 28%),
+        linear-gradient(135deg, #0b0d12 0%, #11151d 52%, #0b0d12 100%);
+      color: var(--text);
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+    body.idle { cursor: none; }
+
+    #stage { position: fixed; inset: 0; }
+    #stage .spine-player { background: transparent !important; }
+    #hotzone-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 12;
+      pointer-events: none;
+    }
+    .hotzone {
+      position: absolute;
+      min-width: 26px;
+      min-height: 26px;
+      border: 1px solid rgba(106, 166, 255, 0.62);
+      border-radius: 6px;
+      background: rgba(106, 166, 255, 0.12);
+      box-shadow: 0 0 0 1px rgba(11, 13, 18, 0.18), inset 0 0 18px rgba(106, 166, 255, 0.12);
+      color: #dceaff;
+      cursor: pointer;
+      pointer-events: auto;
+      opacity: 0.72;
+      transition: opacity 0.15s, background 0.15s, border-color 0.15s;
+    }
+    .hotzone:hover {
+      opacity: 1;
+      background: rgba(106, 166, 255, 0.2);
+      border-color: rgba(152, 199, 255, 0.9);
+    }
+    .hotzone::after {
+      content: attr(data-label);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 2px 6px;
+      border-radius: 999px;
+      background: rgba(11, 13, 18, 0.56);
+      color: currentColor;
+      font-size: 11px;
+      line-height: 1.2;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    #edge-hotzone {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 16px;
+      z-index: 19;
+    }
+    #drawer {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 320px;
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-right: 1px solid var(--line);
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #drawer.open { transform: translateX(0); }
+    #handle {
+      position: fixed;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+      width: 4px; height: 72px;
+      border-radius: 0 4px 4px 0;
+      background: rgba(255, 255, 255, 0.28);
+      z-index: 18;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    body.mouse-active #handle { opacity: 1; }
+    #drawer.open ~ #handle { opacity: 0; }
+
+    header { padding: 14px 14px 10px; flex-shrink: 0; }
+    .nav-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .nav-link {
+      display: block;
+      padding: 8px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-link.active,
+    .nav-link:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    #search {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    #search:focus { border-color: var(--accent); }
+    #search::placeholder { color: var(--muted); }
+
+    #list {
+      overflow-y: auto;
+      flex: 1;
+      min-height: 0;
+      padding: 0 12px 18px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.15) transparent;
+    }
+    .item {
+      display: block;
+      width: 100%;
+      margin-bottom: 3px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 14px;
+      text-align: left;
+      transition: background 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .item:hover { background: rgba(255, 255, 255, 0.07); }
+    .item.active { background: var(--accent); color: #0b1220; font-weight: 600; }
+    .item.hidden { display: none; }
+    .item.disabled { color: var(--muted); cursor: default; }
+    .stage-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px;
+      margin-bottom: 8px;
+    }
+    .stage-row .item {
+      margin: 0;
+      padding: 7px 6px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .tool-row .item {
+      flex: 1 1 64px;
+      margin: 0;
+      padding: 7px 6px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .view-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      margin-bottom: 8px;
+    }
+    .view-row .item {
+      margin: 0;
+      padding: 7px 6px;
+      text-align: center;
+      font-size: 12px;
+    }
+    .advance-btn {
+      margin: 8px 0 6px;
+      border: 1px solid rgba(106, 166, 255, 0.35);
+      background: rgba(106, 166, 255, 0.1);
+    }
+    .empty-note {
+      margin: 0 12px 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .sub-label {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 12px 0 5px 12px;
+    }
+    #anim-list {
+      border-top: 1px solid var(--line);
+      padding: 10px 12px 16px;
+      flex-shrink: 0;
+      max-height: 40vh;
+      overflow-y: auto;
+    }
+    footer {
+      flex-shrink: 0;
+      padding: 10px 16px 13px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+    #error-toast {
+      position: fixed;
+      left: 50%; bottom: 32px;
+      transform: translateX(-50%);
+      max-width: 80vw;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: #3a1d22;
+      color: #ff9d9d;
+      font-size: 13px;
+      z-index: 30;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="hotzone-layer"></div>
+  <div id="edge-hotzone"></div>
+  <nav id="drawer">
+    <header>
+      <div class="nav-row">
+        <a class="nav-link" href="./index.html">角色动画</a>
+        <a class="nav-link active" href="./dating.html">心契之约</a>
+      </div>
+      <input id="search" type="text" placeholder="搜索心契资源…" autocomplete="off" />
+    </header>
+    <div id="list"></div>
+    <div id="anim-list"></div>
+    <footer id="footer">双击画面切换全屏 · 鼠标移到左缘呼出菜单</footer>
+  </nav>
+  <div id="handle"></div>
+  <div id="error-toast"></div>
+
+  <script>
+    const UPSTREAM_COMMIT = "c22400c07bfd";
+    const params = new URLSearchParams(location.search);
+    const useCdn = location.hostname.endsWith("github.io")
+      || params.has("cdn");
+    const CDN_ASSET_BASES = [
+      `https://cdn.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
+      `https://fastly.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
+      `https://gcore.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
+      `https://cdn.statically.io/gh/myssal/Brown-Dust-2-Asset/${UPSTREAM_COMMIT}/`,
+      `https://raw.githubusercontent.com/myssal/Brown-Dust-2-Asset/${UPSTREAM_COMMIT}/`,
+    ];
+    const customAssetBases = params.get("asset_base")
+      ?.split(",")
+      .map(v => v.trim())
+      .filter(Boolean)
+      .map(normalizeAssetBase);
+    const ASSET_BASES = customAssetBases?.length ? customAssetBases : (useCdn ? CDN_ASSET_BASES : ["./upstream/"]);
+    let assetBaseIndex = 0;
+
+    function normalizeAssetBase(base) {
+      return base.endsWith("/") ? base : base + "/";
+    }
+
+    function assetBase() {
+      return ASSET_BASES[assetBaseIndex] || ASSET_BASES[0];
+    }
+
+    function assetUrl(path) {
+      return assetBase() + path;
+    }
+
+    function retryAssetBase(reason, reload) {
+      if (assetBaseIndex + 1 >= ASSET_BASES.length) return false;
+      assetBaseIndex += 1;
+      showError(`素材源加载失败，正在切换备用 CDN ${assetBaseIndex + 1}/${ASSET_BASES.length}：${reason}`);
+      setTimeout(reload, 120);
+      return true;
+    }
+
+    const DATING = [
+      ["illust_dating1", "Nebris", "Guest"],
+      ["illust_dating2", "Morpeah", "Guest"],
+      ["illust_dating3", "Liatris", "Guest"],
+      ["illust_dating4", "Teresse", "Guest"],
+      ["illust_dating5", "Eris", "Guest"],
+      ["illust_dating6", "Granhildr", "Guest"],
+      ["illust_dating7", "Justia", "Hot Summer Dream"],
+      ["illust_dating8", "Rubia", "Guest"],
+      ["illust_dating9", "Teresse", "Milky Bikini"],
+      ["illust_dating10", "Eleaneer", "Guest"],
+      ["illust_dating11", "Scheherazade", "Guest"],
+      ["illust_dating12", "Helena", "Stranger Bunny"],
+      ["illust_dating13", "Sonya", "Guest"],
+      ["illust_dating14", "Eclipse", "Hedonist"],
+      ["illust_dating15", "Refithea", "Guest"],
+      ["illust_dating16", "Olivier", "Guest"],
+      ["illust_dating17", "Palette", "Guest"],
+      ["illust_dating18", "Dating 18", "Unmapped"],
+    ].map(([id, character, tag]) => ({
+      id,
+      character,
+      tag,
+      label: `${id.replace("illust_dating", "心契 ")} · ${character}`,
+      skeleton: `spine/illust/illust_dating/${id}/${id}.skel`,
+      atlas: `spine/illust/illust_dating/${id}/${id}.atlas`,
+    }));
+
+    const INTERACTION_POINTS = {
+      illust_dating1: { 1: { touch: 16, drag: 4 }, 2: { touch: 21, drag: 3 }, 3: { touch: 23, drag: 1 } },
+      illust_dating2: { 1: { touch: 16, drag: 4 }, 2: { touch: 19, drag: 4 }, 3: { touch: 16, drag: 3 } },
+      illust_dating3: { 1: { touch: 17, drag: 3 }, 2: { touch: 16, drag: 3 } },
+      illust_dating4: { 1: { touch: 23, drag: 5 }, 2: { touch: 26, drag: 4 } },
+      illust_dating5: { 1: { touch: 12, drag: 6 }, 2: { touch: 26, drag: 7 } },
+      illust_dating6: { 1: { touch: 4, drag: 3 }, 2: { touch: 2, drag: 2 }, 3: { touch: 2, drag: 2 }, 4: { touch: 1, drag: 2 }, 5: { touch: 2 }, 6: { touch: 30, drag: 3 } },
+      illust_dating7: { 1: { touch: 28, drag: 4 }, 2: { touch: 23, drag: 8 } },
+      illust_dating8: { 1: { touch: 35 }, 2: { touch: 1 }, 3: { touch: 24, drag: 2 } },
+      illust_dating9: { 1: { touch: 38, drag: 3 }, 2: { touch: 30, drag: 6 } },
+      illust_dating10: { 1: { touch: 18, drag: 8 }, 2: { touch: 2 }, 3: { touch: 22, drag: 8 } },
+      illust_dating11: { 1: { gyro: 1, touch: 7, drag: 2 }, 2: { gyro: 3 }, 3: { drag: 3, gyro: 2, touch: 18 }, 4: { gyro: 2, touch: 22, drag: 1 } },
+      illust_dating12: { 1: { touch: 32, gyro: 1, drag: 3 }, 2: { gyro: 1, touch: 1 }, 3: { touch: 42, gyro: 1, drag: 6 } },
+      illust_dating13: { 1: { touch: 9, gyro: 1, drag: 1 }, 2: { drag: 3, touch: 6, gyro: 1 }, 3: { drag: 2, touch: 28, gyro: 1 } },
+      illust_dating14: { 1: { gyro: 2, touch: 44 }, 2: { gyro: 2, touch: 84 } },
+      illust_dating15: { 1: { touch: 10, gyro: 1 }, 2: { touch: 20, gyro: 1 }, 3: { touch: 35, gyro: 1 } },
+      illust_dating16: { 1: { touch: 33, drag: 12, gyro: 3 }, 2: { touch: 65, drag: 5, gyro: 1 } },
+      illust_dating17: { 1: { gyro: 2, touch: 26, drag: 2 }, 2: { gyro: 2, touch: 27, drag: 3 } },
+      illust_dating18: { 1: { gyro: 2, touch: 9, drag: 4 }, 2: { gyro: 2, touch: 6, drag: 5 }, 3: { gyro: 1, drag: 2 }, 4: { gyro: 1, drag: 1 }, 5: { gyro: 1, drag: 1 }, 6: { gyro: 2, touch: 38, drag: 3 }, 7: { gyro: 2, touch: 7, drag: 5 } },
+    };
+
+    const PREFAB_VIEWPORTS = {
+      illust_dating1: { cx: 0, cy: -300, width: 3350, height: 3800, scale: 0.5 },
+      illust_dating2: { cx: 0, cy: -100, width: 4260, height: 3130, scale: 0.5 },
+      illust_dating3: { cx: 0, cy: 0, width: 2425, height: 2865, scale: 0.5 },
+      illust_dating4: { cx: 0, cy: 0, width: 3050, height: 3100, scale: 0.5 },
+      illust_dating5: { cx: 0, cy: 100, width: 3050, height: 3100, scale: 0.5 },
+      illust_dating6: { cx: -50, cy: -300, width: 3500, height: 5000, scale: 0.4 },
+      illust_dating7: { cx: 0, cy: 0, width: 1800, height: 2000, scale: 0.5 },
+      illust_dating8: { cx: 0, cy: 0, width: 4800, height: 4500, scale: 0.5 },
+      illust_dating9: { cx: 0, cy: 0, width: 2850, height: 3500, scale: 0.5 },
+      illust_dating10: { cx: 0, cy: 0, width: 3000, height: 4000, scale: 0.5 },
+      illust_dating11: { cx: 0, cy: 0, width: 4000, height: 4500, scale: 0.4 },
+      illust_dating12: { cx: 0, cy: 0, width: 3500, height: 3700, scale: 0.5 },
+      illust_dating13: { cx: 0, cy: 0, width: 4000, height: 3000, scale: 0.5 },
+      illust_dating14: { cx: 0, cy: 0, width: 8000, height: 5600, scale: 0.3 },
+      illust_dating15: { cx: 0, cy: 0, width: 3000, height: 2600, scale: 0.5 },
+      illust_dating16: { cx: 0, cy: 50, width: 3000, height: 3000, scale: 0.41 },
+      illust_dating17: { cx: 0, cy: 0, width: 4000, height: 4500, scale: 0.4 },
+      illust_dating18: { cx: 0, cy: 0, width: 4000, height: 5500, scale: 0.25 },
+    };
+    const DEFAULT_VIEWPORT = { x: -1000, y: -900, width: 2000, height: 1800 };
+    const GAME_SCREEN_VIEWPORT = { x: -2048, y: -1152, width: 4096, height: 2304 };
+    const VIEWPORT_OVERRIDES = {
+    };
+    const DEFAULT_STAGE_MOTIONS = {
+      illust_dating1: { 1: "idle1", 2: "idle2", 3: "idle3" },
+      illust_dating2: { 1: "idle1", 2: "idle2", 3: "idle3" },
+      illust_dating3: { 1: "idle1", 2: "idle2" },
+      illust_dating4: { 1: "idle1", 2: "idle2" },
+      illust_dating5: { 1: "idle1", 2: "idle2" },
+      illust_dating6: { 1: "idle1", 2: "idle2", 3: "idle3", 4: "idle4", 5: "idle5", 6: "idle6" },
+      illust_dating7: { 1: "idle1", 2: "idle2" },
+      illust_dating8: { 1: "idle1", 2: "idle2", 3: "idle3" },
+      illust_dating9: { 1: "idle1", 2: "idle2" },
+      illust_dating10: { 1: "idle1", 2: "idle2", 3: "idle3" },
+      illust_dating11: { 1: "idle1", 2: "idle2", 3: "idle3", 4: "idle4" },
+      illust_dating12: { 1: "idle1", 2: "idle2", 3: "idle3" },
+      illust_dating13: { 1: "idle1", 2: "idle2", 3: "idle3" },
+      illust_dating14: { 1: "idle1", 2: "idle2" },
+      illust_dating15: { 1: "idle1", 2: "idle2", 3: "idle3" },
+      illust_dating16: { 1: "idle1", 2: "idle2" },
+      illust_dating17: { 1: "idle1", 2: "idle2" },
+      illust_dating18: { 1: "idle1", 2: "idle2", 3: "idle3", 4: "idle4", 5: "idle5", 6: "idle6", 7: "idle7" },
+    };
+    const TOOL_LABELS = {
+      0: "手",
+      1: "道具1",
+      2: "道具2",
+      3: "道具3",
+      4: "道具4",
+      5: "道具5",
+      6: "道具6",
+      7: "道具7",
+      8: "道具8",
+      9: "道具9",
+      10: "道具10",
+      11: "道具11",
+      12: "道具12",
+      13: "道具13",
+      14: "道具14",
+      15: "道具15",
+      16: "道具16",
+      17: "道具17",
+      18: "道具18",
+      19: "道具19",
+      20: "道具20",
+      21: "道具21",
+      22: "道具22",
+      23: "道具23",
+      24: "道具24",
+    };
+    const STAGE_TOOL_SKINS = {
+      illust_dating7: { 1: { 0: "idle1_1", 7: "idle1_1", 4: "idle1_2" }, 2: { 0: "idle1_0" } },
+      illust_dating9: { 1: { 0: "default", 8: "default", 9: "default" }, 2: { 0: "default", 9: "default", 10: "default" } },
+      illust_dating10: { 1: { 0: "idle1_1", 13: "idle1_2" }, 2: { 0: "idle1_2" }, 3: { 0: "idle3_1", 13: "idle3_2" } },
+      illust_dating12: { 1: { 0: "default", 17: "default" }, 3: { 0: "default", 17: "default", 18: "default" } },
+      illust_dating14: { 1: { 20: "skin1_off", 19: "skin2_on" }, 2: { 20: "skin1_off", 19: "skin2_on" } },
+      illust_dating16: { 1: { 0: "skin_0", 21: "skin_21", 22: "skin_22" }, 2: { 0: "skin_0", 21: "skin_21", 22: "skin_22" } },
+      illust_dating17: { 1: { 0: "default", 23: "default" }, 2: { 0: "default", 24: "default" } },
+      illust_dating18: { 1: { 0: "default", 14: "default" }, 2: { 0: "default", 14: "default" }, 3: { 0: "default" }, 4: { 0: "default" }, 6: { 0: "default", 14: "default" }, 7: { 0: "default", 14: "default" } },
+    };
+    const PREFAB_POINT_ACTIONS = {
+      illust_dating1: {
+        "1_18_0": { kind: "drag", mix: ["mix1_18_1", "mix1_18_2"], motions: ["motion1_18"], nextStage: "next" },
+        "2_22_0": { kind: "drag", mix: ["mix2_22_1", "mix2_22_2"], motions: ["motion2_22"], nextStage: "next" },
+      },
+      illust_dating2: {
+        "1_19_0": { kind: "drag", mix: ["mix1_19_1", "mix1_19_2"], motions: ["motion1_19"], nextStage: "next" },
+        "2_22_0": { kind: "drag", mix: [], motions: ["motion2_22"], nextStage: "next" },
+      },
+      illust_dating3: {
+        "1_20_0": { kind: "touch", mix: ["mix1_20_1", "mix1_20_2", "mix1_20_3", "mix1_20_4", "mix1_20_5", "mix1_20_6", "mix1_20_7", "mix1_20_8", "mix1_20_9"], motions: ["motion1_20"], nextStage: "next", clickMax: 10 },
+      },
+      illust_dating4: {
+        "1_28_0": { kind: "touch", mix: [], motions: ["motion1_28"], nextStage: "next" },
+      },
+      illust_dating5: {
+        "1_18_0": { kind: "touch", mix: ["mix1_18_1"], motions: ["motion1_18"], nextStage: "next" },
+      },
+      illust_dating6: {
+        "1_6_0": { kind: "drag", mix: ["mix1_6_1", "mix1_6_2"], motions: ["motion1_6"], nextStage: "next" },
+        "2_3_0": { kind: "drag", mix: ["mix2_3_1", "mix2_2_2"], motions: ["motion2_3"], nextStage: "next" },
+        "3_3_0": { kind: "drag", mix: ["mix3_3_1", "mix3_2_2"], motions: ["motion3_3"], nextStage: "next" },
+        "4_2_0": { kind: "drag", mix: ["mix4_2_1", "mix4_2_2"], motions: ["motion4_2"], nextStage: "next" },
+        "5_2_0": { kind: "touch", mix: ["mix5_2_1"], motions: ["motion5_2"], nextStage: "next" },
+      },
+      illust_dating7: {
+        "1_32_4": { kind: "touch", mix: ["mix1_32_1"], motions: ["motion1_32"], nextStage: "next" },
+      },
+      illust_dating8: {
+        "1_35_11": { kind: "touch", mix: ["mix1_35_1"], motions: ["motion1_35"], nextStage: "next" },
+        "2_1_0": { kind: "touch", mix: ["mix2_1_1"], motions: ["motion2_1"], nextStage: "next" },
+      },
+      illust_dating9: {
+        "1_37_0": { kind: "touch", mix: ["mix1_37_1"], motions: ["motion1_37"], nextStage: "next" },
+      },
+      illust_dating10: {
+        "1_26_13": { kind: "touch", mix: ["mix1_26_1"], motions: ["motion1_26"], nextStage: "next" },
+        "2_2_0": { kind: "touch", mix: ["mix2_2_1"], motions: ["motion2_2"], nextStage: "next" },
+      },
+      illust_dating11: {
+        "1_9_0": { kind: "touch", mix: ["mix1_9_1"], motions: ["motion1_9"], nextStage: "next" },
+        "2_1_14": { kind: "gyro", mix: ["mix2_0_1"], motions: ["motion2_1"], nextStage: 3 },
+        "2_2_14": { kind: "gyro", mix: ["mix2_0_1"], motions: ["motion2_2"], nextStage: 4 },
+        "3_22_14": { kind: "gyro", mix: ["mix3_0_1"], motions: ["motion3_0"], nextStage: 2 },
+        "4_24_14": { kind: "gyro", mix: ["mix4_0_1"], motions: ["motion4_0"], nextStage: 2 },
+      },
+      illust_dating12: {
+        "1_35_0": { kind: "touch", mix: ["mix1_35_1"], motions: ["motion1_35"], nextStage: "next" },
+        "2_1_0": { kind: "touch", mix: ["mix2_1_1"], motions: ["motion2_1"], nextStage: "next" },
+      },
+      illust_dating13: {
+        "1_10_0": { kind: "touch", mix: ["mix1_10_1"], motions: ["motion1_10"], nextStage: "next" },
+        "2_9_0": { kind: "touch", mix: ["mix2_9_1"], motions: ["motion2_9"], nextStage: "next" },
+      },
+      illust_dating14: {
+        "1_22_19": { kind: "touch", mix: ["mix1_23_1"], motions: ["motion1_23"], nextStage: "next", gauge: true },
+        "1_22_20": { kind: "touch", mix: ["mix1_22_1"], motions: ["motion1_22"], nextStage: "next", gauge: true },
+      },
+      illust_dating15: {
+        "1_10_0": { kind: "touch", mix: ["mix1_10_1"], motions: ["motion1_10"], nextStage: "next", gauge: true },
+        "2_20_0": { kind: "touch", mix: ["mix2_20_1"], motions: ["motion2_20"], nextStage: "next", gauge: true },
+      },
+      illust_dating16: {
+        "1_15_0": { kind: "touch", mix: ["mix1_15_1"], motions: ["motion1_15"], nextStage: "next" },
+        "1_15_21": { kind: "touch", mix: ["mix1_16_1"], motions: ["motion1_16"], nextStage: "next" },
+        "1_15_22": { kind: "touch", mix: ["mix1_17_1"], motions: ["motion1_17"], nextStage: "next" },
+      },
+      illust_dating17: {
+        "1_26_0": { kind: "touch", mix: ["mix1_26_1"], motions: ["motion1_26"], nextStage: "next" },
+      },
+      illust_dating18: {
+        "1_14_14": { kind: "gyro", mix: ["mix1_14_1"], motions: ["motion1_14", "motion1_14"], nextStage: 2 },
+        "2_10_14": { kind: "gyro", mix: ["mix2_10_1"], motions: ["motion2_10", "motion2_10"], nextStage: 1 },
+        "2_11_0": { kind: "drag", mix: ["mix2_11_1", "mix2_11_2"], motions: ["motion2_12"], nextStage: 3 },
+        "2_12_0": { kind: "drag", mix: ["mix2_12_1", "mix2_12_2"], motions: ["motion2_12"], nextStage: 3 },
+        "3_1_0": { kind: "drag", mix: ["mix3_1_1", "mix3_1_2"], motions: ["motion3_1"], nextStage: 4 },
+        "3_2_0": { kind: "drag", mix: ["mix3_2_1", "mix3_2_2"], motions: ["motion3_2"], nextStage: 5 },
+        "4_1_0": { kind: "drag", mix: ["mix4_1_1", "mix4_1_2"], motions: ["motion4_1"], nextStage: 6 },
+        "5_1_0": { kind: "drag", mix: ["mix5_1_1", "mix5_1_2"], motions: ["motion5_1"], nextStage: 6 },
+        "6_42_14": { kind: "gyro", mix: ["mix6_42_1"], motions: ["motion6_42", "motion6_42"], nextStage: 7 },
+        "7_13_14": { kind: "gyro", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6 },
+      },
+    };
+    const PREFAB_HOTZONES = {
+      illust_dating1: {
+        "1_18_0": { x: -509.1, y: -959.6, width: 641.2, height: 721.2, shape: 1, source: "InteractionZone" },
+        "2_22_0": { x: 152.1, y: -171.2, width: 245.7, height: 332.2, shape: 1, source: "InteractionZone" },
+      },
+      illust_dating2: {
+        "1_19_0": { x: -62.7, y: -112.9, width: 450, height: 400, shape: 1, source: "InteractionZone" },
+        "2_22_0": { x: -81.8, y: -13.4, width: 75, height: 400, shape: 1, source: "InteractionZone" },
+      },
+      illust_dating3: {
+        "1_20_0": { x: -52.5, y: -294.3, width: 102.1, height: 102.1, shape: 0, source: "point1_20_touch [Override]" },
+      },
+      illust_dating4: {
+        "1_28_0": { x: 105.6, y: -1197.5, width: 150, height: 150, shape: 0, source: "point1_28_touch_follow [Override]" },
+      },
+      illust_dating5: {
+        "1_18_0": { x: 91, y: 219, width: 150, height: 150, shape: 0, source: "point1_18_touch_follow [Override]" },
+      },
+      illust_dating6: {
+        "1_6_0": { x: -279.3, y: -410.3, width: 302.6, height: 370.8, shape: 1, source: "InteractionZone" },
+        "2_3_0": { x: -60.8, y: -266.3, width: 120, height: 480, shape: 1, source: "InteractionZone" },
+        "3_3_0": { x: -100, y: -351.6, width: 200, height: 680, shape: 1, source: "InteractionZone" },
+        "4_2_0": { x: -22.6, y: 177.7, width: 120, height: 320, shape: 1, source: "InteractionZone" },
+        "5_2_0": { x: -136.2, y: -61.7, width: 240, height: 120, shape: 0, source: "point5_2_touch [Override]" },
+      },
+      illust_dating7: {
+        "1_32_4": { x: -710.1, y: -3833.1, width: 1250, height: 1250, shape: 0, source: "point1_32_touch_tool4_follow [Override]" },
+      },
+      illust_dating8: {
+        "1_35_11": { x: -6508.5, y: -140.8, width: 400, height: 300, shape: 0, source: "point1_35_touch_tool11_follow [Override]" },
+        "2_1_0": { x: -982.5, y: -202.8, width: 1750, height: 400, shape: 0, source: "point2_1_touch [Override]" },
+      },
+      illust_dating9: {
+        "1_37_0": { x: -598.7, y: -488.9, width: 1244.7, height: 1227.1, shape: 0, source: "point1_37_touch [Override]" },
+      },
+      illust_dating10: {
+        "1_26_13": { x: -6669.6, y: -127.7, width: 300, height: 300, shape: 0, source: "point1_26_touch_tool13_follow [Override]" },
+        "2_2_0": { x: -6767.6, y: -242.1, width: 500, height: 500, shape: 0, source: "point2_2_touch_follow [Override]" },
+      },
+      illust_dating11: {
+        "1_9_0": { x: -149.2, y: -4963.4, width: 160, height: 160, shape: 0, source: "point1_9_touch [Override]" },
+        "2_1_14": { x: -591.2, y: -928, width: 1200, height: 800, shape: 1, source: "InteractionZone" },
+        "2_2_14": { x: -591.2, y: -77.2, width: 1200, height: 800, shape: 1, source: "InteractionZone" },
+        "3_22_14": { x: -89.1, y: -276, width: 200, height: 800, shape: 1, source: "InteractionZone" },
+        "4_24_14": { x: -173.3, y: -736, width: 360, height: 1000, shape: 1, source: "InteractionZone" },
+      },
+      illust_dating12: {
+        "1_35_0": { x: 741.7, y: 34.5, width: 135, height: 135, shape: 0, source: "point1_35_touch [Override]" },
+        "2_1_0": { x: -196.1, y: -393.4, width: 450, height: 400, shape: 0, source: "point2_1_touch [Override]" },
+      },
+      illust_dating13: {
+        "1_10_0": { x: -5434.4, y: 410.3, width: 400.7, height: 400.7, shape: 0, source: "point1_10_touch [Override]" },
+        "2_9_0": { x: 100.2, y: 148.5, width: 250.5, height: 250.5, shape: 0, source: "point2_9_touch [Override]" },
+      },
+      illust_dating14: {
+        "1_22_19": { x: -103, y: -126.8, width: 150, height: 150, shape: 0, source: "point1_23_touch_gauge_tool19 [Override]" },
+        "1_22_20": { x: -103, y: -126.8, width: 150, height: 150, shape: 0, source: "point1_22_touch_gauge_tool20 [Override]" },
+      },
+      illust_dating15: {
+        "1_10_0": { x: -469.2, y: -300.5, width: 1000, height: 650, shape: 0, source: "point1_10_touch [Override]" },
+        "2_20_0": { x: -469.2, y: -300.5, width: 1000, height: 650, shape: 0, source: "point2_20_touch [Override]" },
+      },
+      illust_dating16: {
+        "1_15_0": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_15_touch [Override]" },
+        "1_15_21": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_16_touch_tool21 [Override]" },
+        "1_15_22": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_17_touch_tool22 [Override]" },
+      },
+      illust_dating17: {
+        "1_26_0": { x: -4751.3, y: 141.2, width: 160, height: 160, shape: 0, source: "point1_26_touch [Override]" },
+      },
+      illust_dating18: {
+        "1_14_14": { x: -678, y: -762, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone1_14" },
+        "2_10_14": { x: -658.3, y: -701.2, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone2_10" },
+        "2_11_0": { x: 79.2, y: -151.3, width: 325, height: 200, shape: 1, source: "interactionBoxZone2_11" },
+        "2_12_0": { x: -349.4, y: -135.6, width: 325, height: 200, shape: 1, source: "interactionBoxZone2_12" },
+        "3_1_0": { x: -330.1, y: -169.7, width: 327.2, height: 203.6, shape: 1, source: "interactionBoxZone3_1" },
+        "3_2_0": { x: 6.1, y: -141.7, width: 325.4, height: 200.7, shape: 1, source: "interactionBoxZone3_2" },
+        "4_1_0": { x: 11.2, y: -141.6, width: 325.4, height: 200.7, shape: 1, source: "interactionBoxZone4_1" },
+        "5_1_0": { x: -323.5, y: -169.6, width: 327.2, height: 203.6, shape: 1, source: "interactionBoxZone5_1" },
+        "6_42_14": { x: -646.8, y: -762, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone6_42" },
+        "7_13_14": { x: -616.3, y: -712.2, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone7_13" },
+      },
+    };
+
+    const stage = document.getElementById("stage");
+    const hotzoneLayer = document.getElementById("hotzone-layer");
+    const drawer = document.getElementById("drawer");
+    const list = document.getElementById("list");
+    const animList = document.getElementById("anim-list");
+    const toast = document.getElementById("error-toast");
+    const search = document.getElementById("search");
+    let player = null;
+    let activeBtn = null;
+    let currentStage = 1;
+    let currentEntry = null;
+    let currentModel = null;
+    let stageModel = null;
+    let restoringIdle = false;
+    let advanceTargetStage = null;
+    let advanceLastMotion = null;
+    let advanceTimer = null;
+    let selectedToolId = null;
+    let viewMode = localStorage.getItem("datingViewMode") || "fit";
+
+    function showError(msg) {
+      toast.textContent = msg;
+      toast.style.display = "block";
+      setTimeout(() => (toast.style.display = "none"), 6000);
+    }
+
+    function clearError() {
+      toast.textContent = "";
+      toast.style.display = "none";
+    }
+
+    function makeViewport(entry) {
+      const base = PREFAB_VIEWPORTS[entry.id] || DEFAULT_VIEWPORT;
+      if (base.x !== undefined) return base;
+      if (viewMode === "fit") return GAME_SCREEN_VIEWPORT;
+      const modeScale = viewMode === "fill" ? (base.scale || 0.5) * 1.45 : 1;
+      const padding = viewMode === "fill" ? 1.04 : 1.08;
+      const width = Math.round(base.width * modeScale * padding);
+      const height = Math.round(base.height * modeScale * padding);
+      return {
+        x: Math.round(base.cx - width / 2),
+        y: Math.round(base.cy - height / 2),
+        width,
+        height,
+      };
+    }
+
+    function loadDating(entry, btn) {
+      if (activeBtn) activeBtn.classList.remove("active");
+      activeBtn = btn;
+      btn.classList.add("active");
+      currentEntry = entry;
+      clearError();
+      if (player) { player.dispose(); player = null; }
+      currentStage = 1;
+      currentModel = null;
+      stageModel = null;
+      selectedToolId = null;
+      restoringIdle = false;
+      advanceTargetStage = null;
+      advanceLastMotion = null;
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+      stage.innerHTML = "";
+      hotzoneLayer.innerHTML = "";
+      animList.innerHTML = '<div class="sub-label">互动模式</div><button class="item disabled">加载中...</button>';
+
+      const config = {
+        skelUrl: assetUrl(entry.skeleton),
+        atlasUrl: assetUrl(entry.atlas),
+        showControls: false,
+        showLoading: false,
+        alpha: true,
+        premultipliedAlpha: false,
+        viewport: VIEWPORT_OVERRIDES[entry.id] || makeViewport(entry),
+        success: (p) => {
+          try {
+            const atlas = Object.entries(p.assetManager.assets)
+              .find(([k]) => k.endsWith(".atlas"))[1];
+            p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
+          } catch (e) { /* keep straight alpha */ }
+          buildStageModel(p);
+          renderStageControls();
+          attachPlaybackListener(p);
+        },
+        error: (_p, reason) => {
+          if (retryAssetBase(reason, () => loadDating(entry, btn))) return;
+          showError("加载失败：" + reason);
+        },
+      };
+      player = new spine.SpinePlayer("stage", config);
+    }
+
+    function buildStageModel(p) {
+      const names = p.skeleton.data.animations.map(a => a.name);
+      const faces = names.filter(n => n.startsWith("_"));
+      const bodies = names.filter(n => !n.startsWith("_"));
+      const defaultMotions = currentEntry ? DEFAULT_STAGE_MOTIONS[currentEntry.id] : null;
+      const stages = new Map();
+      const ensureStage = (stageNo) => {
+        if (!stages.has(stageNo)) {
+          stages.set(stageNo, { idles: [], points: [], motions: [], mixes: [] });
+        }
+        return stages.get(stageNo);
+      };
+
+      bodies.forEach(name => {
+        let m = name.match(/^idle(\d+)$/);
+        if (m) { ensureStage(Number(m[1])).idles.push(name); return; }
+        m = name.match(/^point(\d+)_/);
+        if (m) { ensureStage(Number(m[1])).points.push(name); return; }
+        m = name.match(/^motion(\d+)_/);
+        if (m) { ensureStage(Number(m[1])).motions.push(name); return; }
+        m = name.match(/^mix(\d+)_/);
+        if (m) { ensureStage(Number(m[1])).mixes.push(name); return; }
+        if (name === "loop" && !defaultMotions) ensureStage(1).idles.push(name);
+      });
+      if (defaultMotions) {
+        Object.entries(defaultMotions).forEach(([stageNo, motion]) => {
+          const stage = ensureStage(Number(stageNo));
+          if (bodies.includes(motion)) stage.idles.unshift(motion);
+        });
+      }
+      const meta = currentEntry ? INTERACTION_POINTS[currentEntry.id] : null;
+      if (meta) Object.keys(meta).forEach(stageNo => ensureStage(Number(stageNo)));
+
+      if (!stages.size) {
+        const base = bodies.find(n => /idle|loop/i.test(n)) || bodies[0];
+        stages.set(1, { idles: base ? [base] : [], points: bodies.filter(n => n !== base), motions: [], mixes: [] });
+      }
+
+      const stageIds = [...stages.keys()].sort((a, b) => a - b);
+      stageIds.forEach(id => {
+        const s = stages.get(id);
+        s.idles = uniq(s.idles).sort(stageNameSort);
+        s.points = uniq(s.points).sort(pointNameSort);
+        s.motions = uniq(s.motions).sort(motionNameSort);
+        s.mixes = uniq(s.mixes).sort(motionNameSort);
+      });
+
+      stageModel = {
+        stages,
+        stageIds,
+        faces,
+        fallbackIdle: bodies.find(n => /idle|loop/i.test(n)) || bodies[0],
+        pointMeta: meta || {},
+      };
+      currentStage = stageIds[0] || 1;
+    }
+
+    function renderStageControls() {
+      if (!stageModel) return;
+      const stage = stageModel.stages.get(currentStage);
+      const tools = getStageTools(stage);
+      if (selectedToolId !== null && !tools.includes(selectedToolId)) selectedToolId = null;
+      animList.innerHTML = "";
+
+      const stageLabel = document.createElement("div");
+      stageLabel.className = "sub-label";
+      stageLabel.textContent = "阶段";
+      animList.appendChild(stageLabel);
+
+      const stageRow = document.createElement("div");
+      stageRow.className = "stage-row";
+      stageModel.stageIds.forEach(id => {
+        const b = document.createElement("button");
+        b.className = "item" + (id === currentStage ? " active" : "");
+        b.textContent = `阶段${id}`;
+        b.onclick = () => enterStage(id);
+        stageRow.appendChild(b);
+      });
+      animList.appendChild(stageRow);
+
+      renderViewControls();
+      renderToolControls(tools);
+
+      const idleName = pickIdle(stage);
+      const idleBtn = document.createElement("button");
+      idleBtn.className = "item body-anim active";
+      idleBtn.textContent = idleName ? `待机：${idleName}` : "待机";
+      idleBtn.title = idleName || "";
+      idleBtn.onclick = () => playIdle();
+      animList.appendChild(idleBtn);
+
+      if (stage.motions.length) {
+        const next = nextStageId();
+        const b = document.createElement("button");
+        b.className = "item advance-btn";
+        b.textContent = next ? `推进到阶段${next}` : "播放阶段演出";
+        b.title = stage.motions.join(" -> ");
+        b.onclick = () => advanceStage();
+        animList.appendChild(b);
+      }
+
+      const interactLabel = document.createElement("div");
+      interactLabel.className = "sub-label";
+      interactLabel.textContent = "互动";
+      animList.appendChild(interactLabel);
+
+      const points = stage.points.filter(name => !name.includes("_hidden") && isPointVisibleForTool(name));
+      const prefabActions = currentPrefabActions();
+      if (!points.length && !prefabActions.length) {
+        renderInteractionSummary(currentStage);
+      }
+      points.forEach((name, idx) => {
+        const b = document.createElement("button");
+        b.className = "item body-anim";
+        b.textContent = pointLabel(name, idx);
+        b.title = name;
+        b.onclick = () => playPoint(name, b);
+        animList.appendChild(b);
+      });
+      prefabActions.forEach(({ key, action }, idx) => {
+        const b = document.createElement("button");
+        b.className = "item body-anim";
+        b.textContent = prefabActionLabel(action, idx);
+        b.title = `prefab:${key}`;
+        b.onclick = () => playPrefabAction(action, b);
+        animList.appendChild(b);
+      });
+
+      renderFaces(stageModel.faces);
+      renderHotzones(prefabActions);
+      playIdle();
+    }
+
+    function renderInteractionSummary(stageNo) {
+      const meta = stageModel.pointMeta[String(stageNo)] || stageModel.pointMeta[stageNo];
+      if (!meta) {
+        const empty = document.createElement("div");
+        empty.className = "empty-note";
+        empty.textContent = "这个阶段没有可直接触发的 point 动画，先使用阶段演出或待机查看。";
+        animList.appendChild(empty);
+        return;
+      }
+      [
+        ["touch", "触摸"],
+        ["drag", "拖拽"],
+        ["gyro", "晃动"],
+      ].forEach(([kind, label]) => {
+        if (!meta[kind]) return;
+        const b = document.createElement("button");
+        b.className = "item";
+        b.textContent = `${label}热区 · ${meta[kind]} 个`;
+        b.onclick = () => showError(`已识别阶段${stageNo}的 ${meta[kind]} 个${label}热区；下一步可接入真实坐标和对应语音。`);
+        animList.appendChild(b);
+      });
+    }
+
+    function renderToolControls(tools) {
+      if (!tools.length) return;
+
+      const label = document.createElement("div");
+      label.className = "sub-label";
+      label.textContent = "道具";
+      animList.appendChild(label);
+
+      const row = document.createElement("div");
+      row.className = "tool-row";
+
+      const all = document.createElement("button");
+      all.className = "item" + (selectedToolId === null ? " active" : "");
+      all.textContent = "全部";
+      all.onclick = () => selectTool(null);
+      row.appendChild(all);
+
+      tools.forEach(toolId => {
+        const b = document.createElement("button");
+        b.className = "item" + (selectedToolId === toolId ? " active" : "");
+        b.textContent = toolName(toolId);
+        b.title = `ToolId ${toolId}`;
+        b.onclick = () => selectTool(toolId);
+        row.appendChild(b);
+      });
+      animList.appendChild(row);
+    }
+
+    function renderViewControls() {
+      const label = document.createElement("div");
+      label.className = "sub-label";
+      label.textContent = "画面";
+      animList.appendChild(label);
+
+      const row = document.createElement("div");
+      row.className = "view-row";
+      [
+        ["fit", "游戏"],
+        ["full", "完整"],
+        ["fill", "填充"],
+      ].forEach(([mode, text]) => {
+        const b = document.createElement("button");
+        b.className = "item" + (viewMode === mode ? " active" : "");
+        b.textContent = text;
+        b.onclick = () => setViewMode(mode);
+        row.appendChild(b);
+      });
+      animList.appendChild(row);
+    }
+
+    function setViewMode(mode) {
+      if (viewMode === mode) return;
+      viewMode = mode;
+      localStorage.setItem("datingViewMode", mode);
+      if (currentEntry && activeBtn) loadDating(currentEntry, activeBtn);
+    }
+
+    function selectTool(toolId) {
+      selectedToolId = toolId;
+      applyStageSkin(currentStage);
+      renderStageControls();
+    }
+
+    function renderFaces(faces) {
+      if (!faces.length) return;
+      const label = document.createElement("div");
+      label.className = "sub-label";
+      label.textContent = "表情";
+      animList.appendChild(label);
+      faces.forEach(name => {
+        const b = document.createElement("button");
+        b.className = "item face-anim";
+        b.textContent = name;
+        b.onclick = () => {
+          if (!player) return;
+          try {
+            if (b.classList.contains("active")) {
+              player.animationState.setEmptyAnimation(1, 0.2);
+              b.classList.remove("active");
+            } else {
+              animList.querySelectorAll(".face-anim").forEach(x => x.classList.remove("active"));
+              player.animationState.setAnimation(1, name, true);
+              b.classList.add("active");
+            }
+            player.play();
+          } catch (e) { showError("切换表情失败：" + e.message); }
+        };
+        animList.appendChild(b);
+      });
+    }
+
+    function enterStage(stageNo) {
+      if (!stageModel || !stageModel.stages.has(stageNo)) return;
+      currentStage = stageNo;
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+      renderStageControls();
+    }
+
+    function advanceStage() {
+      if (!player || !stageModel) return;
+      const stage = stageModel.stages.get(currentStage);
+      const seq = stage.motions.length ? stage.motions : stage.mixes;
+      const next = nextStageId();
+      if (!seq.length) {
+        if (next) enterStage(next);
+        return;
+      }
+      try {
+        restoringIdle = false;
+        advanceTargetStage = next || null;
+        advanceLastMotion = seq[seq.length - 1] || null;
+        player.animationState.data.defaultMix = 0.25;
+        player.setAnimation(seq[0], false);
+        seq.slice(1).forEach(name => player.animationState.addAnimation(0, name, false, 0));
+        player.play();
+        animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+        clearTimeout(advanceTimer);
+        if (next) {
+          const duration = seq.reduce((sum, name) => sum + animationDuration(name), 0);
+          const delay = Math.min(7000, Math.max(1600, duration * 1000 + 300));
+          advanceTimer = setTimeout(() => {
+            if (advanceTargetStage === next) enterStage(next);
+          }, delay);
+        }
+      } catch (e) { showError("播放阶段演出失败：" + e.message); }
+    }
+
+    function playPoint(name, btn) {
+      if (!player) return;
+      try {
+        restoringIdle = false;
+        advanceTargetStage = null;
+        advanceLastMotion = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+        player.animationState.data.defaultMix = 0.2;
+        const action = prefabPointAction(name);
+        const sequence = action ? [...(action.mix || []), ...(action.motions || [])].filter(animationExists) : [];
+        if (sequence.length) {
+          const targetStage = resolveActionNextStage(action);
+          advanceTargetStage = targetStage;
+          advanceLastMotion = sequence[sequence.length - 1] || null;
+          player.setAnimation(sequence[0], false);
+          sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
+          if (advanceTargetStage) {
+            const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
+            const delay = Math.min(9000, Math.max(1200, duration * 1000 + 300));
+            advanceTimer = setTimeout(() => {
+              if (advanceTargetStage === targetStage) enterStage(targetStage);
+            }, delay);
+          }
+        } else {
+          player.setAnimation(name, false);
+        }
+        player.play();
+        animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+      } catch (e) { showError("播放互动失败：" + e.message); }
+    }
+
+    function playPrefabAction(action, btn) {
+      if (!player || !action) return;
+      try {
+        const targetStage = resolveActionNextStage(action);
+        restoringIdle = false;
+        advanceTargetStage = targetStage;
+        advanceLastMotion = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+        player.animationState.data.defaultMix = 0.2;
+        const sequence = [...(action.mix || []), ...(action.motions || [])].filter(animationExists);
+        if (!sequence.length) {
+          showError("这个 prefab 互动没有可播放的 Spine 动画。");
+          return;
+        }
+        advanceLastMotion = sequence[sequence.length - 1];
+        player.setAnimation(sequence[0], false);
+        sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
+        player.play();
+        animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+        if (btn) btn.classList.add("active");
+        if (advanceTargetStage) {
+          const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
+          const delay = Math.min(9000, Math.max(1200, duration * 1000 + 300));
+          advanceTimer = setTimeout(() => {
+            if (advanceTargetStage === targetStage) enterStage(targetStage);
+          }, delay);
+        }
+      } catch (e) { showError("播放 prefab 互动失败：" + e.message); }
+    }
+
+    function playIdle() {
+      if (!player || !stageModel) return;
+      const idle = pickIdle(stageModel.stages.get(currentStage));
+      if (!idle) return;
+      try {
+        restoringIdle = true;
+        advanceTargetStage = null;
+        advanceLastMotion = null;
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+        player.animationState.data.defaultMix = 0.25;
+        applyStageSkin(currentStage);
+        player.setAnimation(idle, true);
+        player.play();
+        animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+        const idleBtn = [...animList.querySelectorAll(".body-anim")].find(b => b.title === idle);
+        if (idleBtn) idleBtn.classList.add("active");
+      } catch (e) { showError("播放待机失败：" + e.message); }
+    }
+
+    function applyStageSkin(stageNo) {
+      const stageSkins = currentEntry && STAGE_TOOL_SKINS[currentEntry.id]?.[stageNo];
+      const skinName = stageSkins && (stageSkins[selectedToolId] || stageSkins[0] || Object.values(stageSkins)[0]);
+      if (!skinName || !player?.skeleton?.data?.findSkin(skinName)) return;
+      player.skeleton.setSkinByName(skinName);
+      player.skeleton.setSlotsToSetupPose();
+      player.animationState.apply(player.skeleton);
+    }
+
+    function pickIdle(stage) {
+      if (!stage) return stageModel?.fallbackIdle;
+      return stage.idles[0] || stageModel.fallbackIdle;
+    }
+
+    function nextStageId() {
+      const idx = stageModel.stageIds.indexOf(currentStage);
+      return idx >= 0 ? stageModel.stageIds[idx + 1] : null;
+    }
+
+    function uniq(values) {
+      return [...new Set(values)];
+    }
+
+    function getStageTools(stage) {
+      const fromSkins = currentEntry ? Object.keys(STAGE_TOOL_SKINS[currentEntry.id]?.[currentStage] || {}).map(Number) : [];
+      const fromPoints = (stage?.points || []).map(pointToolId);
+      const fromPrefab = currentEntry ? Object.keys(PREFAB_POINT_ACTIONS[currentEntry.id] || {})
+        .map(key => key.split("_").map(Number))
+        .filter(([stageNo]) => stageNo === currentStage)
+        .map(([, , toolId]) => toolId) : [];
+      return uniq([...fromSkins, ...fromPoints, ...fromPrefab]).filter(n => Number.isFinite(n)).sort((a, b) => a - b);
+    }
+
+    function pointToolId(name) {
+      const m = name.match(/tool(\d+)/);
+      return m ? Number(m[1]) : 0;
+    }
+
+    function prefabPointAction(name) {
+      if (!currentEntry) return null;
+      const m = name.match(/^point(\d+)_(\d+)/);
+      if (!m) return null;
+      const key = `${Number(m[1])}_${Number(m[2])}_${pointToolId(name)}`;
+      return PREFAB_POINT_ACTIONS[currentEntry.id]?.[key] || null;
+    }
+
+    function currentPrefabActions() {
+      const actions = currentEntry ? PREFAB_POINT_ACTIONS[currentEntry.id] : null;
+      if (!actions) return [];
+      return Object.entries(actions)
+        .map(([key, action]) => {
+          const [stageNo, pointId, toolId] = key.split("_").map(Number);
+          return { key, action, stageNo, pointId, toolId };
+        })
+        .filter(item => item.stageNo === currentStage)
+        .filter(item => selectedToolId === null || item.toolId === selectedToolId)
+        .sort((a, b) => a.pointId - b.pointId);
+    }
+
+    function renderHotzones(prefabActions) {
+      hotzoneLayer.innerHTML = "";
+      if (!currentEntry || !prefabActions.length) return;
+      const viewport = VIEWPORT_OVERRIDES[currentEntry.id] || makeViewport(currentEntry);
+      prefabActions.forEach((item, idx) => {
+        const zone = PREFAB_HOTZONES[currentEntry.id]?.[item.key];
+        const box = zone && hotzoneToScreenBox(zone, viewport);
+        if (!box) return;
+        const b = document.createElement("button");
+        b.type = "button";
+        b.className = "hotzone";
+        b.dataset.label = hotzoneLabel(item.action, idx);
+        b.title = `${item.key} · ${zone.source}`;
+        b.style.left = box.left + "%";
+        b.style.top = box.top + "%";
+        b.style.width = box.width + "%";
+        b.style.height = box.height + "%";
+        b.onclick = () => playPrefabAction(item.action, null);
+        hotzoneLayer.appendChild(b);
+      });
+    }
+
+    function hotzoneToScreenBox(zone, viewport) {
+      const left = Math.max(zone.x, viewport.x);
+      const right = Math.min(zone.x + zone.width, viewport.x + viewport.width);
+      const bottom = Math.max(zone.y, viewport.y);
+      const top = Math.min(zone.y + zone.height, viewport.y + viewport.height);
+      if (right <= left || top <= bottom) return null;
+      const width = (right - left) / viewport.width * 100;
+      const height = (top - bottom) / viewport.height * 100;
+      if (width < 1 || height < 1) return null;
+      return {
+        left: roundPct((left - viewport.x) / viewport.width * 100),
+        top: roundPct((viewport.y + viewport.height - top) / viewport.height * 100),
+        width: roundPct(width),
+        height: roundPct(height),
+      };
+    }
+
+    function hotzoneLabel(action, idx) {
+      if (action.kind === "drag") return "拖";
+      if (action.kind === "gyro") return "晃";
+      if (action.gauge) return "计";
+      return String(idx + 1);
+    }
+
+    function roundPct(value) {
+      return Math.round(value * 1000) / 1000;
+    }
+
+    function resolveActionNextStage(action) {
+      if (!action?.nextStage) return null;
+      if (action.nextStage === "next") return nextStageId();
+      return action.nextStage;
+    }
+
+    function prefabActionLabel(action, idx) {
+      const kind = action.kind === "drag" ? "拖拽" : action.kind === "gyro" ? "晃动" : "触摸";
+      const target = resolveActionNextStage(action);
+      const next = target ? ` -> 阶段${target}` : "";
+      const gauge = action.gauge ? "计量" : "";
+      const clicks = action.clickMax ? `${action.clickMax}击` : "";
+      return `${kind}${idx + 1}${gauge}${clicks}${next}`;
+    }
+
+    function animationExists(name) {
+      return !!player?.skeleton?.data?.animations?.some(anim => anim.name === name);
+    }
+
+    function isPointVisibleForTool(name) {
+      if (selectedToolId === null) return true;
+      return pointToolId(name) === selectedToolId;
+    }
+
+    function toolName(toolId) {
+      return TOOL_LABELS[toolId] || `道具${toolId}`;
+    }
+
+    function numericParts(name) {
+      return (name.match(/\d+/g) || []).map(Number);
+    }
+
+    function stageNameSort(a, b) {
+      return (numericParts(a)[0] || 0) - (numericParts(b)[0] || 0) || a.localeCompare(b);
+    }
+
+    function pointNameSort(a, b) {
+      const aa = numericParts(a), bb = numericParts(b);
+      return (aa[0] || 0) - (bb[0] || 0) || (aa[1] || 0) - (bb[1] || 0) || a.localeCompare(b);
+    }
+
+    function motionNameSort(a, b) {
+      const aa = numericParts(a), bb = numericParts(b);
+      return (aa[0] || 0) - (bb[0] || 0) || (aa[1] || 0) - (bb[1] || 0) || a.localeCompare(b);
+    }
+
+    function pointLabel(name, idx) {
+      const kind = name.includes("_drag") ? "拖拽" : name.includes("gyro") ? "晃动" : "触摸";
+      const hidden = name.includes("_hidden") ? "隐藏" : "";
+      const toolId = pointToolId(name);
+      return `${kind}${idx + 1}${toolId ? " · " + toolName(toolId) : ""}${hidden ? " · " + hidden : ""}`;
+    }
+
+    function animationDuration(name) {
+      if (!player) return 2;
+      const anims = player.skeleton?.data?.animations || [];
+      const anim = anims.find(a => a.name === name);
+      return anim?.duration || 2;
+    }
+
+    function attachPlaybackListener(p) {
+      p.animationState.addListener({
+        complete: (track) => {
+          if (!track.animation || track.trackIndex !== 0 || restoringIdle) return;
+          const completed = track.animation.name;
+          if (advanceTargetStage && completed === advanceLastMotion) {
+            const target = advanceTargetStage;
+            advanceTargetStage = null;
+            advanceLastMotion = null;
+            clearTimeout(advanceTimer);
+            advanceTimer = null;
+            enterStage(target);
+            return;
+          }
+          if (!advanceTargetStage) playIdle();
+        },
+      });
+    }
+
+    function buildList() {
+      list.innerHTML = "";
+      DATING.forEach(entry => {
+        const b = document.createElement("button");
+        b.className = "item";
+        b.textContent = entry.label;
+        b.title = `${entry.id} · ${entry.tag}`;
+        b.dataset.search = `${entry.id} ${entry.character} ${entry.tag}`.toLowerCase();
+        b.onclick = () => loadDating(entry, b);
+        list.appendChild(b);
+      });
+      document.getElementById("footer").innerHTML =
+        `${DATING.length} 个心契资源 · ${useCdn ? "CDN" : "本地 upstream"}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
+      const first = list.querySelector(".item");
+      if (first) first.click();
+    }
+
+    search.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      list.querySelectorAll(".item").forEach(el => {
+        el.classList.toggle("hidden", q && !el.dataset.search.includes(q));
+      });
+    });
+
+    const hotzone = document.getElementById("edge-hotzone");
+    hotzone.addEventListener("mouseenter", () => drawer.classList.add("open"));
+    drawer.addEventListener("mouseleave", () => drawer.classList.remove("open"));
+
+    let idleTimer = null;
+    document.addEventListener("mousemove", () => {
+      document.body.classList.add("mouse-active");
+      document.body.classList.remove("idle");
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        document.body.classList.remove("mouse-active");
+        if (!drawer.classList.contains("open")) document.body.classList.add("idle");
+      }, 2500);
+    });
+
+    stage.addEventListener("dblclick", () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    });
+
+    buildList();
+  </script>
+</body>
+</html>

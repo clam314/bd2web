@@ -30,15 +30,23 @@
     body.idle { cursor: none; }
 
     /* ── 全屏舞台 ── */
-    #stage { position: fixed; inset: 0; }
+    /* 默认（立绘形态）铺满浏览器；cutscene 形态下用 JS 锁成游戏窗口 1600:720 比例
+       并居中（aspect-ratio 用 JS 算尺寸而不是 CSS，以兼容老浏览器），多余区域留黑边。
+       这样人物取景 + 背景图与游戏完全对齐，不会因浏览器宽高比走样。 */
+    #stage { position: fixed; inset: 0; background: #000; overflow: hidden; }
     #stage .spine-player { background: transparent !important; }
+    /* 真实运镜：每帧 RAF 直接写 transform（translate），#stage 自己 overflow:hidden
+       把溢出剪掉，letterbox 黑边不会被运镜越界覆盖。RAF 高频写不要 transition，否则会糊。*/
+    #stage > * { width: 100%; height: 100%; transform-origin: 50% 50%; }
 
-    /* 技能动画的游戏化后期：调色（ACES 近似 + 对比/饱和/提亮，参数取自游戏 APK）
-       仅在 cutscene 形态启用 */
+    /* 技能动画的游戏化后期：两套调色对应游戏 Timeline 上的 PostProcessVolume 与
+       PostProcessVolume 2 切换（ACES 近似 + 对比/饱和/提亮，参数取自游戏 APK）。
+       默认 "main"；当 Timeline 切到备用 vol 时 .cutscene-fx-alt 生效。 */
     body.cutscene-fx #stage { filter: brightness(1.06) contrast(1.16) saturate(1.28); }
-    /* 暗角层，仅 cutscene 显示 */
+    body.cutscene-fx.cutscene-fx-alt #stage { filter: brightness(0.92) contrast(1.05) saturate(0.85); }
+    /* 暗角层，仅 cutscene 显示；定位跟舞台一致，靠 JS 同步 inset */
     #vignette {
-      position: fixed; inset: 0; z-index: 5; pointer-events: none; display: none;
+      position: fixed; z-index: 5; pointer-events: none; display: none;
       background: radial-gradient(ellipse 75% 70% at 50% 42%, transparent 55%, rgba(0,0,0,0.55) 100%);
     }
     body.cutscene-fx #vignette { display: block; }
@@ -239,11 +247,18 @@
 
   <script>
     // 素材根目录：本地/家庭主机直接用 upstream/ 克隆；
-    // 跑在 GitHub Pages（*.github.io）上时自动切到 jsDelivr CDN（钉死上游 commit，
+    // 跑在 GitHub Pages（*.github.io）上时自动切到 CDN（钉死上游 commit，
     // 上游更新后改这一个常量即可——或由 Actions 定时工作流自动改）。
     const UPSTREAM_COMMIT = "c22400c07bfd";
+    const params = new URLSearchParams(location.search);
     const useCdn = location.hostname.endsWith("github.io")   // Pages 上自动走 CDN
-      || new URLSearchParams(location.search).has("cdn");    // 本地加 ?cdn=1 可模拟
+      || params.has("cdn");                                  // 本地加 ?cdn=1 可模拟
+
+    const customAssetBases = params.get("asset_base")
+      ?.split(",")
+      .map(v => v.trim())
+      .filter(Boolean)
+      .map(normalizeAssetBase) || [];
 
     // 国内坑：cdn.jsdelivr.net 常被 DNS 污染——请求落到错误的服务器，返回的页面没有
     // CORS 头，浏览器就报「blocked by CORS policy」（看着像 CORS 错，其实是被墙）。
@@ -261,9 +276,22 @@
     let ASSET_BASE = "./upstream/";   // 本地 / 家庭主机默认；Pages 由 resolveAssetBase() 改写
     let cdnHostUsed = "本地";
 
+    function normalizeAssetBase(base) {
+      return base.endsWith("/") ? base : base + "/";
+    }
+
+    function assetUrl(path) {
+      return ASSET_BASE + path;
+    }
+
     // 探测可达镜像：fetch 跨域且无 CORS 头时会 reject（被墙的污染响应正好如此），
     // 所以「fetch 成功 + 内容含已知标记」才算真可达。Promise.any 取第一个成功的。
     async function resolveAssetBase() {
+      if (customAssetBases.length) {
+        ASSET_BASE = customAssetBases[0];
+        cdnHostUsed = "自定义";
+        return;
+      }
       if (!useCdn) return;
       const probe = "spine/char/char000101/char000101.atlas";
       const tryHost = async (h) => {
@@ -290,6 +318,7 @@
     }
 
     const stage = document.getElementById("stage");
+    const vignette = document.getElementById("vignette");
     const drawer = document.getElementById("drawer");
     const tree = document.getElementById("char-tree");
     const toast = document.getElementById("error-toast");
@@ -342,14 +371,113 @@
       return box;
     }
 
-    // 游戏技能动画的取景：从 APK 提取——显示窗口 1600×720、SkeletonGraphic scale=1
-    // 居中。这里按屏幕比例展开为横带（宽=游戏窗口 1600 骨骼单位，原点居中，略上移），
-    // 自然裁掉腿部、呈现游戏式低机位横屏构图。（逐角色精修 + 运镜曲线列入后续优化）
-    const CUT_WIN = 1600, CUT_CX = 0, CUT_CY = 150;
+    // 游戏技能动画的取景：从 APK 提取——显示窗口 1600×720（≈2.22:1，比 16:9 更宽），
+    // SkeletonGraphic scale=1 居中。背景图也是按这个比例出的。
+    // 要还原游戏感，舞台必须锁成这个比例：浏览器宽高比不固定，靠 letterbox/pillarbox 留黑边。
+    // CUT_CY=150 是原点上移量（自然裁掉腿部，呈游戏式低机位横屏构图）。
+    const CUT_W = 1600, CUT_H = 720, CUT_CX = 0, CUT_CY = 150;
     function cutsceneViewport() {
-      const W = CUT_WIN;
-      const h = W * window.innerHeight / window.innerWidth;
-      return { x: CUT_CX - W / 2, y: CUT_CY - h / 2, width: W, height: h };
+      // 舞台已经锁成 1600:720，viewport 用游戏原值即可
+      return { x: CUT_CX - CUT_W / 2, y: CUT_CY - CUT_H / 2, width: CUT_W, height: CUT_H };
+    }
+
+    // 把 #stage 锁成游戏窗口比例并居中；同时同步 #vignette 的 inset，让暗角只盖在舞台上
+    function layoutStage() {
+      const isCutscene = currentPart === "cutscene";
+      if (!isCutscene) {
+        stage.style.left = stage.style.right = stage.style.top = stage.style.bottom = "0";
+        vignette.style.left = vignette.style.right = vignette.style.top = vignette.style.bottom = "0";
+        return;
+      }
+      const W = window.innerWidth, H = window.innerHeight;
+      const target = CUT_W / CUT_H;     // 游戏比例
+      let sw, sh;
+      if (W / H > target) {             // 浏览器太宽 → 左右 pillarbox
+        sh = H; sw = H * target;
+      } else {                          // 浏览器太高 → 上下 letterbox
+        sw = W; sh = W / target;
+      }
+      const left = (W - sw) / 2, top = (H - sh) / 2;
+      for (const el of [stage, vignette]) {
+        el.style.left = left + "px";
+        el.style.top = top + "px";
+        el.style.right = (W - sw - left) + "px";
+        el.style.bottom = (H - sh - top) + "px";
+      }
+    }
+    window.addEventListener("resize", layoutStage);
+
+    // ───── 真实运镜（数据来自 data/cutscene_shots.json，APK Timeline 解出） ─────
+    // 每个 cutscene 一条记录：
+    //   tracks: { "Anchors.AnchoredX": [[t,v],...], ... }  连续曲线，前端线性插值
+    //   events: [[t, name, on], ...]                       离散 on/off（Bg 切换、PostProcessVolume 切换）
+    // 运镜：实时按 RAF 在 #stage 子元素上写 translate；调色：PostProcessVolume vs PP 2 在线切两套 CSS filter。
+    let cutsceneShots = null;   // 全角色数据；启动时异步加载
+    let currentShotData = null; // 当前服装的记录
+    let timelineRaf = 0;        // 当前 RAF 句柄，方便取消
+    let timelineStartMs = 0;
+
+    fetch("./data/cutscene_shots.json?v=" + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) cutsceneShots = d.characters || d; })
+      .catch(() => {});
+
+    // 线性插值：找到 t 落在哪两个 key 之间
+    function sampleTrack(keys, t) {
+      if (!keys || !keys.length) return 0;
+      if (t <= keys[0][0]) return keys[0][1];
+      const last = keys[keys.length - 1];
+      if (t >= last[0]) return last[1];
+      for (let i = 1; i < keys.length; i++) {
+        if (keys[i][0] >= t) {
+          const [t0, v0] = keys[i - 1], [t1, v1] = keys[i];
+          return v0 + (v1 - v0) * (t - t0) / (t1 - t0);
+        }
+      }
+      return last[1];
+    }
+
+    // 找该 event name 在 t 时刻最后一次 on/off 状态（用于 PostProcessVolume 切换）
+    function lastEventState(events, name, t) {
+      let state = null;
+      for (const [et, ename, on] of events || []) {
+        if (et > t) break;
+        if (ename === name) state = on;
+      }
+      return state;
+    }
+
+    function applyTimelineAt(d, t) {
+      // 暂不做 translate 运镜：Anchors.AnchoredX/Y 的语义因角色而异——有的角色用大数值把 UI 容器
+      // "飞出屏幕"切回战斗 UI（如 char000101 的 5000/200000），有的是 anchor preset 的归一化值
+      // （如 char003803 的 0.7-0.87），还没找到统一可靠的相机节点。
+      // 留 PostProcessVolume 切换做颜色分段：main=暖，PostProcessVolume 2=alt(暗冷)。
+      const alt = lastEventState(d.events, "PostProcessVolume 2", t) === true
+               && lastEventState(d.events, "PostProcessVolume",   t) !== true;
+      document.body.classList.toggle("cutscene-fx-alt", alt);
+    }
+
+    function stopTimeline() {
+      if (timelineRaf) cancelAnimationFrame(timelineRaf);
+      timelineRaf = 0;
+    }
+
+    function startTimeline() {
+      stopTimeline();
+      const d = currentShotData;
+      if (!d || currentPart !== "cutscene") {
+        document.body.classList.remove("cutscene-fx-alt");
+        return;
+      }
+      timelineStartMs = performance.now();
+      const tick = () => {
+        const t = (performance.now() - timelineStartMs) / 1000;
+        applyTimelineAt(d, Math.min(t, d.duration));
+        // 到 duration 后停在末态（前端的 spine 链可能还在播，但 Timeline 已结束）
+        if (t < d.duration) timelineRaf = requestAnimationFrame(tick);
+        else timelineRaf = 0;
+      };
+      tick();
     }
 
     function loadPart(part) {
@@ -364,9 +492,19 @@
       // 技能动画走「游戏化」呈现：横屏取景 + 后期；立绘走完整人物取景
       const isCutscene = part === "cutscene";
       document.body.classList.toggle("cutscene-fx", isCutscene);
+      layoutStage();   // 先锁好舞台尺寸再创建播放器，避免 viewport 按错误的容器比例计算
+      stopTimeline();  // 切换形态/服装时先停旧 Timeline，待新主 cut 开始时再起
+      // 从骨骼路径里抠出 6 位服装 ID（如 spine/cutscenes/cutscene_char003803/... → "003803"），
+      // 用作 cutscene_shots.json 的 key。idle 形态不需要。
+      if (isCutscene && cutsceneShots) {
+        const m = (src.skeleton || "").match(/cutscene_char(\d{6})/);
+        currentShotData = m ? cutsceneShots[m[1]] || null : null;
+      } else {
+        currentShotData = null;
+      }
 
       const config = {
-        atlasUrl: ASSET_BASE + src.atlas,
+        atlasUrl: assetUrl(src.atlas),
         showControls: false,
         showLoading: false,
         alpha: true,
@@ -437,8 +575,8 @@
       // 不在这里作为必需资源加载——改在 success 里异步加载（见上），缺失也不致命。
       const cutBgs = isCutscene && Array.isArray(costume.bg) ? costume.bg : [];
 
-      if (src.skeleton.endsWith(".skel")) config.skelUrl = ASSET_BASE + src.skeleton;
-      else config.jsonUrl = ASSET_BASE + src.skeleton;
+      if (src.skeleton.endsWith(".skel")) config.skelUrl = assetUrl(src.skeleton);
+      else config.jsonUrl = assetUrl(src.skeleton);
 
       player = new spine.SpinePlayer("stage", config);
     }
@@ -452,8 +590,70 @@
       const entryBox = renderModeRow(animBox);
       const names = p.skeleton.data.animations.map(a => a.name);
       const faces = names.filter(n => n.startsWith("_"));
-      const bodies = names.filter(n => !n.startsWith("_"));
+      const allBodies = names.filter(n => !n.startsWith("_"));
       const isLoopName = n => /idle|loop/i.test(n);
+
+      // 把身体动画分成「主 cut」和「叠加特效（overlay）」两组。
+      // 游戏里 Timeline 有粒子轨；导出到 spine 时，制作者通常把光效/血花/武器轨迹/召唤物
+      // 也做成 spine 动画（与主 cut 同一骨骼，不同插槽），需要在另一条轨道上**同时叠加播放**。
+      // 之前所有非下划线开头的都被当成独立动作，导致：
+      //   1) overlay 被串进主链当下一段播放（顺序错）
+      //   2) overlay 显示成独立的"动作 N"按钮（数量错）
+      //   3) 主链播放时 overlay 不出现（特效缺失）
+      // 主 cut 的命名很规整：cut_1、cut_A、A_cut、A_cut2、loop、loop_2、idle、motion …
+      // 用严格正则白名单识别；剩下的按前缀（数字、Letter_、cut_X_）配对到主 cut。
+      const MAIN_RE = /^(cut_\d+|cut_[A-Z]|[A-Z]_cut\d*|loop\d*|idle\w*|motion)$/;
+      const mainsSet = new Set(allBodies.filter(n => MAIN_RE.test(n)));
+      const overlayTarget = (n) => {
+        if (mainsSet.has(n)) return null;
+        if (isLoopName(n)) return null;        // 独立 loop/idle 保留在主列表
+        // cut_3_dragon_head → cut_3 ；cut_1_idle_01 也会命中但 isLoopName 已挡掉
+        let m = n.match(/^(cut_[A-Za-z0-9]+)_/);
+        if (m && mainsSet.has(m[1])) return m[1];
+        // 1_mask_effect_start → cut_1
+        m = n.match(/^(\d+)_/);
+        if (m && mainsSet.has("cut_" + m[1])) return "cut_" + m[1];
+        // A_weapon_effect → A_cut；B_fx_1 → B_cut（取同字母的第一个主 cut）
+        m = n.match(/^([A-Z])_/);
+        if (m) {
+          const target = allBodies.find(b => mainsSet.has(b) && b.startsWith(m[1] + "_cut"));
+          if (target) return target;
+        }
+        // 部件化角色（如 char003803 黎维塔奇迹玫瑰）把每个身体部件做成独立的小写前缀动画：
+        //   a_arm1_1_clothes_1 / a_arm1_1_hand_1 / a_arm1_1_ribbon_1 / a_arm1_1_fx_1 / a_arm1_1badge
+        // 对应主 cut 的字母变体（a → cut_A 或 A_cut）。只播主 cut 看不到衣服/丝带/手部。
+        // 配到主 cut 后，下方按 base 分组会把每个 base（如 a_arm1_1_clothes 的 _1/_2）串到一条轨道，
+        // 多组并行叠播。多 pose（a_arm1_1 / a_arm1_2 / a_arm2_1 / a_arm2_2）目前同时上轨——
+        // 不完全准（游戏 Timeline 里它们是顺序触发），但至少能看到衣服/丝带不再缺。
+        m = n.match(/^([a-z])_/);
+        if (m) {
+          const L = m[1].toUpperCase();
+          if (mainsSet.has("cut_" + L)) return "cut_" + L;
+          if (mainsSet.has(L + "_cut")) return L + "_cut";
+          const target = allBodies.find(b => mainsSet.has(b) && b.startsWith(L + "_cut"));
+          if (target) return target;
+        }
+        return null;
+      };
+
+      // 把 overlay 按"base"（去掉 _start/_end/_数字 尾巴）分组：
+      //   同 base 内顺序串播在同一条轨道（如 1_mask_effect_start → _end）
+      //   不同 base 并行在相邻轨道（如龙的 body/breath/head 各自一条）
+      const overlaysByMain = {};   // main → [ [seqOnTrack2], [seqOnTrack3], ... ]
+      const overlayNames = new Set();
+      allBodies.forEach(n => {
+        const main = overlayTarget(n);
+        if (!main) return;
+        overlayNames.add(n);
+        const base = n.replace(/_(start|end|\d+)$/i, "");
+        const groups = overlaysByMain[main] || (overlaysByMain[main] = []);
+        let g = groups.find(grp => grp._base === base);
+        if (!g) { g = []; g._base = base; groups.push(g); }
+        g.push(n);
+      });
+
+      // 主链只在「非 overlay」上面跑（保留 cut_1 → cut_2 → cut_3 → loop 的串接）
+      const bodies = allBodies.filter(n => !overlayNames.has(n));
       const baseLoop = bodies.find(isLoopName);
 
       // 一次性动作播完后串联哪些动画（按骨骼内作者排序＝播放顺序）：
@@ -493,14 +693,38 @@
       const bgs = (currentPart === "cutscene" && Array.isArray(currentCostume.bg))
         ? currentCostume.bg : [];
 
+      // 切换主 cut 时同步调度 overlay：清空所有 overlay 轨道，再按 base 分组分轨重放。
+      // 与 track 0 的主 cut 同帧 setAnimation，靠 start 事件触发，保证起播时机一致。
+      const maxOverlayTracks = Math.max(0, ...Object.values(overlaysByMain).map(g => g.length));
+      const scheduleOverlaysFor = (mainName) => {
+        if (!player) return;
+        for (let t = 2; t < 2 + maxOverlayTracks; t++) {
+          player.animationState.setEmptyAnimation(t, 0.1);
+        }
+        const groups = overlaysByMain[mainName] || [];
+        groups.forEach((group, i) => {
+          const track = 2 + i;
+          try {
+            player.animationState.setAnimation(track, group[0], false);
+            group.slice(1).forEach(n => player.animationState.addAnimation(track, n, false, 0));
+          } catch (e) { /* 找不到的 overlay 静默跳过 */ }
+        });
+      };
+
+      // 记录当前正在播的链，给 start 监听器算 segIdx 用（驱动运镜阶梯）
+      let currentSeqRef = [];
+
       const playSeq = (seq, btn, entryIdx) => {
         if (!player) return;
         try {
+          currentSeqRef = seq;
           player.animationState.data.defaultMix = 0.3; // 片段间平滑过渡
           player.setAnimation(seq[0], seq.length === 1 && isLoopName(seq[0]));
           seq.slice(1).forEach((n, i) => {
             player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
           });
+          // 主 cut 起播 = Timeline 起点（每次点动作都重新跑一遍 Timeline）
+          if (currentPart === "cutscene" && !isLoopName(seq[0])) startTimeline();
           // 切到该动作对应的背景（仅当那张已成功加载才显示，缺失则保持无背景、不报错）
           if (bgs.length && player.applyBg) {
             player._bgWant = "./" + (bgs[entryIdx] || bgs[0]);
@@ -579,13 +803,16 @@
         entryBox.appendChild(group);
       }
 
-      // 串联播放时，高亮跟随轨道0当前正在播的片段所属条目
+      // 串联播放时：(1) 高亮跟随轨道0当前正在播的片段所属条目；
+      // (2) 同步调度该主 cut 对应的 overlay（光效/血花/召唤物 等）到 track 2+。
+      // 运镜不在这里——Timeline 是连续的，已在 playSeq 里 startTimeline() 一次性拉起。
       p.animationState.addListener({
         start: (entry) => {
           if (entry.trackIndex !== 0 || !entry.animation) return;
           const nm = entry.animation.name;
+          scheduleOverlaysFor(nm);
+
           const btns = [...entryBox.querySelectorAll(".body-anim")];
-          // 链头精确匹配优先（避免链尾 loop 和独立 loop 条目同时高亮）
           const heads = btns.filter(x => (x.dataset.seq || "").split("|")[0] === nm);
           btns.forEach(x => x.classList.toggle("active",
             heads.length ? heads.includes(x) : (x.dataset.seq || "").split("|").includes(nm)));
