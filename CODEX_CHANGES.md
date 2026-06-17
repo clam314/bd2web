@@ -74,3 +74,69 @@
 - 支持 URL 参数 `?asset_base=https://example.com/base/` 手动指定素材根路径；多个根路径可用英文逗号分隔，页面会按顺序失败切换。
 - SpinePlayer 加载素材失败时会自动切换下一个素材源并重试当前资源，避免国内环境单个 CDN 域名不可用时直接黑屏。
 - 当前环境不能写 `.git/FETCH_HEAD`，且无法连接 `github.com:443`，因此本次未能在沙箱内完成 `git pull` / `git push`；代码侧 CDN 改动已完成并通过内联脚本语法检查。
+
+## 2026-06-17 心契功能边界与接手说明
+
+### 当前页面里的“阶段”
+
+- “阶段”不是游戏原 UI，而是调试/还原用状态机入口。
+- 阶段列表来自 Spine 动画命名和 prefab 默认待机证据：`idleN`、`motionN_*`、`mixN_*`、`pointN_*`，并优先使用 Unity prefab 的 `_defaultSpineMotionByGroup.GroupDefaultSpineMotionName`。
+- 点击阶段按钮会直接切到该阶段并播放该阶段默认待机，这是为了调试不同待机画面；真实游戏里阶段应由互动完成后逐步解锁，不应允许用户随意跳。
+- 当前“推进到阶段N”按钮是调试按钮，播放当前阶段的 `motionN_*` 序列后进入下一阶段；不是游戏原始互动入口。
+
+### 当前页面里的“道具”
+
+- “道具”不是最终 UI，只是把 prefab 的 `spineInteractionToolId` 暴露出来，方便筛选当前阶段哪些互动点在某个工具状态下可触发。
+- 道具会影响两件事：
+  1. 当前阶段显示哪些 prefab 互动按钮/热区。
+  2. 对少量已从 prefab 证实的资源切换 skin，例如 `illust_dating10`、`illust_dating14`、`illust_dating16`、`illust_dating18`。
+- 目前道具名称仍是 `道具14` 这种占位名，没有从游戏文本/图标资源里还原真实名称或图标。
+- “全部”是调试模式，会把当前阶段所有 toolId 的 prefab 推进点都显示出来；真实游戏不一定允许同时触发。
+
+### 当前页面里的“热区”
+
+- 热区层只针对 `PREFAB_POINT_ACTIONS` 里那些 prefab 明确标记 `IsNextStateWhenActionEnd=1` 的推进点，不覆盖 1257 条普通互动点。
+- 热区坐标来自 prefab 的 `_rectTransform` 或 `_interactionBoxZoneRectTransform`，沿 RectTransform 父链计算静态矩阵，再投影到当前 `4096 x 2304` 游戏 viewport。
+- 只有与当前 viewport 相交的静态热区才会显示；静态坐标明显落在画面外的点不会画假热区，仍保留左侧按钮。
+- 热区点击目前等价于“触发这个 prefab 推进动作”，不区分真实手势。也就是说 `drag`、`gyro`、`touch`、`gauge` 现在都被简化成点击触发。
+- 热区里的文字只是调试标签：
+  - `拖` 表示 prefab `_interactionActionType` 是 drag。
+  - `晃` 表示 gyro。
+  - `计` 表示 gauge 开启。
+  - 数字表示普通 touch 的序号。
+- 这些文字不是游戏内文本，也不会改变触发行为；如果做正式体验，建议默认隐藏文字，只在 debug 模式显示。
+
+### 当前已知问题
+
+- `illust_dating18` 阶段切换有重复感：prefab 里部分动作本身 `_playMotionNames` 包含重复项，例如阶段1 `1_14_14` 记录为 `["motion1_14", "motion1_14"]`。当前页面按证据原样播放，因此会出现重复。下一步需要确认游戏运行时为什么重复记录：可能是两段目的地/循环步骤，也可能应按 destination 次数或 action end 条件处理，而不是简单顺序全播。
+- `illust_dating17` 没有热区：当前静态矩阵算出的推进点 `1_26_0` 落在当前 16:9 viewport 外，属于 `*_follow`/bone 跟随类疑似动态坐标，不能直接画。后续要结合 Spine 运行时 bone 坐标或手机运行态验证。
+- `illust_dating10/13/16/17` 等 `*_follow` touch 点也存在类似静态坐标异常，不能把 prefab 静态坐标当最终点击区域。
+- `gauge` 目前只是“一次点击触发推进”的模拟，没有实现分数累积、阈值、衰减、范围限制。
+- `drag` 目前没有拖拽路径、方向、持续时间判定。
+- `gyro` 目前没有摇晃设备或鼠标模拟，只是点击触发。
+- 隐藏点、普通点、语音、震动、道具图标、真实热区显示/隐藏条件还没有还原。
+
+### 建议下一步计划
+
+1. 先修 `illust_dating18` 重复动作问题：不要直接删重复动画，先回到 prefab 证据，确认 `_destinations`、`_playMotionNames`、`ForceIdleWhenNextState`、action end 条件之间的关系。若重复 motion 对应多个 destination，应实现“按完成条件选择/截断”，并在文档里记录证据。
+2. 给热区增加 debug 开关：默认不显示文字或半透明框；开启 debug 后显示 `拖/晃/计` 和 prefab key，避免用户误以为这是游戏文字。
+3. 处理 `*_follow` 类热区：从 Spine Web runtime 读取当前 skeleton 的 bone/world transform，把 prefab point 绑定到对应 bone 后再投影到屏幕；无法绑定的继续不画，不能猜。
+4. 将 `drag`、`gyro`、`gauge` 从“点击触发”拆成不同交互：
+   - drag：鼠标/触摸拖动，至少记录起止点和距离。
+   - gyro：桌面先提供 debug 按钮或 shake 模拟，手机可接 DeviceMotionEvent。
+   - gauge：按 prefab `_gaugeSettingData.Scores` 和 `InteractableMinMaxRange` 做累积/阈值。
+5. 扩展普通互动点前先导出完整 prefab 点表，按 `IsNextStateWhenActionEnd`、`IsPlayRandomMixAnim`、hidden/gauge/longPress 分组，不要从 Spine 动画名反推玩法。
+6. 完成每一步都要在 `CODEX_CHANGES.md` 记录证据来源、实现范围、未实现边界；不确定的字段必须标为“待验证/假设”。
+
+### 2026-06-17 复查：18 重复与 17 无热区
+
+- `illust_dating18` 的重复主要出现在 gyro 工具推进点：
+  - `point1_14_gyro_tool14 [Override]`：`PlayMixAnimNames=["mix1_14_1"]`，`_playMotionNames=["motion1_14","motion1_14"]`，`ForceIdleWhenNextState=2`。
+  - `point2_10_gyro_tool14 [Override]`：`_playMotionNames=["motion2_10","motion2_10"]`，`ForceIdleWhenNextState=1`。
+  - `point6_42_gyro_tool14 [Override]`：`_playMotionNames=["motion6_42","motion6_42"]`，`ForceIdleWhenNextState=7`。
+  - `point7_13_gyro_tool14 [Override]`：`_playMotionNames=["motion7_13","motion7_13"]`，`ForceIdleWhenNextState=6`。
+- 这说明重复不是 Spine 动画扫描误判，而是 prefab 字段里存在重复 motion。当前页面照字段顺序播放，所以会有重复感。
+- 不要直接把重复 motion 去重后当结论。需要继续查 `_destinations`、gyro action end、Unity 运行时代码如何消费 `_playMotionNames`。一个合理假设是：重复 motion 可能对应两个 destination/两次 action end，而不是连续完整播放两遍。
+- `illust_dating17` 的唯一推进点是 `point1_26_touch [Override]`：`stage=1`、`id=26`、`tool=0`、`PlayMixAnimNames=["mix1_26_1"]`、`_playMotionNames=["motion1_26"]`、`ForceIdleWhenNextState=0`。
+- `illust_dating17` 该点没有 `_interactionBoxZoneRectTransform`，只能用自身 `_rectTransform`；它挂在 `Parent > SkeletonGraphic > SkeletonUtility-SkeletonRoot > root > A__ > ALL > 0aaa_ppppppppppppp2 > point1_26_touch [Override]`。
+- 静态矩阵投影结果落在当前 16:9 viewport 外，因此页面不显示热区。这个点很可能依赖 Spine bone/运行时 follow 位置，下一步应读取当前 skeleton bone world transform，而不是硬用 prefab 静态坐标。
