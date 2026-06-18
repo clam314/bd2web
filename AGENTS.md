@@ -102,32 +102,41 @@ index.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cd
 - **可选精修（未做）**：当前固定框 = 待机包围盒 + 4% padding，已是干净的全身居中立绘。若要像 cutscene 那样**像素级**
   对齐游戏内立绘机位，需照 CUT_WIN 的做法从 APK 角色详情界面 prefab 的 RectTransform + SkeletonGraphic scale 挖真值。优先级低。
 
-#### 多 skel 叠播 cutscene（2026-06-18 诊断，**未修**）
+#### 多 skel + 多实例 叠播 cutscene（2026-06-18 诊断，**未修；之前的修复尝试已部分接入，但方向错，待重做**）
 
 - **现象**：char003803 黎维塔奇迹玫瑰技能动画 cut_B 阶段（wall t≈3.367~4.867s）缺胳膊、缺裙摆、武器尾段消失。用户截图证实。
-- **根因**：cutscene **不是单 skel**。从 APK 备份用 UnityPy 完整 dump 了 `Char003803_Skill` TimelineAsset（21 tracks），关键 4 条 Spine Animation State Graphic Track：
+- **历经两轮挖掘**才搞清楚真实结构（dump 工具：`/tmp/dump_full.py`、`/tmp/dump_skill_scene.py`）：
 
-  | track | 动画 | wall t | dur | clipIn | ts | 所在 skel |
-  |---|---|---|---|---|---|---|
-  | 0 | cut_A          | 0.000 | 3.367 | 0.00 | 1.00 | `cutscene_char003803` (主) |
-  | 0 | cut_B          | 3.367 | 3.133 | 0.00 | 1.00 | 主 |
-  | 0 | cut_B (slo)    | 6.500 | 0.650 | 5.27 | 0.60 | 主（seek + 慢放） |
-  | 0 | cut_B (slo)    | 7.150 | 1.733 | 4.15 | 0.85 | 主（seek + 慢放） |
-  | 1 | cut_A_fx       | 0.000 | 3.317 | 0.00 | 1.00 | 主 |
-  | 2 | **cut_B_B**    | 3.367 | 1.500 | 0.00 | 1.00 | **`cutscene_char003803_1` (副)** |
-  | 3 | **cut_B_F**    | 3.367 | 1.500 | 0.00 | 1.00 | **副** |
+  **第 1 轮（错的）**：以为是"1 主 skel + 1 副 skel"，副 skel `cutscene_char003803_1` 内的 cut_B_B + cut_B_F 两个动画填补主 skel 抠空的部件。按这个做了：单副 player，cut_B_B 在 track 0、cut_B_F 在 track 1。**结果**：cut_B_F 的 attachment 覆盖了 cut_B_B → 鬼影乱叠；setup pose 默认 attachment 可见 → cut_A 阶段就有飘浮鬼手。
 
-  Activation Track（track 4-6）证实绑定：track 2/3 绑 `SkeletonGraphic (cutscene_char003803_1)`，track 0/1 绑 `SkeletonGraphic (cutscene_char003803) (1)`。主 skel 的 cut_B 故意把那几个 slot 抠空（attachment=null），靠副 skel 上的 cut_B_B（背景层）/ cut_B_F（前景层）画出来 + 控制叠层顺序。我们只渲染主 skel = cut_B 段必然缺件。
-- **资源都在**：`upstream/spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.{skel,atlas,png}` 完整（1.6MB skel，包含 `cut_B_B` / `cut_B_F` 两个动画，`strings` 可直接验）。之前对话里说"副 skel 不在仓库"是错的。
-- **现状**：[index.html](index.html) 里硬编了 `SKILL_SCHEDULES["003803"]` 验证用，但只覆盖 track 0+1（主 skel），track 2/3 没接，所以仍缺件。
-- **修复方案（待做）**：cutscene 模式支持 extras 列表，加载多个 spine player 透明叠播：
-  1. `roster.json` 加 `cutscene.extras: [{skeleton, atlas}, ...]`（gen_roster.py 要扫副 skel）
-  2. [index.html](index.html) `loadPart` 支持创建主+副 player 数组，**共享同一固定 viewport**（auto-fit 否则两边坐标对不上）
-  3. `playScheduledSkill` 按 schedule 里的 `playerIdx` 把 clip 分发到对应 player；用 `addAnimation(delay)` 或 setTimeout 让副 player 在 wall t=3.367 才起播
-  4. 副 player canvas 用 `position:absolute` 叠在主 canvas 上、`pointer-events:none`、`alpha:true`
-  5. dump 时按 Activation Track 的 SkeletonGraphic 绑定自动识别 extras（命名规律 `cutscene_charXXXXXX_N`，N=1..），批量生成
-- **波及范围**：003803 确认必修。还要再 dump 几个角色看普遍性——估计带"前/后景叠层"或"召唤物分件"的角色都会用这套（cut_B_B/F 命名就是 Back/Front）。
-- **复现**：本地起 `python3 -m http.server 8081`，开 `http://localhost:8081/?v=N` → 黎维塔 → 奇迹玫瑰 → 技能动画 → 动作1 → 看 t≈3.5s 那一帧（截图存在 `dating13-before.png` 类似命名的工作截图里）。
+  **第 2 轮（真值）**：dump 了 `Char003803_Skill` Timeline 所在场景 `/CutScene_Char003803_Set/SpineRoot/CutScene/Anchors/object/` 下的 sibling 顺序 + PlayableDirector binding，得出**共 4 个 SkeletonGraphic 实例**：
+
+  | sibling | GameObject 名 | skel 文件 | role | Spine Track | 动画 |
+  |---|---|---|---|---|---|
+  | [7]  | SkeletonGraphic (cutscene_char003803_1) | `_1.skel` (副) | **back** 背景层 | Spine Track (2)  | `cut_B_B` (t=3.367, 1.5s) |
+  | [8]  | SkeletonGraphic (cutscene_char003803) | `.skel` (主) | **main** 主体 | Spine Track     | `cut_A` (t=0, 3.367s) / `cut_B` (t=3.367, 3.133s) / `cut_B` slo×2 |
+  | [9]  | SkeletonGraphic (cutscene_char003803) (1) | `.skel` (主) | **fx** 特效 | Spine Track (1) | `cut_A_fx` (t=0, 3.317s) |
+  | [10] | SkeletonGraphic (cutscene_char003803_1) | `_1.skel` (副) | **front** 前景层 | Spine Track (4) | `cut_B_F` (t=3.367, 1.5s) |
+
+  Unity UI 按 sibling 顺序绘制（先画在底层），所以 z-order 从下到上 = `back < main < fx < front`，对应 cut_B_B 在角色背后、cut_A_fx 叠在主体之上但在 cut_B_F 之下、cut_B_F 在最前。
+
+  **关键洞察**：每个 SkeletonGraphic 内部就是一个 spine 实例、只播一条 spine track。游戏没有"同一 skel 上多 spine track"的设计——多动画叠播都靠**多 SkeletonGraphic 实例**（即多 spine player 实例）+ sibling z-order 实现。原因：同 spine 实例上多 AttachmentTimeline 互相覆盖（attachment 是 slot 级独占字段，不能 alpha 混合）。这也解释了为什么 cut_A 主体和 cut_A_fx 特效一定要分两个主 skel 实例——cut_A_fx 显示武器/光效用的 attachment 会盖掉 cut_A 的角色身体 attachment。
+
+- **资源都在**：`upstream/spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.{skel,atlas,png}` 完整（1.6MB skel，含 `cut_B_B` / `cut_B_F` 两个动画）。
+- **复现**：本地 `python3 -m http.server 8081`，开 `http://localhost:8081/?v=N` → 黎维塔 → 奇迹玫瑰 → 技能动画 → 动作1 → 看 t≈3.5s。**当前**（commit `e75b372`）能看到主角，但缺件 + 飘浮鬼影 + 镜头偏远（因为主+副共用一个统一并集 viewport 强求对齐导致 cut_A 阶段也用大框）。
+- **真正的修复方向**（待做，下一轮要按这个来）：
+  1. `roster.json` 里 `cutscene` 改成或扩展为 `cutscene.layers: [{skeleton, atlas, role}, ...]`，按 z-order 由低到高列。role 取值 `back / main / fx / front`（或更通用的数字 index）
+  2. [index.html](index.html) `loadPart` 按 layers 顺序在 #stage 下挂 N 个绝对定位 div + 创建 N 个 `spine.SpinePlayer`，自然 z-order 由 DOM 顺序决定（用 `.cut-layer` class，`pointer-events:none`）
+  3. 每个 player **只用 track 0**（不在同 skeleton 上叠 Spine track，避免 attachment 冲突）
+  4. `SKILL_SCHEDULES` 每条 schedule track 改成 `{layerIdx, clips: [...]}`，每个 player 内部只播自己 layer 的一条 spine 轨
+  5. 各 layer player 的 viewport 设为**完全相同的固定框**——主 skel 的 cut_A + cut_B 包围盒并集（不掺副 skel 那种巨大特效 bbox，否则 cut_A 阶段人物太小）。两个副 skel 的世界坐标系与主同（Unity 同 RectTransform 父级），共用主算出来的框即可对齐
+  6. layer 起播前要把这个 player 的 skeleton 所有 slot.attachment 设 null（避免 setup pose 默认 attachment 在 wait 阶段画出"鬼影"）；动画实际起播时 spine 的 AttachmentTimeline 会把要显示的 attachment 设回去
+  7. dump 工具按 Anchors/object/ 下 sibling 顺序自动识别 layers + 各 Spine Track binding → 各 layer 对应的 SkeletonGraphic GameObject pathID，生成 schedule
+- **波及范围**：003803 这套设计估计是 cutscene 通用模式——绝大多数有"前/后景叠层"或"召唤物"的角色都会用 N 个 SkeletonGraphic 实例。挖一遍所有 154 个 cutscene bundle 就知道。命名规律：主 skel 实例命名 `SkeletonGraphic (cutscene_charXXXXXX)`、`(cutscene_charXXXXXX) (1)`、`(2)`...；副 skel 实例命名 `SkeletonGraphic (cutscene_charXXXXXX_1)`、同名多实例靠 path_id 区分。
+- **失败的前几轮**（commit 历史里能看到，留作教训）：
+  - `2927a7b` 单副 player 多 track：attachment 冲突 → 鬼影
+  - `dd1f7fc` per-animation viewport：主+副 各自 fit 自己 bbox → 错位重叠
+  - `e75b372` 统一并集 viewport：解了错位，但 cut_A 阶段镜头偏远 + 副 player setup pose 飘鬼影没解决
 
 ### 还没做的（见 OPTIMIZATION.md）
 

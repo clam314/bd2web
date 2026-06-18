@@ -23,13 +23,14 @@
      - **下一步**：要做相机平移得先搞清"对每个角色哪个节点才是相机锚点"——可能
        要看 PlayableDirector 的绑定信息，或者用更针对性的启发式（按值域筛掉非相机轨）。
 
-7. **多 skel 叠播 cutscene（cut_B 阶段缺件）** — **未解决，优先级高**
-   - 2026-06-18 dump TimelineAsset 才发现：cutscene 不是单 skel。char003803 cut_B 时段（wall t=3.367~4.867s）
-     缺胳膊/裙摆/武器尾段，因为这些部件在副 skel `cutscene_char003803_1` 的 `cut_B_B`（背景层）和
-     `cut_B_F`（前景层）动画里，主 skel 的 cut_B 故意把对应 slot 抠空。
-   - 资源已在本地 `upstream/spine/cutscenes/cutscene_char003803_1/`（1.6MB skel），是 myssal 仓库正常同步的。
-   - 详细分析与修复步骤见 **AGENTS.md「多 skel 叠播 cutscene」** 段。
-   - 待做：roster.json 加 extras + index.html 支持多 player 透明叠播 + schedule 按 playerIdx 分发。
+7. **多 SkeletonGraphic 实例叠播 cutscene** — **未解决，优先级高**
+   - 2026-06-18 两轮 dump 才搞清结构：cutscene 不是单 skel，也不是"1 主 + 1 副"，而是**多 SkeletonGraphic 实例**
+     按 Unity sibling 顺序叠 z-order。char003803_Skill 场景里就有 4 个 SG 实例（back/main/fx/front 四层），
+     每个实例内部只播一条 spine track（同实例多 track 会 attachment 冲突）。
+   - 之前三轮修复（commit `2927a7b` / `dd1f7fc` / `e75b372`）方向都错，靠近但都没修对。
+   - 详细分析与正确方案见 **AGENTS.md「多 skel + 多实例 叠播 cutscene」** 段。
+   - 待做：roster 加 cutscene.layers 列表 + index.html 按 layers 建 N 个 player + schedule 按 layerIdx 分发
+     + 各 layer player 起播前清 slot.attachment 避免 setup pose 鬼影 + 共享主 skel cut_A∪cut_B 包围盒框对齐。
 
 6. **char003803 黎维塔奇迹玫瑰"只剩腿脚"** — 已解决
    - 之前以为是部件化骨骼（小写 `a_arm*` 部件动画）缺失，写了 overlayTarget 的 `^[a-z]_` 分支
