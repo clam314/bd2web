@@ -49,6 +49,9 @@
       color: #dceaff;
       cursor: pointer;
       pointer-events: auto;
+      touch-action: none;
+      user-select: none;
+      -webkit-user-select: none;
       opacity: 0.72;
       transition: opacity 0.15s, background 0.15s, border-color 0.15s;
     }
@@ -56,6 +59,17 @@
       opacity: 1;
       background: rgba(106, 166, 255, 0.2);
       border-color: rgba(152, 199, 255, 0.9);
+    }
+    .hotzone.holding {
+      opacity: 1;
+      background: rgba(106, 166, 255, 0.34);
+      border-color: #dceaff;
+    }
+    .hotzone.gyro-zone {
+      z-index: 0;
+    }
+    .hotzone.body-zone {
+      z-index: 1;
     }
     .hotzone::after {
       content: attr(data-label);
@@ -412,6 +426,17 @@
       illust_dating17: { 1: "idle1", 2: "idle2" },
       illust_dating18: { 1: "idle1", 2: "idle2", 3: "idle3", 4: "idle4", 5: "idle5", 6: "idle6", 7: "idle7" },
     };
+    const STAGE_LABELS = {
+      illust_dating18: {
+        1: "一阶段·桌下",
+        2: "一阶段·背后",
+        3: "解锁·双腿待处理",
+        4: "解锁·画面左腿完成",
+        5: "解锁·画面右腿完成",
+        6: "二阶段·桌下",
+        7: "二阶段·背后",
+      },
+    };
     const TOOL_LABELS = {
       0: "手",
       1: "道具1",
@@ -520,16 +545,38 @@
         "1_26_0": { kind: "touch", mix: ["mix1_26_1"], motions: ["motion1_26"], nextStage: "next" },
       },
       illust_dating18: {
-        "1_14_14": { kind: "gyro", mix: ["mix1_14_1"], motions: ["motion1_14", "motion1_14"], nextStage: 2 },
-        "2_10_14": { kind: "gyro", mix: ["mix2_10_1"], motions: ["motion2_10", "motion2_10"], nextStage: 1 },
-        "2_11_0": { kind: "drag", mix: ["mix2_11_1", "mix2_11_2"], motions: ["motion2_12"], nextStage: 3 },
-        "2_12_0": { kind: "drag", mix: ["mix2_12_1", "mix2_12_2"], motions: ["motion2_12"], nextStage: 3 },
-        "3_1_0": { kind: "drag", mix: ["mix3_1_1", "mix3_1_2"], motions: ["motion3_1"], nextStage: 4 },
-        "3_2_0": { kind: "drag", mix: ["mix3_2_1", "mix3_2_2"], motions: ["motion3_2"], nextStage: 5 },
-        "4_1_0": { kind: "drag", mix: ["mix4_1_1", "mix4_1_2"], motions: ["motion4_1"], nextStage: 6 },
-        "5_1_0": { kind: "drag", mix: ["mix5_1_1", "mix5_1_2"], motions: ["motion5_1"], nextStage: 6 },
-        "6_42_14": { kind: "gyro", mix: ["mix6_42_1"], motions: ["motion6_42", "motion6_42"], nextStage: 7 },
-        "7_13_14": { kind: "gyro", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6 },
+        "1_1_0": { kind: "touch", label: "左胸：点击 / 长按", mix: ["mix1_1_1"], longPress: { actionType: 1, threshold: 1, loop: "", fail: "", success: "mix1_1_long" } },
+        "1_2_0": { kind: "drag", label: "右胸衣物：拖动 / 长按", mix: ["mix1_2_1", "mix1_2_2"], longPress: { actionType: 2, threshold: 1, loop: "mix1_2_loop", fail: "mix1_2_2", success: "mix1_2_long" } },
+        "1_3_0": { kind: "touch", label: "腹部", mix: ["mix1_3_1"] },
+        "1_4_0": { kind: "touch", label: "泳装下部：润滑", mix: ["mix1_4_1"] },
+        "1_5_0": { kind: "drag", label: "画面右侧大腿：拖动 / 长按", mix: ["mix1_5_1", "mix1_5_2"], longPress: { actionType: 2, threshold: 1, loop: "mix1_5_loop", fail: "mix1_5_2", success: "mix1_5_long" } },
+        "1_6_0": { kind: "drag", label: "画面左侧大腿：拖动 / 长按", mix: ["mix1_6_1", "mix1_6_2"], longPress: { actionType: 2, threshold: 1, loop: "mix1_6_loop", fail: "mix1_6_2", success: "mix1_6_long" } },
+        "1_7_0": { kind: "drag", label: "画面左侧脚部：拖动 / 长按", mix: ["mix1_7_1", "mix1_7_2"], longPress: { actionType: 2, threshold: 1, loop: "mix1_7_loop", fail: "mix1_7_2", success: "mix1_7_long" } },
+        "1_8_0": { kind: "touch", label: "画面右侧脚部：点击 / 长按", mix: ["mix1_8_1"], longPress: { actionType: 1, threshold: 1, loop: "", fail: "", success: "mix1_8_long" } },
+        "1_9_0": { kind: "touch", label: "画面左侧高跟鞋", mix: ["mix1_9_1"] },
+        "1_10_0": { kind: "touch", label: "画面右侧高跟鞋", mix: ["mix1_10_1"] },
+        "1_11_0": { kind: "touch", label: "上方中部互动点", mix: ["mix1_11_1"] },
+        "1_12_0": { kind: "touch", label: "画面左上互动点", mix: ["mix1_12_1"] },
+        "1_13_0": { kind: "touch", label: "画面右上互动点", mix: ["mix1_13_1"] },
+        "1_14_14": { kind: "gyro", label: "左右倾斜切到背后视角", mix: ["mix1_14_1"], motions: ["motion1_14", "motion1_14"], nextStage: 2, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
+        "2_1_0": { kind: "touch", label: "亲吻脸部", mix: ["mix2_1_1"] },
+        "2_2_0": { kind: "drag", label: "画面左侧手：拖动 / 长按", mix: ["mix2_2_1", "mix2_2_2"], longPress: { actionType: 2, threshold: 1, loop: "mix2_2_loop", fail: "mix2_2_2", success: "mix2_2_long" } },
+        "2_3_0": { kind: "drag", label: "画面右侧手：拖动 / 长按", mix: ["mix2_3_1", "mix2_3_2"], longPress: { actionType: 2, threshold: 1, loop: "mix2_3_loop", fail: "mix2_3_2", success: "mix2_3_long" } },
+        "2_4_0": { kind: "touch", label: "胸部：点击 / 长按", mix: ["mix2_4_1"], longPress: { actionType: 1, threshold: 1, loop: "", fail: "", success: "mix2_4_long" } },
+        "2_5_0": { kind: "touch", label: "背部：点击 / 长按", mix: ["mix2_5_1"], longPress: { actionType: 1, threshold: 1, loop: "", fail: "", success: "mix2_5_long" } },
+        "2_6_0": { kind: "touch", label: "臀部：点击 / 长按", mix: ["mix2_6_1"], longPress: { actionType: 1, threshold: 1, loop: "", fail: "", success: "mix2_6_long" } },
+        "2_7_0": { kind: "drag", label: "泳装下部：拖动 / 长按", mix: ["mix2_7_1", "mix2_7_2"], longPress: { actionType: 2, threshold: 1, loop: "mix2_7_loop", fail: "mix2_7_2", success: "mix2_7_long" } },
+        "2_8_0": { kind: "touch", label: "按摩椅", mix: ["mix2_8_1"] },
+        "2_9_0": { kind: "touch", label: "小尤里", mix: ["mix2_9_1"] },
+        "2_10_14": { kind: "gyro", label: "左右倾斜切回桌下视角", mix: ["mix2_10_1"], motions: ["motion2_10", "motion2_10"], nextStage: 1, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
+        "2_11_0": { kind: "drag", label: "长按背后丝袜", mix: ["mix2_11_1", "mix2_11_2"], motions: ["motion2_12"], nextStage: 3, longPress: { actionType: 2, threshold: 1, loop: "mix2_11_loop", fail: "mix2_11_2", success: "motion2_12" } },
+        "2_12_0": { kind: "drag", label: "长按背后丝袜", mix: ["mix2_12_1", "mix2_12_2"], motions: ["motion2_12"], nextStage: 3, longPress: { actionType: 2, threshold: 1, loop: "mix2_12_loop", fail: "mix2_12_2", success: "motion2_12" } },
+        "3_1_0": { kind: "drag", label: "长按画面左腿丝袜", mix: ["mix3_1_1", "mix3_1_2"], motions: ["motion3_1"], nextStage: 4, longPress: { actionType: 2, threshold: 1, loop: "mix3_1_loop", fail: "mix3_1_2", success: "motion3_1" } },
+        "3_2_0": { kind: "drag", label: "长按画面右腿丝袜", mix: ["mix3_2_1", "mix3_2_2"], motions: ["motion3_2"], nextStage: 5, longPress: { actionType: 2, threshold: 1, loop: "mix3_2_loop", fail: "mix3_2_2", success: "motion3_2" } },
+        "4_1_0": { kind: "drag", label: "长按画面右腿丝袜", mix: ["mix4_1_1", "mix4_1_2"], motions: ["motion4_1"], nextStage: 6, longPress: { actionType: 2, threshold: 1, loop: "mix4_1_loop", fail: "mix4_1_2", success: "motion4_1" } },
+        "5_1_0": { kind: "drag", label: "长按画面左腿丝袜", mix: ["mix5_1_1", "mix5_1_2"], motions: ["motion5_1"], nextStage: 6, longPress: { actionType: 2, threshold: 1, loop: "mix5_1_loop", fail: "mix5_1_2", success: "motion5_1" } },
+        "6_42_14": { kind: "gyro", label: "左右倾斜切到二阶段背后视角", mix: ["mix6_42_1"], motions: ["motion6_42", "motion6_42"], nextStage: 7, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
+        "7_13_14": { kind: "gyro", label: "左右倾斜切回二阶段桌下视角", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
       },
     };
     const PREFAB_HOTZONES = {
@@ -603,7 +650,29 @@
         "1_26_0": { x: -4751.3, y: 141.2, width: 160, height: 160, shape: 0, source: "point1_26_touch [Override]" },
       },
       illust_dating18: {
+        "1_1_0": { x: -15.7, y: 113.3, width: 62.5, height: 62.5, shape: 0, source: "point1_1_touch [Override]" },
+        "1_2_0": { x: -91.1, y: 48.5, width: 62.5, height: 62.5, shape: 1, source: "point1_2_drag [Override]" },
+        "1_3_0": { x: -40.7, y: 16.7, width: 75, height: 75, shape: 0, source: "point1_3_touch [Override]" },
+        "1_4_0": { x: -29.2, y: -46.6, width: 62.5, height: 62.5, shape: 0, source: "point1_4_touch [Override]" },
+        "1_5_0": { x: 17.6, y: -94.3, width: 75, height: 125, shape: 1, source: "point1_5_drag [Override]" },
+        "1_6_0": { x: -76.7, y: -131.7, width: 75, height: 125, shape: 1, source: "point1_6_drag [Override]" },
+        "1_7_0": { x: -91.9, y: -496.5, width: 100, height: 100, shape: 1, source: "point1_7_drag [Override]" },
+        "1_8_0": { x: 85.5, y: -353, width: 125, height: 125, shape: 0, source: "point1_8_touch [Override]" },
+        "1_9_0": { x: -251.8, y: -578.3, width: 125, height: 125, shape: 0, source: "point1_9_touch [Override]" },
+        "1_10_0": { x: 161.1, y: -526.9, width: 125, height: 125, shape: 0, source: "point1_10_touch [Override]" },
+        "1_11_0": { x: -80.6, y: 185.7, width: 100, height: 100, shape: 0, source: "point1_11_touch [Override]" },
+        "1_12_0": { x: -175.7, y: 83.9, width: 87.5, height: 87.5, shape: 0, source: "point1_12_touch [Override]" },
+        "1_13_0": { x: 103.7, y: 121.2, width: 150, height: 100, shape: 0, source: "point1_13_touch [Override]" },
         "1_14_14": { x: -678, y: -762, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone1_14" },
+        "2_1_0": { x: -16, y: 176.7, width: 100, height: 100, shape: 0, source: "point2_1_touch [Override]" },
+        "2_2_0": { x: -268.4, y: 19.9, width: 125, height: 125, shape: 1, source: "point2_2_drag [Override]" },
+        "2_3_0": { x: 126.4, y: 87.2, width: 100, height: 100, shape: 1, source: "point2_3_drag [Override]" },
+        "2_4_0": { x: -55.7, y: 54, width: 62.5, height: 100, shape: 0, source: "point2_4_touch [Override]" },
+        "2_5_0": { x: -6.9, y: 66.9, width: 100, height: 100, shape: 0, source: "point2_5_touch [Override]" },
+        "2_6_0": { x: -14.3, y: -114, width: 87.5, height: 87.5, shape: 0, source: "point2_6_touch [Override]" },
+        "2_7_0": { x: -2.2, y: -42.5, width: 75, height: 75, shape: 1, source: "point2_7_drag [Override]" },
+        "2_8_0": { x: -89.7, y: -168.5, width: 125, height: 62.5, shape: 0, source: "point2_8_touch_shake [Override]" },
+        "2_9_0": { x: -86.3, y: 247.4, width: 112.5, height: 200, shape: 0, source: "point2_9_touch [Override]" },
         "2_10_14": { x: -658.3, y: -701.2, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone2_10" },
         "2_11_0": { x: 79.2, y: -151.3, width: 325, height: 200, shape: 1, source: "interactionBoxZone2_11" },
         "2_12_0": { x: -349.4, y: -135.6, width: 325, height: 200, shape: 1, source: "interactionBoxZone2_12" },
@@ -633,6 +702,11 @@
     let advanceTargetStage = null;
     let advanceLastMotion = null;
     let advanceTimer = null;
+    let activeLongPress = null;
+    let activeGyroDrag = null;
+    let activeGyroAction = null;
+    let gyroBaseline = null;
+    let deviceOrientationEnabled = false;
     let selectedToolId = null;
     let viewMode = localStorage.getItem("datingViewMode") || "fit";
 
@@ -679,6 +753,8 @@
       advanceLastMotion = null;
       clearTimeout(advanceTimer);
       advanceTimer = null;
+      cancelLongPress(false);
+      cancelGyroDrag();
       stage.innerHTML = "";
       hotzoneLayer.innerHTML = "";
       animList.innerHTML = '<div class="sub-label">互动模式</div><button class="item disabled">加载中...</button>';
@@ -783,7 +859,8 @@
       stageModel.stageIds.forEach(id => {
         const b = document.createElement("button");
         b.className = "item" + (id === currentStage ? " active" : "");
-        b.textContent = `阶段${id}`;
+        const label = STAGE_LABELS[currentEntry?.id]?.[id];
+        b.textContent = label ? `阶段${id} · ${label}` : `阶段${id}`;
         b.onclick = () => enterStage(id);
         stageRow.appendChild(b);
       });
@@ -924,6 +1001,7 @@
 
     function selectTool(toolId) {
       selectedToolId = toolId;
+      if (toolId === 14) enableDeviceOrientation();
       applyStageSkin(currentStage);
       renderStageControls();
     }
@@ -958,6 +1036,8 @@
 
     function enterStage(stageNo) {
       if (!stageModel || !stageModel.stages.has(stageNo)) return;
+      cancelLongPress(false);
+      cancelGyroDrag();
       currentStage = stageNo;
       clearTimeout(advanceTimer);
       advanceTimer = null;
@@ -1003,7 +1083,7 @@
         advanceTimer = null;
         player.animationState.data.defaultMix = 0.2;
         const action = prefabPointAction(name);
-        const sequence = action ? [...(action.mix || []), ...(action.motions || [])].filter(animationExists) : [];
+        const sequence = action ? prefabActionSequence(action) : [];
         if (sequence.length) {
           const targetStage = resolveActionNextStage(action);
           advanceTargetStage = targetStage;
@@ -1036,7 +1116,7 @@
         clearTimeout(advanceTimer);
         advanceTimer = null;
         player.animationState.data.defaultMix = 0.2;
-        const sequence = [...(action.mix || []), ...(action.motions || [])].filter(animationExists);
+        const sequence = prefabActionSequence(action);
         if (!sequence.length) {
           showError("这个 prefab 互动没有可播放的 Spine 动画。");
           return;
@@ -1055,6 +1135,14 @@
           }, delay);
         }
       } catch (e) { showError("播放 prefab 互动失败：" + e.message); }
+    }
+
+    function prefabActionSequence(action) {
+      const destinationIndex = Number.isInteger(action.destinationIndex) ? action.destinationIndex : 0;
+      const motions = action.destinationIndexed
+        ? (action.motions || []).slice(destinationIndex, destinationIndex + 1)
+        : (action.motions || []);
+      return [...(action.mix || []), ...motions].filter(animationExists);
     }
 
     function playIdle() {
@@ -1138,6 +1226,8 @@
 
     function renderHotzones(prefabActions) {
       hotzoneLayer.innerHTML = "";
+      activeGyroAction = null;
+      gyroBaseline = null;
       if (!currentEntry || !prefabActions.length) return;
       const viewport = VIEWPORT_OVERRIDES[currentEntry.id] || makeViewport(currentEntry);
       prefabActions.forEach((item, idx) => {
@@ -1147,15 +1237,208 @@
         const b = document.createElement("button");
         b.type = "button";
         b.className = "hotzone";
+        b.classList.add(item.action.kind === "gyro" ? "gyro-zone" : "body-zone");
         b.dataset.label = hotzoneLabel(item.action, idx);
-        b.title = `${item.key} · ${zone.source}`;
+        b.title = `${item.action.label || prefabActionLabel(item.action, idx)} · ${item.key} · ${zone.source}`;
         b.style.left = box.left + "%";
         b.style.top = box.top + "%";
         b.style.width = box.width + "%";
         b.style.height = box.height + "%";
-        b.onclick = () => playPrefabAction(item.action, null);
+        if (item.action.longPress) {
+          b.addEventListener("pointerdown", event => beginLongPress(item.action, b, event));
+          b.addEventListener("pointerup", event => cancelLongPress(true, event));
+          b.addEventListener("pointercancel", event => cancelLongPress(true, event));
+          b.addEventListener("click", event => event.preventDefault());
+        } else if (item.action.gyro?.actionType === 1) {
+          b.dataset.label = "左右倾斜";
+          activeGyroAction = item.action;
+          b.addEventListener("pointerdown", event => beginGyroDrag(item.action, b, event));
+          b.addEventListener("pointermove", event => moveGyroDrag(event));
+          b.addEventListener("pointerup", event => cancelGyroDrag(event));
+          b.addEventListener("pointercancel", event => cancelGyroDrag(event));
+          b.addEventListener("click", event => event.preventDefault());
+        } else {
+          b.onclick = () => playPrefabAction(item.action, null);
+        }
         hotzoneLayer.appendChild(b);
       });
+    }
+
+    function beginGyroDrag(action, element, event) {
+      if (!player || activeGyroDrag) return;
+      event.preventDefault();
+      event.stopPropagation();
+      try {
+        element.setPointerCapture(event.pointerId);
+      } catch (e) { /* pointer capture is optional */ }
+      element.classList.add("holding");
+      activeGyroDrag = {
+        action,
+        element,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        threshold: Math.max(72, stage.clientWidth * action.gyro.moveThreshold / 100),
+      };
+    }
+
+    function moveGyroDrag(event) {
+      const drag = activeGyroDrag;
+      if (!drag || event.pointerId !== drag.pointerId) return;
+      const deltaX = event.clientX - drag.startX;
+      if (Math.abs(deltaX) < drag.threshold) return;
+      activeGyroDrag = null;
+      drag.element.classList.remove("holding");
+      try {
+        if (drag.element.hasPointerCapture(drag.pointerId)) {
+          drag.element.releasePointerCapture(drag.pointerId);
+        }
+      } catch (e) { /* element may already be detached */ }
+      playGyroAction(drag.action, deltaX < 0 ? 0 : 1);
+    }
+
+    function cancelGyroDrag(event) {
+      const drag = activeGyroDrag;
+      if (!drag) return;
+      if (event && event.pointerId !== drag.pointerId) return;
+      activeGyroDrag = null;
+      drag.element.classList.remove("holding");
+      try {
+        if (drag.element.hasPointerCapture(drag.pointerId)) {
+          drag.element.releasePointerCapture(drag.pointerId);
+        }
+      } catch (e) { /* element may already be detached */ }
+    }
+
+    function playGyroAction(action, destinationIndex) {
+      if (!action) return;
+      action.destinationIndex = destinationIndex;
+      playPrefabAction(action, null);
+    }
+
+    async function enableDeviceOrientation() {
+      if (deviceOrientationEnabled || typeof DeviceOrientationEvent === "undefined") return;
+      try {
+        if (typeof DeviceOrientationEvent.requestPermission === "function") {
+          const result = await DeviceOrientationEvent.requestPermission();
+          if (result !== "granted") return;
+        }
+        window.addEventListener("deviceorientation", handleDeviceOrientation);
+        deviceOrientationEnabled = true;
+        gyroBaseline = null;
+      } catch (e) {
+        showError("浏览器未允许设备方向感应，可改用画面左右拖动。");
+      }
+    }
+
+    function handleDeviceOrientation(event) {
+      if (!activeGyroAction || selectedToolId !== 14 || advanceTargetStage) return;
+      const angle = screen.orientation?.angle ?? window.orientation ?? 0;
+      const value = Math.abs(angle) === 90 ? event.beta : event.gamma;
+      if (!Number.isFinite(value)) return;
+      if (gyroBaseline === null) {
+        gyroBaseline = value;
+        return;
+      }
+      const delta = value - gyroBaseline;
+      if (Math.abs(delta) < activeGyroAction.gyro.moveThreshold) return;
+      const action = activeGyroAction;
+      gyroBaseline = value;
+      activeGyroAction = null;
+      playGyroAction(action, delta < 0 ? 0 : 1);
+    }
+
+    function beginLongPress(action, element, event) {
+      if (!player || activeLongPress) return;
+      event.preventDefault();
+      event.stopPropagation();
+      try {
+        element.setPointerCapture(event.pointerId);
+      } catch (e) { /* pointer capture is optional */ }
+      restoringIdle = true;
+      advanceTargetStage = null;
+      advanceLastMotion = null;
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+      const start = (action.mix || []).find(animationExists);
+      const loop = action.longPress.loop;
+      if (start) {
+        player.setAnimation(start, false);
+        if (animationExists(loop)) player.animationState.addAnimation(0, loop, true, 0);
+        player.play();
+      }
+      element.classList.add("holding");
+      const press = { action, element, pointerId: event.pointerId, timer: null };
+      press.timer = setTimeout(() => completeLongPress(press), action.longPress.threshold * 1000);
+      activeLongPress = press;
+    }
+
+    function completeLongPress(press) {
+      if (activeLongPress !== press || !player) return;
+      activeLongPress = null;
+      press.element.classList.remove("holding");
+      const action = press.action;
+      const success = animationExists(action.longPress.success)
+        ? action.longPress.success
+        : (action.motions || []).find(animationExists);
+      if (!success) {
+        restoringIdle = false;
+        playIdle();
+        return;
+      }
+      const targetStage = resolveActionNextStage(action);
+      restoringIdle = false;
+      advanceTargetStage = targetStage;
+      advanceLastMotion = success;
+      player.animationState.data.defaultMix = 0.2;
+      player.setAnimation(success, false);
+      player.play();
+      if (targetStage) {
+        const delay = Math.min(9000, Math.max(1200, animationDuration(success) * 1000 + 300));
+        advanceTimer = setTimeout(() => {
+          if (advanceTargetStage === targetStage) enterStage(targetStage);
+        }, delay);
+      }
+    }
+
+    function cancelLongPress(playFailure, event) {
+      const press = activeLongPress;
+      if (!press) return;
+      if (event && event.pointerId !== press.pointerId) return;
+      clearTimeout(press.timer);
+      activeLongPress = null;
+      press.element.classList.remove("holding");
+      try {
+        if (press.element.hasPointerCapture(press.pointerId)) {
+          press.element.releasePointerCapture(press.pointerId);
+        }
+      } catch (e) { /* element may already be detached */ }
+      if (!playFailure || !player) {
+        restoringIdle = false;
+        return;
+      }
+      if (press.action.longPress.actionType === 1) {
+        restoringIdle = false;
+        const shortAction = {
+          ...press.action,
+          mix: (press.action.mix || []).slice(0, 1),
+          motions: [],
+          nextStage: null,
+          longPress: null,
+        };
+        playPrefabAction(shortAction, null);
+        return;
+      }
+      const fail = press.action.longPress.fail;
+      restoringIdle = false;
+      advanceTargetStage = null;
+      advanceLastMotion = null;
+      if (animationExists(fail)) {
+        player.animationState.data.defaultMix = 0.2;
+        player.setAnimation(fail, false);
+        player.play();
+      } else {
+        playIdle();
+      }
     }
 
     function hotzoneToScreenBox(zone, viewport) {
@@ -1176,6 +1459,7 @@
     }
 
     function hotzoneLabel(action, idx) {
+      if (action.label) return action.label.split(/[：:]/)[0].replace(/^画面/, "");
       if (action.kind === "drag") return "拖";
       if (action.kind === "gyro") return "晃";
       if (action.gauge) return "计";
@@ -1198,7 +1482,7 @@
       const next = target ? ` -> 阶段${target}` : "";
       const gauge = action.gauge ? "计量" : "";
       const clicks = action.clickMax ? `${action.clickMax}击` : "";
-      return `${kind}${idx + 1}${gauge}${clicks}${next}`;
+      return `${action.label || `${kind}${idx + 1}`}${gauge}${clicks}${next}`;
     }
 
     function animationExists(name) {

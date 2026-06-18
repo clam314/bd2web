@@ -140,3 +140,225 @@
 - `illust_dating17` 的唯一推进点是 `point1_26_touch [Override]`：`stage=1`、`id=26`、`tool=0`、`PlayMixAnimNames=["mix1_26_1"]`、`_playMotionNames=["motion1_26"]`、`ForceIdleWhenNextState=0`。
 - `illust_dating17` 该点没有 `_interactionBoxZoneRectTransform`，只能用自身 `_rectTransform`；它挂在 `Parent > SkeletonGraphic > SkeletonUtility-SkeletonRoot > root > A__ > ALL > 0aaa_ppppppppppppp2 > point1_26_touch [Override]`。
 - 静态矩阵投影结果落在当前 16:9 viewport 外，因此页面不显示热区。这个点很可能依赖 Spine bone/运行时 follow 位置，下一步应读取当前 skeleton bone world transform，而不是硬用 prefab 静态坐标。
+
+## 2026-06-18 心契18 gyro 重复播放修复
+
+- 进一步解析 18 的 `_destinations` 指针后确认：四个重复 gyro 点都各自指向两个独立的 `InteractionPointDestination` MonoBehaviour，对应名称后缀 `_0` / `_1`。
+- 两个 destination 的 RectTransform 位于相反方向，例如：
+  - `interactionDestination1_14_0.x = 1554`，`interactionDestination1_14_1.x = -1909`。
+  - `interactionDestination2_10_0.x = -2187`，`interactionDestination2_10_1.x = 2002`。
+  - `interactionDestination6_42_0.x = 2006`，`interactionDestination6_42_1.x = -2242`。
+  - `interactionDestination7_13_0.x = -2010`，`interactionDestination7_13_1.x = 2003`。
+- 这证明重复 `_playMotionNames` 是按 destination 索引对齐：两个方向各有一个 motion 条目；网页此前把整个数组连续播放，错误地把一次动作播了两遍。
+- `dating.html` 只给这四个 gyro 点增加 `destinationIndexed: true`。当前网页的一次点击代表一次完成的 gyro 触发，因此 `prefabActionSequence()` 只消费一个 destination 对应的 motion。
+- 没有对所有动作做通用去重；drag/touch/gauge 以及其它资源的重复动画仍按 prefab 原数据处理，避免误删可能有意义的重复步骤。
+- 后续实现真实 gyro 方向时，应根据摇晃/移动方向选择 destination index；当前两个索引里的 motion 名相同，所以先取第一个不会造成动画分支丢失。
+
+## 2026-06-18 心契18 七阶段状态图确认
+
+证据来源：
+
+- Unity bundle `common-char-datingillust_assets_all.bundle` 中 `illust_dating18` prefab 的默认待机、推进点、热区坐标和 `ForceIdleWhenNextState`。
+- 本地逐个播放 Spine 的 `idle1` 到 `idle7`，对比每个画面的视角和丝袜状态。
+- GameKee《满好感角色互动攻略》中“致胜王牌 -莎拉（尊爵不凡）”一节：
+  <https://www.gamekee.com/zsca2/644053.html>。文章明确说明先在背后视角撕开丝袜，再转到桌下视角分别处理左右腿，完成后进入二阶段。
+
+已确认状态：
+
+| 阶段 | 默认动画 | 画面状态 | 进入/离开关系 |
+|---|---|---|---|
+| 1 | `idle1` | 一阶段桌下视角，丝袜完整 | `1_14_14` 切到阶段2 |
+| 2 | `idle2` | 一阶段背后视角，丝袜完整 | `2_10_14` 回阶段1；`2_11_0` 或 `2_12_0` 撕开后进阶段3 |
+| 3 | `idle3` | 回到桌下视角，左右腿丝袜等待分别去除 | 左侧热区 `3_1_0` 进阶段4；右侧热区 `3_2_0` 进阶段5 |
+| 4 | `idle4` | 画面左腿已完成，右腿仍有丝袜 | 右侧热区 `4_1_0` 进阶段6 |
+| 5 | `idle5` | 画面右腿已完成，左腿仍有丝袜 | 左侧热区 `5_1_0` 进阶段6 |
+| 6 | `idle6` | 二阶段桌下视角，左右丝袜均已去除 | `6_42_14` 切到阶段7 |
+| 7 | `idle7` | 二阶段背后视角，丝袜已去除 | `7_13_14` 回阶段6 |
+
+```text
+阶段1（桌下/完整） <----> 阶段2（背后/完整）
+                              |
+                         撕开丝袜
+                              v
+                    阶段3（桌下/双腿待处理）
+                       /                 \
+                  先处理左腿           先处理右腿
+                     v                     v
+                 阶段4                  阶段5
+                       \                 /
+                        完成另一侧
+                              v
+阶段6（二阶段桌下/完成） <----> 阶段7（二阶段背后/完成）
+```
+
+热区左右也有 prefab 坐标和最终画面双重证据：
+
+- 阶段3 的 `3_1_0` 中心 x 为 `-166.5`，进入阶段4；`idle4` 显示画面左腿已完成。
+- 阶段3 的 `3_2_0` 中心 x 为 `168.8`，进入阶段5；`idle5` 显示画面右腿已完成。
+- 阶段4 仅剩右侧 `4_1_0`；阶段5 仅剩左侧 `5_1_0`，两者完成后都汇合到阶段6。
+
+页面改动：
+
+- 只为 `illust_dating18` 增加有证据的阶段名称和推进动作名称，阶段按钮会显示“阶段1 · 一阶段·桌下”等说明。
+- 互动按钮不再显示无意义的“拖拽1/晃动1”，改为“切到背后视角”“背后撕开丝袜”“去掉画面左腿丝袜”等与实际状态变化一致的文字。
+- 本次没有把 drag/gyro 强行改成自制手势判定。prefab 的 destination、长按阈值和方向完成条件尚未全部确认；在找到字段证据前，页面仍保留点击触发的调试行为。
+
+## 2026-06-18 心契18 解锁长按逻辑
+
+重新读取原始 Unity prefab 的完整 MonoBehaviour typetree 后，确认阶段2到阶段6的六个推进点不是普通单击：
+
+- `_interactionActionType = 1`，资源节点本身是 drag 类型。
+- `_longPressSettingData.ActionType = 2`。
+- `_longPressSettingData.ThresholdTime = 1.0`，六个点完全一致。
+- 每个点都明确提供：
+  - `LoopMixAnimationName`：按住期间的循环动画，例如 `mix3_1_loop`。
+  - `FailMixAnimationName`：未达到阈值释放时的回退动画，例如 `mix3_1_2`。
+  - `SuccessMixAnimationName`：达到阈值后的成功动画，例如 `motion3_1`。
+- GameKee 攻略同样明确写的是长按撕开、长按左右腿去除，因此本轮把 long-press 作为解锁条件，不要求用户必须拖到 destination。
+
+六个点的原始规则：
+
+| prefab key | 阈值 | 循环 | 失败 | 成功 | 下一阶段 |
+|---|---:|---|---|---|---:|
+| `2_11_0` | 1秒 | `mix2_11_loop` | `mix2_11_2` | `motion2_12` | 3 |
+| `2_12_0` | 1秒 | `mix2_12_loop` | `mix2_12_2` | `motion2_12` | 3 |
+| `3_1_0` | 1秒 | `mix3_1_loop` | `mix3_1_2` | `motion3_1` | 4 |
+| `3_2_0` | 1秒 | `mix3_2_loop` | `mix3_2_2` | `motion3_2` | 5 |
+| `4_1_0` | 1秒 | `mix4_1_loop` | `mix4_1_2` | `motion4_1` | 6 |
+| `5_1_0` | 1秒 | `mix5_1_loop` | `mix5_1_2` | `motion5_1` | 6 |
+
+实现范围：
+
+- 18 的上述画面热区改为 Pointer Events 长按，鼠标和触摸共用同一套逻辑。
+- 按下先播放 `PlayMixAnimNames` 的第一段，再循环 prefab 指定的 `LoopMixAnimationName`。
+- 1 秒内释放播放 `FailMixAnimationName`，随后恢复当前阶段待机，不推进。
+- 按满 1 秒播放 `SuccessMixAnimationName`；成功动画结束后才进入 prefab 指定阶段。
+- 热区显示“按住”，按压期间有高亮反馈；设置 `touch-action: none`，避免手机浏览器把长按识别成滚动手势。
+- 左侧互动按钮仍是分析/调试直达按钮，真实长按操作位于画面热区。
+
+destination 方向证据保留给后续普通拖拽动作：
+
+- `2_11_0` destination `(870, 0)`，向画面右侧。
+- `2_12_0` destination `(-846, 0)`，向画面左侧。
+- `3_1_0` destination `(-914, 19)`，向画面左侧。
+- `3_2_0` destination `(846, -4)`，向画面右侧。
+- `4_1_0` 从 `(-168, 212)` 到 `(740, 208)`，向画面右侧。
+- `5_1_0` 从 `(-1, 0)` 到 `(-15, -879)`，主要向下。
+
+这些 destination 证明资源还支持方向性拖动，但没有证据表明解锁必须同时满足“拖到 destination”和“长按 1 秒”。攻略与 long-press 字段已足以确认当前解锁方式，因此暂不附加自创距离阈值。
+
+浏览器验证：
+
+- 阶段2短按热区后仍停留阶段2。
+- 阶段2按满1秒后进入阶段3。
+- `3 -> 4 -> 6` 和 `3 -> 5 -> 6` 两条顺序均完整通过。
+- 验证过程无控制台 error/warning。
+
+## 2026-06-18 心契18 视角倾斜/移动逻辑
+
+四个视角切换点的完整 prefab 字段一致：
+
+| prefab key | gyro action | move threshold | sensitivity | destinations | 下一阶段 |
+|---|---:|---:|---:|---:|---:|
+| `1_14_14` | 1 | 18 | 1500 | 左右各1个 | 2 |
+| `2_10_14` | 1 | 18 | 1500 | 左右各1个 | 1 |
+| `6_42_14` | 1 | 18 | 1500 | 左右各1个 | 7 |
+| `7_13_14` | 1 | 18 | 1500 | 左右各1个 | 6 |
+
+补充对照整个 dating prefab：
+
+- gyro `_actionType=0` 的点没有 destination，使用 `_shakingThreshold` / `_shakingHoldTime`，更接近原地摇晃。
+- gyro `_actionType=1` 的点使用 `_movePointThreshold` / `_movePointSensitivity`；18 的四个点额外提供左右 destination，明确是方向移动类交互。
+- 四个点的左右 destination 大约位于 `x=-1900~-2240` 和 `x=1550~2006`，说明左右两个方向都可完成视角切换。
+
+官方 UI 资源证据：
+
+- 从 `common-ui-atlas_assets_ui/atlas/interactiongui.spriteatlasv2.bundle` 的 `InteractionGUI` SpriteAtlas 读取到：
+  - `icon_interaction_toolbar_14` 是一个特殊角色/工具图标，并非通用陀螺仪图标。
+  - `icon_interaction_toolbar_15` 才是标准陀螺仪图标。
+- 因此 `point*_gyro_tool14` 的含义是“选中 tool14 后执行 gyro 移动动作”，不能把 tool14 本身直接命名成陀螺仪。
+- 目前没有文本资源能证明 tool14 的正式中文名称，页面继续保留“道具14”，不凭图标猜名字。
+
+实现：
+
+- 四个 gyro 热区不再单击触发，热区提示改为“左右倾斜”。
+- 手机选择 `道具14` 后启用 `DeviceOrientationEvent`：
+  - 竖屏使用 `gamma`，横屏使用 `beta`。
+  - 以进入当前阶段后的第一次方向值为基线，变化达到 prefab 的 `moveThreshold=18` 时触发。
+  - iOS 会在点击道具14时请求方向传感器权限；拒绝后仍可使用画面拖动。
+- 桌面端没有设备方向传感器，增加按住热区水平拖动模拟：
+  - 拖动距离达到画面宽度的18%时触发。
+  - 18%是浏览器端对 prefab 数值18的明确适配，不声称 Unity 原单位是百分比。
+- 左右方向会选择对应 destination index；当前两侧绑定的 motion 名相同，但不再固定消费第一个索引，为以后出现不同方向动画保留正确结构。
+- 长按热区位于 gyro 大热区上层，仍可正常完成阶段2到阶段6的解锁，不会被视角拖动抢走。
+
+浏览器验证：
+
+- 阶段1单击 gyro 热区后仍停留阶段1。
+- 水平拖动可完成 `阶段1 -> 阶段2 -> 阶段1`。
+- 水平拖动可完成 `阶段6 -> 阶段7 -> 阶段6`。
+- 四次切换均只播放一次 motion，控制台无 error/warning。
+
+## 2026-06-18 心契18 普通互动第一批（阶段1/2）
+
+本轮开始接入攻略中缺失的普通互动，只覆盖一阶段正面与背面，不提前拼装阶段6牌局。
+
+证据来源：
+
+- Unity prefab 中 `Illust_dating18` 下的 92 个互动 MonoBehaviour。
+- prefab 的 `_interactionActionType`、`PlayMixAnimNames`、`_longPressSettingData` 和 RectTransform。
+- `illust_dating18.skel` 中每段 mix 动画实际修改的 slot/attachment 名称。
+- 巴哈姆特文章 `https://m.gamer.com.tw/forum/C.php?bsn=76207&snA=10163` 的操作说明。
+
+阶段1新增13个普通点：
+
+| prefab point | 已确认对象 | 操作 |
+|---|---|---|
+| `1_1` | 左胸 | 点击；长按1秒播放 `mix1_1_long` |
+| `1_2` | 右胸衣物 | 拖动/长按，含 loop、失败、成功动画 |
+| `1_3` | 腹部 | 点击 |
+| `1_4` | 泳装下部/润滑 | 点击 |
+| `1_5` | 画面右侧大腿 | 拖动/长按 |
+| `1_6` | 画面左侧大腿 | 拖动/长按 |
+| `1_7` | 画面左侧脚部 | 拖动/长按 |
+| `1_8` | 画面右侧脚部 | 点击；长按1秒 |
+| `1_9` | 画面左侧高跟鞋 | 点击 |
+| `1_10` | 画面右侧高跟鞋 | 点击 |
+| `1_11` | 上方中部点 | 点击；身体部位名称暂不猜 |
+| `1_12` | 画面左上点 | 点击；身体部位名称暂不猜 |
+| `1_13` | 画面右上点 | 点击；身体部位名称暂不猜 |
+
+阶段2新增9个普通点：
+
+| prefab point | 已确认对象 | 操作 |
+|---|---|---|
+| `2_1` | 脸部亲吻 | 点击 |
+| `2_2` | 画面左侧手 | 拖动/长按 |
+| `2_3` | 画面右侧手 | 拖动/长按 |
+| `2_4` | 胸部 | 点击/长按 |
+| `2_5` | 背部 | 点击/长按 |
+| `2_6` | 臀部 | 点击/长按 |
+| `2_7` | 泳装下部 | 拖动/长按 |
+| `2_8` | 按摩椅 | 点击 |
+| `2_9` | 小尤里 | 点击 |
+
+实现说明：
+
+- 普通点热区坐标来自 prefab RectTransform，并按 SkeletonGraphic 的 `0.25` 缩放换算到现有游戏窗口坐标。
+- 身体热区层级高于覆盖全画面的视角 gyro 区，防止普通点被视角切换区挡住。
+- 热区文字优先显示已确认对象，不再只显示无意义的序号。
+- long press `ActionType=1`：
+  - 短按重新播放普通 mix。
+  - 按满1秒播放 success mix。
+- long press `ActionType=2`：
+  - 按下播放开始 mix 和 loop。
+  - 提前释放播放 prefab 的 fail mix。
+  - 按满1秒播放 success mix。
+- 本轮没有自行补拖动方向阈值。资源虽有 destination，但在完整方向完成条件实现前，仍以 prefab 已明确的1秒长按规则触发特殊分支。
+
+验证：
+
+- 页面内联脚本通过 Node 语法检查。
+- `git diff --check` 通过。
+- 本轮新增的阶段1/2所有 mix、loop、long 名称均在 `illust_dating18.skel` 中存在。
+- 当前受限运行环境禁止监听本地端口，且内置浏览器安全策略不允许打开 `file://`，因此本轮未能进行实际画面点击验证。需在已有本地服务中刷新 `dating.html?v=<新时间戳>` 后继续视觉校准。
