@@ -390,6 +390,75 @@
       return { x: CUT_CX - CUT_W / 2, y: CUT_CY - CUT_H / 2, width: CUT_W, height: CUT_H };
     }
 
+    // 计算一组动画的并集包围盒（给 per-animation viewport 用），p 是 spine-player
+    function unionAnimViewport(p, animNames) {
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const name of animNames) {
+        const anim = p?.skeleton?.data?.findAnimation?.(name);
+        if (!anim) continue;
+        const b = {};
+        try { p.calculateAnimationViewport(anim, b); }
+        catch(_) { continue; }
+        if (b.x < minX) minX = b.x;
+        if (b.y < minY) minY = b.y;
+        if (b.x + b.width  > maxX) maxX = b.x + b.width;
+        if (b.y + b.height > maxY) maxY = b.y + b.height;
+      }
+      if (!isFinite(minX)) return null;
+      return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
+    }
+
+    // 给当前 cutscene 的主+副 player 写 per-animation viewport：
+    // - cut_A 阶段（cut_A、cut_A_fx）：用主 skel 这两个动画的并集
+    // - cut_B 阶段（cut_B、cut_B_B、cut_B_F）：主+副 三个动画的并集——主和副共用同一框 → 对齐
+    // 别的动画（loop / loop_2）不写，沿用默认 padding 自适应
+    function setupCutsceneViewports() {
+      if (!player?.skeleton) return;
+      const mainAnims = player.skeleton.data.animations.map(a => a.name);
+
+      const aBox = unionAnimViewport(player, ["cut_A","cut_A_fx"].filter(n => mainAnims.includes(n)));
+      // cut_B 阶段：主的 cut_B + 所有 extras 的 cut_B_B/cut_B_F
+      const bAnimsByPlayer = [["cut_B"]];
+      extraPlayers.forEach(ep => {
+        const exAnims = ep?.skeleton?.data?.animations?.map(a => a.name) || [];
+        bAnimsByPlayer.push(["cut_B_B","cut_B_F"].filter(n => exAnims.includes(n)));
+      });
+      // 计算 cut_B 阶段并集：主+副 各自包围盒（同一世界坐标系），再求总并集
+      let bMin = {x:Infinity, y:Infinity}, bMax = {x:-Infinity, y:-Infinity};
+      const players = [player, ...extraPlayers];
+      bAnimsByPlayer.forEach((names, i) => {
+        const box = unionAnimViewport(players[i], names);
+        if (!box) return;
+        bMin.x = Math.min(bMin.x, box.x);
+        bMin.y = Math.min(bMin.y, box.y);
+        bMax.x = Math.max(bMax.x, box.x + box.width);
+        bMax.y = Math.max(bMax.y, box.y + box.height);
+      });
+      const bBox = isFinite(bMin.x) ? { x: bMin.x, y: bMin.y, width: bMax.x - bMin.x, height: bMax.y - bMin.y } : null;
+
+      // 适度外扩 8% 给画面留 padding（spine-player 的 viewport 不会自动留边）
+      const expand = (b, ratio = 0.08) => b && ({
+        x: b.x - b.width * ratio,
+        y: b.y - b.height * ratio,
+        width: b.width * (1 + ratio * 2),
+        height: b.height * (1 + ratio * 2),
+      });
+      const aBoxE = expand(aBox), bBoxE = expand(bBox);
+
+      const writeAnimVp = (p, mapping) => {
+        if (!p?.config?.viewport) return;
+        p.config.viewport.animations = p.config.viewport.animations || {};
+        for (const [name, box] of Object.entries(mapping)) {
+          if (!box) continue;
+          if ((p.skeleton?.data?.animations || []).some(a => a.name === name)) {
+            p.config.viewport.animations[name] = box;
+          }
+        }
+      };
+      writeAnimVp(player, { cut_A: aBoxE, cut_A_fx: aBoxE, cut_B: bBoxE });
+      extraPlayers.forEach(ep => writeAnimVp(ep, { cut_B_B: bBoxE, cut_B_F: bBoxE }));
+    }
+
     // 把 #stage 锁成游戏窗口比例并居中；同时同步 #vignette 的 inset，让暗角只盖在舞台上
     function layoutStage() {
       const isCutscene = currentPart === "cutscene";
@@ -519,10 +588,10 @@
         showLoading: false,
         alpha: true,
         premultipliedAlpha: false, // 占位，加载完成后按 atlas 实际标记修正（见 success）
-        // cutscene 用游戏原窗口 1600×720（固定 viewport）：必须固定，否则副 skel 叠播时
-        // 各自 auto-fit 的中心不同会错位。立绘走自适应 padding。
-        viewport: isCutscene ? cutsceneViewport() :
-          { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
+        // cutscene 模式：主+副 player 都用 padding 自适应，详细的 per-animation 拟合框
+        // 在 success 后由 setupCutsceneViewports() 写入（主和副共用同一并集框→对齐）。
+        // 立绘模式：自适应 padding。
+        viewport: { padLeft: "5%", padRight: "5%", padTop: "5%", padBottom: "5%" },
         success: (p) => {
           // 贴图 alpha 模式必须和素材导出一致，否则边缘出现白边/黑边。
           // 不同来源导出不同（gamekee 为 pma，myssal 为直通），从播放器
@@ -577,6 +646,13 @@
           });
 
           renderEntries(p, animBox);
+          // cutscene 多 skel 模式：主 player 也可能后于 extras 完成；同样推到下一个微任务，
+          // 等所有 player 的 skeleton 都到位再写 per-animation viewport（保证对齐）。
+          if (part === "cutscene") {
+            setTimeout(() => {
+              if (player?.skeleton && extraPlayers.every(ep => ep?.skeleton)) setupCutsceneViewports();
+            }, 0);
+          }
         },
         error: (_p, reason) => {
           showError("加载失败：" + reason);
@@ -615,6 +691,11 @@
               } catch(_) {}
               // 副 player 默认不要把 setup pose 画出来——等 schedule 起播时再 setAnimation。
               try { ep.animationState.clearTracks(); ep.skeleton.setToSetupPose(); } catch(_) {}
+              // 等所有副 player 都加载完，计算 per-animation viewport（主+副共用 cut_B 并集 → 对齐）。
+              // 用 setTimeout(0) 推到下一个微任务——避免 success 同步触发时 extraPlayers.push() 还没返回。
+              setTimeout(() => {
+                if (player?.skeleton && extraPlayers.every(p => p?.skeleton)) setupCutsceneViewports();
+              }, 0);
             },
             error: (_p, reason) => console.warn(`[extra ${idx}] ${reason}`),
           };
