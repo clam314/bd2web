@@ -5,12 +5,41 @@
 
 ## 待办
 
-1. **运镜曲线（放大缩小/平移）** — 优先级中
+1. **运镜曲线（放大缩小/平移）** — 数据已就绪，前端接入待办
    - 游戏技能是 Timeline `CharXXXXXX_Skill`，含 Animation Track 给 RectTransform 打的
-     缩放/位移关键帧（"Recorded" 无限片段）。当前播放器是固定取景，没有运镜。
-   - 难点：曲线存在 Unity 压缩二进制（m_MuscleClip / streamed clip），UnityPy typetree 读不到，
-     需解 streamed 格式或 il2cpp 类型树。
-   - 产出：每套服装一条相机关键帧 → 播放时驱动 player viewport 动画。
+     缩放/位移关键帧（"Recorded" 无限片段）。
+   - **2026-06-17 突破**：StreamedClip 二进制格式按 AssetStudio 格式手解通了，
+     `tools/extract_cutscene_shots.py` 已经把 154 个角色的真实运镜/Bg 切换/PostProcessVolume
+     调色全部解出存 `data/cutscene_shots.json`（1.6M）。增量提取（bundle hash 做 key）。
+   - **关键发现**：真实运镜比想象的简单——大多数角色只是 Anchors 的 X 慢平移
+     + 在某个时间点硬切（Bg_A_shadow OFF + PostProcessVolume 切换）。
+     之前做的程序化平滑 push-in + 段切震屏方向是错的，需要回退。
+   - **2026-06-17**：
+     - 接入 Timeline 后发现 Anchors.AnchoredX/Y 语义不统一：char000101 末尾用 5000/200000 把 UI
+       容器"飞出屏幕"切回战斗 UI；char003803 主阶段是 0.7-0.87 的 normalized 值；真实平移
+       （749→-787）在 loop_2 阶段。统一映射成 translate 会把角色推出可视区。
+     - **当前**：translate 驱动已撤回，只保留 PostProcessVolume 调色切换（清晰可靠）。
+       sentinel frame 已正确解为 t=0 基线（之前漏了，导致末段大数值被读为初始值）。
+     - **下一步**：要做相机平移得先搞清"对每个角色哪个节点才是相机锚点"——可能
+       要看 PlayableDirector 的绑定信息，或者用更针对性的启发式（按值域筛掉非相机轨）。
+
+7. **多 skel 叠播 cutscene（cut_B 阶段缺件）** — **未解决，优先级高**
+   - 2026-06-18 dump TimelineAsset 才发现：cutscene 不是单 skel。char003803 cut_B 时段（wall t=3.367~4.867s）
+     缺胳膊/裙摆/武器尾段，因为这些部件在副 skel `cutscene_char003803_1` 的 `cut_B_B`（背景层）和
+     `cut_B_F`（前景层）动画里，主 skel 的 cut_B 故意把对应 slot 抠空。
+   - 资源已在本地 `upstream/spine/cutscenes/cutscene_char003803_1/`（1.6MB skel），是 myssal 仓库正常同步的。
+   - 详细分析与修复步骤见 **AGENTS.md「多 skel 叠播 cutscene」** 段。
+   - 待做：roster.json 加 extras + index.html 支持多 player 透明叠播 + schedule 按 playerIdx 分发。
+
+6. **char003803 黎维塔奇迹玫瑰"只剩腿脚"** — 已解决
+   - 之前以为是部件化骨骼（小写 `a_arm*` 部件动画）缺失，写了 overlayTarget 的 `^[a-z]_` 分支
+     去叠播——实际是误判：用 `strings` 提取 skel 时把 bone/slot 名字混进来当 anim 名了，
+     这个角色其实只有 5 个动画（cut_A、cut_A_fx、cut_B、loop、loop_2）。
+   - 真因：主链 `cut_A → cut_B → loop` 终止于 `loop`，而 `loop` 是横躺翻腾过渡帧；
+     `loop_2` 才是站立 hero 终态。
+   - **2026-06-17 修复**：`chainQueue` 改为跳过中间 loop，链尾用 bodies 里最后一个 loop
+     （loop_2 优先于 loop），对所有角色生效。拉德尔验证渲染依然正常。
+   - 小写部件分支（`^[a-z]_` 在 overlayTarget）保留，对其他真有部件化设计的角色可能有用。
 
 2. **逐角色取景精修** — 优先级中
    - 现在 cutscene 用统一 1600 窗口、原点居中略上移（CUT_WIN/CUT_CX/CUT_CY，见 index.html）。
@@ -28,6 +57,9 @@
 4. **粒子特效（水花/光线）** — 优先级低 / 可能不做
    - 游戏 Timeline 的 Control Track 触发 Unity ParticleSystem（如 0.35s 水爆、5.73s 光线）。
      网页 spine 框架无法播放，需 WebGL 粒子另写，投入产出比低。
+   - **部分已解决（2026-06-16）**：制作者把光效/血花/武器轨迹/召唤物也做成了 spine 动画
+     （与主 cut 共骨骼，不同插槽）。index.html `renderEntries` 现在把它们识别为 overlay
+     并在 track 2+ 上与对应主 cut 同时播。剩下的纯 Unity 粒子（爆炸、火花粒子流）仍未覆盖。
 
 5. **后期精修** — 优先级低
    - 现用 CSS 近似（暗角 + brightness/contrast/saturate）。APK 真值：

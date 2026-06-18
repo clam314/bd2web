@@ -253,7 +253,6 @@
     const params = new URLSearchParams(location.search);
     const useCdn = location.hostname.endsWith("github.io")   // Pages 上自动走 CDN
       || params.has("cdn");                                  // 本地加 ?cdn=1 可模拟
-
     const customAssetBases = params.get("asset_base")
       ?.split(",")
       .map(v => v.trim())
@@ -509,8 +508,11 @@
         showLoading: false,
         alpha: true,
         premultipliedAlpha: false, // 占位，加载完成后按 atlas 实际标记修正（见 success）
-        viewport: isCutscene ? cutsceneViewport() :
-          { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
+        // cutscene 模式之前强制锁到 1600×720（来自 APK 的游戏窗口尺寸），但部分角色的
+        // cut_B / loop 把骨骼摆得很开（如 char003803 黎维塔奇迹玫瑰翻腾时双腿垂直朝上），
+        // 整个上半身会飞出视口，看起来就像"只剩腿和手"。游戏里靠 Timeline 运镜跟踪角色，
+        // 我们没接相机数据，索性退回自适应 padding——保证角色不出框，牺牲一点"游戏窗口感"。
+        viewport: { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
         success: (p) => {
           // 贴图 alpha 模式必须和素材导出一致，否则边缘出现白边/黑边。
           // 不同来源导出不同（gamekee 为 pma，myssal 为直通），从播放器
@@ -579,6 +581,7 @@
       else config.jsonUrl = assetUrl(src.skeleton);
 
       player = new spine.SpinePlayer("stage", config);
+      window._dbgPlayer = player;   // 调试用：可在控制台/Playwright 里检查骨骼状态
     }
 
     // 动画的播放逻辑还原游戏内的结构：
@@ -668,10 +671,17 @@
         for (let j = bodies.indexOf(name) + 1; j < bodies.length; j++) {
           const n = bodies[j];
           if (n.endsWith("_ef")) continue; // 特效片段是叠加用的，不串进主序列
+          if (isLoopName(n)) break;        // 碰到循环就停，下面统一加最后一个 loop
           queue.push(n);
-          if (isLoopName(n)) return queue;
         }
-        return baseLoop && baseLoop !== name ? [baseLoop] : [];
+        // 链尾循环：用 bodies 里**最后一个** loop（如 loop_2 优先于 loop）。
+        // 原因：某些角色（如 char003803）的 loop 是"翻腾过渡帧"（横躺、上半身藏在镜头外），
+        // loop_2 才是稳定的 hero 终态（站立、面朝镜头、衣服展开）。游戏 Timeline 里末段播 loop_2，
+        // 我们没接 Timeline 就直接用最后一个 loop 当链尾，对绝大多数角色都更接近游戏感。
+        const loops = bodies.filter(isLoopName);
+        if (loops.length) queue.push(loops[loops.length - 1]);
+        else if (baseLoop && baseLoop !== name) queue.push(baseLoop);
+        return queue;
       };
 
       // 把整条链整合成一个条目：中间片段（cut_2、cut_3）和同名配对的收尾
@@ -693,31 +703,90 @@
       const bgs = (currentPart === "cutscene" && Array.isArray(currentCostume.bg))
         ? currentCostume.bg : [];
 
-      // 切换主 cut 时同步调度 overlay：清空所有 overlay 轨道，再按 base 分组分轨重放。
-      // 与 track 0 的主 cut 同帧 setAnimation，靠 start 事件触发，保证起播时机一致。
-      const maxOverlayTracks = Math.max(0, ...Object.values(overlaysByMain).map(g => g.length));
-      const scheduleOverlaysFor = (mainName) => {
-        if (!player) return;
-        for (let t = 2; t < 2 + maxOverlayTracks; t++) {
-          player.animationState.setEmptyAnimation(t, 0.1);
+      // overlay 调度策略：链首主 cut 起播时，把**所有 main 的所有 overlay 组**一次性
+      // 全部上轨（每组循环第一段），后续 cut_B/loop 起播都不再动 overlay 轨。
+      // 这样避免了 cut_B 起播时把 cut_A 的部件清掉，导致衣服/丝带消失。
+      // 视觉上多 pose 同时叠播不精确（游戏 Timeline 里是顺序触发），但优于"裸体只剩骨骼"。
+      let overlaysStarted = false;
+      const scheduleOverlaysFor = (_mainName) => {
+        if (!player || overlaysStarted) return;
+        let track = 2;
+        for (const groups of Object.values(overlaysByMain)) {
+          if (!groups) continue;
+          for (const group of groups) {
+            try {
+              player.animationState.setAnimation(track, group[0], true);
+            } catch (e) { /* 找不到的 overlay 静默跳过 */ }
+            track++;
+          }
         }
-        const groups = overlaysByMain[mainName] || [];
-        groups.forEach((group, i) => {
-          const track = 2 + i;
-          try {
-            player.animationState.setAnimation(track, group[0], false);
-            group.slice(1).forEach(n => player.animationState.addAnimation(track, n, false, 0));
-          } catch (e) { /* 找不到的 overlay 静默跳过 */ }
-        });
+        overlaysStarted = true;
       };
+      const resetOverlays = () => { overlaysStarted = false; };
 
       // 记录当前正在播的链，给 start 监听器算 segIdx 用（驱动运镜阶梯）
       let currentSeqRef = [];
 
+      // ===== 验证用：硬编 char003803 的真实 Timeline 剧本 =====
+      // 数据来源：本地 APK 备份解出来的 Char003803 TimelineAsset（dump_full.py），权威。
+      // 字段：clipIn=spine 动画内起播偏移；wallDur=Timeline 上墙钟时长；ts=timeScale；
+      //      animationEnd = clipIn + wallDur*ts（即动画时间消耗量）。
+      const SKILL_SCHEDULES = {
+        "003803": {
+          duration: 8.883,
+          tracks: [
+            { trackIdx: 0, clips: [
+              { anim: "cut_A", clipIn: 0,    wallDur: 3.367, ts: 1.00 },
+              { anim: "cut_B", clipIn: 0,    wallDur: 3.133, ts: 1.00 },
+              { anim: "cut_B", clipIn: 5.27, wallDur: 0.650, ts: 0.60 },
+              { anim: "cut_B", clipIn: 4.15, wallDur: 1.733, ts: 0.85 },
+            ]},
+            { trackIdx: 2, clips: [
+              { anim: "cut_A_fx", clipIn: 0, wallDur: 3.317, ts: 1.00 },
+            ]},
+          ],
+        },
+      };
+
+      function playScheduledSkill(schedule) {
+        if (!player) return;
+        // 不用 clearTracks/setToSetupPose——spine-player 的渲染循环对状态变化有依赖，
+        // 直接 setAnimation 替换轨道更安全。track 0 用 player.setAnimation（wrapper 处理），
+        // 其余轨/后续 clip 用 animationState 直接调。
+        schedule.tracks.forEach((tr) => {
+          tr.clips.forEach((c, i) => {
+            let e;
+            if (tr.trackIdx === 0 && i === 0) {
+              e = player.setAnimation(c.anim, false);
+            } else if (i === 0) {
+              e = player.animationState.setAnimation(tr.trackIdx, c.anim, false);
+            } else {
+              e = player.animationState.addAnimation(tr.trackIdx, c.anim, false, 0);
+            }
+            e.animationStart = c.clipIn;
+            e.animationEnd   = c.clipIn + c.wallDur * c.ts;
+            e.timeScale      = c.ts;
+            e.mixDuration    = 0;
+          });
+        });
+        player.play();
+      }
+
       const playSeq = (seq, btn, entryIdx) => {
         if (!player) return;
         try {
+          // 该角色若有权威剧本就走 schedule 分支（不用 chainQueue 启发式）
+          const charId = (currentCostume?.cutscene?.skeleton || "").match(/cutscene_char(\d{6})/)?.[1];
+          const schedule = charId && SKILL_SCHEDULES[charId];
+          if (currentPart === "cutscene" && schedule && entryIdx === 0) {
+            currentSeqRef = schedule.tracks[0].clips.map(c => c.anim);
+            playScheduledSkill(schedule);
+            entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+            btn.classList.add("active");
+            return;
+          }
           currentSeqRef = seq;
+          resetOverlays();   // 重置开关，让本次链首 cut 起播时重新启动一遍 overlay
           player.animationState.data.defaultMix = 0.3; // 片段间平滑过渡
           player.setAnimation(seq[0], seq.length === 1 && isLoopName(seq[0]));
           seq.slice(1).forEach((n, i) => {

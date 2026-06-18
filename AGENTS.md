@@ -17,14 +17,16 @@ bd2web/
 ├── vendor/                 spine-player 4.1.56 已本地化（断网可用）
 ├── data/
 │   ├── roster.json         角色清单（gen_roster.py 自动生成，勿手改）
-│   └── zh.json             官方中文名（fetch_zh_names.py 抓取）
+│   ├── zh.json             官方中文名（fetch_zh_names.py 抓取）
+│   └── cutscene_shots.json 每个角色 cutscene 的真实运镜/Bg 切换/调色关键帧（extract_cutscene_shots.py 解 APK Timeline 出，1.6M / 154 角色）
 ├── upstream/               [.gitignored] sparse clone myssal/Brown-Dust-2-Asset 的 spine/
 ├── bg/                     [.gitignored] APK 提取的技能动画背景图（55M，82 张）
 ├── tools/
 │   ├── sync.sh             同步上游 + 重建 roster
 │   ├── gen_roster.py       扫描 upstream + bg 生成 data/roster.json
 │   ├── fetch_zh_names.py   从 gamekee 抓官方中文名
-│   └── extract_bgs.py      从 APK 备份解 cutscene 背景到 bg/
+│   ├── extract_bgs.py      从 APK 备份解 cutscene 背景到 bg/
+│   └── extract_cutscene_shots.py  从 APK 备份解 Timeline 运镜/调色关键帧（增量提取，--force 全量重跑）
 ├── .github/workflows/sync.yml   每周自动同步
 ├── docker-compose.yml      家庭主机部署（nginx）
 ├── README.md               部署说明
@@ -62,6 +64,7 @@ index.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cd
 1. **myssal/Brown-Dust-2-Asset**（GitHub 公开仓库）：194 个角色的 spine 三件套（skel/atlas/png），按服装编号命名，覆盖 idle 和 cutscene。这是核心素材来源，每周由 Actions 跟随。
 2. **gamekee.com**（中文 wiki）：官方中文角色名/服装名。fetch_zh_names.py 抓 `https://www.gamekee.com/v1/wiki/entry` 的 5/4/3 星目录，逐页解析 `content/<id>.json`。**注意防盗链**（必须带 `Referer: https://www.gamekee.com/`）。
 3. **APK 解包**（手机 → adb pull → UnityPy）：取景框、技能 Timeline、后期参数、场景背景。一次性挖了备份在 `/Users/woods/bd2_gamedata_backup/`，以后不用再连手机。
+   - **2026-06-17 突破**：StreamedClip 二进制可以手解（按 AssetStudio 格式 4 字节 time + 4 字节 keyCount + N×20 字节 key），`tools/extract_cutscene_shots.py` 已经把 154 个角色的运镜/Bg 切换/PostProcessVolume 调色全部解出，存 `data/cutscene_shots.json`。脚本按 file.json 里的 bundle hash 做增量。
 
 ### 已固化的"游戏化"效果
 
@@ -69,7 +72,10 @@ index.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cd
 |---|---|---|
 | 立绘形态 | 整套动作锁定到待机包围盒的固定取景（见下「立绘取景锁定」）| spine 包围盒 |
 | 技能动画串联 | `A_cut → B_cut → loop` 真实序列 | APK Timeline `CharXXXXXX_Skill` |
-| 横屏取景 | 固定窗口 1600 骨骼单位、原点居中略上移 | APK RectTransform 1600×720 + SkeletonGraphic scale=1 |
+| Spine 特效叠加 | 主 cut 走 track 0，光效/血花/召唤物（`1_mask_effect`/`A_weapon_effect`/`cut_3_dragon_*` 等）按前缀配对到对应主 cut，分组分轨同时播 | skel 内的动画命名分类（见 index.html `renderEntries` 的 MAIN_RE / overlayTarget） |
+| 链尾用最后一个 loop | 主链原本碰到第一个 loop 就停（`cut_A → cut_B → loop`），但部分角色（如 char003803 黎维塔奇迹玫瑰）的 `loop` 是横躺翻腾过渡帧，`loop_2` 才是 hero 终态。改成跳过中间 loop，链尾用 `bodies` 里最后一个 loop（loop_2 优先于 loop） | 见 index.html `chainQueue`，对所有角色生效 |
+| 真实调色切换 | Timeline 上 PostProcessVolume / PostProcessVolume 2 的 on/off 事件决定 `.cutscene-fx-alt` class，CSS filter 在两套（main 暖 / alt 冷）之间切。RAF 驱动 | `data/cutscene_shots.json`（extract_cutscene_shots.py 产）events 字段；前端 `applyTimelineAt` |
+| 横屏取景 | 舞台容器锁成 1600:720（letterbox/pillarbox 留黑边），viewport 用游戏原值 1600×720 不再随浏览器宽高比走样 | APK RectTransform 1600×720 + SkeletonGraphic scale=1 |
 | 后期效果 | CSS 暗角 + brightness/contrast/saturate | APK Volume Profile（ACES + ColorAdjustments + Bloom） |
 | 场景背景 | 同一镜头共享，按动作切换 bg[idx] | APK `char<id>_back<N>.png` 提取 |
 | 中文名 | 角色 + 服装名 | gamekee `/v1/wiki/entry` |
@@ -95,6 +101,33 @@ index.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cd
   （扫描发现 char065103 / char067003 两套 skel 二进制头解析异常 "Offset out of DataView"，与本次无关，疑似导出格式差异，留给后续排查。）
 - **可选精修（未做）**：当前固定框 = 待机包围盒 + 4% padding，已是干净的全身居中立绘。若要像 cutscene 那样**像素级**
   对齐游戏内立绘机位，需照 CUT_WIN 的做法从 APK 角色详情界面 prefab 的 RectTransform + SkeletonGraphic scale 挖真值。优先级低。
+
+#### 多 skel 叠播 cutscene（2026-06-18 诊断，**未修**）
+
+- **现象**：char003803 黎维塔奇迹玫瑰技能动画 cut_B 阶段（wall t≈3.367~4.867s）缺胳膊、缺裙摆、武器尾段消失。用户截图证实。
+- **根因**：cutscene **不是单 skel**。从 APK 备份用 UnityPy 完整 dump 了 `Char003803_Skill` TimelineAsset（21 tracks），关键 4 条 Spine Animation State Graphic Track：
+
+  | track | 动画 | wall t | dur | clipIn | ts | 所在 skel |
+  |---|---|---|---|---|---|---|
+  | 0 | cut_A          | 0.000 | 3.367 | 0.00 | 1.00 | `cutscene_char003803` (主) |
+  | 0 | cut_B          | 3.367 | 3.133 | 0.00 | 1.00 | 主 |
+  | 0 | cut_B (slo)    | 6.500 | 0.650 | 5.27 | 0.60 | 主（seek + 慢放） |
+  | 0 | cut_B (slo)    | 7.150 | 1.733 | 4.15 | 0.85 | 主（seek + 慢放） |
+  | 1 | cut_A_fx       | 0.000 | 3.317 | 0.00 | 1.00 | 主 |
+  | 2 | **cut_B_B**    | 3.367 | 1.500 | 0.00 | 1.00 | **`cutscene_char003803_1` (副)** |
+  | 3 | **cut_B_F**    | 3.367 | 1.500 | 0.00 | 1.00 | **副** |
+
+  Activation Track（track 4-6）证实绑定：track 2/3 绑 `SkeletonGraphic (cutscene_char003803_1)`，track 0/1 绑 `SkeletonGraphic (cutscene_char003803) (1)`。主 skel 的 cut_B 故意把那几个 slot 抠空（attachment=null），靠副 skel 上的 cut_B_B（背景层）/ cut_B_F（前景层）画出来 + 控制叠层顺序。我们只渲染主 skel = cut_B 段必然缺件。
+- **资源都在**：`upstream/spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.{skel,atlas,png}` 完整（1.6MB skel，包含 `cut_B_B` / `cut_B_F` 两个动画，`strings` 可直接验）。之前对话里说"副 skel 不在仓库"是错的。
+- **现状**：[index.html](index.html) 里硬编了 `SKILL_SCHEDULES["003803"]` 验证用，但只覆盖 track 0+1（主 skel），track 2/3 没接，所以仍缺件。
+- **修复方案（待做）**：cutscene 模式支持 extras 列表，加载多个 spine player 透明叠播：
+  1. `roster.json` 加 `cutscene.extras: [{skeleton, atlas}, ...]`（gen_roster.py 要扫副 skel）
+  2. [index.html](index.html) `loadPart` 支持创建主+副 player 数组，**共享同一固定 viewport**（auto-fit 否则两边坐标对不上）
+  3. `playScheduledSkill` 按 schedule 里的 `playerIdx` 把 clip 分发到对应 player；用 `addAnimation(delay)` 或 setTimeout 让副 player 在 wall t=3.367 才起播
+  4. 副 player canvas 用 `position:absolute` 叠在主 canvas 上、`pointer-events:none`、`alpha:true`
+  5. dump 时按 Activation Track 的 SkeletonGraphic 绑定自动识别 extras（命名规律 `cutscene_charXXXXXX_N`，N=1..），批量生成
+- **波及范围**：003803 确认必修。还要再 dump 几个角色看普遍性——估计带"前/后景叠层"或"召唤物分件"的角色都会用这套（cut_B_B/F 命名就是 Back/Front）。
+- **复现**：本地起 `python3 -m http.server 8081`，开 `http://localhost:8081/?v=N` → 黎维塔 → 奇迹玫瑰 → 技能动画 → 动作1 → 看 t≈3.5s 那一帧（截图存在 `dating13-before.png` 类似命名的工作截图里）。
 
 ### 还没做的（见 OPTIMIZATION.md）
 
