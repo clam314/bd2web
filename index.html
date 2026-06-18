@@ -408,55 +408,46 @@
       return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
     }
 
-    // 给当前 cutscene 的主+副 player 写 per-animation viewport：
-    // - cut_A 阶段（cut_A、cut_A_fx）：用主 skel 这两个动画的并集
-    // - cut_B 阶段（cut_B、cut_B_B、cut_B_F）：主+副 三个动画的并集——主和副共用同一框 → 对齐
-    // 别的动画（loop / loop_2）不写，沿用默认 padding 自适应
+    // 给当前 cutscene 的主+副 player 写**统一固定 viewport**：把主+所有副 player 的
+    // 所有 cut_* 动画包围盒求并集，主和副都用这一个框 → 坐标系一致，主+副绝对对齐。
+    // 代价：cut_A 阶段镜头偏远人物偏小，但避免了"主播 cut_B 框跳大→副 player 用自己
+    // 小框→错位重叠"的视觉灾难。详见 AGENTS.md「多 skel 叠播 cutscene」段。
     function setupCutsceneViewports() {
       if (!player?.skeleton) return;
-      const mainAnims = player.skeleton.data.animations.map(a => a.name);
+      if (!extraPlayers.every(ep => ep?.skeleton)) return;   // 等所有 player 就绪再算
 
-      const aBox = unionAnimViewport(player, ["cut_A","cut_A_fx"].filter(n => mainAnims.includes(n)));
-      // cut_B 阶段：主的 cut_B + 所有 extras 的 cut_B_B/cut_B_F
-      const bAnimsByPlayer = [["cut_B"]];
-      extraPlayers.forEach(ep => {
-        const exAnims = ep?.skeleton?.data?.animations?.map(a => a.name) || [];
-        bAnimsByPlayer.push(["cut_B_B","cut_B_F"].filter(n => exAnims.includes(n)));
-      });
-      // 计算 cut_B 阶段并集：主+副 各自包围盒（同一世界坐标系），再求总并集
-      let bMin = {x:Infinity, y:Infinity}, bMax = {x:-Infinity, y:-Infinity};
-      const players = [player, ...extraPlayers];
-      bAnimsByPlayer.forEach((names, i) => {
-        const box = unionAnimViewport(players[i], names);
-        if (!box) return;
-        bMin.x = Math.min(bMin.x, box.x);
-        bMin.y = Math.min(bMin.y, box.y);
-        bMax.x = Math.max(bMax.x, box.x + box.width);
-        bMax.y = Math.max(bMax.y, box.y + box.height);
-      });
-      const bBox = isFinite(bMin.x) ? { x: bMin.x, y: bMin.y, width: bMax.x - bMin.x, height: bMax.y - bMin.y } : null;
-
-      // 适度外扩 8% 给画面留 padding（spine-player 的 viewport 不会自动留边）
-      const expand = (b, ratio = 0.08) => b && ({
-        x: b.x - b.width * ratio,
-        y: b.y - b.height * ratio,
-        width: b.width * (1 + ratio * 2),
-        height: b.height * (1 + ratio * 2),
-      });
-      const aBoxE = expand(aBox), bBoxE = expand(bBox);
-
-      const writeAnimVp = (p, mapping) => {
-        if (!p?.config?.viewport) return;
-        p.config.viewport.animations = p.config.viewport.animations || {};
-        for (const [name, box] of Object.entries(mapping)) {
-          if (!box) continue;
-          if ((p.skeleton?.data?.animations || []).some(a => a.name === name)) {
-            p.config.viewport.animations[name] = box;
-          }
+      // 收集主+副所有 cut_* 动画的包围盒（同一 Unity SkeletonGraphic 父级，骨骼坐标系一致）
+      const allPlayers = [player, ...extraPlayers];
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const p of allPlayers) {
+        const cutAnims = (p.skeleton?.data?.animations || []).filter(a => /^cut_/i.test(a.name));
+        for (const a of cutAnims) {
+          const b = {};
+          try { p.calculateAnimationViewport(a, b); }
+          catch(_) { continue; }
+          if (b.x < minX) minX = b.x;
+          if (b.y < minY) minY = b.y;
+          if (b.x + b.width  > maxX) maxX = b.x + b.width;
+          if (b.y + b.height > maxY) maxY = b.y + b.height;
         }
+      }
+      if (!isFinite(minX)) return;
+
+      // 适度外扩 6% 给画面留 padding（spine-player 的固定 viewport 不会自动留边）
+      const w = maxX - minX, h = maxY - minY;
+      const ratio = 0.06;
+      const box = {
+        x: minX - w * ratio,
+        y: minY - h * ratio,
+        width:  w * (1 + ratio * 2),
+        height: h * (1 + ratio * 2),
       };
-      writeAnimVp(player, { cut_A: aBoxE, cut_A_fx: aBoxE, cut_B: bBoxE });
-      extraPlayers.forEach(ep => writeAnimVp(ep, { cut_B_B: bBoxE, cut_B_F: bBoxE }));
+      // 主+副都用同一个固定框（写到 viewport 顶层 x/y/w/h，spine-player 会对所有动画都用此框）
+      allPlayers.forEach(p => {
+        if (!p?.config?.viewport) return;
+        Object.assign(p.config.viewport, box);
+        p.config.viewport.animations = {};   // 清掉之前可能写过的 per-animation 覆盖
+      });
     }
 
     // 把 #stage 锁成游戏窗口比例并居中；同时同步 #vignette 的 inset，让暗角只盖在舞台上
@@ -898,7 +889,7 @@
 
         schedule.tracks.forEach((tr) => {
           const p = players[tr.playerIdx];
-          if (!p) return;
+          if (!p?.animationState || !p?.skeleton) return;   // 副 player 还没 success 完时跳过该轨
           const sorted = [...tr.clips].sort((a,b) => a.startWall - b.startWall);
           // 用 spine 自己的 delay 队列（不用 setTimeout——浏览器标签节流时 setTimeout 不跑，
           // spine 的 trackTime 跟 rAF 走也会被节流但至少和动画播放同步）。
