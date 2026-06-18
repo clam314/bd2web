@@ -38,6 +38,9 @@
     /* 真实运镜：每帧 RAF 直接写 transform（translate），#stage 自己 overflow:hidden
        把溢出剪掉，letterbox 黑边不会被运镜越界覆盖。RAF 高频写不要 transition，否则会糊。*/
     #stage > * { width: 100%; height: 100%; transform-origin: 50% 50%; }
+    /* cutscene 多 skel 叠播：副 player 的容器绝对定位铺满 stage，与主 player 同
+       viewport，鼠标事件穿透。详见 AGENTS.md「多 skel 叠播 cutscene」段。 */
+    .extra-stage { position: absolute; inset: 0; pointer-events: none; }
 
     /* 技能动画的游戏化后期：两套调色对应游戏 Timeline 上的 PostProcessVolume 与
        PostProcessVolume 2 切换（ACES 近似 + 对比/饱和/提亮，参数取自游戏 APK）。
@@ -324,6 +327,13 @@
     const search = document.getElementById("search");
 
     let player = null;
+    const extraPlayers = [];   // cutscene 多 skel 叠播的副 player（如 char003803_1），与主 player 同 viewport
+    // 角色 → 副 skel 列表（Timeline Activation Track 绑定的 SkeletonGraphic (cutscene_charXXXXXX_N)）。
+    // 先硬编 003803 验证；通用化后由 gen_roster.py 扫 _N 后缀自动写入 roster.json。
+    const CUTSCENE_EXTRAS = {
+      "003803": [{ skeleton: "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.skel",
+                   atlas:    "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.atlas" }],
+    };
     let activeCostumeBtn = null;
     let currentCostume = null;
     let currentPart = null;      // "idle"（立绘）| "cutscene"（技能动画）
@@ -485,6 +495,7 @@
       if (!src) return;
       currentPart = part;
       if (player) { player.dispose(); player = null; }
+      if (extraPlayers.length) { extraPlayers.forEach(p => { try { p.dispose(); } catch(_){} }); extraPlayers.length = 0; }
       stage.innerHTML = "";
       renderModeRow(animBox);
 
@@ -508,11 +519,10 @@
         showLoading: false,
         alpha: true,
         premultipliedAlpha: false, // 占位，加载完成后按 atlas 实际标记修正（见 success）
-        // cutscene 模式之前强制锁到 1600×720（来自 APK 的游戏窗口尺寸），但部分角色的
-        // cut_B / loop 把骨骼摆得很开（如 char003803 黎维塔奇迹玫瑰翻腾时双腿垂直朝上），
-        // 整个上半身会飞出视口，看起来就像"只剩腿和手"。游戏里靠 Timeline 运镜跟踪角色，
-        // 我们没接相机数据，索性退回自适应 padding——保证角色不出框，牺牲一点"游戏窗口感"。
-        viewport: { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
+        // cutscene 用游戏原窗口 1600×720（固定 viewport）：必须固定，否则副 skel 叠播时
+        // 各自 auto-fit 的中心不同会错位。立绘走自适应 padding。
+        viewport: isCutscene ? cutsceneViewport() :
+          { padLeft: "4%", padRight: "4%", padTop: "4%", padBottom: "4%" },
         success: (p) => {
           // 贴图 alpha 模式必须和素材导出一致，否则边缘出现白边/黑边。
           // 不同来源导出不同（gamekee 为 pma，myssal 为直通），从播放器
@@ -582,6 +592,38 @@
 
       player = new spine.SpinePlayer("stage", config);
       window._dbgPlayer = player;   // 调试用：可在控制台/Playwright 里检查骨骼状态
+
+      // 副 skel 叠播：cutscene 模式且当前服装有 extras，创建透明 overlay player。
+      // 共享主 player 的固定 viewport（cutsceneViewport），保证两个骨骼坐标对齐。
+      if (isCutscene) {
+        const charId = (src.skeleton || "").match(/cutscene_char(\d{6})/)?.[1];
+        const extras = (charId && CUTSCENE_EXTRAS[charId]) || [];
+        extras.forEach((ex, idx) => {
+          const div = document.createElement("div");
+          div.className = "extra-stage";
+          div.id = `extra-stage-${idx}`;
+          stage.appendChild(div);
+          const exConfig = {
+            atlasUrl: assetUrl(ex.atlas),
+            showControls: false, showLoading: false,
+            alpha: true, premultipliedAlpha: false,
+            viewport: cutsceneViewport(),     // 与主 player 同框
+            success: (ep) => {
+              try {
+                const atlas = Object.entries(ep.assetManager.assets).find(([k]) => k.endsWith(".atlas"))[1];
+                ep.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
+              } catch(_) {}
+              // 副 player 默认不要把 setup pose 画出来——等 schedule 起播时再 setAnimation。
+              try { ep.animationState.clearTracks(); ep.skeleton.setToSetupPose(); } catch(_) {}
+            },
+            error: (_p, reason) => console.warn(`[extra ${idx}] ${reason}`),
+          };
+          if (ex.skeleton.endsWith(".skel")) exConfig.skelUrl = assetUrl(ex.skeleton);
+          else exConfig.jsonUrl = assetUrl(ex.skeleton);
+          extraPlayers.push(new spine.SpinePlayer(div.id, exConfig));
+        });
+        window._dbgExtras = extraPlayers;
+      }
     }
 
     // 动画的播放逻辑还原游戏内的结构：
@@ -728,21 +770,30 @@
       let currentSeqRef = [];
 
       // ===== 验证用：硬编 char003803 的真实 Timeline 剧本 =====
-      // 数据来源：本地 APK 备份解出来的 Char003803 TimelineAsset（dump_full.py），权威。
-      // 字段：clipIn=spine 动画内起播偏移；wallDur=Timeline 上墙钟时长；ts=timeScale；
+      // 数据来源：本地 APK 备份解出来的 Char003803_Skill TimelineAsset（dump_full.py），权威。
+      // playerIdx=0 主 skel（cutscene_char003803），1=副 skel（cutscene_char003803_1）。
+      // 字段：startWall=Timeline 上墙钟起播时刻；wallDur=墙钟时长；
+      //      clipIn=spine 动画内起播偏移；ts=timeScale；
       //      animationEnd = clipIn + wallDur*ts（即动画时间消耗量）。
+      // 详见 AGENTS.md「多 skel 叠播 cutscene」段。
       const SKILL_SCHEDULES = {
         "003803": {
           duration: 8.883,
           tracks: [
-            { trackIdx: 0, clips: [
-              { anim: "cut_A", clipIn: 0,    wallDur: 3.367, ts: 1.00 },
-              { anim: "cut_B", clipIn: 0,    wallDur: 3.133, ts: 1.00 },
-              { anim: "cut_B", clipIn: 5.27, wallDur: 0.650, ts: 0.60 },
-              { anim: "cut_B", clipIn: 4.15, wallDur: 1.733, ts: 0.85 },
+            { playerIdx: 0, trackIdx: 0, clips: [
+              { anim: "cut_A", startWall: 0.000, wallDur: 3.367, clipIn: 0,    ts: 1.00 },
+              { anim: "cut_B", startWall: 3.367, wallDur: 3.133, clipIn: 0,    ts: 1.00 },
+              { anim: "cut_B", startWall: 6.500, wallDur: 0.650, clipIn: 5.27, ts: 0.60 },
+              { anim: "cut_B", startWall: 7.150, wallDur: 1.733, clipIn: 4.15, ts: 0.85 },
             ]},
-            { trackIdx: 2, clips: [
-              { anim: "cut_A_fx", clipIn: 0, wallDur: 3.317, ts: 1.00 },
+            { playerIdx: 0, trackIdx: 1, clips: [
+              { anim: "cut_A_fx", startWall: 0.000, wallDur: 3.317, clipIn: 0, ts: 1.00 },
+            ]},
+            { playerIdx: 1, trackIdx: 0, clips: [
+              { anim: "cut_B_B", startWall: 3.367, wallDur: 1.500, clipIn: 0, ts: 1.00 },
+            ]},
+            { playerIdx: 1, trackIdx: 1, clips: [
+              { anim: "cut_B_F", startWall: 3.367, wallDur: 1.500, clipIn: 0, ts: 1.00 },
             ]},
           ],
         },
@@ -750,26 +801,46 @@
 
       function playScheduledSkill(schedule) {
         if (!player) return;
-        // 不用 clearTracks/setToSetupPose——spine-player 的渲染循环对状态变化有依赖，
-        // 直接 setAnimation 替换轨道更安全。track 0 用 player.setAnimation（wrapper 处理），
-        // 其余轨/后续 clip 用 animationState 直接调。
-        schedule.tracks.forEach((tr) => {
-          tr.clips.forEach((c, i) => {
-            let e;
-            if (tr.trackIdx === 0 && i === 0) {
-              e = player.setAnimation(c.anim, false);
-            } else if (i === 0) {
-              e = player.animationState.setAnimation(tr.trackIdx, c.anim, false);
-            } else {
-              e = player.animationState.addAnimation(tr.trackIdx, c.anim, false, 0);
-            }
-            e.animationStart = c.clipIn;
-            e.animationEnd   = c.clipIn + c.wallDur * c.ts;
-            e.timeScale      = c.ts;
-            e.mixDuration    = 0;
-          });
+        const players = [player, ...extraPlayers];
+        // 重置所有 player 的轨道（避免上次播放残留导致 track 上有旧 entry）
+        players.forEach(p => {
+          if (!p) return;
+          try { p.animationState.clearTracks(); p.skeleton.setToSetupPose(); } catch(_){}
         });
-        player.play();
+
+        const applyEntry = (e, c) => {
+          e.animationStart = c.clipIn;
+          e.animationEnd   = c.clipIn + c.wallDur * c.ts;
+          e.timeScale      = c.ts;
+          e.mixDuration    = 0;
+        };
+
+        schedule.tracks.forEach((tr) => {
+          const p = players[tr.playerIdx];
+          if (!p) return;
+          const sorted = [...tr.clips].sort((a,b) => a.startWall - b.startWall);
+          // 用 spine 自己的 delay 队列（不用 setTimeout——浏览器标签节流时 setTimeout 不跑，
+          // spine 的 trackTime 跟 rAF 走也会被节流但至少和动画播放同步）。
+          //   startWall > 0: 先 setEmptyAnimation(trackIdx, 0) 占位，再 addAnimation(..., delay=startWall)
+          //   startWall = 0: 直接 setAnimation
+          let firstEntry = null;
+          if (sorted[0].startWall > 0.001) {
+            p.animationState.setEmptyAnimation(tr.trackIdx, 0);
+            firstEntry = p.animationState.addAnimation(tr.trackIdx, sorted[0].anim, false, sorted[0].startWall);
+          } else if (tr.playerIdx === 0 && tr.trackIdx === 0) {
+            // 主 player track 0 首 clip 走 wrapper（触发 spine-player 内部 redraw）
+            firstEntry = p.setAnimation(sorted[0].anim, false);
+          } else {
+            firstEntry = p.animationState.setAnimation(tr.trackIdx, sorted[0].anim, false);
+          }
+          applyEntry(firstEntry, sorted[0]);
+          // 同轨后续 clip 紧跟前者结束（delay=0）
+          for (let i = 1; i < sorted.length; i++) {
+            const e = p.animationState.addAnimation(tr.trackIdx, sorted[i].anim, false, 0);
+            applyEntry(e, sorted[i]);
+          }
+          p.play();
+        });
       }
 
       const playSeq = (seq, btn, entryIdx) => {
