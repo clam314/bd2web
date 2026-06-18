@@ -71,6 +71,17 @@
     .hotzone.body-zone {
       z-index: 1;
     }
+    .hotzone.card-zone {
+      z-index: 2;
+      border-color: rgba(255, 214, 112, 0.78);
+      background: rgba(255, 196, 76, 0.16);
+      color: #fff1bd;
+    }
+    .hotzone.card-result-zone {
+      z-index: 3;
+      border-color: rgba(255, 214, 112, 0.46);
+      background: rgba(255, 196, 76, 0.08);
+    }
     .hotzone::after {
       content: attr(data-label);
       position: absolute;
@@ -575,6 +586,7 @@
         "3_2_0": { kind: "drag", label: "长按画面右腿丝袜", mix: ["mix3_2_1", "mix3_2_2"], motions: ["motion3_2"], nextStage: 5, longPress: { actionType: 2, threshold: 1, loop: "mix3_2_loop", fail: "mix3_2_2", success: "motion3_2" } },
         "4_1_0": { kind: "drag", label: "长按画面右腿丝袜", mix: ["mix4_1_1", "mix4_1_2"], motions: ["motion4_1"], nextStage: 6, longPress: { actionType: 2, threshold: 1, loop: "mix4_1_loop", fail: "mix4_1_2", success: "motion4_1" } },
         "5_1_0": { kind: "drag", label: "长按画面左腿丝袜", mix: ["mix5_1_1", "mix5_1_2"], motions: ["motion5_1"], nextStage: 6, longPress: { actionType: 2, threshold: 1, loop: "mix5_1_loop", fail: "mix5_1_2", success: "motion5_1" } },
+        "6_7_0": { kind: "card", label: "牌堆：随机发牌", mix: ["mix6_7_1", "mix6_7_2", "mix6_7_3", "mix6_7_4", "mix6_7_5", "mix6_7_6"], cardGame: "deal" },
         "6_1_0": { kind: "touch", label: "画面右侧腿部：点击 / 长按", mix: ["mix6_1_1"], longPress: { actionType: 1, threshold: 1, loop: "", fail: "", success: "mix6_1_long" } },
         "6_2_0": { kind: "touch", label: "画面左侧腿部：点击 / 长按", mix: ["mix6_2_1"], longPress: { actionType: 1, threshold: 1, loop: "", fail: "", success: "mix6_2_long" } },
         "6_3_0": { kind: "drag", label: "画面右侧脚部：拖动 / 长按", mix: ["mix6_3_1", "mix6_3_2"], longPress: { actionType: 2, threshold: 1, loop: "mix6_3_loop", fail: "mix6_3_2", success: "mix6_3_long" } },
@@ -705,6 +717,7 @@
         "3_2_0": { x: 6.1, y: -141.7, width: 325.4, height: 200.7, shape: 1, source: "interactionBoxZone3_2" },
         "4_1_0": { x: 11.2, y: -141.6, width: 325.4, height: 200.7, shape: 1, source: "interactionBoxZone4_1" },
         "5_1_0": { x: -323.5, y: -169.6, width: 327.2, height: 203.6, shape: 1, source: "interactionBoxZone5_1" },
+        "6_7_0": { x: -261.5, y: 88.9, width: 87.5, height: 87.5, shape: 0, source: "point6_7_touch [Override] · idle6 bone" },
         "6_1_0": { x: -79.8, y: -125.7, width: 75, height: 125, shape: 0, source: "point6_1_touch [Override]" },
         "6_2_0": { x: 14.4, y: -100.2, width: 75, height: 125, shape: 0, source: "point6_2_touch [Override]" },
         "6_3_0": { x: -102.9, y: -508, width: 125, height: 125, shape: 1, source: "point6_3_drag [Override]" },
@@ -734,6 +747,30 @@
         "7_13_14": { x: -616.3, y: -712.2, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone7_13" },
       },
     };
+    const DATING18_CARD_GAME = {
+      handWindow: [2700, 7070],
+      hands: [
+        { deal: "mix6_7_1", redeal: 8, cards: [14, 20, 21], centers: [[-294.5, 92.7], [-145.7, 94.1], [-57.3, 104.3], [35.9, 114.6]] },
+        { deal: "mix6_7_2", redeal: 9, cards: [22, 29, 15], centers: [[-295.3, 91.3], [-147.2, 94.9], [-58.8, 105.2], [34.3, 115.5]] },
+        { deal: "mix6_7_3", redeal: 10, cards: [23, 24, 16], centers: [[-294.7, 88.9], [-146, 93.5], [-57.7, 103.7], [35.5, 114]] },
+        { deal: "mix6_7_4", redeal: 11, cards: [30, 17, 25], centers: [[-294.7, 87.2], [-148.1, 95.2], [-59.7, 105.4], [33.4, 115.7]] },
+        { deal: "mix6_7_5", redeal: 12, cards: [26, 27, 18], centers: [[-292, 87], [-147.9, 94.9], [-59.5, 105.1], [33.6, 115.4]] },
+        { deal: "mix6_7_6", redeal: 13, cards: [28, 19, 31], centers: [[-291.7, 88.5], [-148.1, 95.5], [-59.7, 105.7], [33.5, 116]] },
+      ],
+      results: {
+        14: 32, 15: 32, 16: 32, 17: 32, 18: 32, 19: 32,
+        20: 33, 21: 33, 22: 33, 23: 33, 24: 33, 25: 33, 26: 33, 27: 33, 28: 33,
+        29: null, 30: null, 31: null,
+      },
+      resultWindows: {
+        32: [1050, 2030],
+        33: [1000, 2170],
+      },
+      finishWindows: {
+        32: [15720, 18930],
+        33: [15020, 18430],
+      },
+    };
 
     const stage = document.getElementById("stage");
     const hotzoneLayer = document.getElementById("hotzone-layer");
@@ -759,6 +796,8 @@
     let deviceOrientationEnabled = false;
     let selectedToolId = null;
     let viewMode = localStorage.getItem("datingViewMode") || "fit";
+    let cardGameState = null;
+    let cardGameTimers = [];
 
     function showError(msg) {
       toast.textContent = msg;
@@ -803,6 +842,7 @@
       advanceLastMotion = null;
       clearTimeout(advanceTimer);
       advanceTimer = null;
+      resetCardGame(false);
       cancelLongPress(false);
       cancelGyroDrag();
       stage.innerHTML = "";
@@ -960,7 +1000,7 @@
         b.className = "item body-anim";
         b.textContent = prefabActionLabel(action, idx);
         b.title = `prefab:${key}`;
-        b.onclick = () => playPrefabAction(action, b);
+        b.onclick = () => action.cardGame === "deal" ? playCardDeal() : playPrefabAction(action, b);
         animList.appendChild(b);
       });
 
@@ -1086,6 +1126,7 @@
 
     function enterStage(stageNo) {
       if (!stageModel || !stageModel.stages.has(stageNo)) return;
+      resetCardGame(false);
       cancelLongPress(false);
       cancelGyroDrag();
       currentStage = stageNo;
@@ -1200,6 +1241,7 @@
       const idle = pickIdle(stageModel.stages.get(currentStage));
       if (!idle) return;
       try {
+        resetCardGame(true);
         restoringIdle = true;
         advanceTargetStage = null;
         advanceLastMotion = null;
@@ -1274,26 +1316,172 @@
         .sort((a, b) => a.pointId - b.pointId);
     }
 
+    function isDating18CardStage() {
+      return currentEntry?.id === "illust_dating18" && currentStage === 6;
+    }
+
+    function clearCardGameTimers() {
+      cardGameTimers.forEach(clearTimeout);
+      cardGameTimers = [];
+    }
+
+    function resetCardGame(render) {
+      clearCardGameTimers();
+      cardGameState = isDating18CardStage() ? { phase: "ready" } : null;
+      if (render && currentEntry && stageModel) renderHotzones(currentPrefabActions());
+    }
+
+    function scheduleCardGame(delay, callback) {
+      const timer = setTimeout(() => {
+        cardGameTimers = cardGameTimers.filter(item => item !== timer);
+        callback();
+      }, delay);
+      cardGameTimers.push(timer);
+    }
+
+    function playCardAnimation(name) {
+      if (!player || !animationExists(name)) return false;
+      restoringIdle = false;
+      advanceTargetStage = null;
+      advanceLastMotion = null;
+      clearTimeout(advanceTimer);
+      advanceTimer = null;
+      player.animationState.data.defaultMix = 0.2;
+      player.setAnimation(name, false);
+      player.play();
+      animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+      return true;
+    }
+
+    function playCardDeal() {
+      if (!isDating18CardStage() || !player) return;
+      clearCardGameTimers();
+      const handIndex = Math.floor(Math.random() * DATING18_CARD_GAME.hands.length);
+      const hand = DATING18_CARD_GAME.hands[handIndex];
+      cardGameState = { phase: "dealing", handIndex };
+      renderHotzones(currentPrefabActions());
+      if (!playCardAnimation(hand.deal)) {
+        resetCardGame(true);
+        return;
+      }
+      const [openAt, closeAt] = DATING18_CARD_GAME.handWindow;
+      scheduleCardGame(openAt, () => {
+        if (cardGameState?.phase !== "dealing" || cardGameState.handIndex !== handIndex) return;
+        cardGameState.phase = "hand";
+        renderHotzones(currentPrefabActions());
+      });
+      scheduleCardGame(closeAt, () => {
+        if (cardGameState?.phase !== "hand" || cardGameState.handIndex !== handIndex) return;
+        cardGameState.phase = "resolving";
+        renderHotzones(currentPrefabActions());
+      });
+    }
+
+    function playCardChoice(pointId) {
+      if (cardGameState?.phase !== "hand") return;
+      const hand = DATING18_CARD_GAME.hands[cardGameState.handIndex];
+      if (!hand) return;
+      clearCardGameTimers();
+      cardGameState = { phase: "resolving", handIndex: cardGameState.handIndex, pointId };
+      renderHotzones(currentPrefabActions());
+      if (!playCardAnimation(`mix6_${pointId}_1`)) {
+        resetCardGame(true);
+        return;
+      }
+      if (pointId === hand.redeal) return;
+      const resultPoint = DATING18_CARD_GAME.results[pointId];
+      if (!resultPoint) return;
+      const [openAt, closeAt] = DATING18_CARD_GAME.resultWindows[resultPoint];
+      scheduleCardGame(openAt, () => {
+        if (cardGameState?.pointId !== pointId) return;
+        cardGameState.phase = "result";
+        cardGameState.resultPoint = resultPoint;
+        renderHotzones(currentPrefabActions());
+      });
+      scheduleCardGame(closeAt, () => {
+        if (cardGameState?.phase !== "result" || cardGameState.pointId !== pointId) return;
+        cardGameState.phase = "resolving";
+        renderHotzones(currentPrefabActions());
+      });
+    }
+
+    function playCardResult(resultPoint) {
+      if (cardGameState?.phase !== "result" || cardGameState.resultPoint !== resultPoint) return;
+      clearCardGameTimers();
+      cardGameState.phase = "special";
+      renderHotzones(currentPrefabActions());
+      if (!playCardAnimation(`mix6_${resultPoint}_1`)) {
+        resetCardGame(true);
+        return;
+      }
+      const [openAt, closeAt] = DATING18_CARD_GAME.finishWindows[resultPoint];
+      scheduleCardGame(openAt, () => {
+        if (cardGameState?.phase !== "special" || cardGameState.resultPoint !== resultPoint) return;
+        cardGameState.phase = "finish";
+        renderHotzones(currentPrefabActions());
+      });
+      scheduleCardGame(closeAt, () => {
+        if (cardGameState?.phase !== "finish" || cardGameState.resultPoint !== resultPoint) return;
+        cardGameState.phase = "special";
+        renderHotzones(currentPrefabActions());
+      });
+    }
+
+    function playCardFinish() {
+      if (cardGameState?.phase !== "finish") return;
+      clearCardGameTimers();
+      cardGameState.phase = "resolving";
+      renderHotzones(currentPrefabActions());
+      if (!playCardAnimation("mix6_34_1")) resetCardGame(true);
+    }
+
+    function renderCardGameHotzones(viewport) {
+      if (!isDating18CardStage() || !cardGameState || cardGameState.phase === "ready") return false;
+      if (cardGameState.phase === "hand") {
+        const hand = DATING18_CARD_GAME.hands[cardGameState.handIndex];
+        const points = [hand.redeal, ...hand.cards];
+        points.forEach((pointId, index) => {
+          const [cx, cy] = hand.centers[index];
+          const zone = { x: cx - 43.75, y: cy - 43.75, width: 87.5, height: 87.5 };
+          const box = hotzoneToScreenBox(zone, viewport);
+          if (!box) return;
+          const label = index === 0 ? "重发" : `牌${index}`;
+          const b = makeHotzoneButton(box, label, `牌局互动 · point6_${pointId}`, "card-zone");
+          b.onclick = () => playCardChoice(pointId);
+          hotzoneLayer.appendChild(b);
+        });
+      } else if (cardGameState.phase === "result") {
+        const box = hotzoneToScreenBox(viewport, viewport);
+        const b = makeHotzoneButton(box, "触发结果", `牌局结果 · point6_${cardGameState.resultPoint}`, "card-result-zone");
+        b.onclick = () => playCardResult(cardGameState.resultPoint);
+        hotzoneLayer.appendChild(b);
+      } else if (cardGameState.phase === "finish") {
+        const box = hotzoneToScreenBox(viewport, viewport);
+        const b = makeHotzoneButton(box, "结束", "牌局结束 · point6_34", "card-result-zone");
+        b.onclick = () => playCardFinish();
+        hotzoneLayer.appendChild(b);
+      }
+      return true;
+    }
+
     function renderHotzones(prefabActions) {
       hotzoneLayer.innerHTML = "";
       activeGyroAction = null;
       gyroBaseline = null;
-      if (!currentEntry || !prefabActions.length) return;
+      if (!currentEntry) return;
       const viewport = VIEWPORT_OVERRIDES[currentEntry.id] || makeViewport(currentEntry);
+      if (renderCardGameHotzones(viewport)) return;
+      if (!prefabActions.length) return;
       prefabActions.forEach((item, idx) => {
         const zone = PREFAB_HOTZONES[currentEntry.id]?.[item.key];
         const box = zone && hotzoneToScreenBox(zone, viewport);
         if (!box) return;
-        const b = document.createElement("button");
-        b.type = "button";
-        b.className = "hotzone";
-        b.classList.add(item.action.kind === "gyro" ? "gyro-zone" : "body-zone");
-        b.dataset.label = hotzoneLabel(item.action, idx);
-        b.title = `${item.action.label || prefabActionLabel(item.action, idx)} · ${item.key} · ${zone.source}`;
-        b.style.left = box.left + "%";
-        b.style.top = box.top + "%";
-        b.style.width = box.width + "%";
-        b.style.height = box.height + "%";
+        const b = makeHotzoneButton(
+          box,
+          hotzoneLabel(item.action, idx),
+          `${item.action.label || prefabActionLabel(item.action, idx)} · ${item.key} · ${zone.source}`,
+          item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
+        );
         if (item.action.longPress) {
           b.addEventListener("pointerdown", event => beginLongPress(item.action, b, event));
           b.addEventListener("pointerup", event => cancelLongPress(true, event));
@@ -1307,11 +1495,26 @@
           b.addEventListener("pointerup", event => cancelGyroDrag(event));
           b.addEventListener("pointercancel", event => cancelGyroDrag(event));
           b.addEventListener("click", event => event.preventDefault());
+        } else if (item.action.cardGame === "deal") {
+          b.onclick = () => playCardDeal();
         } else {
           b.onclick = () => playPrefabAction(item.action, null);
         }
         hotzoneLayer.appendChild(b);
       });
+    }
+
+    function makeHotzoneButton(box, label, title, className) {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = `hotzone ${className}`;
+      b.dataset.label = label;
+      b.title = title;
+      b.style.left = box.left + "%";
+      b.style.top = box.top + "%";
+      b.style.width = box.width + "%";
+      b.style.height = box.height + "%";
+      return b;
     }
 
     function beginGyroDrag(action, element, event) {
