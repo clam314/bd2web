@@ -97,6 +97,19 @@
       white-space: nowrap;
       pointer-events: none;
     }
+    #hotzone-layer:not(.show-hotzones) .hotzone,
+    #hotzone-layer:not(.show-hotzones) .hotzone:hover,
+    #hotzone-layer:not(.show-hotzones) .hotzone.holding {
+      border-color: transparent;
+      background: transparent;
+      box-shadow: none;
+      color: transparent;
+      cursor: default;
+      opacity: 1;
+    }
+    #hotzone-layer:not(.show-hotzones) .hotzone::after {
+      display: none;
+    }
 
     #edge-hotzone {
       position: fixed;
@@ -170,6 +183,26 @@
     }
     #search:focus { border-color: var(--accent); }
     #search::placeholder { color: var(--muted); }
+    .debug-toggle {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--muted);
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .debug-toggle:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text);
+    }
+    .debug-toggle.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(106, 166, 255, 0.12);
+    }
 
     #list {
       overflow-y: auto;
@@ -295,6 +328,7 @@
         <a class="nav-link" href="./index.html">角色动画</a>
         <a class="nav-link active" href="./dating.html">心契之约</a>
       </div>
+      <button id="hotzone-toggle" class="debug-toggle" type="button" aria-pressed="false">显示热区</button>
       <input id="search" type="text" placeholder="搜索心契资源…" autocomplete="off" />
     </header>
     <div id="list"></div>
@@ -787,6 +821,7 @@
     const animList = document.getElementById("anim-list");
     const toast = document.getElementById("error-toast");
     const search = document.getElementById("search");
+    const hotzoneToggle = document.getElementById("hotzone-toggle");
     let player = null;
     let activeBtn = null;
     let currentStage = 1;
@@ -1887,6 +1922,19 @@
         el.classList.toggle("hidden", q && !el.dataset.search.includes(q));
       });
     });
+
+    let showHotzones = false;
+    function applyHotzoneVisibility() {
+      hotzoneLayer.classList.toggle("show-hotzones", showHotzones);
+      hotzoneToggle.classList.toggle("active", showHotzones);
+      hotzoneToggle.textContent = showHotzones ? "隐藏热区" : "显示热区";
+      hotzoneToggle.setAttribute("aria-pressed", String(showHotzones));
+    }
+    hotzoneToggle.addEventListener("click", () => {
+      showHotzones = !showHotzones;
+      applyHotzoneVisibility();
+    });
+    applyHotzoneVisibility();
 
     const hotzone = document.getElementById("edge-hotzone");
     hotzone.addEventListener("mouseenter", () => drawer.classList.add("open"));
