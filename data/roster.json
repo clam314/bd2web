@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-16T00:55:21+00:00",
+ "generatedAt": "2026-06-19T22:02:29+00:00",
  "source": "Brown-Dust-2-Asset@c22400c07bfd",
  "commit": "c22400c07bfd",
  "characters": [
@@ -18,9 +18,7 @@
       "skeleton": "spine/cutscenes/cutscene_char000101/cutscene_char000101.skel",
       "atlas": "spine/cutscenes/cutscene_char000101/cutscene_char000101.atlas"
      },
-     "bg": [
-      "bg/000101_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "孤独生还者",
@@ -87,10 +85,7 @@
       "skeleton": "spine/cutscenes/cutscene_char000201/cutscene_char000201.skel",
       "atlas": "spine/cutscenes/cutscene_char000201/cutscene_char000201.atlas"
      },
-     "bg": [
-      "bg/000201_1.png",
-      "bg/000201_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "皎洁死神",
@@ -420,9 +415,7 @@
       "skeleton": "spine/cutscenes/cutscene_char000801/cutscene_char000801.skel",
       "atlas": "spine/cutscenes/cutscene_char000801/cutscene_char000801.atlas"
      },
-     "bg": [
-      "bg/000801_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "大海女帝",
@@ -599,9 +592,7 @@
       "skeleton": "spine/cutscenes/cutscene_char001206/cutscene_char001206.skel",
       "atlas": "spine/cutscenes/cutscene_char001206/cutscene_char001206.atlas"
      },
-     "bg": [
-      "bg/001206_5.png"
-     ]
+     "bg": null
     },
     {
      "label": "女仆代号R",
@@ -691,9 +682,7 @@
       "skeleton": "spine/cutscenes/cutscene_char003101/cutscene_char003101.skel",
       "atlas": "spine/cutscenes/cutscene_char003101/cutscene_char003101.atlas"
      },
-     "bg": [
-      "bg/003101_1.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -755,10 +744,7 @@
       "skeleton": "spine/cutscenes/cutscene_char003301/cutscene_char003301.skel",
       "atlas": "spine/cutscenes/cutscene_char003301/cutscene_char003301.atlas"
      },
-     "bg": [
-      "bg/003301_1.png",
-      "bg/003301_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "松散的救生员",
@@ -822,10 +808,7 @@
       "skeleton": "spine/cutscenes/cutscene_char003402/cutscene_char003402.skel",
       "atlas": "spine/cutscenes/cutscene_char003402/cutscene_char003402.atlas"
      },
-     "bg": [
-      "bg/003402_1.png",
-      "bg/003402_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "使徒",
@@ -875,9 +858,7 @@
       "skeleton": "spine/cutscenes/cutscene_char003601/cutscene_char003601.skel",
       "atlas": "spine/cutscenes/cutscene_char003601/cutscene_char003601.atlas"
      },
-     "bg": [
-      "bg/003601_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "使徒",
@@ -913,10 +894,7 @@
       "skeleton": "spine/cutscenes/cutscene_char003604/cutscene_char003604.skel",
       "atlas": "spine/cutscenes/cutscene_char003604/cutscene_char003604.atlas"
      },
-     "bg": [
-      "bg/003604_1.png",
-      "bg/003604_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -978,10 +956,7 @@
       "skeleton": "spine/cutscenes/cutscene_char003801/cutscene_char003801.skel",
       "atlas": "spine/cutscenes/cutscene_char003801/cutscene_char003801.atlas"
      },
-     "bg": [
-      "bg/003801_1.png",
-      "bg/003801_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "温泉管理员",
@@ -1067,10 +1042,7 @@
       "skeleton": "spine/cutscenes/cutscene_char004001/cutscene_char004001.skel",
       "atlas": "spine/cutscenes/cutscene_char004001/cutscene_char004001.atlas"
      },
-     "bg": [
-      "bg/004001_1.png",
-      "bg/004001_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "半糖余韵兔女郎",
@@ -1082,10 +1054,7 @@
       "skeleton": "spine/cutscenes/cutscene_char004002/cutscene_char004002.skel",
       "atlas": "spine/cutscenes/cutscene_char004002/cutscene_char004002.atlas"
      },
-     "bg": [
-      "bg/004002_1.png",
-      "bg/004002_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "服装 91",
@@ -1097,9 +1066,7 @@
       "skeleton": "spine/cutscenes/cutscene_char004091/cutscene_char004091.skel",
       "atlas": "spine/cutscenes/cutscene_char004091/cutscene_char004091.atlas"
      },
-     "bg": [
-      "bg/004091_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -1130,10 +1097,7 @@
       "skeleton": "spine/cutscenes/cutscene_char004102/cutscene_char004102.skel",
       "atlas": "spine/cutscenes/cutscene_char004102/cutscene_char004102.atlas"
      },
-     "bg": [
-      "bg/004102_1.png",
-      "bg/004102_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -1340,11 +1304,7 @@
       "skeleton": "spine/cutscenes/cutscene_char020601/cutscene_char020601.skel",
       "atlas": "spine/cutscenes/cutscene_char020601/cutscene_char020601.atlas"
      },
-     "bg": [
-      "bg/020601_1.png",
-      "bg/020601_2.png",
-      "bg/020601_3.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -1382,10 +1342,7 @@
       "skeleton": "spine/cutscenes/cutscene_char020801/cutscene_char020801.skel",
       "atlas": "spine/cutscenes/cutscene_char020801/cutscene_char020801.atlas"
      },
-     "bg": [
-      "bg/020801_1.png",
-      "bg/020801_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -1404,13 +1361,7 @@
       "skeleton": "spine/cutscenes/cutscene_char020901/cutscene_char020901.skel",
       "atlas": "spine/cutscenes/cutscene_char020901/cutscene_char020901.atlas"
      },
-     "bg": [
-      "bg/020901_1.png",
-      "bg/020901_2.png",
-      "bg/020901_3.png",
-      "bg/020901_4.png",
-      "bg/020901_5.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -1429,11 +1380,7 @@
       "skeleton": "spine/cutscenes/cutscene_char021001/cutscene_char021001.skel",
       "atlas": "spine/cutscenes/cutscene_char021001/cutscene_char021001.atlas"
      },
-     "bg": [
-      "bg/021001_1.png",
-      "bg/021001_2.png",
-      "bg/021001_4.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -1486,9 +1433,7 @@
       "skeleton": "spine/cutscenes/cutscene_char060402/cutscene_char060402.skel",
       "atlas": "spine/cutscenes/cutscene_char060402/cutscene_char060402.atlas"
      },
-     "bg": [
-      "bg/060402_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "化妆舞会兔女郎",
@@ -1550,11 +1495,7 @@
       "skeleton": "spine/cutscenes/cutscene_char060601/cutscene_char060601.skel",
       "atlas": "spine/cutscenes/cutscene_char060601/cutscene_char060601.atlas"
      },
-     "bg": [
-      "bg/060601_1.png",
-      "bg/060601_2.png",
-      "bg/060601_3.png"
-     ]
+     "bg": null
     },
     {
      "label": "机械人女王",
@@ -1585,9 +1526,7 @@
       "skeleton": "spine/cutscenes/cutscene_char060701/cutscene_char060701.skel",
       "atlas": "spine/cutscenes/cutscene_char060701/cutscene_char060701.atlas"
      },
-     "bg": [
-      "bg/060701_3.png"
-     ]
+     "bg": null
     },
     {
      "label": "代号A",
@@ -1599,9 +1538,7 @@
       "skeleton": "spine/cutscenes/cutscene_char060702/cutscene_char060702.skel",
       "atlas": "spine/cutscenes/cutscene_char060702/cutscene_char060702.atlas"
      },
-     "bg": [
-      "bg/060702_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "游戏社",
@@ -1613,10 +1550,7 @@
       "skeleton": "spine/cutscenes/cutscene_char060706/cutscene_char060706.skel",
       "atlas": "spine/cutscenes/cutscene_char060706/cutscene_char060706.atlas"
      },
-     "bg": [
-      "bg/060706_1.png",
-      "bg/060706_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -1635,10 +1569,7 @@
       "skeleton": "spine/cutscenes/cutscene_char060801/cutscene_char060801.skel",
       "atlas": "spine/cutscenes/cutscene_char060801/cutscene_char060801.atlas"
      },
-     "bg": [
-      "bg/060801_2.png",
-      "bg/060801_3.png"
-     ]
+     "bg": null
     },
     {
      "label": "代号O",
@@ -1650,9 +1581,7 @@
       "skeleton": "spine/cutscenes/cutscene_char060802/cutscene_char060802.skel",
       "atlas": "spine/cutscenes/cutscene_char060802/cutscene_char060802.atlas"
      },
-     "bg": [
-      "bg/060802_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "服装 04",
@@ -1836,10 +1765,7 @@
       "skeleton": "spine/cutscenes/cutscene_char061492/cutscene_char061492.skel",
       "atlas": "spine/cutscenes/cutscene_char061492/cutscene_char061492.atlas"
      },
-     "bg": [
-      "bg/061492_1.png",
-      "bg/061492_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -2098,9 +2024,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067002/cutscene_char067002.skel",
       "atlas": "spine/cutscenes/cutscene_char067002/cutscene_char067002.atlas"
      },
-     "bg": [
-      "bg/067002_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "回归偶像",
@@ -2167,9 +2091,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067103/cutscene_char067103.skel",
       "atlas": "spine/cutscenes/cutscene_char067103/cutscene_char067103.atlas"
      },
-     "bg": [
-      "bg/067103_1.png"
-     ]
+     "bg": null
     },
     {
      "label": "服装 04",
@@ -2209,9 +2131,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067202/cutscene_char067202.skel",
       "atlas": "spine/cutscenes/cutscene_char067202/cutscene_char067202.atlas"
      },
-     "bg": [
-      "bg/067202_1.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -2297,11 +2217,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067403/cutscene_char067403.skel",
       "atlas": "spine/cutscenes/cutscene_char067403/cutscene_char067403.atlas"
      },
-     "bg": [
-      "bg/067403_1.png",
-      "bg/067403_3.png",
-      "bg/067403_4.png"
-     ]
+     "bg": null
     },
     {
      "label": "服装 91",
@@ -2356,10 +2272,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067504/cutscene_char067504.skel",
       "atlas": "spine/cutscenes/cutscene_char067504/cutscene_char067504.atlas"
      },
-     "bg": [
-      "bg/067504_1.png",
-      "bg/067504_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -2378,9 +2291,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067601/cutscene_char067601.skel",
       "atlas": "spine/cutscenes/cutscene_char067601/cutscene_char067601.atlas"
      },
-     "bg": [
-      "bg/067601_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "水上乐园女王",
@@ -2404,10 +2315,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067604/cutscene_char067604.skel",
       "atlas": "spine/cutscenes/cutscene_char067604/cutscene_char067604.atlas"
      },
-     "bg": [
-      "bg/067604_1.png",
-      "bg/067604_2.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -2457,10 +2365,7 @@
       "skeleton": "spine/cutscenes/cutscene_char067801/cutscene_char067801.skel",
       "atlas": "spine/cutscenes/cutscene_char067801/cutscene_char067801.atlas"
      },
-     "bg": [
-      "bg/067801_1.png",
-      "bg/067801_2.png"
-     ]
+     "bg": null
     },
     {
      "label": "奇迹海洋",
@@ -2555,20 +2460,7 @@
       "skeleton": "spine/cutscenes/cutscene_char100501/cutscene_char100501.skel",
       "atlas": "spine/cutscenes/cutscene_char100501/cutscene_char100501.atlas"
      },
-     "bg": [
-      "bg/100501_1.png",
-      "bg/100501_10.png",
-      "bg/100501_11.png",
-      "bg/100501_12.png",
-      "bg/100501_2.png",
-      "bg/100501_3.png",
-      "bg/100501_4.png",
-      "bg/100501_5.png",
-      "bg/100501_6.png",
-      "bg/100501_7.png",
-      "bg/100501_8.png",
-      "bg/100501_9.png"
-     ]
+     "bg": null
     },
     {
      "label": "炸弹帽衫",
@@ -2787,14 +2679,7 @@
       "skeleton": "spine/cutscenes/cutscene_char103201/cutscene_char103201.skel",
       "atlas": "spine/cutscenes/cutscene_char103201/cutscene_char103201.atlas"
      },
-     "bg": [
-      "bg/103201_1.png",
-      "bg/103201_2.png",
-      "bg/103201_3.png",
-      "bg/103201_4.png",
-      "bg/103201_5.png",
-      "bg/103201_6.png"
-     ]
+     "bg": null
     }
    ]
   },
@@ -2813,11 +2698,7 @@
       "skeleton": "spine/cutscenes/cutscene_char103301/cutscene_char103301.skel",
       "atlas": "spine/cutscenes/cutscene_char103301/cutscene_char103301.atlas"
      },
-     "bg": [
-      "bg/103301_1.png",
-      "bg/103301_2.png",
-      "bg/103301_4.png"
-     ]
+     "bg": null
     }
    ]
   },
