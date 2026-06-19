@@ -417,6 +417,12 @@
     const GAME_SCREEN_VIEWPORT = { x: -2048, y: -1152, width: 4096, height: 2304 };
     const VIEWPORT_OVERRIDES = {
     };
+    const HOTZONE_WORLD_SCALES = {
+      // Unity imports dating18's Spine data at 0.25. PREFAB_HOTZONES stores
+      // those Unity-space values, while Spine Web exposes the raw skeleton
+      // world coordinates, so restore the original scale before projection.
+      illust_dating18: 4,
+    };
     const DEFAULT_STAGE_MOTIONS = {
       illust_dating1: { 1: "idle1", 2: "idle2", 3: "idle3" },
       illust_dating2: { 1: "idle1", 2: "idle2", 3: "idle3" },
@@ -1452,7 +1458,7 @@
       return true;
     }
 
-    function renderCardGameHotzones(viewport) {
+    function renderCardGameHotzones() {
       if (!isDating18CardStage() || !cardGameState || cardGameState.phase === "ready") return false;
       if (cardGameState.phase === "hand") {
         const hand = DATING18_CARD_GAME.hands[cardGameState.handIndex];
@@ -1460,7 +1466,7 @@
         points.forEach((pointId, index) => {
           const [cx, cy] = hand.centers[index];
           const zone = { x: cx - 43.75, y: cy - 43.75, width: 87.5, height: 87.5 };
-          const box = hotzoneToScreenBox(zone, viewport);
+          const box = hotzoneToScreenBox(zone);
           if (!box) return;
           const label = index === 0
             ? "重发"
@@ -1472,13 +1478,13 @@
           hotzoneLayer.appendChild(b);
         });
       } else if (cardGameState.phase === "result") {
-        const box = hotzoneToScreenBox(viewport, viewport);
+        const box = fullCanvasHotzoneBox();
         const outcome = cardGameState.outcome === "match" ? "同花色" : "不同花色";
         const b = makeHotzoneButton(box, `${outcome} · 再点一次画面`, `牌局结果 · point6_${cardGameState.resultPoint}`, "card-result-zone");
         b.onclick = () => playCardResult(cardGameState.resultPoint);
         hotzoneLayer.appendChild(b);
       } else if (cardGameState.phase === "finish") {
-        const box = hotzoneToScreenBox(viewport, viewport);
+        const box = fullCanvasHotzoneBox();
         const b = makeHotzoneButton(box, "结束", "牌局结束 · point6_34", "card-result-zone");
         b.onclick = () => playCardFinish();
         hotzoneLayer.appendChild(b);
@@ -1491,12 +1497,11 @@
       activeGyroAction = null;
       gyroBaseline = null;
       if (!currentEntry) return;
-      const viewport = VIEWPORT_OVERRIDES[currentEntry.id] || makeViewport(currentEntry);
-      if (renderCardGameHotzones(viewport)) return;
+      if (renderCardGameHotzones()) return;
       if (!prefabActions.length) return;
       prefabActions.forEach((item, idx) => {
         const zone = PREFAB_HOTZONES[currentEntry.id]?.[item.key];
-        const box = zone && hotzoneToScreenBox(zone, viewport);
+        const box = zone && hotzoneToScreenBox(zone);
         if (!box) return;
         const b = makeHotzoneButton(
           box,
@@ -1716,18 +1721,52 @@
       }
     }
 
-    function hotzoneToScreenBox(zone, viewport) {
-      const left = Math.max(zone.x, viewport.x);
-      const right = Math.min(zone.x + zone.width, viewport.x + viewport.width);
-      const bottom = Math.max(zone.y, viewport.y);
-      const top = Math.min(zone.y + zone.height, viewport.y + viewport.height);
-      if (right <= left || top <= bottom) return null;
-      const width = (right - left) / viewport.width * 100;
-      const height = (top - bottom) / viewport.height * 100;
+    function fullCanvasHotzoneBox() {
+      const canvasRect = player?.canvas?.getBoundingClientRect();
+      const layerRect = hotzoneLayer.getBoundingClientRect();
+      if (!canvasRect || !layerRect.width || !layerRect.height) return null;
+      return {
+        left: roundPct((canvasRect.left - layerRect.left) / layerRect.width * 100),
+        top: roundPct((canvasRect.top - layerRect.top) / layerRect.height * 100),
+        width: roundPct(canvasRect.width / layerRect.width * 100),
+        height: roundPct(canvasRect.height / layerRect.height * 100),
+      };
+    }
+
+    function hotzoneToScreenBox(zone) {
+      const canvas = player?.canvas;
+      const viewport = player?.viewport;
+      if (!canvas || !viewport || !currentEntry) return null;
+      const canvasRect = canvas.getBoundingClientRect();
+      const layerRect = hotzoneLayer.getBoundingClientRect();
+      if (!canvasRect.width || !canvasRect.height || !layerRect.width || !layerRect.height) return null;
+
+      const scale = HOTZONE_WORLD_SCALES[currentEntry.id] || 1;
+      const worldLeft = zone.x * scale;
+      const worldRight = (zone.x + zone.width) * scale;
+      const worldBottom = zone.y * scale;
+      const worldTop = (zone.y + zone.height) * scale;
+      const backingScaleX = canvas.width / canvasRect.width;
+      const backingScaleY = canvas.height / canvasRect.height;
+      const zoom = canvas.height / canvas.width > viewport.height / viewport.width
+        ? viewport.width / canvas.width
+        : viewport.height / canvas.height;
+      const cameraX = viewport.x + viewport.width / 2;
+      const cameraY = viewport.y + viewport.height / 2;
+      const projectX = x => canvasRect.left + (canvas.width / 2 + (x - cameraX) / zoom) / backingScaleX;
+      const projectY = y => canvasRect.top + (canvas.height / 2 - (y - cameraY) / zoom) / backingScaleY;
+
+      const leftPx = Math.max(canvasRect.left, projectX(worldLeft));
+      const rightPx = Math.min(canvasRect.right, projectX(worldRight));
+      const topPx = Math.max(canvasRect.top, projectY(worldTop));
+      const bottomPx = Math.min(canvasRect.bottom, projectY(worldBottom));
+      if (rightPx <= leftPx || bottomPx <= topPx) return null;
+      const width = (rightPx - leftPx) / layerRect.width * 100;
+      const height = (bottomPx - topPx) / layerRect.height * 100;
       if (width < 1 || height < 1) return null;
       return {
-        left: roundPct((left - viewport.x) / viewport.width * 100),
-        top: roundPct((viewport.y + viewport.height - top) / viewport.height * 100),
+        left: roundPct((leftPx - layerRect.left) / layerRect.width * 100),
+        top: roundPct((topPx - layerRect.top) / layerRect.height * 100),
         width: roundPct(width),
         height: roundPct(height),
       };
@@ -1868,6 +1907,16 @@
       if (document.fullscreenElement) document.exitFullscreen();
       else document.documentElement.requestFullscreen();
     });
+
+    let hotzoneResizeFrame = null;
+    function refreshHotzoneProjection() {
+      cancelAnimationFrame(hotzoneResizeFrame);
+      hotzoneResizeFrame = requestAnimationFrame(() => {
+        if (currentEntry && stageModel) renderHotzones(currentPrefabActions());
+      });
+    }
+    window.addEventListener("resize", refreshHotzoneProjection);
+    document.addEventListener("fullscreenchange", refreshHotzoneProjection);
 
     buildList();
   </script>
