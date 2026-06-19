@@ -762,9 +762,11 @@
         20: 33, 21: 33, 22: 33, 23: 33, 24: 33, 25: 33, 26: 33, 27: 33, 28: 33,
         29: null, 30: null, 31: null,
       },
-      resultWindows: {
-        32: [1050, 2030],
-        33: [1000, 2170],
+      matchingSuit: [14, 15, 16, 17, 18, 19],
+      specialClubs: [29, 30, 31],
+      resultOpenAt: {
+        32: 1050,
+        33: 1000,
       },
       finishWindows: {
         32: [15720, 18930],
@@ -1339,13 +1341,17 @@
       cardGameTimers.push(timer);
     }
 
-    function playCardAnimation(name) {
+    function playCardAnimation(name, completeBehavior = "none") {
       if (!player || !animationExists(name)) return false;
       restoringIdle = false;
       advanceTargetStage = null;
       advanceLastMotion = null;
       clearTimeout(advanceTimer);
       advanceTimer = null;
+      if (cardGameState) {
+        cardGameState.animation = name;
+        cardGameState.completeBehavior = completeBehavior;
+      }
       player.animationState.data.defaultMix = 0.2;
       player.setAnimation(name, false);
       player.play();
@@ -1360,7 +1366,7 @@
       const hand = DATING18_CARD_GAME.hands[handIndex];
       cardGameState = { phase: "dealing", handIndex };
       renderHotzones(currentPrefabActions());
-      if (!playCardAnimation(hand.deal)) {
+      if (!playCardAnimation(hand.deal, "idle-if-resolving")) {
         resetCardGame(true);
         return;
       }
@@ -1382,25 +1388,24 @@
       const hand = DATING18_CARD_GAME.hands[cardGameState.handIndex];
       if (!hand) return;
       clearCardGameTimers();
-      cardGameState = { phase: "resolving", handIndex: cardGameState.handIndex, pointId };
+      const outcome = DATING18_CARD_GAME.matchingSuit.includes(pointId)
+        ? "match"
+        : DATING18_CARD_GAME.specialClubs.includes(pointId) ? "club" : "mismatch";
+      cardGameState = { phase: "resolving", handIndex: cardGameState.handIndex, pointId, outcome };
       renderHotzones(currentPrefabActions());
-      if (!playCardAnimation(`mix6_${pointId}_1`)) {
+      const resultPoint = pointId === hand.redeal ? null : DATING18_CARD_GAME.results[pointId];
+      const completeBehavior = resultPoint ? "hold" : "idle";
+      if (!playCardAnimation(`mix6_${pointId}_1`, completeBehavior)) {
         resetCardGame(true);
         return;
       }
       if (pointId === hand.redeal) return;
-      const resultPoint = DATING18_CARD_GAME.results[pointId];
       if (!resultPoint) return;
-      const [openAt, closeAt] = DATING18_CARD_GAME.resultWindows[resultPoint];
+      const openAt = DATING18_CARD_GAME.resultOpenAt[resultPoint];
       scheduleCardGame(openAt, () => {
         if (cardGameState?.pointId !== pointId) return;
         cardGameState.phase = "result";
         cardGameState.resultPoint = resultPoint;
-        renderHotzones(currentPrefabActions());
-      });
-      scheduleCardGame(closeAt, () => {
-        if (cardGameState?.phase !== "result" || cardGameState.pointId !== pointId) return;
-        cardGameState.phase = "resolving";
         renderHotzones(currentPrefabActions());
       });
     }
@@ -1410,7 +1415,7 @@
       clearCardGameTimers();
       cardGameState.phase = "special";
       renderHotzones(currentPrefabActions());
-      if (!playCardAnimation(`mix6_${resultPoint}_1`)) {
+      if (!playCardAnimation(`mix6_${resultPoint}_1`, "idle")) {
         resetCardGame(true);
         return;
       }
@@ -1432,7 +1437,19 @@
       clearCardGameTimers();
       cardGameState.phase = "resolving";
       renderHotzones(currentPrefabActions());
-      if (!playCardAnimation("mix6_34_1")) resetCardGame(true);
+      if (!playCardAnimation("mix6_34_1", "idle")) resetCardGame(true);
+    }
+
+    function handleCardAnimationComplete(completed) {
+      if (!cardGameState || cardGameState.phase === "ready") return false;
+      if (cardGameState.animation !== completed) return true;
+      const behavior = cardGameState.completeBehavior;
+      cardGameState.animation = null;
+      cardGameState.completeBehavior = "none";
+      if (behavior === "idle" || (behavior === "idle-if-resolving" && cardGameState.phase === "resolving")) {
+        playIdle();
+      }
+      return true;
     }
 
     function renderCardGameHotzones(viewport) {
@@ -1445,14 +1462,19 @@
           const zone = { x: cx - 43.75, y: cy - 43.75, width: 87.5, height: 87.5 };
           const box = hotzoneToScreenBox(zone, viewport);
           if (!box) return;
-          const label = index === 0 ? "重发" : `牌${index}`;
+          const label = index === 0
+            ? "重发"
+            : DATING18_CARD_GAME.matchingSuit.includes(pointId)
+              ? "同花色"
+              : DATING18_CARD_GAME.specialClubs.includes(pointId) ? "梅花" : "其他花色";
           const b = makeHotzoneButton(box, label, `牌局互动 · point6_${pointId}`, "card-zone");
           b.onclick = () => playCardChoice(pointId);
           hotzoneLayer.appendChild(b);
         });
       } else if (cardGameState.phase === "result") {
         const box = hotzoneToScreenBox(viewport, viewport);
-        const b = makeHotzoneButton(box, "触发结果", `牌局结果 · point6_${cardGameState.resultPoint}`, "card-result-zone");
+        const outcome = cardGameState.outcome === "match" ? "同花色" : "不同花色";
+        const b = makeHotzoneButton(box, `${outcome} · 再点一次画面`, `牌局结果 · point6_${cardGameState.resultPoint}`, "card-result-zone");
         b.onclick = () => playCardResult(cardGameState.resultPoint);
         hotzoneLayer.appendChild(b);
       } else if (cardGameState.phase === "finish") {
@@ -1788,6 +1810,7 @@
         complete: (track) => {
           if (!track.animation || track.trackIndex !== 0 || restoringIdle) return;
           const completed = track.animation.name;
+          if (handleCardAnimationComplete(completed)) return;
           if (advanceTargetStage && completed === advanceLastMotion) {
             const target = advanceTargetStage;
             advanceTargetStage = null;
