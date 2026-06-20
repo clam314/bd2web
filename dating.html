@@ -841,6 +841,7 @@
     let viewMode = localStorage.getItem("datingViewMode") || "fit";
     let cardGameState = null;
     let cardGameTimers = [];
+    let hotzoneProjectionPending = false;
 
     function showError(msg) {
       toast.textContent = msg;
@@ -900,6 +901,13 @@
         alpha: true,
         premultipliedAlpha: false,
         viewport: VIEWPORT_OVERRIDES[entry.id] || makeViewport(entry),
+        frame: (p) => {
+          if (!hotzoneProjectionPending || !p.viewport?.width || !p.viewport?.height) return;
+          const rect = p.canvas?.getBoundingClientRect();
+          if (!rect?.width || !rect?.height) return;
+          hotzoneProjectionPending = false;
+          renderHotzones(currentPrefabActions());
+        },
         success: (p) => {
           try {
             const atlas = Object.entries(p.assetManager.assets)
@@ -1048,7 +1056,6 @@
       });
 
       renderFaces(stageModel.faces);
-      renderHotzones(prefabActions);
       playIdle();
     }
 
@@ -1297,7 +1304,14 @@
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
         const idleBtn = [...animList.querySelectorAll(".body-anim")].find(b => b.title === idle);
         if (idleBtn) idleBtn.classList.add("active");
+        scheduleHotzoneRender();
       } catch (e) { showError("播放待机失败：" + e.message); }
+    }
+
+    function scheduleHotzoneRender() {
+      // SpinePlayer applies its effective viewport/camera during drawFrame.
+      // Let the player's frame callback project once those values are valid.
+      hotzoneProjectionPending = true;
     }
 
     function applyStageSkin(stageNo) {
