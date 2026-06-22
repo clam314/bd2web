@@ -22,7 +22,12 @@ BACKUP = Path("/Users/woods/bd2_gamedata_backup")
 CACHE = BACKUP / "UnityCache" / "Shared"
 OUT = ROOT / "bg"
 
-PATTERN = re.compile(r"^char(\d{6})_back(\d+)$")
+# 两种命名都覆盖：
+#   旧：char003703_back1 / char<id>_back<N>            （单张整图，N 对应技能 1/2）
+#   新：Char003803_back1_1 / Char<id>_back<N>_<M>      （分层 BG，M=1 是主图，M=2+ 是装饰叠加）
+# 我们对新命名只取 _1 主图（命名归一到 <id>_<N>.png 与旧命名兼容）。
+PATTERN_OLD = re.compile(r"^char(\d{6})_back(\d+)$",       re.IGNORECASE)
+PATTERN_NEW = re.compile(r"^char(\d{6})_back(\d+)_(\d+)$", re.IGNORECASE)
 
 
 def bundle_data_path(bundle_hash):
@@ -59,12 +64,19 @@ def main():
                 continue
             try:
                 d = o.read()
-                m = PATTERN.match(d.m_Name)
-                if not m:
+                m_new = PATTERN_NEW.match(d.m_Name)
+                m_old = None if m_new else PATTERN_OLD.match(d.m_Name)
+                if not (m_new or m_old):
                     continue
-                costume_id, idx = m.group(1), m.group(2)
-                # 只要 1024x1024 整张（避免分块版 back1-1/back1-2 这类小图）
-                if (d.m_Width, d.m_Height) != (1024, 1024):
+                if m_new:
+                    costume_id, idx, layer = m_new.group(1), m_new.group(2), m_new.group(3)
+                    # 只取主图 _1，装饰层 _2+ 暂时丢弃（前端目前只能渲一张 backgroundImage）
+                    if layer != "1":
+                        continue
+                else:
+                    costume_id, idx = m_old.group(1), m_old.group(2)
+                # 旧命名要求 1024x1024 整张（避免分块版）；新命名不强约束尺寸（主图通常 1024 但有 2048 的）
+                if m_old and (d.m_Width, d.m_Height) != (1024, 1024):
                     continue
                 out = OUT / f"{costume_id}_{idx}.png"
                 if out.exists():
