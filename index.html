@@ -41,6 +41,9 @@
     /* cutscene 多 SkeletonGraphic 实例叠播：每层一个 .cut-layer，绝对定位铺满 stage、
        DOM 顺序自然给 z-order（先 append 的在底）。鼠标事件穿透。详见 AGENTS.md。 */
     .cut-layer { position: absolute; inset: 0; pointer-events: none; }
+    /* additive 层（如 char003803 的 back/front 用副 _1 skel，游戏里挂 "Additive" 材质）：
+       用 CSS plus-lighter 实现真加法混合，避免渲成粉白色鬼影盖住主角。 */
+    .cut-layer.additive { mix-blend-mode: plus-lighter; }
 
     /* 技能动画的游戏化后期：两套调色对应游戏 Timeline 上的 PostProcessVolume 与
        PostProcessVolume 2 切换（ACES 近似 + 对比/饱和/提亮，参数取自游戏 APK）。
@@ -335,13 +338,17 @@
     // 先硬编 003803 验证；通用化后由 gen_roster.py 扫 cutscene bundle 自动写入 roster.json。
     const CUTSCENE_LAYERS = {
       "003803": [
-        { role: "back",  skeleton: "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.skel",
+        // blend:"additive" 来自 Unity 场景里这层 SkeletonGraphic 的 m_Material = "Additive"
+        // （挖 bundle 验证：material pathID=-2797912536920885961 → 跨 bundle 找到名字就叫 Additive）
+        { role: "back",  blend: "additive",
+                         skeleton: "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.skel",
                          atlas:    "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.atlas" },
         { role: "main",  skeleton: "spine/cutscenes/cutscene_char003803/cutscene_char003803.skel",
                          atlas:    "spine/cutscenes/cutscene_char003803/cutscene_char003803.atlas" },
         { role: "fx",    skeleton: "spine/cutscenes/cutscene_char003803/cutscene_char003803.skel",
                          atlas:    "spine/cutscenes/cutscene_char003803/cutscene_char003803.atlas" },
-        { role: "front", skeleton: "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.skel",
+        { role: "front", blend: "additive",
+                         skeleton: "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.skel",
                          atlas:    "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.atlas" },
       ],
     };
@@ -615,7 +622,7 @@
       // 每层一个绝对定位 div，DOM append 顺序 = z-order（先 append 的在底，role: back → main → fx → front）
       layers.forEach((ly, idx) => {
         const div = document.createElement("div");
-        div.className = "cut-layer";
+        div.className = "cut-layer" + (ly.blend === "additive" ? " additive" : "");
         div.id = `cut-layer-${idx}`;
         stage.appendChild(div);
         const isMain = idx === mainLayerIdx;
