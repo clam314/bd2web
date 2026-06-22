@@ -447,18 +447,33 @@
     }
 
     function applyTimelineAt(d, t) {
-      // 暂不做 translate 运镜：Anchors.AnchoredX/Y 的语义因角色而异——有的角色用大数值把 UI 容器
-      // "飞出屏幕"切回战斗 UI（如 char000101 的 5000/200000），有的是 anchor preset 的归一化值
-      // （如 char003803 的 0.7-0.87），还没找到统一可靠的相机节点。
-      // 留 PostProcessVolume 切换做颜色分段：main=暖，PostProcessVolume 2=alt(暗冷)。
+      // PostProcessVolume 调色切换（CSS filter alt 模式）
       const alt = lastEventState(d.events, "PostProcessVolume 2", t) === true
                && lastEventState(d.events, "PostProcessVolume",   t) !== true;
       document.body.classList.toggle("cutscene-fx-alt", alt);
+
+      // 镜头推拉：Unity 端 `Anchors/object.LocalPos.z` 是 Screen Space-Camera 模式下的
+      // z 深度——z 越小角色越近相机越大，z 越大越远越小。char003803 数据范围 0.779–1.6：
+      // cut_B 慢放高潮 t≈7.183~7.8s 推到 z=0.779（最近，主角特写），cut_A 中段 z=1.6（最远）。
+      // 用 CSS transform: scale(1/z) 套在 #stage 的 spine-player 子 div 上模拟。
+      // origin = 50%/50%（CSS 默认通过 #stage > * 的 transform-origin 设的）。
+      const zKeys = d.tracks && d.tracks["Anchors/object.LocalPos.z"];
+      const inner = stage.firstElementChild;
+      if (zKeys && zKeys.length && inner) {
+        const z = sampleTrack(zKeys, t);
+        const scale = z > 0.01 ? 1 / z : 1;
+        inner.style.transform = `scale(${scale.toFixed(4)})`;
+      } else if (inner) {
+        inner.style.transform = "";
+      }
     }
 
     function stopTimeline() {
       if (timelineRaf) cancelAnimationFrame(timelineRaf);
       timelineRaf = 0;
+      // 清掉镜头 transform，避免下次切角色/形态时保留旧 scale
+      const inner = stage.firstElementChild;
+      if (inner) inner.style.transform = "";
     }
 
     function startTimeline() {
