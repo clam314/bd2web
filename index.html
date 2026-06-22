@@ -455,6 +455,21 @@
         if (!p?.config?.viewport) return;
         Object.assign(p.config.viewport, box);
         p.config.viewport.animations = {};
+        // 删 padding 字段：spine-player 的 setViewport 仅在判断 globalViewport.x/y/w/h 都
+        // 定义 + width/height truthy 才走 fixed box 分支；padding 字段本身不阻止 fixed box，
+        // 但保留干扰。
+        delete p.config.viewport.padLeft;
+        delete p.config.viewport.padRight;
+        delete p.config.viewport.padTop;
+        delete p.config.viewport.padBottom;
+        // 关键：spine-player 的 setViewport 只在动画切换时跑（写入 this.currentViewport）；
+        // 我们改了 config.viewport 后没触发动画切换，currentViewport 还是初始用 padding 算的旧值。
+        // 强制调一次：用当前正在播的动画（或默认动画）触发重算。
+        try {
+          const cur = p.animationState?.tracks?.[0]?.animation;
+          const anim = cur || p.skeleton?.data?.animations?.[0];
+          if (anim) p.setViewport(anim);
+        } catch(_) {}
       });
     }
 
