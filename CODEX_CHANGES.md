@@ -570,3 +570,187 @@ destination 方向证据保留给后续普通拖拽动作：
 - 现在 `playIdle()` 设置待机动画后标记热区待投影，由 SpinePlayer 自身的 `frame` 回调在有效 viewport 和
   canvas 尺寸出现后生成当前阶段热区。首次进入角色、切换阶段、后台标签页和自动恢复待机都不再依赖
   猜测延迟时间，也不需要额外操作菜单。
+
+## 2026-06-22 心契音频资源分析与通用接入方案（尚未接入）
+
+本节记录 dating18 的已确认结论，以及后续所有心契角色可复用的音频提取和播放方案。当前仅记录，
+未提交音频资源，也未修改前端播放器。
+
+### 身份与版本真值
+
+- `dating18` 是【尊爵不凡】致胜王牌莎赫拉查德（莎拉），资源编号 `char000396`。
+- **不是**温泉修行者，也不是 `char067004`。
+- dating18 prefab 内有两个指向 `Char067004` 的 Gauge 音频字段，但 `_GaugeSettingData.IsOn = 0`，
+  属于复制 prefab 后遗留的禁用配置，不能用来判断角色身份或动作音频归属。
+- 本地旧备份 `/Users/woods/bd2_gamedata_backup` 的 Addressables 版本是 `20260602132141`。
+- 手机当前 `file.json` 版本是 `20260616170924`，SoundData catalog 版本是 `20260616081003`，
+  属于 2026-06-18 游戏更新后的资源。
+- `interaction_char000396` 和旧名 `visual_interaction_sfx` 的 UnityCache bundle 新旧字节一致，
+  但 SoundMaster 已更新，事件路径和真实 SFX bank 归属已经变化。
+
+以后查音频时，资源优先级固定为：
+
+1. 手机当前 `/files/SoundData/Patched/`
+2. 手机当前 SoundMaster / catalog
+3. 手机当前 UnityCache
+4. `/Users/woods/bd2_gamedata_backup`
+
+必须比较文件 SHA256、BNKI bank GUID 和事件 GUID，不能只看 readableName 或旧 catalog hash。
+
+### 莎拉心契语音 bank
+
+资源为 `common-interactionvoice.../interaction_char000396.bytes`。解出的 FMOD bank 有 98 个事件、
+100 个 sample：
+
+- 49 个韩语事件有内容。
+- 同名的 49 个日语事件在这份 bank 中为空。
+- 25 组情绪语音，每组通常有 4 个变体：
+  `Annoy1/2`、`Embarrass1/2`、`Endure1/2`、`Neutral1/2`、`Pain1/2`、
+  `Shy1/2/3/4`、`Sigh1/2/3`、`Smile1/2/3`、`Surprise1/2/3/4/5`。
+- 另外有 24 个动作 selector 事件，负责按原游戏权重从一个或多个情绪池中选语音。
+
+FMOD 关系已经还原为：
+
+```text
+EVNT → TMLN → MUIT / WAIT → WAV
+```
+
+不能在网页里自行猜“身体部位对应哪种情绪”；必须从动作 selector 自动导出精确 sample、重复项和权重。
+
+| 动作 | 语音池 |
+|---|---|
+| `mix1_10_1` | Surprise1 |
+| `mix1_2_long` | Annoy1 + Surprise2 |
+| `mix1_4_1` | Annoy1 + Surprise2 |
+| `mix1_8_long` | Shy3 |
+| `mix1_9_1` | Annoy1 + Surprise2 |
+| `mix2_2_long` | Shy3 + Surprise2 |
+| `mix2_6_long` | Shy3 + Surprise2 |
+| `mix2_9_1` | Sigh2 |
+| `mix6_14_1` | Smile3 + Surprise1（7 个加权候选） |
+| `mix6_20_1` | Annoy1 + Embarrass1（6 个候选） |
+| `mix6_29_1` | Embarrass1 + Endure2 |
+| `mix6_2_long` | Embarrass1 + Shy4 |
+| `mix6_30_1` | Embarrass1 + Endure2 + Pain1（11 个候选） |
+| `mix6_31_1` | Embarrass1 + Endure2 + Sigh1（12 个候选） |
+| `mix6_32_1` | Endure1 + Pain1 + Shy1 + Shy4 + Sigh1 + Surprise3 + Surprise5（27 个候选） |
+| `mix6_33_1` | Endure1 + Endure2 + Shy1 + Shy4 + Sigh1 + Surprise4 + Surprise5（28 个候选） |
+| `mix6_3_long` | Endure2 + Surprise2 |
+| `mix6_4_long` | Annoy1 + Surprise2 |
+| `mix6_7_1` | Neutral1 + Smile1 + Surprise1（10 个候选） |
+| `mix6_8_1` | Neutral1（只使用 2 个变体） |
+| `mix7_1_long` | Shy1 + Surprise4 |
+| `mix7_2_long` | Shy1 + Surprise4 |
+| `mix7_4_long` | Pain1 + Shy1 |
+| `mix7_5_1` | Annoy2（只使用 2 个变体） |
+
+上表只说明池关系，不能代替工具生成的精确权重数据。
+
+### 莎拉心契动作 SFX bank
+
+2026-06-18 更新后的真实文件位于手机：
+
+```text
+/sdcard/Android/data/com.neowizgames.game.browndust2/files/SoundData/Patched/Sound/
+342271E9887477BD308B35108B7346D60DDED17E
+```
+
+- 大小：59,921,920 bytes
+- SHA256：`0f6cd82848391943e1bcc974c538396f63ec4e7e01df2983d6d20b432e93b7f1`
+- BNKI GUID：`bcbf2950f645bb4bbd33ad593e44c248`
+- 路径：`bank:/BundleCommon/Sound/Visual_Novel_SFX`
+- 716 个事件，429 个 sample
+
+旧备份中的 `bank:/BundleCommon/Sound/Visual_Interaction_SFX` 只含 12 个早期角色，没有
+`Char000396`。两个名称相近但不是同一份内容，这是最重要的版本陷阱之一。
+
+更新后的 Master.strings 中已找到 `Char000396` 的 98 条心契语音路径和 112 条
+Cinematic / Visual_Novel 心契 SFX 路径。112 个 SFX 事件共引用 127 个不同 sample，其中
+10 个是莎拉专属：
+
+```text
+Char000396_Card_01
+Char000396_Card_02
+Char000396_Card_03
+Char000396_Metal_Rattle_01
+Char000396_Shoes_Drop_01
+Char000396_Shoes_Drop_02
+Char000396_Shoes_Drop_03
+Char000396_mix6_32_1
+Char000396_mix6_33_1
+Char000396_motion1_14
+```
+
+其余事件会复用公共衣料、碰撞、液体、挥动等音效。
+
+SFX 事件可能包含时间轴延迟、随机权重、多段串联和循环，不能把事件引用的所有 sample 同时播放。
+正确方案二选一：
+
+1. 解析 FMOD event 的 timing/random/loop，在浏览器按 schedule 播放。
+2. 离线按原事件结构渲染为 OGG；循环事件另外保存 start/loop/stop 语义。
+
+`Char000396_mix6_32_1`、`Char000396_mix6_33_1` 这类预混长轨可优先直接使用。
+
+### 格式与转换结论
+
+- FSB5 codec `0x10`（16）是 **FMOD FADPCM**，不是 FMOD Opus；Opus 是 `0x11`（17）。
+- 游戏 FMOD runtime 版本是 **2.03.12**。
+- GitHub 上现成的 vgmstream macOS release 是 arm64，本机是 Intel x86_64，不能直接运行。
+- 已验证官方开源 vgmstream 稳定 tag `r2117` 可在本机编译，FADPCM 无需额外 codec 依赖。
+- 网页资源建议转成 48 kHz OGG Vorbis，并保持原 mono/stereo。
+- 实测 `Char000396_Int_Shy4_1` 为 1.152 秒 mono，OGG 约 13.9 KB；
+  `Char000396_mix6_32_1` 为 12.981 秒 stereo，OGG 约 202 KB。
+
+### 后续角色统一提取流水线
+
+1. 从正式 dating/角色数据确认 `datingId → char/costumeId`，忽略 prefab 中禁用的残留引用。
+2. 拉当前 `file.json`、SoundData catalog、SoundMaster 和相关 patched bank，记录版本、SHA256、BNKI GUID。
+3. 用游戏自带 `libfmodstudio.so` 和 Master.strings 导出 GUID → event path。
+   当前已验证 Android `app_process` + 游戏 APK classpath + JavaVM/NativeActivity 环境可行，后续应封装成脚本。
+4. 用事件 GUID 反查真正包含它的 bank；catalog 名称含糊时，以 bank 内 GUID 为最终证据。
+5. 解析 FEV 图：
+   - 语音生成 selector → sample 池、重复项和权重。
+   - SFX 生成 timeline、随机分支、loop 和 WAV 引用。
+6. 定位 FSB5，按 name table/stream index 用 vgmstream 解码，再用 FFmpeg 转 OGG。
+7. 自动生成项目数据和资源，不在 `index.html` 里维护巨型手写映射。
+8. 核对路径、bank GUID、sample index/name、时长，再与 Spine 动画逐动作验证。
+
+建议结构：
+
+```text
+audio/dating/<datingId>/voice/*.ogg
+audio/dating/<datingId>/sfx/*.ogg
+data/dating_audio.json
+```
+
+`dating_audio.json` 至少保存 charId、源版本、bank GUID/SHA256、动作原名、规范化名称、语音权重池、
+SFX 时间表和循环停止条件。动作名存在大小写与补零差异（如 `mix1_01_1` / `mix1_1_1` / `Idle1`），
+必须受控规范化并保留原名，不能靠宽松正则猜测。
+
+### 前端播放逻辑
+
+统一入口建议为：
+
+```js
+playDatingActionAudio(datingId, stage, animationName, phase)
+```
+
+- 第一次用户点击/触摸时创建或恢复 `AudioContext`，满足浏览器自动播放限制。
+- 动作开始时，语音按原 selector 权重选一个 sample；SFX 按时间表播放；预混长轨直接播放；
+  循环音登记停止条件。
+- 动作结束、切动作、切角色或退出心契时，停止/短淡出旧音频，清除循环和待触发任务。
+- 使用 generation/token，防止上一个动作的异步音频串进新动作。
+- 语音与 SFX 分开控制音量，只预载当前角色资源。
+- 音频缺失必须静默降级，不能影响 Spine 互动。
+
+### 实施顺序
+
+1. 莎拉全部 100 个语音 sample + 24 个动作 selector 精确权重。
+2. 10 个 `Char000396_*` 专属 SFX，优先预混长轨和强绑定动作。
+3. 公共 SFX 的 timeline/random/loop。
+4. 把身份识别、Master.strings、bank 定位、FEV、FSB 和 JSON 生成整合成通用工具，再批量扩展角色。
+
+### 托管风险
+
+项目是公开仓库，游戏原始音频有版权和仓库体积风险。决定公开托管方式前，提取音频应保持本地并
+加入 `.gitignore`。正式提交前需单独确认是进入公开仓库还是外部静态托管，以及 Pages/CDN 缓存和流量方案。

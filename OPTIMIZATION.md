@@ -66,3 +66,14 @@
    - 现用 CSS 近似（暗角 + brightness/contrast/saturate）。APK 真值：
      Bloom intensity 1.59/阈值 0.64/偏蓝 tint；Tonemapping ACES；
      ColorAdjustments 曝光 -0.3/对比 49/饱和 33。想更准可上 WebGL 后期 pass。
+
+8. **心契互动音频** — 优先级高，dating18 资源分析已完成
+   - `dating18` 是【尊爵不凡】致胜王牌莎赫拉查德（莎拉），资源编号 `char000396`；
+     prefab 中禁用的 `Char067004` 字段是残留配置，不能作为映射依据。
+   - 已确认 2026-06-18 更新后的语音、Visual_Novel_SFX、Master.strings、FMOD 事件图和
+     FSB5/FADPCM 解码链路。
+   - 先接语音 selector 与角色专属 SFX，再处理公共 SFX 的 timeline/random/loop。
+   - 开发通用生成工具，产出 `data/dating_audio.json` 和按角色组织的 OGG，前端只消费生成数据。
+   - 音频公开托管前先确认版权、体积和 CDN 方案；资源缺失时必须无声降级。
+   - 详细结论见 [CODEX_CHANGES.md](CODEX_CHANGES.md) 的
+     “2026-06-22 心契音频资源分析与通用接入方案”。
