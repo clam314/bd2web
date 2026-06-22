@@ -649,15 +649,12 @@
               } catch(_) {}
             }
 
-            // 非主层（back/fx/front）默认隐身——清空所有 slot.attachment，等 schedule 起播再由
-            // 动画自己的 AttachmentTimeline 设回去。否则 setup pose 的默认 attachment 在 cut_A
-            // 阶段就会画出"飘浮鬼影"（cut_B_B/F 的身体部件挂在主角位置）。
+            // 非主层默认 div 隐身（display:none），等 schedule 里它真正起播时再显示。
+            // 不能清 slot.attachment——fx 层（如 cut_A_fx）和很多动画依赖 setup pose 的默认
+            // attachment，没有 AttachmentTimeline 把它们设回去；清了就整层不画。
             if (isCutscene && !isMain) {
-              try {
-                p.animationState.clearTracks();
-                p.skeleton.setToSetupPose();
-                for (const slot of p.skeleton.slots) slot.attachment = null;
-              } catch(_) {}
+              p._layerDiv = document.getElementById(`cut-layer-${idx}`);
+              p._layerDiv.style.display = "none";
             }
 
             if (isMain) {
@@ -888,14 +885,18 @@
       function playScheduledSkill(schedule) {
         if (!layerPlayers.length) return;
 
-        // 重置每层 player：清轨 + setup pose；非主层再清 slot.attachment 避免 setup pose 鬼影
+        // 重置每层 player：清轨 + setup pose。**不清 slot.attachment** —— fx 类动画依赖
+        // setup pose 默认 attachment（没有 AttachmentTimeline 设回去），清了整层不画。
+        // 避免"setup pose 鬼影"改用 CSS display 控制层 div 显隐（layer success 时初始 none，
+        // schedule 起播时 listener.start 切到 block）。
         layerPlayers.forEach((p, i) => {
           if (!p?.animationState || !p?.skeleton) return;
           try {
             p.animationState.clearTracks();
             p.skeleton.setToSetupPose();
-            if (i !== mainLayerIdx) for (const slot of p.skeleton.slots) slot.attachment = null;
           } catch(_){}
+          // 非主层先隐身，等首个非空 clip 起播再显示
+          if (i !== mainLayerIdx && p._layerDiv) p._layerDiv.style.display = "none";
         });
 
         const applyEntry = (e, c) => {
@@ -906,25 +907,46 @@
           e.mixDuration    = 0;
         };
 
+        // 给非主层的"首个真动画 entry"挂 listener：start 时显示 div、end 时隐藏，
+        // 用 spine 自己的时钟驱动（标签节流也能跟动画同步，不需要 setTimeout）。
+        const attachShowHide = (p, entry) => {
+          if (!entry) return;
+          const div = p._layerDiv;
+          if (!div) return;
+          entry.listener = entry.listener || {};
+          const origStart = entry.listener.start;
+          const origEnd = entry.listener.end;
+          entry.listener.start    = (...a) => { div.style.display = "block"; origStart?.(...a); };
+          entry.listener.end      = (...a) => { div.style.display = "none";  origEnd?.(...a);   };
+          entry.listener.complete = entry.listener.complete; // keep
+        };
+
         schedule.tracks.forEach((tr) => {
           const p = layerPlayers[tr.layerIdx];
-          if (!p?.animationState || !p?.skeleton) return;   // 该层还没 success 时跳过
+          if (!p?.animationState || !p?.skeleton) return;
           const sorted = [...tr.clips].sort((a,b) => a.startWall - b.startWall);
+          const isMain = tr.layerIdx === mainLayerIdx;
 
-          // 每个 player 只用 spine track 0。startWall>0 → setEmpty(0,0) 占位 + addAnimation(delay=startWall)
           let firstEntry = null;
           if (sorted[0].startWall > 0.001) {
             p.animationState.setEmptyAnimation(0, 0);
             firstEntry = p.animationState.addAnimation(0, sorted[0].anim, false, sorted[0].startWall);
-          } else if (tr.layerIdx === mainLayerIdx) {
-            // 主层首 clip 走 spine-player wrapper（触发其内部 redraw 钩子）
+          } else if (isMain) {
             firstEntry = p.setAnimation(sorted[0].anim, false);
           } else {
             firstEntry = p.animationState.setAnimation(0, sorted[0].anim, false);
           }
           applyEntry(firstEntry, sorted[0]);
+          if (!isMain) attachShowHide(p, firstEntry);
+
           for (let i = 1; i < sorted.length; i++) {
-            applyEntry(p.animationState.addAnimation(0, sorted[i].anim, false, 0), sorted[i]);
+            const e = p.animationState.addAnimation(0, sorted[i].anim, false, 0);
+            applyEntry(e, sorted[i]);
+            if (!isMain) attachShowHide(p, e);   // 后续 clip 起播时保持显示，end 时再隐藏
+          }
+          // 非主层若 startWall==0（如 fx 层），直接显示
+          if (!isMain && sorted[0].startWall <= 0.001 && p._layerDiv) {
+            p._layerDiv.style.display = "block";
           }
           p.play();
         });
