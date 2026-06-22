@@ -51,6 +51,17 @@
     }
     body.cutscene-fx #vignette { display: block; }
 
+    /* 变身光罩：cut_B 变身瞬间游戏是一片粉白光芒（UIParticle 粒子 + bloom 过曝）把
+       散开的半成品身体盖住。我们渲不了 Unity 粒子，用一层径向粉白光近似，由 Timeline
+       按 cut_B 阶段驱动 opacity（bell 曲线 fade）。定位跟舞台一致（JS 同步 inset）。 */
+    #flash {
+      position: fixed; z-index: 6; pointer-events: none; display: none; opacity: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 45%, rgba(255,240,250,0.95) 0%, rgba(255,210,235,0.7) 30%, rgba(255,180,220,0.25) 55%, transparent 75%);
+      mix-blend-mode: screen;
+    }
+    body.cutscene-fx #flash { display: block; }
+
     /* ── 左侧滑出抽屉 ── */
     #drawer {
       position: fixed;
@@ -232,6 +243,7 @@
 <body>
   <div id="stage"></div>
   <div id="vignette"></div>
+  <div id="flash"></div>
 
   <div id="edge-hotzone"></div>
   <nav id="drawer">
@@ -416,11 +428,12 @@
     }
 
     // 把 #stage 锁成游戏窗口比例并居中；同时同步 #vignette 的 inset，让暗角只盖在舞台上
+    const flash = document.getElementById("flash");
     function layoutStage() {
       const isCutscene = currentPart === "cutscene";
       if (!isCutscene) {
-        stage.style.left = stage.style.right = stage.style.top = stage.style.bottom = "0";
-        vignette.style.left = vignette.style.right = vignette.style.top = vignette.style.bottom = "0";
+        for (const el of [stage, vignette, flash])
+          el.style.left = el.style.right = el.style.top = el.style.bottom = "0";
         return;
       }
       const W = window.innerWidth, H = window.innerHeight;
@@ -432,7 +445,7 @@
         sw = W; sh = W / target;
       }
       const left = (W - sw) / 2, top = (H - sh) / 2;
-      for (const el of [stage, vignette]) {
+      for (const el of [stage, vignette, flash]) {
         el.style.left = left + "px";
         el.style.top = top + "px";
         el.style.right = (W - sw - left) + "px";
@@ -488,11 +501,31 @@
       const alt = lastEventState(d.events, "PostProcessVolume 2", t) === true
                && lastEventState(d.events, "PostProcessVolume",   t) !== true;
       document.body.classList.toggle("cutscene-fx-alt", alt);
+
+      // 背景切换：游戏 Timeline 的 Bg_B（cut_B 粉光）在 t≈2.98 起 on。on 用 bg[1]（粉光放射），
+      // 否则 bg[0]（cut_A 红幕）。只在 want 变化时切，避免每帧重设 backgroundImage。
+      const bgArr = Array.isArray(currentCostume?.bg) ? currentCostume.bg : [];
+      if (player?.applyBg && bgArr.length) {
+        const bgB = lastEventState(d.events, "Anchors/object/Bg_B", t) === true;
+        const want = "./" + (bgB ? (bgArr[1] || bgArr[0]) : bgArr[0]);
+        if (player._bgWant !== want) { player._bgWant = want; player.applyBg(); }
+      }
+
+      // 变身光罩：cut_B 变身瞬间（游戏 t≈3.0~5.5 一片粉白光芒，t3.5 峰值近全白）。
+      // 用 bell 曲线驱动 #flash opacity，近似 UIParticle 粒子 + bloom 把散开的半成品身体盖住。
+      const FS = 3.0, FP = 3.7, FE = 5.5, FPEAK = 0.82;
+      let fop = 0;
+      if (t >= FS && t <= FE) {
+        fop = (t < FP ? (t - FS) / (FP - FS) : 1 - (t - FP) / (FE - FP)) * FPEAK;
+        fop = Math.max(0, fop);
+      }
+      flash.style.opacity = fop.toFixed(3);
     }
 
     function stopTimeline() {
       if (timelineRaf) cancelAnimationFrame(timelineRaf);
       timelineRaf = 0;
+      if (flash) flash.style.opacity = 0;   // 变身光罩归零，避免切角色/重播时残留
     }
 
     function startTimeline() {

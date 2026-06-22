@@ -6,5 +6,6 @@ sync.log
 .claude/
 bg_demo/
 demo.html
+skill_demo/
 # bg/ 不再 ignore——背景图从 /Users/woods/bd2_gamedata_backup 跑 tools/extract_bgs.py 出来后
 # 直接进仓库部署到 Pages（约 50MB），避免 Pages 上线后看不到背景。
