@@ -511,13 +511,16 @@
         if (player._bgWant !== want) { player._bgWant = want; player.applyBg(); }
       }
 
-      // 变身光罩：cut_B 变身瞬间（游戏 t≈3.0~5.5 一片粉白光芒，t3.5 峰值近全白）。
-      // 用 bell 曲线驱动 #flash opacity，近似 UIParticle 粒子 + bloom 把散开的半成品身体盖住。
-      const FS = 3.0, FP = 3.7, FE = 5.5, FPEAK = 0.82;
+      // 变身光罩：cut_B 变身瞬间（游戏 t≈3.5~4.5 一片粉白光芒持续约 1s，近全白）。
+      // 梯形曲线驱动 #flash opacity：ramp up → plateau（持续亮）→ ramp down，
+      // 近似 UIParticle 粒子 + bloom 把散开的半成品身体盖住。尖峰一闪太短看不清，改持续。
+      const F_UP0 = 2.8, F_UP1 = 3.4, F_DN0 = 4.4, F_DN1 = 5.6, FPEAK = 0.92;
       let fop = 0;
-      if (t >= FS && t <= FE) {
-        fop = (t < FP ? (t - FS) / (FP - FS) : 1 - (t - FP) / (FE - FP)) * FPEAK;
-        fop = Math.max(0, fop);
+      if (t >= F_UP0 && t <= F_DN1) {
+        if (t < F_UP1)      fop = (t - F_UP0) / (F_UP1 - F_UP0);   // 渐入
+        else if (t <= F_DN0) fop = 1;                              // 持续峰值（变身白光）
+        else                 fop = 1 - (t - F_DN0) / (F_DN1 - F_DN0); // 渐出
+        fop = Math.max(0, fop) * FPEAK;
       }
       flash.style.opacity = fop.toFixed(3);
     }
