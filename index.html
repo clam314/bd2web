@@ -38,12 +38,6 @@
     /* 真实运镜：每帧 RAF 直接写 transform（translate），#stage 自己 overflow:hidden
        把溢出剪掉，letterbox 黑边不会被运镜越界覆盖。RAF 高频写不要 transition，否则会糊。*/
     #stage > * { width: 100%; height: 100%; transform-origin: 50% 50%; }
-    /* cutscene 多 SkeletonGraphic 实例叠播：每层一个 .cut-layer，绝对定位铺满 stage、
-       DOM 顺序自然给 z-order（先 append 的在底）。鼠标事件穿透。详见 AGENTS.md。 */
-    .cut-layer { position: absolute; inset: 0; pointer-events: none; }
-    /* additive 层（如 char003803 的 back/front 用副 _1 skel，游戏里挂 "Additive" 材质）：
-       用 CSS plus-lighter 实现真加法混合，避免渲成粉白色鬼影盖住主角。 */
-    .cut-layer.additive { mix-blend-mode: plus-lighter; }
 
     /* 技能动画的游戏化后期：两套调色对应游戏 Timeline 上的 PostProcessVolume 与
        PostProcessVolume 2 切换（ACES 近似 + 对比/饱和/提亮，参数取自游戏 APK）。
@@ -329,29 +323,7 @@
     const toast = document.getElementById("error-toast");
     const search = document.getElementById("search");
 
-    let player = null;            // 兼容立绘形态：等价于 cutscene 模式下 layerPlayers[mainLayerIdx]
-    const layerPlayers = [];      // cutscene 模式下按 z-order 由低到高排列的所有 spine player（含主+副）
-    let mainLayerIdx = 0;         // layerPlayers 里 role="main" 的索引（schedule 默认 layerIdx）
-    // 角色 → cutscene 多层结构（来自 Unity 场景 Anchors/object/ 下 SkeletonGraphic 实例的 sibling 顺序）。
-    // 列表按 z-order 从下到上：先画的在底。role 取值 back / main / fx / front（仅说明用，逻辑只看 layerIdx）。
-    // 详见 AGENTS.md「多 skel + 多实例 叠播 cutscene」段。
-    // 先硬编 003803 验证；通用化后由 gen_roster.py 扫 cutscene bundle 自动写入 roster.json。
-    const CUTSCENE_LAYERS = {
-      "003803": [
-        // blend:"additive" 来自 Unity 场景里这层 SkeletonGraphic 的 m_Material = "Additive"
-        // （挖 bundle 验证：material pathID=-2797912536920885961 → 跨 bundle 找到名字就叫 Additive）
-        { role: "back",  blend: "additive",
-                         skeleton: "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.skel",
-                         atlas:    "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.atlas" },
-        { role: "main",  skeleton: "spine/cutscenes/cutscene_char003803/cutscene_char003803.skel",
-                         atlas:    "spine/cutscenes/cutscene_char003803/cutscene_char003803.atlas" },
-        { role: "fx",    skeleton: "spine/cutscenes/cutscene_char003803/cutscene_char003803.skel",
-                         atlas:    "spine/cutscenes/cutscene_char003803/cutscene_char003803.atlas" },
-        { role: "front", blend: "additive",
-                         skeleton: "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.skel",
-                         atlas:    "spine/cutscenes/cutscene_char003803_1/cutscene_char003803_1.atlas" },
-      ],
-    };
+    let player = null;
     let activeCostumeBtn = null;
     let currentCostume = null;
     let currentPart = null;      // "idle"（立绘）| "cutscene"（技能动画）
@@ -406,78 +378,6 @@
     function cutsceneViewport() {
       // 舞台已经锁成 1600:720，viewport 用游戏原值即可
       return { x: CUT_CX - CUT_W / 2, y: CUT_CY - CUT_H / 2, width: CUT_W, height: CUT_H };
-    }
-
-    // 计算一组动画的并集包围盒（给 per-animation viewport 用），p 是 spine-player
-    function unionAnimViewport(p, animNames) {
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-      for (const name of animNames) {
-        const anim = p?.skeleton?.data?.findAnimation?.(name);
-        if (!anim) continue;
-        const b = {};
-        try { p.calculateAnimationViewport(anim, b); }
-        catch(_) { continue; }
-        if (b.x < minX) minX = b.x;
-        if (b.y < minY) minY = b.y;
-        if (b.x + b.width  > maxX) maxX = b.x + b.width;
-        if (b.y + b.height > maxY) maxY = b.y + b.height;
-      }
-      if (!isFinite(minX)) return null;
-      return { x: minX, y: minY, width: maxX - minX, height: maxY - minY };
-    }
-
-    // cutscene 模式：把所有层 player 的 viewport 设成同一个固定框 = 主层 cut_A∪cut_B 的包围盒，
-    // 所有层共用 = 坐标系完全一致、绝对对齐。
-    // 为什么只算主层、不算副层：副层（cut_B_B 背景 / cut_B_F 前景）的包围盒含巨大特效轨迹（B_Trans_FX
-    // 之类），把它们算进并集会让 cut_A 阶段镜头被拉得离主角很远，人物变小。游戏里副层也是按主角
-    // 同坐标系绘制，所以用主层的取景框来 fit 是合理的（副层超出去的部分会被裁掉，正常）。
-    function setupCutsceneViewports() {
-      const mainP = layerPlayers[mainLayerIdx];
-      if (!mainP?.skeleton) return;
-      if (!layerPlayers.every(p => p?.skeleton)) return;
-
-      // 用主层的 cut_A、cut_B 两个核心姿态求并集（cut_A_fx 不算——它跑在 fx 层但骨骼一样、bbox 会很大）
-      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
-      for (const name of ["cut_A", "cut_B"]) {
-        const a = mainP.skeleton.data.findAnimation?.(name);
-        if (!a) continue;
-        const b = {};
-        try { mainP.calculateAnimationViewport(a, b); }
-        catch(_) { continue; }
-        if (b.x < minX) minX = b.x;
-        if (b.y < minY) minY = b.y;
-        if (b.x + b.width  > maxX) maxX = b.x + b.width;
-        if (b.y + b.height > maxY) maxY = b.y + b.height;
-      }
-      if (!isFinite(minX)) return;
-      const w = maxX - minX, h = maxY - minY;
-      const ratio = 0.08;   // 外扩 8% 留白
-      const box = {
-        x: minX - w * ratio,
-        y: minY - h * ratio,
-        width:  w * (1 + ratio * 2),
-        height: h * (1 + ratio * 2),
-      };
-      layerPlayers.forEach(p => {
-        if (!p?.config?.viewport) return;
-        Object.assign(p.config.viewport, box);
-        p.config.viewport.animations = {};
-        // 删 padding 字段：spine-player 的 setViewport 仅在判断 globalViewport.x/y/w/h 都
-        // 定义 + width/height truthy 才走 fixed box 分支；padding 字段本身不阻止 fixed box，
-        // 但保留干扰。
-        delete p.config.viewport.padLeft;
-        delete p.config.viewport.padRight;
-        delete p.config.viewport.padTop;
-        delete p.config.viewport.padBottom;
-        // 关键：spine-player 的 setViewport 只在动画切换时跑（写入 this.currentViewport）；
-        // 我们改了 config.viewport 后没触发动画切换，currentViewport 还是初始用 padding 算的旧值。
-        // 强制调一次：用当前正在播的动画（或默认动画）触发重算。
-        try {
-          const cur = p.animationState?.tracks?.[0]?.animation;
-          const anim = cur || p.skeleton?.data?.animations?.[0];
-          if (anim) p.setViewport(anim);
-        } catch(_) {}
-      });
     }
 
     // 把 #stage 锁成游戏窗口比例并居中；同时同步 #vignette 的 inset，让暗角只盖在舞台上
@@ -584,8 +484,7 @@
       const src = costume[part];
       if (!src) return;
       currentPart = part;
-      if (layerPlayers.length) { layerPlayers.forEach(p => { try { p.dispose(); } catch(_){} }); layerPlayers.length = 0; }
-      player = null; mainLayerIdx = 0;
+      if (player) { player.dispose(); player = null; }
       stage.innerHTML = "";
       renderModeRow(animBox);
 
@@ -605,110 +504,64 @@
 
       // 背景：技能动画的场景图（roster 提供，来自游戏资源 char<id>_back<N>），
       // 画在同一镜头里（与人物共享取景）。bg 在 costume 上、数组按动作 1/2 对应。
-      // 不在这里作为必需资源加载——改在 success 里异步加载（见 createPlayer），缺失也不致命。
+      // 不在这里作为必需资源加载——改在 success 里异步加载，缺失也不致命。
       const cutBgs = isCutscene && Array.isArray(costume.bg) ? costume.bg : [];
 
-      // 决定要创建几层 player：
-      //   立绘形态：永远 1 层（src 自己）
-      //   cutscene 形态：若 CUTSCENE_LAYERS[charId] 有定义就按它列表（多实例叠层），
-      //                   否则退回单层（src 自己）
-      const charId = isCutscene ? (src.skeleton || "").match(/cutscene_char(\d{6})/)?.[1] : null;
-      const layersDef = (isCutscene && charId && CUTSCENE_LAYERS[charId]) || null;
-      const layers = layersDef
-        || [{ role: "main", skeleton: src.skeleton, atlas: src.atlas }];
-      mainLayerIdx = layers.findIndex(l => l.role === "main");
-      if (mainLayerIdx < 0) mainLayerIdx = 0;
+      const config = {
+        atlasUrl: assetUrl(src.atlas),
+        showControls: false,
+        showLoading: false,
+        alpha: true,
+        premultipliedAlpha: false,   // 占位，success 里按 atlas pma 标记修正
+        viewport: { padLeft: "5%", padRight: "5%", padTop: "5%", padBottom: "5%" },
+        success: (p) => {
+          try {
+            const atlas = Object.entries(p.assetManager.assets).find(([k]) => k.endsWith(".atlas"))[1];
+            p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
+          } catch(_) {}
 
-      // 每层一个绝对定位 div，DOM append 顺序 = z-order（先 append 的在底，role: back → main → fx → front）
-      layers.forEach((ly, idx) => {
-        const div = document.createElement("div");
-        div.className = "cut-layer" + (ly.blend === "additive" ? " additive" : "");
-        div.id = `cut-layer-${idx}`;
-        stage.appendChild(div);
-        const isMain = idx === mainLayerIdx;
-        const cfg = {
-          atlasUrl: assetUrl(ly.atlas),
-          showControls: false,
-          showLoading: false,
-          alpha: true,
-          premultipliedAlpha: false,
-          // 所有层先用宽松 padding 自适应；cutscene 模式 success 后由 setupCutsceneViewports
-          // 改写成主层 cut_A∪cut_B 的固定框（共用同一框 = 对齐）。立绘单层时按下面 idle 分支锁定。
-          viewport: { padLeft: "5%", padRight: "5%", padTop: "5%", padBottom: "5%" },
-          success: (p) => {
-            // pma 模式（gamekee=pma / myssal=直通），从 atlas 读
+          if (part === "idle") {
+            // 立绘形态锁定取景（详见 AGENTS.md「立绘取景锁定」段）
             try {
-              const atlas = Object.entries(p.assetManager.assets).find(([k]) => k.endsWith(".atlas"))[1];
-              p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
+              const anims = p.skeleton.data.animations;
+              const rest = anims.find(a => /idle/i.test(a.name) && !a.name.startsWith("_"))
+                        || anims.find(a => !a.name.startsWith("_"));
+              if (rest) {
+                const box = {};
+                p.calculateAnimationViewport(rest, box);
+                Object.assign(p.config.viewport, { x: box.x, y: box.y, width: box.width, height: box.height });
+              }
             } catch(_) {}
+          }
 
-            if (!isCutscene && part === "idle") {
-              // 立绘形态锁定取景（详见 AGENTS.md「立绘取景锁定」段）
-              try {
-                const anims = p.skeleton.data.animations;
-                const rest = anims.find(a => /idle/i.test(a.name) && !a.name.startsWith("_"))
-                          || anims.find(a => !a.name.startsWith("_"));
-                if (rest) {
-                  const box = {};
-                  p.calculateAnimationViewport(rest, box);
-                  Object.assign(p.config.viewport, { x: box.x, y: box.y, width: box.width, height: box.height });
-                }
-              } catch(_) {}
+          // 背景图（cutscene 阶段）：异步加载、加载成功才挂上；缺失不致命
+          p._bgLoaded = new Set(); p._bgWant = null;
+          p.applyBg = () => {
+            if (p.disposed) return;
+            const want = p._bgWant;
+            if (want && p._bgLoaded.has(want)) {
+              if (p.config.backgroundImage) p.config.backgroundImage.url = want;
+              else p.config.backgroundImage = { url: want };
+            } else {
+              p.config.backgroundImage = null;
             }
+          };
+          cutBgs.forEach(b => {
+            const url = "./" + b;
+            p.assetManager.loadTexture(url,
+              () => { p._bgLoaded.add(url); p.applyBg(); },
+              () => { /* 缺失忽略 */ });
+          });
 
-            // 非主层默认 div 隐身（display:none），等 schedule 里它真正起播时再显示。
-            // 不能清 slot.attachment——fx 层（如 cut_A_fx）和很多动画依赖 setup pose 的默认
-            // attachment，没有 AttachmentTimeline 把它们设回去；清了就整层不画。
-            if (isCutscene && !isMain) {
-              p._layerDiv = document.getElementById(`cut-layer-${idx}`);
-              p._layerDiv.style.display = "none";
-            }
+          renderEntries(p, animBox);
+        },
+        error: (_p, reason) => showError("加载失败：" + reason),
+      };
+      if (src.skeleton.endsWith(".skel")) config.skelUrl = assetUrl(src.skeleton);
+      else config.jsonUrl = assetUrl(src.skeleton);
 
-            if (isMain) {
-              // 背景图（仅主层有，与角色共一个镜头）
-              p._bgLoaded = new Set(); p._bgWant = null;
-              p.applyBg = () => {
-                if (p.disposed) return;
-                const want = p._bgWant;
-                if (want && p._bgLoaded.has(want)) {
-                  if (p.config.backgroundImage) p.config.backgroundImage.url = want;
-                  else p.config.backgroundImage = { url: want };
-                } else {
-                  p.config.backgroundImage = null;
-                }
-              };
-              cutBgs.forEach(b => {
-                const url = "./" + b;
-                p.assetManager.loadTexture(url,
-                  () => { p._bgLoaded.add(url); p.applyBg(); },
-                  () => { /* 缺失忽略 */ });
-              });
-
-              renderEntries(p, animBox);
-            }
-
-            // cutscene 模式：所有层就绪后写共享 viewport
-            if (isCutscene) {
-              setTimeout(() => {
-                if (layerPlayers.every(lp => lp?.skeleton)) setupCutsceneViewports();
-              }, 0);
-            }
-          },
-          error: (_p, reason) => {
-            if (isMain) showError("加载失败：" + reason);
-            else console.warn(`[layer ${idx} ${ly.role}] ${reason}`);
-          },
-        };
-        if (ly.skeleton.endsWith(".skel")) cfg.skelUrl = assetUrl(ly.skeleton);
-        else cfg.jsonUrl = assetUrl(ly.skeleton);
-        const lp = new spine.SpinePlayer(div.id, cfg);
-        lp._role = ly.role; lp._layerIdx = idx;
-        layerPlayers.push(lp);
-      });
-      // 主 player 引用：兼容 idle 模式 / 老代码 / 外部钩子。layerPlayers[mainLayerIdx] 是同一个实例。
-      player = layerPlayers[mainLayerIdx];
+      player = new spine.SpinePlayer("stage", config);
       window._dbgPlayer = player;
-      window._dbgLayers = layerPlayers;
     }
 
     // 动画的播放逻辑还原游戏内的结构：
@@ -854,57 +707,31 @@
       // 记录当前正在播的链，给 start 监听器算 segIdx 用（驱动运镜阶梯）
       let currentSeqRef = [];
 
-      // ===== 验证用：硬编 char003803 的真实 Timeline 剧本 =====
-      // 数据来源：本地 APK 备份解出来的 Char003803_Skill TimelineAsset
-      // + /CutScene_Char003803_Set/SpineRoot/CutScene/Anchors/object 下 SkeletonGraphic
-      //   实例的 sibling z-order（详见 /tmp/dump_skill_scene.py 与 AGENTS.md 该段）。
-      // 每条 schedule track 对应一层 player（layerIdx → CUTSCENE_LAYERS[charId][layerIdx]），
-      // **每个 player 内部只用 spine track 0**（同 skel 多轨会 attachment 冲突）。
-      // 字段：startWall=Timeline 墙钟起播时刻；wallDur=墙钟时长；clipIn=spine 动画内起播偏移；
-      //       ts=timeScale；animationEnd = clipIn + wallDur*ts。
+      // ===== char003803 等"权威剧本"角色的 schedule（主 skel 单层，sorted by startWall） =====
+      // 数据来源：APK 备份解出的 Char003803_Skill TimelineAsset 主 Spine Track 4 个 clip。
+      // 字段：startWall=Timeline 墙钟起播时刻；wallDur=墙钟时长；clipIn=源动画起播偏移；
+      //       ts=timeScale；spine entry.animationEnd = clipIn + wallDur*ts。
+      // 副 skel/fx 实例的多层叠播之前接过——经数据证明其 RGBATimeline 让 1.5s 窗口内
+      // alpha 几乎全程为 0，视觉贡献近零（详见 AGENTS.md「多 skel 叠播」段历史教训），
+      // 已砍掉简化代码。视觉差距来自缺相机推拉 + BG 切换 + UIParticle 粒子，不在 schedule 层。
       const SKILL_SCHEDULES = {
         "003803": {
           duration: 8.883,
-          tracks: [
-            // layer 0 = back（_1 skel 实例 #1）
-            { layerIdx: 0, clips: [
-              { anim: "cut_B_B", startWall: 3.367, wallDur: 1.500, clipIn: 0, ts: 1.00 },
-            ]},
-            // layer 1 = main（主 skel 实例 #1）
-            { layerIdx: 1, clips: [
-              { anim: "cut_A", startWall: 0.000, wallDur: 3.367, clipIn: 0,    ts: 1.00 },
-              { anim: "cut_B", startWall: 3.367, wallDur: 3.133, clipIn: 0,    ts: 1.00 },
-              { anim: "cut_B", startWall: 6.500, wallDur: 0.650, clipIn: 5.27, ts: 0.60 },
-              { anim: "cut_B", startWall: 7.150, wallDur: 1.733, clipIn: 4.15, ts: 0.85 },
-            ]},
-            // layer 2 = fx（主 skel 实例 #2，跑特效动画）
-            { layerIdx: 2, clips: [
-              { anim: "cut_A_fx", startWall: 0.000, wallDur: 3.317, clipIn: 0, ts: 1.00 },
-            ]},
-            // layer 3 = front（_1 skel 实例 #2）
-            { layerIdx: 3, clips: [
-              { anim: "cut_B_F", startWall: 3.367, wallDur: 1.500, clipIn: 0, ts: 1.00 },
-            ]},
+          clips: [
+            { anim: "cut_A", startWall: 0.000, wallDur: 3.367, clipIn: 0,    ts: 1.00 },
+            { anim: "cut_B", startWall: 3.367, wallDur: 3.133, clipIn: 0,    ts: 1.00 },
+            { anim: "cut_B", startWall: 6.500, wallDur: 0.650, clipIn: 5.27, ts: 0.60 },
+            { anim: "cut_B", startWall: 7.150, wallDur: 1.733, clipIn: 4.15, ts: 0.85 },
           ],
         },
       };
 
       function playScheduledSkill(schedule) {
-        if (!layerPlayers.length) return;
-
-        // 重置每层 player：清轨 + setup pose。**不清 slot.attachment** —— fx 类动画依赖
-        // setup pose 默认 attachment（没有 AttachmentTimeline 设回去），清了整层不画。
-        // 避免"setup pose 鬼影"改用 CSS display 控制层 div 显隐（layer success 时初始 none，
-        // schedule 起播时 listener.start 切到 block）。
-        layerPlayers.forEach((p, i) => {
-          if (!p?.animationState || !p?.skeleton) return;
-          try {
-            p.animationState.clearTracks();
-            p.skeleton.setToSetupPose();
-          } catch(_){}
-          // 非主层先隐身，等首个非空 clip 起播再显示
-          if (i !== mainLayerIdx && p._layerDiv) p._layerDiv.style.display = "none";
-        });
+        if (!player?.animationState || !player?.skeleton) return;
+        try {
+          player.animationState.clearTracks();
+          player.skeleton.setToSetupPose();
+        } catch(_){}
 
         const applyEntry = (e, c) => {
           if (!e) return;
@@ -914,49 +741,19 @@
           e.mixDuration    = 0;
         };
 
-        // 给非主层的"首个真动画 entry"挂 listener：start 时显示 div、end 时隐藏，
-        // 用 spine 自己的时钟驱动（标签节流也能跟动画同步，不需要 setTimeout）。
-        const attachShowHide = (p, entry) => {
-          if (!entry) return;
-          const div = p._layerDiv;
-          if (!div) return;
-          entry.listener = entry.listener || {};
-          const origStart = entry.listener.start;
-          const origEnd = entry.listener.end;
-          entry.listener.start    = (...a) => { div.style.display = "block"; origStart?.(...a); };
-          entry.listener.end      = (...a) => { div.style.display = "none";  origEnd?.(...a);   };
-          entry.listener.complete = entry.listener.complete; // keep
-        };
-
-        schedule.tracks.forEach((tr) => {
-          const p = layerPlayers[tr.layerIdx];
-          if (!p?.animationState || !p?.skeleton) return;
-          const sorted = [...tr.clips].sort((a,b) => a.startWall - b.startWall);
-          const isMain = tr.layerIdx === mainLayerIdx;
-
-          let firstEntry = null;
-          if (sorted[0].startWall > 0.001) {
-            p.animationState.setEmptyAnimation(0, 0);
-            firstEntry = p.animationState.addAnimation(0, sorted[0].anim, false, sorted[0].startWall);
-          } else if (isMain) {
-            firstEntry = p.setAnimation(sorted[0].anim, false);
-          } else {
-            firstEntry = p.animationState.setAnimation(0, sorted[0].anim, false);
-          }
-          applyEntry(firstEntry, sorted[0]);
-          if (!isMain) attachShowHide(p, firstEntry);
-
-          for (let i = 1; i < sorted.length; i++) {
-            const e = p.animationState.addAnimation(0, sorted[i].anim, false, 0);
-            applyEntry(e, sorted[i]);
-            if (!isMain) attachShowHide(p, e);   // 后续 clip 起播时保持显示，end 时再隐藏
-          }
-          // 非主层若 startWall==0（如 fx 层），直接显示
-          if (!isMain && sorted[0].startWall <= 0.001 && p._layerDiv) {
-            p._layerDiv.style.display = "block";
-          }
-          p.play();
-        });
+        const sorted = [...schedule.clips].sort((a, b) => a.startWall - b.startWall);
+        let firstEntry;
+        if (sorted[0].startWall > 0.001) {
+          player.animationState.setEmptyAnimation(0, 0);
+          firstEntry = player.animationState.addAnimation(0, sorted[0].anim, false, sorted[0].startWall);
+        } else {
+          firstEntry = player.setAnimation(sorted[0].anim, false);
+        }
+        applyEntry(firstEntry, sorted[0]);
+        for (let i = 1; i < sorted.length; i++) {
+          applyEntry(player.animationState.addAnimation(0, sorted[i].anim, false, 0), sorted[i]);
+        }
+        player.play();
       }
 
       const playSeq = (seq, btn, entryIdx) => {
@@ -966,8 +763,15 @@
           const charId = (currentCostume?.cutscene?.skeleton || "").match(/cutscene_char(\d{6})/)?.[1];
           const schedule = charId && SKILL_SCHEDULES[charId];
           if (currentPart === "cutscene" && schedule && entryIdx === 0) {
-            currentSeqRef = schedule.tracks[0].clips.map(c => c.anim);
+            currentSeqRef = schedule.clips.map(c => c.anim);
             playScheduledSkill(schedule);
+            // 起 Timeline RAF（背景切换、PostProcessVolume 等）
+            startTimeline();
+            // 主 cut 起始的背景（cutscene 阶段 bg[0]）
+            if (bgs.length && player.applyBg) {
+              player._bgWant = "./" + (bgs[0] || "");
+              player.applyBg();
+            }
             entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
             btn.classList.add("active");
             return;
