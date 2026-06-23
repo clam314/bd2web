@@ -51,16 +51,6 @@
     }
     body.cutscene-fx #vignette { display: block; }
 
-    /* 变身光罩：cut_B 变身瞬间游戏是一片粉白光芒（UIParticle 粒子 + bloom 过曝）把
-       散开的半成品身体盖住。我们渲不了 Unity 粒子，用一层径向粉白光近似，由 Timeline
-       按 cut_B 阶段驱动 opacity（bell 曲线 fade）。定位跟舞台一致（JS 同步 inset）。 */
-    #flash {
-      position: fixed; z-index: 6; pointer-events: none; display: none; opacity: 0;
-      background:
-        radial-gradient(ellipse 70% 60% at 50% 45%, rgba(255,240,250,0.95) 0%, rgba(255,210,235,0.7) 30%, rgba(255,180,220,0.25) 55%, transparent 75%);
-      mix-blend-mode: screen;
-    }
-    body.cutscene-fx #flash { display: block; }
 
     /* ── 左侧滑出抽屉 ── */
     #drawer {
@@ -243,7 +233,6 @@
 <body>
   <div id="stage"></div>
   <div id="vignette"></div>
-  <div id="flash"></div>
 
   <div id="edge-hotzone"></div>
   <nav id="drawer">
@@ -382,172 +371,12 @@
       return box;
     }
 
-    // 游戏技能动画的取景：从 APK 提取——显示窗口 1600×720（≈2.22:1，比 16:9 更宽），
-    // SkeletonGraphic scale=1 居中。背景图也是按这个比例出的。
-    // 要还原游戏感，舞台必须锁成这个比例：浏览器宽高比不固定，靠 letterbox/pillarbox 留黑边。
-    // CUT_CY=150 是原点上移量（自然裁掉腿部，呈游戏式低机位横屏构图）。
-    const CUT_W = 1600, CUT_H = 720, CUT_CX = 0, CUT_CY = 150;
-    function cutsceneViewport() {
-      // 舞台已经锁成 1600:720，viewport 用游戏原值即可
-      return { x: CUT_CX - CUT_W / 2, y: CUT_CY - CUT_H / 2, width: CUT_W, height: CUT_H };
-    }
-
-    // ───── cutscene 程序化相机跟随 ─────
-    // spine-player 默认按「整段动画并集包围盒」自适应取景（cut_B 翻腾跳跃的并集框高达
-    // 2019，角色每帧只占一小块 → 用户看到的"缺胳膊少腿、角色小而乱"）。游戏里相机是
-    // 逐帧跟随角色的（Anchors/object 容器平移），但我们解出的相机数据字段错位不可信
-    // （LocalPos.z 实际初值应为 0 却解成 1.2）。所以改用程序化跟随：每帧把取景框中心
-    // 对准角色当前 bbox 中心、框大小固定 = 相机始终贴着角色、大小稳定。
-    // CAM_FH：取景框世界高度。cut_A 角色站立 bbox 高约 765，但坐姿张腿/法杖戳出时单帧
-    // bbox 可达 ~1100，CAM_FH=1300 给足余量让角色完整（站立占 ~59%，张扬姿势也不裁切）；
-    // cut_B 翻腾时手脚甩出框的部分裁掉，与游戏特写一致。
-    const CAM_FH = 1300;
-    const CAM_LERP = 0.18;          // 相机跟随平滑系数（0=不动，1=瞬移）
-    let camCX = null, camCY = null; // 当前相机中心（世界坐标），null=未初始化（下次直接定位）
-    // 注意：skeleton.getBounds 要求 spine.Vector2（内部调 offset.set）——普通对象会抛
-    // "offset.set is not a function"，导致 cameraFollow 每帧在这行静默挂掉。
-    const _camOff = new spine.Vector2(), _camSz = new spine.Vector2();
-    function resetCamera() { camCX = camCY = null; }
-    // 每帧由 spine-player 的 config.frame 调用：把 p.currentViewport 设成跟随角色的紧框
-    function cameraFollow(p) {
-      if (currentPart !== "cutscene" || !p?.skeleton || !p.currentViewport) return;
-      try {
-        p.skeleton.getBounds(_camOff, _camSz);
-      } catch (_) { return; }
-      if (!isFinite(_camOff.x) || _camSz.x <= 0 || _camSz.y <= 0) return;
-      const cx = _camOff.x + _camSz.x / 2;
-      const cy = _camOff.y + _camSz.y / 2;
-      if (camCX === null) { camCX = cx; camCY = cy; }   // 首帧直接定位，不从旧位置滑
-      else { camCX += (cx - camCX) * CAM_LERP; camCY += (cy - camCY) * CAM_LERP; }
-      const fh = CAM_FH, fw = fh * (CUT_W / CUT_H);
-      const vp = p.currentViewport;
-      vp.x = camCX - fw / 2; vp.y = camCY - fh / 2;
-      vp.width = fw; vp.height = fh;
-      vp.padLeft = vp.padRight = vp.padTop = vp.padBottom = 0;
-      p.previousViewport = null;   // 禁掉 spine-player 的 viewport transition 插值（否则跟随滞后/抖）
-    }
-
-    // 把 #stage 锁成游戏窗口比例并居中；同时同步 #vignette 的 inset，让暗角只盖在舞台上
-    const flash = document.getElementById("flash");
+    // 舞台铺满浏览器（立绘和技能动画都全屏自适应，spine 默认取景让角色居中铺满）。
     function layoutStage() {
-      const isCutscene = currentPart === "cutscene";
-      if (!isCutscene) {
-        for (const el of [stage, vignette, flash])
-          el.style.left = el.style.right = el.style.top = el.style.bottom = "0";
-        return;
-      }
-      const W = window.innerWidth, H = window.innerHeight;
-      const target = CUT_W / CUT_H;     // 游戏比例
-      let sw, sh;
-      if (W / H > target) {             // 浏览器太宽 → 左右 pillarbox
-        sh = H; sw = H * target;
-      } else {                          // 浏览器太高 → 上下 letterbox
-        sw = W; sh = W / target;
-      }
-      const left = (W - sw) / 2, top = (H - sh) / 2;
-      for (const el of [stage, vignette, flash]) {
-        el.style.left = left + "px";
-        el.style.top = top + "px";
-        el.style.right = (W - sw - left) + "px";
-        el.style.bottom = (H - sh - top) + "px";
-      }
+      for (const el of [stage, vignette])
+        el.style.left = el.style.right = el.style.top = el.style.bottom = "0";
     }
     window.addEventListener("resize", layoutStage);
-
-    // ───── 真实运镜（数据来自 data/cutscene_shots.json，APK Timeline 解出） ─────
-    // 每个 cutscene 一条记录：
-    //   tracks: { "Anchors.AnchoredX": [[t,v],...], ... }  连续曲线，前端线性插值
-    //   events: [[t, name, on], ...]                       离散 on/off（Bg 切换、PostProcessVolume 切换）
-    // 运镜：实时按 RAF 在 #stage 子元素上写 translate；调色：PostProcessVolume vs PP 2 在线切两套 CSS filter。
-    let cutsceneShots = null;   // 全角色数据；启动时异步加载
-    let currentShotData = null; // 当前服装的记录
-    let timelineRaf = 0;        // 当前 RAF 句柄，方便取消
-    let timelineStartMs = 0;
-
-    fetch("./data/cutscene_shots.json?v=" + Date.now())
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d) cutsceneShots = d.characters || d; })
-      .catch(() => {});
-
-    // 线性插值：找到 t 落在哪两个 key 之间
-    function sampleTrack(keys, t) {
-      if (!keys || !keys.length) return 0;
-      if (t <= keys[0][0]) return keys[0][1];
-      const last = keys[keys.length - 1];
-      if (t >= last[0]) return last[1];
-      for (let i = 1; i < keys.length; i++) {
-        if (keys[i][0] >= t) {
-          const [t0, v0] = keys[i - 1], [t1, v1] = keys[i];
-          return v0 + (v1 - v0) * (t - t0) / (t1 - t0);
-        }
-      }
-      return last[1];
-    }
-
-    // 找该 event name 在 t 时刻最后一次 on/off 状态（用于 PostProcessVolume 切换）
-    function lastEventState(events, name, t) {
-      let state = null;
-      for (const [et, ename, on] of events || []) {
-        if (et > t) break;
-        if (ename === name) state = on;
-      }
-      return state;
-    }
-
-    function applyTimelineAt(d, t) {
-      // PostProcessVolume 调色切换（CSS filter alt 模式）。
-      // 镜头推拉不在这里：之前试过用 cutscene_shots 的 LocalPos.z 当 scale，但那数据字段
-      // 错位不可信（实测初值应为 0 却解成 1.2）。取景改由 cameraFollow 逐帧跟随角色实现。
-      const alt = lastEventState(d.events, "PostProcessVolume 2", t) === true
-               && lastEventState(d.events, "PostProcessVolume",   t) !== true;
-      document.body.classList.toggle("cutscene-fx-alt", alt);
-
-      // 背景切换：游戏 Timeline 的 Bg_B（cut_B 粉光）在 t≈2.98 起 on。on 用 bg[1]（粉光放射），
-      // 否则 bg[0]（cut_A 红幕）。只在 want 变化时切，避免每帧重设 backgroundImage。
-      const bgArr = Array.isArray(currentCostume?.bg) ? currentCostume.bg : [];
-      if (player?.applyBg && bgArr.length) {
-        const bgB = lastEventState(d.events, "Anchors/object/Bg_B", t) === true;
-        const want = "./" + (bgB ? (bgArr[1] || bgArr[0]) : bgArr[0]);
-        if (player._bgWant !== want) { player._bgWant = want; player.applyBg(); }
-      }
-
-      // 变身光罩：cut_B 变身瞬间（游戏 t≈3.5~4.5 一片粉白光芒持续约 1s，近全白）。
-      // 梯形曲线驱动 #flash opacity：ramp up → plateau（持续亮）→ ramp down，
-      // 近似 UIParticle 粒子 + bloom 把散开的半成品身体盖住。尖峰一闪太短看不清，改持续。
-      const F_UP0 = 2.8, F_UP1 = 3.4, F_DN0 = 4.4, F_DN1 = 5.6, FPEAK = 0.92;
-      let fop = 0;
-      if (t >= F_UP0 && t <= F_DN1) {
-        if (t < F_UP1)      fop = (t - F_UP0) / (F_UP1 - F_UP0);   // 渐入
-        else if (t <= F_DN0) fop = 1;                              // 持续峰值（变身白光）
-        else                 fop = 1 - (t - F_DN0) / (F_DN1 - F_DN0); // 渐出
-        fop = Math.max(0, fop) * FPEAK;
-      }
-      flash.style.opacity = fop.toFixed(3);
-    }
-
-    function stopTimeline() {
-      if (timelineRaf) cancelAnimationFrame(timelineRaf);
-      timelineRaf = 0;
-      if (flash) flash.style.opacity = 0;   // 变身光罩归零，避免切角色/重播时残留
-    }
-
-    function startTimeline() {
-      stopTimeline();
-      const d = currentShotData;
-      if (!d || currentPart !== "cutscene") {
-        document.body.classList.remove("cutscene-fx-alt");
-        return;
-      }
-      timelineStartMs = performance.now();
-      const tick = () => {
-        const t = (performance.now() - timelineStartMs) / 1000;
-        applyTimelineAt(d, Math.min(t, d.duration));
-        // 到 duration 后停在末态（前端的 spine 链可能还在播，但 Timeline 已结束）
-        if (t < d.duration) timelineRaf = requestAnimationFrame(tick);
-        else timelineRaf = 0;
-      };
-      tick();
-    }
 
     function loadPart(part) {
       const costume = currentCostume, animBox = currentAnimBox;
@@ -558,23 +387,13 @@
       stage.innerHTML = "";
       renderModeRow(animBox);
 
-      // 技能动画走「游戏化」呈现：横屏取景 + 后期；立绘走完整人物取景
+      // 立绘和技能动画都全屏自适应取景（spine 默认按动画包围盒 fit，角色居中铺满）。
       const isCutscene = part === "cutscene";
       document.body.classList.toggle("cutscene-fx", isCutscene);
-      layoutStage();   // 先锁好舞台尺寸再创建播放器，避免 viewport 按错误的容器比例计算
-      stopTimeline();  // 切换形态/服装时先停旧 Timeline，待新主 cut 开始时再起
-      // 从骨骼路径里抠出 6 位服装 ID（如 spine/cutscenes/cutscene_char003803/... → "003803"），
-      // 用作 cutscene_shots.json 的 key。idle 形态不需要。
-      if (isCutscene && cutsceneShots) {
-        const m = (src.skeleton || "").match(/cutscene_char(\d{6})/);
-        currentShotData = m ? cutsceneShots[m[1]] || null : null;
-      } else {
-        currentShotData = null;
-      }
+      layoutStage();
 
-      // 背景：技能动画的场景图（roster 提供，来自游戏资源 char<id>_back<N>），
-      // 画在同一镜头里（与人物共享取景）。bg 在 costume 上、数组按动作 1/2 对应。
-      // 不在这里作为必需资源加载——改在 success 里异步加载，缺失也不致命。
+      // 背景：技能动画的场景图（roster 提供，来自游戏资源 char<id>_back<N>，存 bg/）。
+      // success 里异步加载，缺失不致命。
       const cutBgs = isCutscene && Array.isArray(costume.bg) ? costume.bg : [];
 
       const config = {
@@ -584,8 +403,6 @@
         alpha: true,
         premultipliedAlpha: false,   // 占位，success 里按 atlas pma 标记修正
         viewport: { padLeft: "5%", padRight: "5%", padTop: "5%", padBottom: "5%" },
-        // 每帧由 cameraFollow 接管取景（内部按 currentPart 判断，仅 cutscene 跟随）
-        frame: (p) => cameraFollow(p),
         success: (p) => {
           try {
             const atlas = Object.entries(p.assetManager.assets).find(([k]) => k.endsWith(".atlas"))[1];
@@ -751,24 +568,30 @@
         entries.push(seq);
       });
 
+      // 技能动画（cutscene）：gamekee 风格——列出主动作各自单独循环播，不串接、不还原
+      // 游戏 Timeline 演出（相机/粒子/后处理网页做不了，详见 AGENTS.md 历史教训）。
+      // 主动作命名：cut_A/cut_B/cut_1…（黎维塔等）、A_cut/B_cut（卢班希亚等）、loop/loop_2。
+      // 排除特效/部件（_fx/_ef/_effect/smile）。
+      if (currentPart === "cutscene") {
+        const CUT_MAIN = /^(cut_[A-Za-z0-9]+|[A-Za-z]_cut\d*|loop\w*)$/;
+        const mains = allBodies.filter(n => CUT_MAIN.test(n) && !/_fx$|_ef$|_effect|smile/i.test(n));
+        entries.length = 0;
+        (mains.length ? mains : allBodies).forEach(n => entries.push([n]));
+      }
+
       // 当前服装的 cutscene 背景列表（按动作 1/2 对应 bg[0]/bg[1]，缺则共用）
       const bgs = (currentPart === "cutscene" && Array.isArray(currentCostume.bg))
         ? currentCostume.bg : [];
 
-      // overlay 调度策略：链首主 cut 起播时，把**所有 main 的所有 overlay 组**一次性
-      // 全部上轨（每组循环第一段），后续 cut_B/loop 起播都不再动 overlay 轨。
-      // 这样避免了 cut_B 起播时把 cut_A 的部件清掉，导致衣服/丝带消失。
-      // 视觉上多 pose 同时叠播不精确（游戏 Timeline 里是顺序触发），但优于"裸体只剩骨骼"。
+      // overlay 调度（立绘 motion 偶有光效部件叠加；cutscene 已简化为单动作循环播不用）。
       let overlaysStarted = false;
       const scheduleOverlaysFor = (_mainName) => {
-        if (!player || overlaysStarted) return;
+        if (!player || overlaysStarted || currentPart === "cutscene") return;
         let track = 2;
         for (const groups of Object.values(overlaysByMain)) {
           if (!groups) continue;
           for (const group of groups) {
-            try {
-              player.animationState.setAnimation(track, group[0], true);
-            } catch (e) { /* 找不到的 overlay 静默跳过 */ }
+            try { player.animationState.setAnimation(track, group[0], true); } catch (e) {}
             track++;
           }
         }
@@ -776,94 +599,28 @@
       };
       const resetOverlays = () => { overlaysStarted = false; };
 
-      // 记录当前正在播的链，给 start 监听器算 segIdx 用（驱动运镜阶梯）
-      let currentSeqRef = [];
-
-      // ===== char003803 等"权威剧本"角色的 schedule（主 skel 单层，sorted by startWall） =====
-      // 数据来源：APK 备份解出的 Char003803_Skill TimelineAsset 主 Spine Track 4 个 clip。
-      // 字段：startWall=Timeline 墙钟起播时刻；wallDur=墙钟时长；clipIn=源动画起播偏移；
-      //       ts=timeScale；spine entry.animationEnd = clipIn + wallDur*ts。
-      // 副 skel/fx 实例的多层叠播之前接过——经数据证明其 RGBATimeline 让 1.5s 窗口内
-      // alpha 几乎全程为 0，视觉贡献近零（详见 AGENTS.md「多 skel 叠播」段历史教训），
-      // 已砍掉简化代码。视觉差距来自缺相机推拉 + BG 切换 + UIParticle 粒子，不在 schedule 层。
-      const SKILL_SCHEDULES = {
-        "003803": {
-          duration: 8.883,
-          clips: [
-            { anim: "cut_A", startWall: 0.000, wallDur: 3.367, clipIn: 0,    ts: 1.00 },
-            { anim: "cut_B", startWall: 3.367, wallDur: 3.133, clipIn: 0,    ts: 1.00 },
-            { anim: "cut_B", startWall: 6.500, wallDur: 0.650, clipIn: 5.27, ts: 0.60 },
-            { anim: "cut_B", startWall: 7.150, wallDur: 1.733, clipIn: 4.15, ts: 0.85 },
-          ],
-        },
-      };
-
-      function playScheduledSkill(schedule) {
-        if (!player?.animationState || !player?.skeleton) return;
-        resetCamera();   // 相机直接定位到角色起始位置，不从上一次的位置滑过来
-        try {
-          player.animationState.clearTracks();
-          player.skeleton.setToSetupPose();
-        } catch(_){}
-
-        const applyEntry = (e, c) => {
-          if (!e) return;
-          e.animationStart = c.clipIn;
-          e.animationEnd   = c.clipIn + c.wallDur * c.ts;
-          e.timeScale      = c.ts;
-          e.mixDuration    = 0;
-        };
-
-        const sorted = [...schedule.clips].sort((a, b) => a.startWall - b.startWall);
-        let firstEntry;
-        if (sorted[0].startWall > 0.001) {
-          player.animationState.setEmptyAnimation(0, 0);
-          firstEntry = player.animationState.addAnimation(0, sorted[0].anim, false, sorted[0].startWall);
-        } else {
-          firstEntry = player.setAnimation(sorted[0].anim, false);
-        }
-        applyEntry(firstEntry, sorted[0]);
-        for (let i = 1; i < sorted.length; i++) {
-          applyEntry(player.animationState.addAnimation(0, sorted[i].anim, false, 0), sorted[i]);
-        }
-        player.play();
-      }
-
       const playSeq = (seq, btn, entryIdx) => {
         if (!player) return;
         try {
-          // 该角色若有权威剧本就走 schedule 分支（不用 chainQueue 启发式）
-          const charId = (currentCostume?.cutscene?.skeleton || "").match(/cutscene_char(\d{6})/)?.[1];
-          const schedule = charId && SKILL_SCHEDULES[charId];
-          if (currentPart === "cutscene" && schedule && entryIdx === 0) {
-            currentSeqRef = schedule.clips.map(c => c.anim);
-            playScheduledSkill(schedule);
-            // 起 Timeline RAF（背景切换、PostProcessVolume 等）
-            startTimeline();
-            // 主 cut 起始的背景（cutscene 阶段 bg[0]）
+          if (currentPart === "cutscene") {
+            // gamekee 风格：循环播单个主动作 + 显示对应背景，spine 默认自适应取景。
+            player.setAnimation(seq[0], true);
             if (bgs.length && player.applyBg) {
-              player._bgWant = "./" + (bgs[0] || "");
+              player._bgWant = "./" + (bgs[entryIdx] || bgs[0]);
               player.applyBg();
             }
+            player.play();
             entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
             btn.classList.add("active");
             return;
           }
-          currentSeqRef = seq;
-          if (currentPart === "cutscene") resetCamera();   // 相机重新定位到角色起始位置
-          resetOverlays();   // 重置开关，让本次链首 cut 起播时重新启动一遍 overlay
-          player.animationState.data.defaultMix = 0.3; // 片段间平滑过渡
+          // 立绘：motion 一次性播完串回 idle 循环；idle 自身循环。
+          resetOverlays();
+          player.animationState.data.defaultMix = 0.3;
           player.setAnimation(seq[0], seq.length === 1 && isLoopName(seq[0]));
           seq.slice(1).forEach((n, i) => {
             player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
           });
-          // 主 cut 起播 = Timeline 起点（每次点动作都重新跑一遍 Timeline）
-          if (currentPart === "cutscene" && !isLoopName(seq[0])) startTimeline();
-          // 切到该动作对应的背景（仅当那张已成功加载才显示，缺失则保持无背景、不报错）
-          if (bgs.length && player.applyBg) {
-            player._bgWant = "./" + (bgs[entryIdx] || bgs[0]);
-            player.applyBg();
-          }
           player.play();
           entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
           btn.classList.add("active");
@@ -937,9 +694,7 @@
         entryBox.appendChild(group);
       }
 
-      // 串联播放时：(1) 高亮跟随轨道0当前正在播的片段所属条目；
-      // (2) 同步调度该主 cut 对应的 overlay（光效/血花/召唤物 等）到 track 2+。
-      // 运镜不在这里——Timeline 是连续的，已在 playSeq 里 startTimeline() 一次性拉起。
+      // 轨道0 当前播放片段 → 高亮对应按钮；立绘 motion 起播时调度 overlay 光效。
       p.animationState.addListener({
         start: (entry) => {
           if (entry.trackIndex !== 0 || !entry.animation) return;
