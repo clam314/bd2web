@@ -571,10 +571,10 @@ destination 方向证据保留给后续普通拖拽动作：
   canvas 尺寸出现后生成当前阶段热区。首次进入角色、切换阶段、后台标签页和自动恢复待机都不再依赖
   猜测延迟时间，也不需要额外操作菜单。
 
-## 2026-06-22 心契音频资源分析与通用接入方案（尚未接入）
+## 2026-06-22 心契音频资源分析与通用接入方案（后续已实现）
 
-本节记录 dating18 的已确认结论，以及后续所有心契角色可复用的音频提取和播放方案。当前仅记录，
-未提交音频资源，也未修改前端播放器。
+本节记录 dating18 的已确认结论，以及后续所有心契角色可复用的音频提取和播放方案。
+实现结果见后面的 2026-06-23 语音与 SFX 接入记录。
 
 ### 身份与版本真值
 
@@ -736,8 +736,9 @@ playDatingActionAudio(datingId, stage, animationName, phase)
 ```
 
 - 第一次用户点击/触摸时创建或恢复 `AudioContext`，满足浏览器自动播放限制。
-- 动作开始时，语音按原 selector 权重选一个 sample；SFX 按时间表播放；预混长轨直接播放；
-  循环音登记停止条件。
+- Spine 动画真正开始时读取对应 FMOD event。一个 event 可以有多个时间触发点；每个触发点再按自己的
+  selector 权重选一个 sample。不能把长动作误做成“动作开头只随机播放一句”。
+- SFX 按时间表播放；预混长轨直接播放；循环音登记停止条件。
 - 动作结束、切动作、切角色或退出心契时，停止/短淡出旧音频，清除循环和待触发任务。
 - 使用 generation/token，防止上一个动作的异步音频串进新动作。
 - 语音与 SFX 分开控制音量，只预载当前角色资源。
@@ -750,7 +751,319 @@ playDatingActionAudio(datingId, stage, animationName, phase)
 3. 公共 SFX 的 timeline/random/loop。
 4. 把身份识别、Master.strings、bank 定位、FEV、FSB 和 JSON 生成整合成通用工具，再批量扩展角色。
 
-### 托管风险
+### 托管决定
 
-项目是公开仓库，游戏原始音频有版权和仓库体积风险。决定公开托管方式前，提取音频应保持本地并
-加入 `.gitignore`。正式提交前需单独确认是进入公开仓库还是外部静态托管，以及 Pages/CDN 缓存和流量方案。
+用户于 2026-06-23 明确决定允许网页转码音频进入公开 GitHub 仓库。当前只提交页面实际引用的
+OGG，不提交原始 Unity bundle、FEV bank 或 FSB；dating18 的 227 个 OGG 合计约 4.9 MB，
+由 GitHub Pages 与网页同源发布。`audio/dating/` 已从 `.gitignore` 移除。
+
+### 语言策略（2026-06-23 最终决定）
+
+- 心契音频统一使用**韩语（KR）**。
+- 不开发语言切换菜单，也不同时维护 KR/JP 多套资源。
+- 原因是 common interaction bank 中 KR 事件、Timeline、selector 和 100 个 waveform 完整闭合；
+  当前客户端的 JP 事件只是空壳，独立 JP bank 中也没有莎拉心契 waveform。
+- 这里的“没有 JP”只限定于手机当前资源版本 `20260616170924`，不代表官方未来不会补发，
+  也不代表其他心契角色一定没有日配。
+- `data/dating_audio.json` 每个角色只保存一套 KR 数据。
+- 后续扩展其他角色优先使用同样完整、可验证的 KR interaction bank，不再为多语言增加复杂度。
+- `tools/audit_dating_jp_audio.py` 保留，未来游戏更新后仍可复查日配是否新增，但不会影响当前 KR 主线。
+
+## 2026-06-23 dating18 莎拉语音第一阶段接入
+
+> 语言说明：本节 KR 数据既是解析验证样本，也是当前项目正式采用的唯一语音语言。
+
+### 新增通用生成工具
+
+新增 `tools/extract_dating_audio.py`，输入：
+
+- interaction voice Unity bundle
+- 其内嵌的 FSB5
+- 当前 Master.strings 导出的 `GUID<TAB>event path`
+
+自动完成：
+
+1. Unity TextAsset 提取 RIFF FEV bank。
+2. 解析 `EVNT → TMLN → MUIT/WAIT → WAV`。
+3. 保留每个 Timeline instrument 的起始 tick、持续 tick、随机候选和权重。
+4. 用 vgmstream 读取 FSB stream name、采样率、声道、时长。
+5. 用 vgmstream + FFmpeg 转为 48 kHz OGG Vorbis。
+6. 合并生成 `data/dating_audio.json`。
+
+这套工具没有写死莎拉的情绪表，可复用于后续角色。
+
+### 修正此前对 selector 的简化理解
+
+动作语音 event 不是都在动作开头随机选一句。长动作的 TMLN 会排列多个 MUIT，每个 MUIT 都有自己的
+时间和随机池。
+
+例如 `mix6_32_1` 有 7 个语音触发点：
+
+| 时间（秒） | 随机池 |
+|---:|---|
+| 0.999833 | Sigh1 |
+| 2.000021 | Surprise5 |
+| 4.500479 | Endure1 |
+| 6.700437 | Pain1（只取 1/2/4） |
+| 7.999875 | Shy4 |
+| 10.500187 | Surprise3 |
+| 14.499896 | Shy1 |
+
+工具现在会逐触发点保存 `at`、`window` 和精确 choices/weight，前端按原时间轴调度。
+
+### 生成结果
+
+- `data/dating_audio.json`
+  - 49 个有内容的 KR 事件
+  - 81 个时间触发点
+  - 24 个动作事件映射
+  - 100 个 sample 元数据
+- 本地 `audio/dating/illust_dating18/voice/`
+  - 100 个 OGG
+  - 总计约 1.5 MB
+  - 随站点进入公开仓库
+  - 当前为正式采用的 KR 资源
+
+数据记录了当前资源的校验值：
+
+```text
+sourceVersion  20260616170924
+voice bank GUID da8d214b81a44e4aac792556ee6b57ff
+bundle SHA256  a5b7c3b8eddd13b6f1c82b8e26c1224dffb2c76852b202f3cb662cdffabeb596
+bank SHA256    5af9818050d2c6cc544ac5e1eb765946ab03637a2891c75db159d7af2f5c6efa
+FSB SHA256     8c97172af4faa7625375bb80b1aba331b62ea372ee4b89b64894fb5993c6dd00
+```
+
+ADB 复核手机当前 `file.json` 仍是 `20260616170924`；更新后的 Visual_Novel_SFX 文件仍为
+59,921,920 bytes，SHA256 仍是
+`0f6cd82848391943e1bcc974c538396f63ec4e7e01df2983d6d20b432e93b7f1`。
+
+### 前端实现
+
+`dating.html` 新增通用 `DatingAudioController`：
+
+- 切换到有音频数据的角色时先探测一条资源；404 时静默禁用，避免 Pages 连续请求 100 个不存在文件。
+- 探测成功后并发预解码当前角色的全部语音；莎拉总量约 1.5 MB。
+- 监听 Spine AnimationState 的 `start`，队列动画到真正起播时才调度对应 event。
+- 每个 FMOD trigger 按原权重随机选择 sample，并按 `at/window` 在 Web Audio 时间轴播放。
+- 快速切动作、恢复待机、切阶段或切角色时，generation 变化并停止全部旧 source。
+- `AudioContext.resume()` 不阻塞调度：后台浏览器可能一直 suspended，但声音仍先排入时间轴；
+  下一次有效用户手势恢复 context 后即可播放。
+- `?audioDebug=1` 时才在 `<html>` data 属性和 console 输出当前动画/sample，普通访问无调试状态。
+- 新增 `?dating=18` 直达参数，方便逐角色测试。
+- dating18 列表身份修正为“莎拉 / 尊爵不凡·致胜王牌”。
+
+### 本地验证
+
+- 100 个 OGG 全部存在，均可由 ffprobe 识别为 Vorbis；抽查为 48 kHz mono。
+- 本地浏览器实际请求 100 个文件全部返回 200。
+- 点击 `mix1_4_1`：
+  - Spine start 事件正确识别动画名。
+  - 一次排入两个语音 source，对应 t=0 和 t=1.696375 的两个 FMOD trigger。
+- 随即切到没有语音 event 的 `mix1_3_1`：
+  - 已排入的旧 source 立即从 2 变为 0。
+- 页面内联 JavaScript 语法检查、Python 编译检查和 `git diff --check` 均通过。
+
+### 日语资源定位现状
+
+- `interaction_char000396` 同时登记了 49 个 JP event path，但对应 Timeline 均为空，不含日语 waveform。
+- 手机已下载独立的日语资源：
+  - `SoundData/Patched/LocalVoice_JP/`
+  - `SoundData/Patched/LocalVisualNovel_JP/`
+- 已拉取并检查当前 `LocalVisualNovel_JP` 下 4 个 bank；其中均未包含莎拉心契的 JP event GUID，
+  因此莎拉日语语音更可能位于数量较多的 `LocalVoice_JP` bank 中。
+- 下一步只围绕 JP 做定位：
+  1. 扫描 `LocalVoice_JP` bank 的 event/WAV/sample。
+  2. 找到与 `Char000396_Int_*_JP` 对应的 waveform。
+  3. 复用已解析的动作 Timeline/selector 结构，替换为 JP sample。
+  4. 重新生成 OGG 和 `data/dating_audio.json`。
+  5. 若未来正式补发完整 JP，再与 KR 逐事件比较后决定是否调整；当前不切换。
+
+## 2026-06-23 dating18 日语语音全量审计结论
+
+### 结论
+
+当前手机资源版本 `20260616170924` **没有发布莎拉 `char000396` 的心契专用日语语音**。
+
+这不是路径尚未找到，而是经过当前已下载的 JP bank、事件 GUID、FSB stream name 和 Addressables
+catalog 四层交叉验证后的结论。
+
+### 审计范围与证据
+
+- 从手机拉取 `SoundData/Patched/LocalVoice_JP/`：
+  - 86 个 bank
+  - 合计约 232 MB
+- 加上手机当前 `LocalVisualNovel_JP` 的 4 个 bank，共扫描 90 个日语 bank。
+- 对照 Master.strings 中 `Char000396/Interaction/*_JP` 的 49 个目标 event GUID：
+  - bank 命中数：0
+- 扫描全部 FSB stream name：
+  - 心契特征 sample（`Int_` / `Interaction` / `Shy1` 等）：0
+- 当前 Addressables catalog 的 `localvisualnovel_jp` 条目：
+  - 13 条
+  - `local_char000396_jp`：0 条
+- `LocalVoice_JP/8B418A01190FC504AF0C1CA1647BB81721DA0EA8` 确实包含莎拉日语：
+  - bank 共 165 个 stream
+  - 其中莎拉 26 个
+  - 内容仅为 `Admire`、`BattleReady`、`Damage`、`Smile`、`Worry` 等普通战斗/档案语音
+  - 没有心契互动语音
+
+`interaction_char000396` common bank 中虽然登记了 49 个 JP event path，但它们的 Timeline 全为空；
+同 bank 的 49 个 KR event 才引用 100 个心契 sample。JP event 是预留空壳，不代表日配已经随资源发布。
+
+### 项目处理
+
+- 不用 26 条普通角色日语语音冒充心契语音。
+- 项目恢复并统一使用完整的 KR 心契语音。
+- `data/dating_audio.json` 使用 `defaultLanguage: "KR"`，莎拉保留 49 个事件、81 个触发点和
+  100 个 sample。
+- JP 审计证据保存在 `jpAudit.illust_dating18`，只用于说明当前版本未采用 JP 的原因。
+- 若未来更新发布完整 JP，可用审计工具发现；当前不因此增加语言切换功能。
+
+### 新增更新审计工具
+
+新增 `tools/audit_dating_jp_audio.py`，用于游戏更新后重新检查：
+
+1. JP interaction event GUID 是否出现在任一 bank。
+2. FSB 是否出现目标角色 sample。
+3. 是否出现心契特征 sample。
+4. catalog 是否新增 `local_charXXXXXX_jp`。
+
+本次报告结果：
+
+```text
+target JP events       49
+JP banks scanned       90
+event GUID hits         0
+interaction sample hits 0
+catalog char000396 hits 0
+available              false
+```
+
+以后不用再次手工翻 bank；更新资源后重跑审计工具即可。
+
+## 2026-06-23 dating18 莎拉角色专属 SFX 接入
+
+### SFX Timeline 解析补全
+
+`Visual_Novel_SFX` 使用的 TLNB 比 interaction voice bank 多一个 2 字节类型字段：
+
+```text
+voice: GUID + count:u16 + width:u16 + records
+SFX:   GUID + type:u16 + count:u16 + width:u16 + records
+```
+
+空 Timeline 的 width 也可能是 9，而不是 voice bank 中常见的 1。`tools/extract_dating_audio.py`
+现已同时兼容两种 FMOD 2.03.x 布局；更新后的 SFX bank 可完整解析：
+
+- 716 个事件
+- 716 个 Timeline
+- 2,384 个 multi instrument
+- 10,350 个 wave instrument
+- 429 个 WAV/sample
+
+### 新增 SFX 生成工具（先以专属 sample 验证）
+
+新增 `tools/extract_dating_sfx.py`：
+
+- 输入 Visual_Novel_SFX bank、FSB、Master.strings event path。
+- 第一轮只提取 `CharXXXXXX_*` 角色专属 sample；第三阶段已扩展为全部直接 Timeline sample。
+- 保存 FMOD 的真实触发时间、窗口、随机候选和权重。
+- 自动把 FMOD 补零名规范化为 Spine 名：
+  - `mix6_07_1 → mix6_7_1`
+  - `mix2_08_1 → mix2_8_1`
+- 支持显式 alias；莎拉六种随机发牌动画 `mix6_7_1`～`mix6_7_6`
+  共用同一个 FMOD 发牌事件。
+- 转码为 48 kHz OGG，合并进 `data/dating_audio.json` 的 `character.sfx`。
+
+### 已接入的 10 个莎拉专属 sample
+
+```text
+Char000396_Card_01
+Char000396_Card_02
+Char000396_Card_03
+Char000396_Metal_Rattle_01
+Char000396_Shoes_Drop_01
+Char000396_Shoes_Drop_02
+Char000396_Shoes_Drop_03
+Char000396_mix6_32_1
+Char000396_mix6_33_1
+Char000396_motion1_14
+```
+
+生成结果：
+
+- 10 个 sample
+- 21 个 SFX event
+- 29 个真实时间触发点
+- 26 个 Spine 动画映射（含 5 个发牌 alias）
+- OGG 合计约 564 KB
+
+关键时序示例：
+
+| 动作 | 专属 SFX |
+|---|---|
+| `mix1_10_1` / `mix6_6_1` | t=4.29s 从 3 个 Shoes_Drop 中随机选 1 个 |
+| `motion1_14` | t=0.15s 播转场轨 |
+| `motion2_10` | t=0.16625s 播转场轨 |
+| `motion6_42` | t=0.12s 播转场轨 |
+| `motion7_13` | t=0.1s 播转场轨 |
+| `mix6_7_1`～`mix6_7_6` | t=0.132/1.065/1.598/7.362s 播 4 段牌声 |
+| `mix6_32_1` | t=0 播 12.981333s 预混长轨 |
+| `mix6_33_1` | t=0 播 15.754667s 预混长轨 |
+
+### 前端
+
+`DatingAudioController` 现在同时管理两条总线：
+
+- voice gain：0.9
+- SFX gain：0.82
+
+语音与 SFX：
+
+- 共用 Spine `start` 时刻和 Web Audio 时间基准。
+- 各自从 voice/sfx event 选择 sample。
+- 共用 generation 和 source 集合，因此切动作、回待机、切阶段或切角色时一起停止。
+- 第一轮验证时预解码 100 条语音 + 10 条专属 SFX，总体积约 2 MB；
+  完整阶段为 100 条语音 + 127 条 SFX，总体积约 4.9 MB。
+- 音频缺失仍静默降级，不影响互动。
+
+新增 `?stage=6` 直达阶段参数，可与 `?dating=18`、`?audioDebug=1` 组合做逐阶段验收。
+
+### 本地验证
+
+- 10 个 OGG 全部可被 ffprobe 识别；长轨时长分别为 12.981333s / 15.754667s。
+- 浏览器实际请求 100 条 voice + 10 条 SFX，全部返回 200/304。
+- 随机发牌得到 `mix6_7_3` 时：
+  - 正确映射到 SFX event `mix6_7_1`
+  - 调度 Card_01 / Card_02 / Card_03 / Card_01 四个时间点
+  - 调试状态为 `channel=sfx`
+- 发牌中途切换动作，待播/正在播放的 source 从 4 立即归零。
+- JavaScript 语法、Python AST、JSON 数据断言和 `git diff --check` 全部通过。
+
+### 第三阶段：完整公共 SFX（2026-06-23）
+
+对 112 个莎拉 SFX event 的 Timeline 做了逐 instrument 审计：
+
+- 670 个 Timeline 触发记录，670 个 instrument GUID 均可解释。
+- 525 个为 multi instrument（MUIT），145 个为直接 wave instrument（WAIT）。
+- 直接引用 127 个不同 sample；没有未知 instrument，也没有把递归后代声音粗暴地同时播放。
+- vgmstream 检查 429 个 FSB stream 后确认没有内嵌无限循环点。名称带 `_loop` 的事件仍由有限
+  sample 组成，切动作时沿用 generation/source 取消机制即可正确停止。
+
+`tools/extract_dating_sfx.py` 已改为生成完整直接时间轴：
+
+- 112 个 SFX event
+- 670 个真实时间触发点
+- 127 个 sample
+- 117 个 Spine 动画映射（含 5 个发牌 alias）
+- SFX OGG 约 3.4 MB
+
+加上 100 条 KR voice，dating18 共 227 个 OGG、约 4.9 MB。所有 manifest 文件均存在，
+音频只包含页面需要的 OGG 转码；原始 59.9 MB bank 和 56 MB FSB 不进入仓库。
+
+最终验证：
+
+- 本地浏览器实际请求 100 条 voice + 127 条 SFX，音频资源全部返回 200。
+- 227 个文件全部通过 ffprobe，codec 均为 OGG Vorbis。
+- JSON 断言确认 112 events / 670 triggers / 127 samples / 117 actions。
+- 页面 JavaScript、三个 Python 工具和 `git diff --check` 全部通过。

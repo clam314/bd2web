@@ -67,13 +67,29 @@
      Bloom intensity 1.59/阈值 0.64/偏蓝 tint；Tonemapping ACES；
      ColorAdjustments 曝光 -0.3/对比 49/饱和 33。想更准可上 WebGL 后期 pass。
 
-8. **心契互动音频** — 优先级高，dating18 资源分析已完成
+8. **心契互动音频** — dating18 已完成并公开部署
    - `dating18` 是【尊爵不凡】致胜王牌莎赫拉查德（莎拉），资源编号 `char000396`；
      prefab 中禁用的 `Char067004` 字段是残留配置，不能作为映射依据。
    - 已确认 2026-06-18 更新后的语音、Visual_Novel_SFX、Master.strings、FMOD 事件图和
      FSB5/FADPCM 解码链路。
-   - 先接语音 selector 与角色专属 SFX，再处理公共 SFX 的 timeline/random/loop。
-   - 开发通用生成工具，产出 `data/dating_audio.json` 和按角色组织的 OGG，前端只消费生成数据。
-   - 音频公开托管前先确认版权、体积和 CDN 方案；资源缺失时必须无声降级。
+   - **2026-06-23 已完成第一阶段**：通用 FEV/FSB 提取工具、`data/dating_audio.json`、
+     100 条 KR OGG、本地预载、真实多触发点时间轴、随机权重和切动作取消。
+   - **语言策略最终确定：统一使用韩语 KR。** 不开发语言切换，也不托管多套语言。
+     KR interaction bank 的事件、时间轴、随机权重和 100 个 waveform 完整可验证。
+   - **2026-06-23 JP 全量审计**：扫描手机 86 个 `LocalVoice_JP` + 4 个 `LocalVisualNovel_JP`，
+     对照 49 个 JP event GUID 和全部 FSB stream name；当前版本没有发布 `char000396` 心契日配。
+     莎拉只有 26 条普通战斗/档案日语，不能拿来冒充互动语音。
+   - 新增 `tools/audit_dating_jp_audio.py`；游戏更新后可自动重扫 GUID、sample 和 catalog。
+   - JP 审计结论仅限当前版本，不代表未来不会补发；审计工具保留，但当前主线不等待 JP。
+   - 已恢复 100 条 KR OGG 和完整 `data/dating_audio.json` 播放映射。
+   - **2026-06-23 SFX 已完整接入**：112 个事件、670 个时间触发点、127 个直接引用 sample
+     和 117 个动画映射；保留真实时间轴、播放窗口与每个随机池的权重。
+   - 127 个 sample 中含 10 个角色专属音效，以及公共衣料、液体、碰撞、挥动等音效。
+     审计确认目标 Timeline 的 670 个 instrument 全部属于已解析的 WAIT/MUIT，没有猜测未知结构。
+   - FSB 没有内嵌无限循环点；`*_loop` 事件使用有限音频片段。voice/SFX 使用独立音量总线，
+     共用动画起点和取消生命周期，切动作时会停止旧 source。
+   - 100 条 KR voice + 127 条 SFX OGG 合计约 4.9 MB，已允许进入公开仓库并由 GitHub Pages
+     同源提供；资源缺失时仍无声降级。
+   - 后续任务是把同一生成流程扩展到其他心契角色，不再为 dating18 单独补音频结构。
    - 详细结论见 [CODEX_CHANGES.md](CODEX_CHANGES.md) 的
      “2026-06-22 心契音频资源分析与通用接入方案”。

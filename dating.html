@@ -396,7 +396,7 @@
       ["illust_dating15", "Refithea", "Guest"],
       ["illust_dating16", "Olivier", "Guest"],
       ["illust_dating17", "Palette", "Guest"],
-      ["illust_dating18", "Dating 18", "Unmapped"],
+      ["illust_dating18", "莎拉", "尊爵不凡·致胜王牌"],
     ].map(([id, character, tag]) => ({
       id,
       character,
@@ -843,6 +843,282 @@
     let cardGameTimers = [];
     let hotzoneProjectionPending = false;
 
+    class DatingAudioController {
+      constructor() {
+        this.context = null;
+        this.voiceGain = null;
+        this.sfxGain = null;
+        this.manifestPromise = null;
+        this.currentId = null;
+        this.currentCharacter = null;
+        this.prepareGeneration = 0;
+        this.playGeneration = 0;
+        this.bufferPromises = new Map();
+        this.sources = new Set();
+        this.unavailable = new Set();
+        this.debug = new URLSearchParams(location.search).has("audioDebug");
+      }
+
+      ensureContext() {
+        if (!this.context) {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return null;
+          this.context = new AudioContextClass();
+          this.voiceGain = this.context.createGain();
+          this.voiceGain.gain.value = 0.9;
+          this.voiceGain.connect(this.context.destination);
+          this.sfxGain = this.context.createGain();
+          this.sfxGain.gain.value = 0.82;
+          this.sfxGain.connect(this.context.destination);
+        }
+        return this.context;
+      }
+
+      async unlock() {
+        const context = this.ensureContext();
+        if (context?.state === "suspended") {
+          try { await context.resume(); } catch (e) { /* next user gesture can retry */ }
+        }
+      }
+
+      loadManifest() {
+        if (!this.manifestPromise) {
+          this.manifestPromise = fetch("./data/dating_audio.json")
+            .then(response => {
+              if (!response.ok) throw new Error(`dating audio manifest ${response.status}`);
+              return response.json();
+            })
+            .catch(() => ({ version: 1, characters: {} }));
+        }
+        return this.manifestPromise;
+      }
+
+      async prepare(datingId) {
+        const generation = ++this.prepareGeneration;
+        this.currentId = datingId;
+        this.currentCharacter = null;
+        this.stop();
+        const manifest = await this.loadManifest();
+        if (generation !== this.prepareGeneration || datingId !== this.currentId) return;
+        const character = manifest.characters?.[datingId];
+        if (!character) return;
+        this.currentCharacter = character;
+
+        const voiceNames = Object.keys(character.samples || {});
+        const sfxNames = Object.keys(character.sfx?.samples || {});
+        if (!voiceNames.length && !sfxNames.length) return;
+        try {
+          const probeChannel = voiceNames.length ? "voice" : "sfx";
+          const probeName = voiceNames[0] || sfxNames[0];
+          await this.loadBuffer(character, probeName, probeChannel);
+        } catch (e) {
+          this.unavailable.add(datingId);
+          return;
+        }
+        if (generation !== this.prepareGeneration || datingId !== this.currentId) return;
+        const entries = [
+          ...voiceNames.map(name => ({ channel: "voice", name })),
+          ...sfxNames.map(name => ({ channel: "sfx", name })),
+        ];
+        this.preload(character, entries, generation);
+      }
+
+      async preload(character, entries, generation) {
+        let next = 0;
+        const worker = async () => {
+          while (
+            next < entries.length &&
+            generation === this.prepareGeneration &&
+            character === this.currentCharacter
+          ) {
+            const entry = entries[next++];
+            try {
+              await this.loadBuffer(character, entry.name, entry.channel);
+            } catch (e) { /* lazy retry on use */ }
+          }
+        };
+        await Promise.all(Array.from({ length: Math.min(6, entries.length) }, worker));
+      }
+
+      sampleUrl(character, sampleName, channel) {
+        const collection = channel === "sfx" ? character.sfx : character;
+        const sample = collection?.samples?.[sampleName];
+        if (!sample) return null;
+        return new URL(collection.audioBase + sample.file, document.baseURI).href;
+      }
+
+      loadBuffer(character, sampleName, channel = "voice") {
+        const url = this.sampleUrl(character, sampleName, channel);
+        if (!url) return Promise.reject(new Error(`unknown ${channel} sample ${sampleName}`));
+        if (!this.bufferPromises.has(url)) {
+          const promise = (async () => {
+            const context = this.ensureContext();
+            if (!context) throw new Error("Web Audio API unavailable");
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`${channel} sample ${response.status}`);
+            return context.decodeAudioData(await response.arrayBuffer());
+          })();
+          this.bufferPromises.set(url, promise);
+          promise.catch(() => this.bufferPromises.delete(url));
+        }
+        return this.bufferPromises.get(url);
+      }
+
+      stop() {
+        this.playGeneration += 1;
+        this.sources.forEach(source => {
+          try { source.stop(); } catch (e) { /* already stopped */ }
+        });
+        this.sources.clear();
+        if (this.debug) document.documentElement.dataset.datingAudioSources = "0";
+      }
+
+      weightedChoice(choices) {
+        const total = choices.reduce((sum, choice) => sum + Math.max(0, choice.weight), 0);
+        if (!total) return choices[0] || null;
+        let value = Math.random() * total;
+        for (const choice of choices) {
+          value -= Math.max(0, choice.weight);
+          if (value <= 0) return choice;
+        }
+        return choices[choices.length - 1] || null;
+      }
+
+      playAnimation(datingId, animationName) {
+        const wallStartedAt = performance.now();
+        this.stop();
+        const generation = this.playGeneration;
+        if (this.debug) {
+          document.documentElement.dataset.datingAudioPhase = `requested:${animationName}`;
+        }
+        void this.scheduleAnimation(datingId, animationName, wallStartedAt, generation);
+      }
+
+      async scheduleAnimation(datingId, animationName, wallStartedAt, generation) {
+        if (this.unavailable.has(datingId)) return;
+        let character = this.currentId === datingId ? this.currentCharacter : null;
+        if (!character) {
+          const manifest = await this.loadManifest();
+          character = manifest.characters?.[datingId];
+        }
+        if (
+          !character ||
+          generation !== this.playGeneration ||
+          datingId !== this.currentId
+        ) return;
+
+        const scheduledEvents = [
+          {
+            channel: "voice",
+            collection: character,
+            eventName: character.actions?.[animationName],
+          },
+          {
+            channel: "sfx",
+            collection: character.sfx,
+            eventName: character.sfx?.actions?.[animationName],
+          },
+        ].map(item => ({
+          ...item,
+          event: item.eventName && item.collection?.events?.[item.eventName],
+        })).filter(item => item.event?.triggers?.length);
+        if (!scheduledEvents.length) return;
+        if (this.debug) {
+          document.documentElement.dataset.datingAudioPhase =
+            `event:${scheduledEvents.map(item => `${item.channel}:${item.eventName}`).join(",")}`;
+        }
+
+        const context = this.ensureContext();
+        if (!context) return;
+        if (this.debug) {
+          document.documentElement.dataset.datingAudioContext = context.state;
+        }
+        if (context.state === "suspended") {
+          void context.resume().catch(() => { /* next user gesture can retry */ });
+        }
+        if (this.debug) {
+          document.documentElement.dataset.datingAudioContext = context.state;
+          document.documentElement.dataset.datingAudioPhase =
+            `scheduling:${scheduledEvents.map(item => `${item.channel}:${item.eventName}`).join(",")}`;
+        }
+        if (generation !== this.playGeneration) return;
+
+        const elapsed = Math.max(0, (performance.now() - wallStartedAt) / 1000);
+        const contextStartedAt = context.currentTime - elapsed;
+        scheduledEvents.forEach(item => {
+          item.event.triggers.forEach(trigger => {
+            const choice = this.weightedChoice(trigger.choices || []);
+            if (choice) {
+              void this.scheduleTrigger(
+                character,
+                choice.sample,
+                trigger,
+                contextStartedAt,
+                generation,
+                item.channel
+              );
+            }
+          });
+        });
+      }
+
+      async scheduleTrigger(
+        character,
+        sampleName,
+        trigger,
+        contextStartedAt,
+        generation,
+        channel
+      ) {
+        let buffer;
+        try {
+          buffer = await this.loadBuffer(character, sampleName, channel);
+        } catch (e) {
+          return;
+        }
+        if (generation !== this.playGeneration || character !== this.currentCharacter) return;
+
+        const context = this.context;
+        const target = contextStartedAt + trigger.at;
+        const lateBy = Math.max(0, context.currentTime - target);
+        const playableWindow = Math.min(buffer.duration, trigger.window || buffer.duration);
+        if (lateBy >= playableWindow) return;
+
+        const source = context.createBufferSource();
+        source.buffer = buffer;
+        source.connect(channel === "sfx" ? this.sfxGain : this.voiceGain);
+        source.onended = () => {
+          this.sources.delete(source);
+          if (this.debug) {
+            document.documentElement.dataset.datingAudioSources = String(this.sources.size);
+          }
+        };
+        this.sources.add(source);
+        const startAt = Math.max(context.currentTime, target);
+        if (this.debug) {
+          document.documentElement.dataset.datingAudioSample = sampleName;
+          document.documentElement.dataset.datingAudioChannel = channel;
+          document.documentElement.dataset.datingAudioAt = String(trigger.at);
+          document.documentElement.dataset.datingAudioSources = String(this.sources.size);
+          console.debug(
+            `[dating-audio:${channel}] ${sampleName} at=${trigger.at.toFixed(3)}s ` +
+            `late=${lateBy.toFixed(3)}s`
+          );
+        }
+        source.start(startAt, lateBy);
+        const remainingWindow = playableWindow - lateBy;
+        if (remainingWindow < buffer.duration - lateBy) {
+          source.stop(startAt + remainingWindow);
+        }
+      }
+    }
+
+    const datingAudio = new DatingAudioController();
+    if (datingAudio.debug) document.documentElement.dataset.datingAudioDebug = "ready";
+    document.addEventListener("pointerdown", () => void datingAudio.unlock(), {
+      capture: true,
+    });
+
     function showError(msg) {
       toast.textContent = msg;
       toast.style.display = "block";
@@ -875,6 +1151,7 @@
       activeBtn = btn;
       btn.classList.add("active");
       currentEntry = entry;
+      void datingAudio.prepare(entry.id);
       clearError();
       if (player) { player.dispose(); player = null; }
       currentStage = 1;
@@ -915,6 +1192,10 @@
             p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
           } catch (e) { /* keep straight alpha */ }
           buildStageModel(p);
+          const requestedStage = Number(new URLSearchParams(location.search).get("stage"));
+          if (Number.isInteger(requestedStage) && stageModel.stages.has(requestedStage)) {
+            currentStage = requestedStage;
+          }
           renderStageControls();
           attachPlaybackListener(p);
         },
@@ -1895,6 +2176,13 @@
 
     function attachPlaybackListener(p) {
       p.animationState.addListener({
+        start: (track) => {
+          if (!track.animation || track.trackIndex !== 0 || !currentEntry) return;
+          if (datingAudio.debug) {
+            document.documentElement.dataset.datingAnimation = track.animation.name;
+          }
+          datingAudio.playAnimation(currentEntry.id, track.animation.name);
+        },
         complete: (track) => {
           if (!track.animation || track.trackIndex !== 0 || restoringIdle) return;
           const completed = track.animation.name;
@@ -1920,14 +2208,21 @@
         b.className = "item";
         b.textContent = entry.label;
         b.title = `${entry.id} · ${entry.tag}`;
+        b.dataset.id = entry.id;
         b.dataset.search = `${entry.id} ${entry.character} ${entry.tag}`.toLowerCase();
         b.onclick = () => loadDating(entry, b);
         list.appendChild(b);
       });
       document.getElementById("footer").innerHTML =
         `${DATING.length} 个心契资源 · ${useCdn ? "CDN" : "本地 upstream"}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
-      const first = list.querySelector(".item");
-      if (first) first.click();
+      const requested = new URLSearchParams(location.search).get("dating");
+      const requestedId = requested
+        ? (requested.startsWith("illust_dating") ? requested : `illust_dating${requested}`)
+        : null;
+      const initial = requestedId
+        ? list.querySelector(`[data-id="${requestedId}"]`)
+        : list.querySelector(".item");
+      if (initial) initial.click();
     }
 
     search.addEventListener("input", () => {
