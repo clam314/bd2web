@@ -568,15 +568,17 @@
         entries.push(seq);
       });
 
-      // 技能动画（cutscene）：gamekee 风格——列出主动作各自单独循环播，不串接、不还原
-      // 游戏 Timeline 演出（相机/粒子/后处理网页做不了，详见 AGENTS.md 历史教训）。
-      // 主动作命名：cut_A/cut_B/cut_1…（黎维塔等）、A_cut/B_cut（卢班希亚等）、loop/loop_2。
-      // 排除特效/部件（_fx/_ef/_effect/smile）。
+      // 技能动画（cutscene）：gamekee 风格——列出真正的"技能动作"各自单独循环播，不串接、
+      // 不还原游戏 Timeline 演出（相机/粒子/后处理网页做不了，详见 AGENTS.md 历史教训）。
+      // 只取主 cut 动作：cut_A/cut_B/cut_1…（黎维塔等）、A_cut/B_cut（卢班希亚等）。
+      // **排除 loop/loop_2**——它们是 hero 待机循环和横躺翻腾过渡帧（不是技能动作），
+      // 且包围盒超宽（loop 3895/loop_2 4172），单独全屏自适应会把角色缩成一小团。
+      // 也排除特效/部件（_fx/_ef/_effect/smile）。
       if (currentPart === "cutscene") {
-        const CUT_MAIN = /^(cut_[A-Za-z0-9]+|[A-Za-z]_cut\d*|loop\w*)$/;
+        const CUT_MAIN = /^(cut_[A-Za-z0-9]+|[A-Za-z]_cut\d*)$/;
         const mains = allBodies.filter(n => CUT_MAIN.test(n) && !/_fx$|_ef$|_effect|smile/i.test(n));
         entries.length = 0;
-        (mains.length ? mains : allBodies).forEach(n => entries.push([n]));
+        (mains.length ? mains : allBodies.filter(n => !isLoopName(n))).forEach(n => entries.push([n]));
       }
 
       // 当前服装的 cutscene 背景列表（按动作 1/2 对应 bg[0]/bg[1]，缺则共用）
