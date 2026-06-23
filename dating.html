@@ -344,10 +344,11 @@
     const useCdn = location.hostname.endsWith("github.io")
       || params.has("cdn");
     const CDN_ASSET_BASES = [
-      `https://cdn.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
       `https://fastly.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
+      `https://jsdelivr.b-cdn.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
       `https://gcore.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
-      `https://cdn.statically.io/gh/myssal/Brown-Dust-2-Asset/${UPSTREAM_COMMIT}/`,
+      `https://testingcf.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
+      `https://cdn.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
       `https://raw.githubusercontent.com/myssal/Brown-Dust-2-Asset/${UPSTREAM_COMMIT}/`,
     ];
     const customAssetBases = params.get("asset_base")
@@ -357,6 +358,8 @@
       .map(normalizeAssetBase);
     const ASSET_BASES = customAssetBases?.length ? customAssetBases : (useCdn ? CDN_ASSET_BASES : ["./upstream/"]);
     let assetBaseIndex = 0;
+    let assetRetryTimer = null;
+    let datingLoadGeneration = 0;
 
     function normalizeAssetBase(base) {
       return base.endsWith("/") ? base : base + "/";
@@ -370,12 +373,58 @@
       return assetBase() + path;
     }
 
+    async function fetchAssetCheck(url, options = {}) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        const response = await fetch(url, {
+          cache: "no-store",
+          ...options,
+          signal: controller.signal,
+        });
+        if (!response.ok) throw new Error(`${response.status} ${url}`);
+        return response;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    async function preflightDatingAssets(entry, base) {
+      const atlasUrl = base + entry.atlas;
+      const atlas = await (await fetchAssetCheck(atlasUrl)).text();
+      const textureNames = atlas
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(line => /\.png$/i.test(line));
+      if (!textureNames.length) throw new Error(`atlas 没有贴图页：${atlasUrl}`);
+
+      const directory = entry.atlas.slice(0, entry.atlas.lastIndexOf("/") + 1);
+      const urls = [
+        base + entry.skeleton,
+        ...textureNames.map(name => base + directory + name),
+      ];
+      await Promise.all(urls.map(url => fetchAssetCheck(url, { method: "HEAD" })));
+    }
+
     function retryAssetBase(reason, reload) {
       if (assetBaseIndex + 1 >= ASSET_BASES.length) return false;
       assetBaseIndex += 1;
       showError(`素材源加载失败，正在切换备用 CDN ${assetBaseIndex + 1}/${ASSET_BASES.length}：${reason}`);
-      setTimeout(reload, 120);
+      clearTimeout(assetRetryTimer);
+      assetRetryTimer = setTimeout(reload, 120);
       return true;
+    }
+
+    function disposePlayerSafely() {
+      if (!player) return;
+      const oldPlayer = player;
+      player = null;
+      try {
+        oldPlayer.dispose();
+      } catch (e) {
+        // SpinePlayer 在素材只加载了一部分时，AssetManager.dispose() 可能遇到 null。
+        // 清空舞台即可释放 DOM/WebGL 引用，不能让销毁异常中断备用 CDN 重试。
+      }
     }
 
     const DATING = [
@@ -1146,14 +1195,17 @@
       };
     }
 
-    function loadDating(entry, btn) {
+    async function loadDating(entry, btn) {
+      const loadGeneration = ++datingLoadGeneration;
       if (activeBtn) activeBtn.classList.remove("active");
       activeBtn = btn;
       btn.classList.add("active");
       currentEntry = entry;
       void datingAudio.prepare(entry.id);
       clearError();
-      if (player) { player.dispose(); player = null; }
+      clearTimeout(assetRetryTimer);
+      assetRetryTimer = null;
+      disposePlayerSafely();
       currentStage = 1;
       currentModel = null;
       stageModel = null;
@@ -1170,9 +1222,21 @@
       hotzoneLayer.innerHTML = "";
       animList.innerHTML = '<div class="sub-label">互动模式</div><button class="item disabled">加载中...</button>';
 
+      const selectedAssetBase = assetBase();
+      try {
+        await preflightDatingAssets(entry, selectedAssetBase);
+      } catch (error) {
+        if (loadGeneration !== datingLoadGeneration) return;
+        const reason = error?.message || String(error);
+        if (retryAssetBase(reason, () => loadDating(entry, btn))) return;
+        showError("加载失败：" + reason);
+        return;
+      }
+      if (loadGeneration !== datingLoadGeneration) return;
+
       const config = {
-        skelUrl: assetUrl(entry.skeleton),
-        atlasUrl: assetUrl(entry.atlas),
+        skelUrl: selectedAssetBase + entry.skeleton,
+        atlasUrl: selectedAssetBase + entry.atlas,
         showControls: false,
         showLoading: false,
         alpha: true,
@@ -1186,6 +1250,10 @@
           renderHotzones(currentPrefabActions());
         },
         success: (p) => {
+          if (loadGeneration !== datingLoadGeneration || p !== player) {
+            try { p.dispose(); } catch (e) { /* stale partial player */ }
+            return;
+          }
           try {
             const atlas = Object.entries(p.assetManager.assets)
               .find(([k]) => k.endsWith(".atlas"))[1];
@@ -1200,6 +1268,9 @@
           attachPlaybackListener(p);
         },
         error: (_p, reason) => {
+          if (loadGeneration !== datingLoadGeneration) return;
+          disposePlayerSafely();
+          stage.innerHTML = "";
           if (retryAssetBase(reason, () => loadDating(entry, btn))) return;
           showError("加载失败：" + reason);
         },

@@ -91,5 +91,11 @@
    - 100 条 KR voice + 127 条 SFX OGG 合计约 4.9 MB，已允许进入公开仓库并由 GitHub Pages
      同源提供；资源缺失时仍无声降级。
    - 后续任务是把同一生成流程扩展到其他心契角色，不再为 dating18 单独补音频结构。
+
+9. **心契素材 CDN 容错** — 2026-06-23 已修
+   - 心契页现在会在创建 SpinePlayer 前检查 skeleton、atlas 和全部贴图页；整套不可用就换镜像。
+   - 移除会跳转 HTTP 的 statically，补齐 BunnyCDN / Cloudflare testing 镜像。
+   - 半加载播放器采用安全销毁，旧请求用 generation 隔离。
+   - 已用 404 首源故障注入验证：自动切到本地次源，控制台无残留异常。
    - 详细结论见 [CODEX_CHANGES.md](CODEX_CHANGES.md) 的
      “2026-06-22 心契音频资源分析与通用接入方案”。

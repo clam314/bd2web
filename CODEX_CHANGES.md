@@ -1067,3 +1067,26 @@ Char000396_motion1_14
 - 227 个文件全部通过 ffprobe，codec 均为 OGG Vorbis。
 - JSON 断言确认 112 events / 670 triggers / 127 samples / 117 actions。
 - 页面 JavaScript、三个 Python 工具和 `git diff --check` 全部通过。
+
+## 2026-06-23 心契 Spine CDN 故障切换修复
+
+线上曾出现主 jsDelivr 对 dating18 的 skel 和 11 张贴图集中返回 502。原备用链还有两个问题：
+
+- `cdn.statically.io` 会重定向到 HTTP，被 GitHub Pages 的 HTTPS 页面按 Mixed Content 拦截。
+- SpinePlayer 在素材只加载一部分时直接 `dispose()`，内部会对 null 资源调用 `dispose`，
+  使备用 CDN 重试被二次异常打断。
+
+`dating.html` 现已：
+
+- 移除 statically，统一为 HTTPS；镜像顺序为 fastly、BunnyCDN、Gcore、Cloudflare testing、
+  jsDelivr 主域和 raw.githubusercontent。
+- 创建 SpinePlayer 前先读取 atlas，并用 HEAD 并行检查 skeleton 与 atlas 列出的全部贴图页。
+  只有整套资源可用才创建播放器，避免半初始化实例。
+- 预检遇到 403/404/502、超时或 CORS 错误时自动切换下一个镜像。
+- 增加安全销毁、加载 generation 和单一 retry timer，旧角色/旧镜像的异步回调不能干扰新加载。
+
+故障注入验证使用“首源固定 404、次源本地 upstream”：
+
+- 自动切换后 dating18 成功进入阶段 6。
+- 页面出现一个有效 canvas，阶段与互动控制正常生成。
+- 控制台无 SpinePlayer 加载异常，也没有 null dispose 异常。
