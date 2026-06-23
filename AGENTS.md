@@ -66,16 +66,40 @@ index.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cd
 3. **APK 解包**（手机 → adb pull → UnityPy）：取景框、技能 Timeline、后期参数、场景背景。一次性挖了备份在 `/Users/woods/bd2_gamedata_backup/`，以后不用再连手机。
    - **2026-06-17 突破**：StreamedClip 二进制可以手解（按 AssetStudio 格式 4 字节 time + 4 字节 keyCount + N×20 字节 key），`tools/extract_cutscene_shots.py` 已经把 154 个角色的运镜/Bg 切换/PostProcessVolume 调色全部解出，存 `data/cutscene_shots.json`。脚本按 file.json 里的 bundle hash 做增量。
 
-### 已固化的"游戏化"效果
+### ⚠️ 2026-06-23 重大方向转变：技能动画放弃"还原游戏演出"，改 gamekee 风格朴素展示
+
+**背景**：花了 N 轮想还原游戏 cutscene 的完整演出（schedule 串接 / 多 skel 多实例叠播 /
+程序化相机跟随 / 变身光罩 flash / 运镜推拉 / 调色切换），用户逐帧对照游戏录屏
+（`skill_demo/lathel-skill.mp4`，已 gitignore）后确认**全都不像**。根本原因已查清：
+游戏的"技能动画"= spine 骨骼动画 + Unity 相机剧烈运镜（怼脸特写）+ ParticleSystem
+粒子（泡泡/星星/光线）+ 后处理（强 bloom 把变身瞬间散开的半成品身体盖住）。**网页
+只有 spine 这一层，拿不到那 80% 的 Unity 演出层**——粒子/后处理/相机系统是 spine 网页
+播放器架构上无法复刻的（浏览器跑 Unity 也不行：只有提取的资源 bundle，没有游戏私有
+C# 脚本程序集，无法重建 Timeline 驱动）。
+
+**决定**：对照 gamekee 角色图鉴（`live2d-img.gamekee.com` 用 spine-player 4.1 播
+`cutscene_charXXXXXX.skel.json`）发现——**gamekee 也没还原演出，就是朴素 setAnimation
+循环播 cutscene spine 的单个主动作**（`A_cut`/`B_cut` 或 `cut_A`/`cut_B`），spine 默认
+自适应取景。于是技能动画改成同款（commit 1d106ef，净删 245 行）。
+
+**现状（已固化）**：
 
 | 效果 | 实现 | 数据来源 |
 |---|---|---|
-| 立绘形态 | 整套动作锁定到待机包围盒的固定取景（见下「立绘取景锁定」）| spine 包围盒 |
-| 技能动画串联 | `A_cut → B_cut → loop` 真实序列 | APK Timeline `CharXXXXXX_Skill` |
-| Spine 特效叠加 | 主 cut 走 track 0，光效/血花/召唤物（`1_mask_effect`/`A_weapon_effect`/`cut_3_dragon_*` 等）按前缀配对到对应主 cut，分组分轨同时播 | skel 内的动画命名分类（见 index.html `renderEntries` 的 MAIN_RE / overlayTarget） |
-| 链尾用最后一个 loop | 主链原本碰到第一个 loop 就停（`cut_A → cut_B → loop`），但部分角色（如 char003803 黎维塔奇迹玫瑰）的 `loop` 是横躺翻腾过渡帧，`loop_2` 才是 hero 终态。改成跳过中间 loop，链尾用 `bodies` 里最后一个 loop（loop_2 优先于 loop） | 见 index.html `chainQueue`，对所有角色生效 |
-| 真实调色切换 | Timeline 上 PostProcessVolume / PostProcessVolume 2 的 on/off 事件决定 `.cutscene-fx-alt` class，CSS filter 在两套（main 暖 / alt 冷）之间切。RAF 驱动 | `data/cutscene_shots.json`（extract_cutscene_shots.py 产）events 字段；前端 `applyTimelineAt` |
-| 横屏取景 | 舞台容器锁成 1600:720（letterbox/pillarbox 留黑边），viewport 用游戏原值 1600×720 不再随浏览器宽高比走样 | APK RectTransform 1600×720 + SkeletonGraphic scale=1 |
+| 立绘形态 | 整套动作锁定到待机包围盒的固定取景（见下「立绘取景锁定」）；动作=待机(idle)/互动(motion) | spine 包围盒 |
+| 技能动画形态 | **gamekee 风格**：列出 cutscene spine 的主动作（`cut_*`/`[A-Z]_cut`/`loop*`，正则 `CUT_MAIN`）各自一个按钮「动作1/2/3/4」，点击 `setAnimation(name, loop=true)` 循环播单个动画 + 显示对应背景。**不串接、不叠层、不还原演出**（见 index.html `renderEntries` cutscene 分支 + `playSeq`） | cutscene spine 自带的主动作 |
+| 背景 | cutscene 选动作时显示 `costume.bg[entryIdx]`（bg/ 里的 `<id>_<N>.png`），spine-player `backgroundImage` 铺在 viewport 内 | roster `costume.bg` |
+| 取景 | 立绘和技能动画**都全屏自适应**（padding 5%，spine 默认按动画包围盒 fit，角色居中铺满）。不再 letterbox 锁 1600:720 | spine 默认取景 |
+| Spine 特效叠加（立绘） | 立绘 motion 偶有光效部件，按前缀配对叠 track 2+（`overlayTarget`/`scheduleOverlaysFor`）；**cutscene 不用** | skel 动画命名 |
+
+**已删除的复杂代码**（commit 1d106ef，别再重建）：`SKILL_SCHEDULES`、`playScheduledSkill`、
+`cameraFollow`（程序化相机跟随）、`#flash` 变身光罩、`applyTimelineAt`/`startTimeline`/
+`stopTimeline`、`sampleTrack`/`lastEventState`、`CUT_W/H` letterbox、多 skel 多实例叠播。
+`data/cutscene_shots.json` 和 `extract_cutscene_shots.py` 不再被前端用（运镜数据字段错位
+不可信，留着仅作历史参考，可删）。
+
+下面这些是**历史记录**（已废弃的还原尝试），保留是为了让后人别重蹈覆辙——不要再去做
+schedule 串接 / 多 skel 叠播 / 相机跟随 / 变身光罩。
 | 后期效果 | CSS 暗角 + brightness/contrast/saturate | APK Volume Profile（ACES + ColorAdjustments + Bloom） |
 | 场景背景 | 同一镜头共享，按动作切换 bg[idx] | APK `char<id>_back<N>.png` 提取 |
 | 中文名 | 角色 + 服装名 | gamekee `/v1/wiki/entry` |
