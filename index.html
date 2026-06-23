@@ -390,17 +390,54 @@
       "003803": { scale: 1.283, x: 1, y: -605, anchors: 1600 },
     };
     const CUTSCENE_CAM_DEFAULT = { scale: 1.283, x: 0, y: -605, anchors: 1600 };
-    function cutsceneZoomTo(p, charId) {
+    function cutsceneZoomTo(p, charId, zoomScale) {
       try {
         const cam = CUTSCENE_CAM[charId] || CUTSCENE_CAM_DEFAULT;
-        const h = cam.anchors / cam.scale;          // 取景框高（spine 世界单位）
-        const w = h;                                 // Anchors 方形窗口
-        const cx = -cam.x / cam.scale;               // 取景中心 x（容器偏移反向）
-        const cy = -cam.y / cam.scale;               // 取景中心 y（角色落在画面下部 = 中心在其上方）
+        const s = zoomScale || cam.scale;            // 运镜 scale（默认静态值；可传动态运镜值）
+        const ASPECT = 16 / 9;                        // 游戏 cutscene 是 16:9 横屏宽幅
+        const h = cam.anchors / s;                    // 取景框高（spine 世界单位）；scale 大→框小→放大
+        const w = h * ASPECT;
+        const cx = -cam.x / s;                        // 取景中心（容器偏移反向 / scale）
+        const cy = -cam.y / s;
         const vp = p.config.viewport;
         vp.x = cx - w / 2; vp.y = cy - h / 2; vp.width = w; vp.height = h;
         ["padLeft","padRight","padTop","padBottom"].forEach(k => delete vp[k]);
       } catch (_) {}
+    }
+
+    // ───── cutscene 动态运镜（镜头推拉）─────
+    // 游戏 Timeline 用 object 的 scale 曲线做推拉（cutscene_shots 里那条之前误标 "LocalPos.z"，
+    // 实为 Transform scale——初值 1.236≈静态 1.283 可证）。scale 大→框小→角色放大（推近）。
+    // 每帧（config.frame）按当前 trackTime 映射到 timeline 时间采样 scale，更新取景。
+    let cutsceneShots = null;
+    fetch("./data/cutscene_shots.json?v=" + Date.now())
+      .then(r => r.ok ? r.json() : null)
+      .then(d => { if (d) cutsceneShots = d.characters || d; })
+      .catch(() => {});
+    function sampleTrack(keys, t) {
+      if (!keys || !keys.length) return null;
+      if (t <= keys[0][0]) return keys[0][1];
+      const last = keys[keys.length - 1];
+      if (t >= last[0]) return last[1];
+      for (let i = 1; i < keys.length; i++) {
+        if (keys[i][0] >= t) { const [t0,v0]=keys[i-1],[t1,v1]=keys[i]; return v0+(v1-v0)*(t-t0)/(t1-t0); }
+      }
+      return last[1];
+    }
+    // 各动作在 skill timeline 的起始时刻（scale 曲线按 timeline 时间，动作 trackTime 要加此偏移）。
+    // 来自 SKILL Timeline 的 Spine Track clip 起播 wall time（挖自 APK）。
+    const ACTION_TL_OFFSET = { "003803": { cut_A: 0, cut_B: 3.367 } };
+    function cutsceneCameraFrame(p) {
+      if (currentPart !== "cutscene" || !p?.currentViewport || !p._camCharId) return;
+      const cam = CUTSCENE_CAM[p._camCharId]; if (!cam) return;
+      const tt = p.animationState?.tracks?.[0]?.trackTime || 0;
+      let s = cam.scale;
+      if (p._camScaleKeys) { const v = sampleTrack(p._camScaleKeys, (p._camOffset || 0) + tt); if (v) s = v; }
+      const ASPECT = 16/9, h = cam.anchors/s, w = h*ASPECT, cx = -cam.x/s, cy = -cam.y/s;
+      const vp = p.currentViewport;
+      vp.x = cx - w/2; vp.y = cy - h/2; vp.width = w; vp.height = h;
+      vp.padLeft = vp.padRight = vp.padTop = vp.padBottom = 0;
+      p.previousViewport = null;
     }
 
     function loadPart(part) {
@@ -425,6 +462,8 @@
         alpha: true,
         premultipliedAlpha: false,   // 占位，success 里按 atlas pma 标记修正
         viewport: { padLeft: "5%", padRight: "5%", padTop: "5%", padBottom: "5%" },
+        // cutscene 每帧动态运镜（按 timeline scale 曲线推拉）；立绘不挂
+        frame: (p) => { if (part === "cutscene") cutsceneCameraFrame(p); },
         success: (p) => {
           try {
             const atlas = Object.entries(p.assetManager.assets).find(([k]) => k.endsWith(".atlas"))[1];
@@ -610,10 +649,12 @@
         if (!player) return;
         try {
           if (currentPart === "cutscene") {
-            // 放大取景用游戏 prefab 挖的固定取景参数（按角色 ID）。
-            // 必须在 setAnimation 前设——spine-player 的 setViewport 在 setAnimation 时读 config.viewport。
+            // 取景：固定参数（prefab 挖）+ 动态运镜（timeline scale 曲线）。
             const charId = (currentCostume?.cutscene?.skeleton || "").match(/cutscene_char(\d{6})/)?.[1];
-            cutsceneZoomTo(player, charId);
+            player._camCharId = charId;
+            player._camScaleKeys = cutsceneShots?.[charId]?.tracks?.["Anchors/object.LocalPos.z"] || null;
+            player._camOffset = ACTION_TL_OFFSET[charId]?.[seq[0]] || 0;
+            cutsceneZoomTo(player, charId);   // 初始框（setAnimation 时 setViewport 读 config.viewport）
             // 单次播放、停在末帧（完整定格姿态）+ 显示对应背景。
             // 不循环：黎维塔等变身系角色 cut_B 前段是"变身瞬间"（身体散开/无衣，游戏靠粒子
             // 光盖住，我们没有就露馅）——循环会反复闪回这个缺件段。单次播完停末帧最干净。
