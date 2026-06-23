@@ -33,7 +33,7 @@
     /* 默认（立绘形态）铺满浏览器；cutscene 形态下用 JS 锁成游戏窗口 1600:720 比例
        并居中（aspect-ratio 用 JS 算尺寸而不是 CSS，以兼容老浏览器），多余区域留黑边。
        这样人物取景 + 背景图与游戏完全对齐，不会因浏览器宽高比走样。 */
-    #stage { position: fixed; inset: 0; background: #000; overflow: hidden; }
+    #stage { position: fixed; inset: 0; background-color: #000; background-size: cover; background-position: center; overflow: hidden; }
     #stage .spine-player { background: transparent !important; }
     /* 真实运镜：每帧 RAF 直接写 transform（translate），#stage 自己 overflow:hidden
        把溢出剪掉，letterbox 黑边不会被运镜越界覆盖。RAF 高频写不要 transition，否则会糊。*/
@@ -378,6 +378,35 @@
     }
     window.addEventListener("resize", layoutStage);
 
+    // 技能动画放大取景：游戏是固定相机放大构图，角色占满画面、部分肢体在屏幕外。
+    // 用该动作"末帧 hero 定格"的包围盒（最紧凑，避开播放中翻腾甩开导致的超大并集框），
+    // 收紧放大后居中设为固定 viewport——角色占满、脸在中央、腿等边缘出框（游戏感）。
+    // CUT_ZOOM<1 越小越放大。每个动作各算各的（cut_A/cut_B 末帧姿势位置不同）。
+    function cutsceneZoomTo(p, animName) {
+      try {
+        const sk = p.skeleton;
+        const anim = sk.data.findAnimation(animName);
+        if (!anim) return;
+        // 采末帧姿势的世界包围盒
+        sk.setToSetupPose();
+        anim.apply(sk, anim.duration, anim.duration, false, [], 1,
+                   spine.MixBlend.setup, spine.MixDirection.mixIn);
+        sk.updateWorldTransform();
+        const off = new spine.Vector2(), sz = new spine.Vector2();
+        sk.getBounds(off, sz);
+        if (!isFinite(off.x) || sz.x <= 0 || sz.y <= 0) return;
+        // 框 = bbox × CUT_ZOOM（<1 → 框比角色小 → 放大裁切）。中心略上移对准上半身/脸
+        // （hero 多是劈叉/伸腿姿势，bbox 中心偏低，框中心上移让脸在画面中央、腿向下出框）。
+        const CUT_ZOOM = 0.62;
+        const cx = off.x + sz.x / 2;
+        const cy = off.y + sz.y * 0.60;   // 0.5=正中，>0.5 偏上半身（spine y 向上，*0.6 取偏上）
+        const w = sz.x * CUT_ZOOM, h = sz.y * CUT_ZOOM;
+        const vp = p.config.viewport;
+        vp.x = cx - w / 2; vp.y = cy - h / 2; vp.width = w; vp.height = h;
+        ["padLeft","padRight","padTop","padBottom"].forEach(k => delete vp[k]);
+      } catch (_) {}
+    }
+
     function loadPart(part) {
       const costume = currentCostume, animBox = currentAnimBox;
       const src = costume[part];
@@ -385,16 +414,13 @@
       currentPart = part;
       if (player) { player.dispose(); player = null; }
       stage.innerHTML = "";
+      stage.style.backgroundImage = "";   // 清旧背景（立绘无背景；新 cutscene 在 playSeq 重设）
       renderModeRow(animBox);
 
       // 立绘和技能动画都全屏自适应取景（spine 默认按动画包围盒 fit，角色居中铺满）。
       const isCutscene = part === "cutscene";
       document.body.classList.toggle("cutscene-fx", isCutscene);
       layoutStage();
-
-      // 背景：技能动画的场景图（roster 提供，来自游戏资源 char<id>_back<N>，存 bg/）。
-      // success 里异步加载，缺失不致命。
-      const cutBgs = isCutscene && Array.isArray(costume.bg) ? costume.bg : [];
 
       const config = {
         atlasUrl: assetUrl(src.atlas),
@@ -422,26 +448,9 @@
               }
             } catch(_) {}
           }
-
-          // 背景图（cutscene 阶段）：异步加载、加载成功才挂上；缺失不致命
-          p._bgLoaded = new Set(); p._bgWant = null;
-          p.applyBg = () => {
-            if (p.disposed) return;
-            const want = p._bgWant;
-            if (want && p._bgLoaded.has(want)) {
-              if (p.config.backgroundImage) p.config.backgroundImage.url = want;
-              else p.config.backgroundImage = { url: want };
-            } else {
-              p.config.backgroundImage = null;
-            }
-          };
-          cutBgs.forEach(b => {
-            const url = "./" + b;
-            p.assetManager.loadTexture(url,
-              () => { p._bgLoaded.add(url); p.applyBg(); },
-              () => { /* 缺失忽略 */ });
-          });
-
+          // 技能动画的放大取景在 playSeq 里按各动作"末帧 hero 定格"包围盒单独设（见 cutsceneZoomTo）。
+          // 背景改用 #stage 的 CSS background（全屏 cover，spine canvas 透明叠前面），
+          // 不再用 spine 的 backgroundImage（那个只在 viewport 框内画，竖框会留左右黑边）。
           renderEntries(p, animBox);
         },
         error: (_p, reason) => showError("加载失败：" + reason),
@@ -605,14 +614,16 @@
         if (!player) return;
         try {
           if (currentPart === "cutscene") {
-            // 单次播放、停在末帧（完整定格姿态）+ 显示对应背景，spine 默认自适应取景。
+            // 放大取景到该动作末帧 hero 定格（游戏感：角色占满+边缘出框）。
+            // 必须在 setAnimation 前设——spine-player 的 setViewport 在 setAnimation 时读 config.viewport。
+            cutsceneZoomTo(player, seq[0]);
+            // 单次播放、停在末帧（完整定格姿态）+ 显示对应背景。
             // 不循环：黎维塔等变身系角色 cut_B 前段是"变身瞬间"（身体散开/无衣，游戏靠粒子
             // 光盖住，我们没有就露馅）——循环会反复闪回这个缺件段。单次播完停末帧最干净。
             player.setAnimation(seq[0], false);
-            if (bgs.length && player.applyBg) {
-              player._bgWant = "./" + (bgs[entryIdx] || bgs[0]);
-              player.applyBg();
-            }
+            // 背景：#stage CSS background 全屏 cover（spine canvas 透明叠前面）
+            const bgUrl = bgs.length ? "./" + (bgs[entryIdx] || bgs[0]) : "";
+            stage.style.backgroundImage = bgUrl ? `url("${bgUrl}")` : "";
             player.play();
             entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
             btn.classList.add("active");
