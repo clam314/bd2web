@@ -605,8 +605,10 @@
         if (!player) return;
         try {
           if (currentPart === "cutscene") {
-            // gamekee 风格：循环播单个主动作 + 显示对应背景，spine 默认自适应取景。
-            player.setAnimation(seq[0], true);
+            // 单次播放、停在末帧（完整定格姿态）+ 显示对应背景，spine 默认自适应取景。
+            // 不循环：黎维塔等变身系角色 cut_B 前段是"变身瞬间"（身体散开/无衣，游戏靠粒子
+            // 光盖住，我们没有就露馅）——循环会反复闪回这个缺件段。单次播完停末帧最干净。
+            player.setAnimation(seq[0], false);
             if (bgs.length && player.applyBg) {
               player._bgWant = "./" + (bgs[entryIdx] || bgs[0]);
               player.applyBg();
