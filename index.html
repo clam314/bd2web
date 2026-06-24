@@ -773,7 +773,8 @@
       roster.characters.forEach(char => {
         const wrap = document.createElement("div");
         wrap.className = "char";
-        wrap.dataset.search = (char.name + " " + (char.aka || "") + " " + char.id).toLowerCase();
+        const costumeSearch = char.costumes.map(c => c.label).join(" ");
+        wrap.dataset.search = (char.name + " " + (char.aka || "") + " " + char.id + " " + costumeSearch).toLowerCase();
 
         const head = document.createElement("button");
         head.className = "item";

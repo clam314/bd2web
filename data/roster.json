@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-06-24T06:34:32+00:00",
+ "generatedAt": "2026-06-24T06:42:48+00:00",
  "source": "Brown-Dust-2-Asset@c22400c07bfd",
  "commit": "c22400c07bfd",
  "characters": [
@@ -2251,7 +2251,7 @@
      ]
     },
     {
-     "label": "服装 04",
+     "label": "战地医疗兵",
      "idle": {
       "skeleton": "spine/char/char067104/char067104.skel",
       "atlas": "spine/char/char067104/char067104.atlas"
