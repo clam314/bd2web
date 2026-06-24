@@ -1090,3 +1090,65 @@ Char000396_motion1_14
 - 自动切换后 dating18 成功进入阶段 6。
 - 页面出现一个有效 canvas，阶段与互动控制正常生成。
 - 控制台无 SpinePlayer 加载异常，也没有 null dispose 异常。
+
+## 2026-06-24 Nebris / illust_dating1 prefab 交互补全
+
+以第一个心契资源 `illust_dating1` 作为“普通三阶段心契”的样本，回到 Unity prefab
+而不是靠 Spine 动画名猜测交互。
+
+### 资源身份
+
+- 页面资源：`illust_dating1`
+- 角色：Nebris
+- 对应服装：`char003303`（新进员工）
+- 不对应隐藏资源 `char003392`
+
+### prefab 结论
+
+`common-char-datingillust_assets_all` 里的 `Illust_dating1` 是很干净的三阶段结构：
+
+- 共 68 条 prefab 互动记录，去重后 64 个动作 key。
+- 全部是手部工具 `toolId=0`，没有道具切换。
+- 动作类型只有 touch / drag。
+- 没有长按、计量条、陀螺仪、麦克风、随机牌局等特殊机制。
+- 阶段推进只有两个点：
+  - `1_18_0`：`mix1_18_1`、`mix1_18_2`、`motion1_18`，完成后进入阶段 2。
+  - `2_22_0`：`mix2_22_1`、`mix2_22_2`、`motion2_22`，完成后进入阶段 3。
+- 阶段 3 的 `3_6_0`、`3_7_0` 在 prefab 中属于隐藏点；当前页面不显示，避免把未确认触发条件的隐藏互动暴露出来。
+
+### 前端实现
+
+`dating.html` 的 `PREFAB_POINT_ACTIONS.illust_dating1` 已补齐 64 个 prefab key。
+
+对这种已经有 prefab 阶段推进动作的资源，左侧菜单不再额外生成通用“推进到阶段 X”按钮，
+避免出现一个真实 prefab 推进点和一个猜测推进按钮并存。隐藏 prefab 动作会在
+`currentPrefabActions()` 里过滤掉。
+
+### 本地验证
+
+本地预览 `dating.html?dating=1`：
+
+- 阶段 1 显示 `拖拽1`、`拖拽2`、`触摸3` 到 `触摸17`、`拖拽18 -> 阶段2`。
+- 普通动作 `触摸10` 可播放，控制台无错误。
+- 点击画面热区 `1_18_0 · InteractionZone` 后进入阶段 2，并刷新出阶段 2 的完整动作表。
+- 阶段 2 显示 `拖拽1`、`触摸2` 到 `触摸21`、`拖拽22 -> 阶段3`。
+- 点击画面热区 `2_22_0 · InteractionZone` 后进入阶段 3。
+- 阶段 3 只显示 22 个可见动作；隐藏点 `3_6_0`、`3_7_0` 没有出现在左侧菜单。
+
+### 尚未完成
+
+本轮没有接 Nebris 音频。
+
+已确认旧备份里存在 `interaction_char003303.bytes`，TextAsset 名为
+`Interaction_Char003303`，内部是 FEV/FSB5，能看到 `Char003303_Int_Joy*`、
+`Char003303_Int_Smile*`、`Char003303_Int_Sigh*`、`Char003303_Int_Pain*`
+等 42 个 sample 名称；`Visual_Novel_SFX` dump 中也能搜到
+`Char003303/Interaction/...` 的 SFX 路径。但还没有把 voice event path、Timeline
+触发点和 OGG manifest 接进 `data/dating_audio.json`。
+
+下一步如果继续做 Nebris，应优先：
+
+1. 用现有 FMOD 解析工具扩展 `char003303` 的 interaction voice / SFX 映射。
+2. 只把页面实际引用的 OGG 和 manifest 加进仓库。
+3. 再考虑普通 touch 点的画面热区；目前只有两个推进点有 prefab 坐标，其他普通点建议走
+   Spine 运行时 bone 坐标，不要直接用静态矩阵生成假热区。
