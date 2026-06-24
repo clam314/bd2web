@@ -245,7 +245,10 @@ def parse_fev(blob: bytes) -> dict:
         instrument = direct_payload(blob, item, b"MUIB")
         playlist = direct_payload(blob, item, b"PLST")
         if len(instrument) < 16 or len(playlist) < 12:
-            raise ValueError("MUIT 数据太短")
+            # Some BD2 SFX banks contain empty/placeholder MUIT containers.
+            # They are safe to ignore unless a Timeline references them later,
+            # in which case extraction still fails as an unknown instrument.
+            continue
         instrument_guid = guid(instrument[:16])
         record_count = u16(playlist, 8)
         record_width = u16(playlist, 10)
@@ -411,6 +414,8 @@ def build_character_data(
     bundle_hash: str | None,
     bank_hash: str,
     fsb_hash: str,
+    expect_events: int | None = None,
+    expect_samples: int | None = None,
 ) -> dict:
     samples = {}
     events = {}
@@ -477,10 +482,14 @@ def build_character_data(
         if re.match(r"^(?:mix|motion)\d+_", name):
             actions[name] = name
 
-    if len(events) != 49:
-        raise ValueError(f"预期 {language} 语音事件 49 个，实际 {len(events)}")
-    if len(used_streams) != 100:
-        raise ValueError(f"预期引用全部 100 个 sample，实际 {len(used_streams)}")
+    if expect_events is not None and len(events) != expect_events:
+        raise ValueError(
+            f"预期 {language} 语音事件 {expect_events} 个，实际 {len(events)}"
+        )
+    if expect_samples is not None and len(used_streams) != expect_samples:
+        raise ValueError(
+            f"预期引用 {expect_samples} 个 sample，实际 {len(used_streams)}"
+        )
 
     return {
         "charId": char_id,
@@ -541,6 +550,16 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="将当前语言引用的所有 sample 转为 OGG",
     )
+    parser.add_argument(
+        "--expect-events",
+        type=int,
+        help="可选验收断言：期望当前语言事件数",
+    )
+    parser.add_argument(
+        "--expect-samples",
+        type=int,
+        help="可选验收断言：期望当前语言引用 sample 数",
+    )
     return parser.parse_args()
 
 
@@ -576,6 +595,8 @@ def main():
         bundle_hash=bundle_hash,
         bank_hash=bank_hash,
         fsb_hash=sha256(fsb),
+        expect_events=args.expect_events,
+        expect_samples=args.expect_samples,
     )
 
     output = args.output_data.resolve()

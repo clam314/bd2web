@@ -77,6 +77,21 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--alias", action="append", default=[])
     parser.add_argument(
+        "--expect-events",
+        type=int,
+        help="可选验收断言：期望 SFX 事件数",
+    )
+    parser.add_argument(
+        "--expect-triggers",
+        type=int,
+        help="可选验收断言：期望 Timeline 触发点数",
+    )
+    parser.add_argument(
+        "--expect-samples",
+        type=int,
+        help="可选验收断言：期望直接引用 sample 数",
+    )
+    parser.add_argument(
         "--output-data",
         type=Path,
         default=ROOT / "data" / "dating_audio.json",
@@ -153,19 +168,33 @@ def main():
             raise ValueError(f"alias 指向不存在的事件：{animation}={event_name}")
         actions[animation] = event_name
 
-    if len(events) != 112:
-        raise ValueError(f"预期莎拉 SFX 事件 112 个，实际 {len(events)}")
     trigger_count = sum(len(event["triggers"]) for event in events.values())
-    if trigger_count != 670:
-        raise ValueError(f"预期莎拉 SFX 触发点 670 个，实际 {trigger_count}")
-    if len(samples) != 127:
-        raise ValueError(f"预期莎拉直接引用 SFX 127 个，实际 {len(samples)}")
+    if args.expect_events is not None and len(events) != args.expect_events:
+        raise ValueError(f"预期 SFX 事件 {args.expect_events} 个，实际 {len(events)}")
+    if args.expect_triggers is not None and trigger_count != args.expect_triggers:
+        raise ValueError(
+            f"预期 SFX 触发点 {args.expect_triggers} 个，实际 {trigger_count}"
+        )
+    if args.expect_samples is not None and len(samples) != args.expect_samples:
+        raise ValueError(
+            f"预期直接引用 SFX {args.expect_samples} 个，实际 {len(samples)}"
+        )
 
     output = args.output_data.resolve()
     document = json.loads(output.read_text(encoding="utf-8"))
     character = document["characters"].get(args.dating_id)
     if not character:
-        raise ValueError(f"{output} 缺少角色 {args.dating_id}，请先生成语音数据")
+        character = {
+            "charId": args.char_id,
+            "sourceVersion": args.source_version,
+            "language": document.get("defaultLanguage", "KR"),
+            "audioBase": f"./audio/dating/{args.dating_id}/voice/",
+            "bank": None,
+            "samples": {},
+            "events": {},
+            "actions": {},
+        }
+        document["characters"][args.dating_id] = character
     character["sfx"] = {
         "sourceVersion": args.source_version,
         "audioBase": f"./audio/dating/{args.dating_id}/sfx/",

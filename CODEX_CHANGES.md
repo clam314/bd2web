@@ -1135,20 +1135,75 @@ Char000396_motion1_14
 - 点击画面热区 `2_22_0 · InteractionZone` 后进入阶段 3。
 - 阶段 3 只显示 22 个可见动作；隐藏点 `3_6_0`、`3_7_0` 没有出现在左侧菜单。
 
-### 尚未完成
+### Nebris SFX 接入（2026-06-24）
 
-本轮没有接 Nebris 音频。
+Nebris 的动作 SFX 可以可靠接入，因为 `Visual_Interaction_SFX` 的 event path
+直接使用 Spine 动画名：
+
+```text
+event:/Cinematic/Visual_Novel/Char003303/Interaction/idle1/mix1_17_2
+event:/Cinematic/Visual_Novel/Char003303/Interaction/idle1/motion1_18
+event:/Cinematic/Visual_Novel/Char003303/Interaction/idle2/motion2_22
+...
+```
+
+生成流程：
+
+- 从 `visual-eventdump-all.tsv` 过滤 `Char003303/Interaction/`，得到 88 个 SFX event path。
+- 使用 `Visual_Interaction_SFX` 作为事件时间线 bank。
+- 使用 `Visual_Novel_SFX` 内嵌 FSB5 作为 sample bank。
+- `tools/extract_dating_sfx.py` 现在支持非莎拉角色，不再硬编码莎拉的
+  `112 events / 670 triggers / 127 samples` 断言；如需验收断言，可传
+  `--expect-events`、`--expect-triggers`、`--expect-samples`。
+- `tools/extract_dating_audio.py` 对 SFX bank 中短/空 MUIT 容器做保守容错：
+  未被 Timeline 引用的占位 MUIT 会跳过；如果实际引用到了，后续仍会以未知 instrument 报错。
+- `tools/extract_dating_sfx.py` 现在可以创建 SFX-only 角色节点，适合 Nebris 这种
+  SFX 已证实、voice 映射尚未证实的情况。
+
+生成结果：
+
+- `data/dating_audio.json` 新增 `characters.illust_dating1.sfx`
+- `audio/dating/illust_dating1/sfx/` 新增 66 个 OGG
+- 88 个 SFX event
+- 324 个 Timeline 触发点
+- 88 个动画映射
+
+注意：SFX sample 名里会出现其他角色编号或公共音效名，例如 `Char004202_*`、
+`Char000396_Card_02`、`Cloth_*`、`Mud_*`。这是 FMOD 时间线真实引用的公共 sample，
+不是资源串错。
+
+验证：
+
+- 66 个 OGG 全部通过 ffprobe，codec 为 OGG Vorbis。
+- `illust_dating18` 的既有 voice/SFX manifest 未被删除。
+- SFX-only 节点可被前端 `DatingAudioController` 预载：没有 voice sample 时会以 sfx
+  sample 作为探测资源。
+
+### 尚未完成：Nebris voice
 
 已确认旧备份里存在 `interaction_char003303.bytes`，TextAsset 名为
 `Interaction_Char003303`，内部是 FEV/FSB5，能看到 `Char003303_Int_Joy*`、
 `Char003303_Int_Smile*`、`Char003303_Int_Sigh*`、`Char003303_Int_Pain*`
-等 42 个 sample 名称；`Visual_Novel_SFX` dump 中也能搜到
-`Char003303/Interaction/...` 的 SFX 路径。但还没有把 voice event path、Timeline
-触发点和 OGG manifest 接进 `data/dating_audio.json`。
+等 42 个 sample 名称。进一步拆包结果：
+
+- bank GUID：`c2629058281b854c8e3ec2f61ee269b1`
+- 30 个 voice event
+- 30 个 Timeline
+- 15 条非空 Timeline
+- 15 个 multi instrument
+- 42 个 WAIT/WAV/sample
+
+但 Nebris voice 和莎拉不同：莎拉 voice event path 是 `mix/motion` 动作名，
+例如 `Char000396_Int_mix6_7_1_KR`；Nebris voice sample 是 `Joy1`、`Smile1`、
+`Sigh1`、`Pain1` 这类情绪池，而且 prefab 的互动点脚本只包含 Spine 动作/SFX 信息，
+没有发现“某个 point 对应某个情绪 voice”的字段。
+
+所以当前不能把 voice 随机硬配到动作上，否则会出现“声音有了但语义不对”。后续要接 voice，
+需要继续找游戏运行时的动作→情绪映射来源；找不到证据前只保留已证实的 SFX。
 
 下一步如果继续做 Nebris，应优先：
 
-1. 用现有 FMOD 解析工具扩展 `char003303` 的 interaction voice / SFX 映射。
-2. 只把页面实际引用的 OGG 和 manifest 加进仓库。
+1. 找 Nebris 的 point/action → `Joy1` / `Smile1` / `Sigh1` 等 voice 事件映射。
+2. 只把页面实际引用的 voice OGG 和 manifest 加进仓库。
 3. 再考虑普通 touch 点的画面热区；目前只有两个推进点有 prefab 坐标，其他普通点建议走
    Spine 运行时 bone 坐标，不要直接用静态矩阵生成假热区。
