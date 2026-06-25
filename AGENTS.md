@@ -190,6 +190,137 @@ schedule 串接 / 多 skel 叠播 / 相机跟随 / 变身光罩。
 
 ---
 
+## il2cpp 静态分析 / dump（2026-06-24 加）
+
+想看游戏 C# 逻辑、数值表、类结构时，从 APK 的 il2cpp 里 dump。
+
+- **别用 Cpp2IL**（`2022.1.0-pre-release.21`）：它解析不了本作的 metadata v31，binary init
+  阶段读 registration 指针数组越界直接崩。换 **Il2CppDumper**（Perfare），自带搜索回退，能过。
+- 工具装在**仓库外** `~/tools/Il2CppDumper`（不进 git）；本机只有 .NET 10 运行时，csproj 是
+  `net6;net8`，所以要 roll-forward：
+
+  ```bash
+  cd ~/tools/Il2CppDumper/Il2CppDumper && \
+  DOTNET_ROLL_FORWARD=Major dotnet run -c Release -f net8.0 -- \
+    <libil2cpp.so> <global-metadata.dat> <输出目录>
+  ```
+
+  输入取自 `local_device_cache/apk_20260624/`：
+  `lib/arm64-v8a/libil2cpp.so` + `assets/bin/Data/Managed/Metadata/global-metadata.dat`。
+- 输出在 `local_device_cache/cpp2il_dump/`（**已被 gitignore**）：`dump.cs`(97M/273万行)、
+  `il2cpp.h`、`script.json`(喂 IDA 的 `il2cpp.py`)、`stringliteral.json`、`DummyDll/`。
+- 游戏主逻辑看 `DummyDll/Assembly-CSharp.dll`（拖 ILSpy/dnSpy），比啃 `dump.cs` 舒服。
+- 跑时会打印 `ERROR: This file may be protected` —— 只是警告，后续 `Searching...` 自动搜出
+  正确 `CodeRegistration` 照样 dump 成功，看到结尾 `Done!` 即 OK。
+
+### Data 表解密进度（2026-06-25，静态逆向拿到 DB 密钥）
+
+目标：拿 `SpineInteractionPointTable`（Nebris 等情绪角色的 动作→语音 映射）。
+
+**✅ DB 密钥已确定（从 libil2cpp.so 反汇编读出，已验证代码路径）：**
+```
+passphrase = SHA1(UTF8("spdhdnlwmrpavmtm")) → BitConverter.ToString → Replace("-","")
+           = "67E939EAAE0F44ED3C1091B176A32F5CDC6D3E49"  (40位大写hex)
+经标准 sqlite3_key 设入。存档库(CreateLocalDB)和母表(ConnectDB)用同一把 key。
+```
+代码地址：取key `@0x6cd56b8`(加载字面量 spdhdnlwmrpavmtm)、转换 `@0x6cd53c8`(SHA1+BitConverter+Replace)、
+SetKey `@0x6cd547c` 与母表 SetKey `@0x611c018` 都调它 → `sqlite3_key`@0x7cfe768。
+
+**逆向方法（免 Ghidra，关键技巧）：** il2cpp 的字符串/方法引用走 0xbf 区 usage 槽位间接层，
+`script.json` 的 ScriptString(0xc6)/ScriptMetadata(0xc5) 是数据地址、代码不直接 adrp 到那。
+解法：用 `objdump -R` 导出 **ELF 重定位表**(1.39M 条 R_AARCH64_RELATIVE)建"槽位→目标"映射，
+叠加 `strmap`(ScriptString) / `methmap`(ScriptMethod) 即可解析任意函数的字符串和调用。
+工具脚本在 `/tmp/`：`annot2.py`(反汇编+reloc注释单函数)、`xref.py`(扫引用某槽位的代码)、
+`strmap.json`/`methmap.json`/`relocs.txt`(派生数据)。llvm-objdump 用 `xcrun -f llvm-objdump`。
+
+**⚠️ 但仍读不出表 —— 卡在"外层 + 文件落地"：**
+- 这把 key **打不开** `local_device_cache/.../Data/<hash>` 文件（手动 SQLCipher4/3 + openssl AES
+  全试过；也不是 "UnityFS"/"SQLite" 明文）。因为 `Data/<hash>`(b3d5固定头、全随机熵)是**加密的
+  Unity Addressables 内容**，不是 SQLCipher db 本身。
+- 真实流程：`DBLoadAsset`协程(@0x612805c) 从 addressable 取字节 → `CreateDBFileFromBytes`
+  写出 SQLCipher db → `ConnectDB`(@0x611d040) 用上面的 key 打开。写出的 db 不在可访问的
+  `/sdcard/Android/data/<pkg>/files/DBFiles/`（启动时该目录为空，可能解到内存或内部存储）。
+- 外层 Unity bundle 加密的 key 尚未找到（无 `SetAssetBundleDecryptKey`）。
+
+**下一步（缺的是"文件"不是"密钥"）：**
+1. **抓运行时 db**：DBFiles 在数据"首次/更新"处理时才会被写。设法触发重新处理（清 app 缓存有风险，
+   需用户同意）再轮询 `files/DBFiles/` 抓 `.db`，拿到后用上面 key 直接开。
+2. **root / frida**：root 后从内部存储拿 db，或 frida hook `sqlite3_open` 拿明文（用户当前无 root）。
+3. **破外层**：逆 `DBLoadAsset`/addressable 加载，找 Unity bundle 解密 key，离线解 `Data/<hash>`
+   → 取内层 TextAsset(=SQLCipher db) → 用已知 key 开。
+
+### 代码层确认的两个结论（2026-06-24，从 dump 读出，回答"情绪语音/热区到底能不能做"）
+
+**(1) 情绪语音映射 = `SpineInteractionPointTable`，无明文捷径。**
+该 protobuf 行类（dump.cs `class SpineInteractionPointTable : IMessage`）的列里直接有：
+`SoundVoiceName`(repeated，普通点击/动作语音)、`SoundMotionVoiceName`(动作动画语音)、
+`LongPressSuccess/Fail/LoopVoiceName`、`SoundFXName/SoundMotionFXName`、键 `Id/GroupId/
+InteractionGroupId`。运行时 `SpineInteractionPoint` 按 `(interactionGroupId,groupId,id)` 查表
+拿 voice 事件名 → `PlayVoiceSFX(eventName)` 走 FMOD（对应 `Interaction_Char003303.bytes` bank）。
+prefab 只给了 illust_dating15/18/19 这 3 个角色硬编码的 `VoiceSoundEventName`（dump.cs
+`SpineInteractionGroupData.GaugeSettingData.MotionNameByScore` 旁 `public string VoiceSoundEventName`），
+其余角色（含 Nebris）全靠查表。**结论：情绪语音能做，但唯一路径是解出这张表（= 当前后台任务）；
+非 root 无运行时捷径。**
+
+**(2) `*_follow` 热区不是"画不了"，是绑在 Spine 骨骼上的。**
+Codex 卡在 illust_dating10/13/16/17 的 follow 点静态矩阵落在画面外。但 dump.cs
+`class SpineInteractionPoint : MonoBehaviour`（TypeDefIndex 5244）有字段
+`SkeletonUtilityBone`（`boneName`/`bone`/`mode`，见 `class SkeletonUtilityBone`：
+`public string boneName`）——这些点是 Spine **骨骼跟随**，运行时坐标 = 该 bone 世界坐标，
+不是静态 RectTransform。**可行路线（不依赖解密、纯 web 端）**：从 prefab bundle
+`common-char-datingillust_assets_all.bundle` 抽每个 follow 点的 `boneName` → dating.html 里用
+spine-ts `skeleton.findBone(name).worldX/worldY` 每帧定位热区。可单独立项，不必等解密。
+
+### 运行态提取尝试 + 结论（2026-06-25，frida-gadget 全流程，最终卡死）
+
+目标仍是读出 `SpineInteractionPointTable`。静态解密卡在自定义 SQLCipher（见上），转运行态 frida。
+**整套流程跑通了，但被多重墙堵死，最终没拿到数据。如实记录供下次（尤其有 root 时）复用。**
+
+**关键技术结论：**
+- **`Data/<hash>` 是通过自定义 SQLite VFS 边读边解密的**，磁盘上没有明文 db。游戏启动期就 open
+  `files/Data/t/<hash>`(fd 复用) 读取解密到内存。固定头 b3d5 + stock sqlcipher 打不开 = 自定义
+  VFS/编译。**所以离线 stock sqlcipher 这条死路确认。**
+- **心契语音数据启动时不在内存**：启动期列读取 hook 只看到 ClientDbVersionInfoTable/服务器URL/
+  本地化串，**没有任何 Char/voice**。`SpineInteractionPointTable` 要**进入心契功能**才连对应 db、
+  才查。`RawDataManager.GetSpineInteractionPointTables(gid)` 在登录前/没进心契时对所有 gid(0~5000)
+  返回空。
+- **il2cpp 方法不能从 frida 主动调**：在游戏线程同步跑几千次 invoke → 卡白屏崩溃；在 frida 线程跑
+  → GC 不同步直接崩。**只有被动 read-hook 安全**（`Interceptor.attach` 读寄存器/返回值，不 invoke）。
+- **重打包客户端无法 Google 登录**（签名 SHA 变了，Google Sign-In/Play Integrity 校验失败）→ 进不去
+  游戏 → 心契数据永远不加载。**这是没有 root 时的死结。**
+
+**frida-gadget 注入流程（可复用，工具都在 `/tmp`，脚本在 `/tmp/il2build`）：**
+1. `brew install` 不用；用 pip venv `/tmp/fridaenv` 装 frida-tools/objection；frida 17.15.3。
+2. 合并 split APK：`java -jar /tmp/APKEditor.jar m -i <splitsdir> -o merged.apk`。
+3. 注入 gadget（**比 objection/apktool 稳**，适合 530MB 大包）：lief 给 `lib/arm64-v8a/libmain.so`
+   加 `DT_NEEDED libgadget.so`（`lib.add_library("libgadget.so")`），把 frida-gadget arm64 .so 放进
+   `lib/arm64-v8a/libgadget.so`。`extractNativeLibs=true` 所以普通压缩条目即可。
+4. gadget 配置 `lib/arm64-v8a/libgadget.config.so`(JSON)：`{"interaction":{"type":"script",
+   "path":"/sdcard/Android/data/<pkg>/files/hook.js","on_change":"reload"}}` → 脚本放外部目录，改脚本
+   只需 `adb push`(不重装)。注意：text 文件命名成 `.so` 才会被 installer 解压到 nativeLibraryDir。
+5. 删 `META-INF/*` → `zipalign -f -p 4` → `apksigner sign`(debug.ks) → `adb install`。
+6. 验证：logcat 出 `Frida: Listening on ... 27042` = gadget 加载成功；脚本 `console.log` 在 script 模式
+   **无客户端时会被丢弃**，要写文件才看得到（`new File(path,"a")`）。
+7. **frida 17 API 变更坑**：静态 `Module.findExportByName(null/name,...)` 被删，改用
+   `Process.getModuleByName("libil2cpp.so").findExportByName(name)` 实例方法。
+
+**frida-il2cpp-bridge（241 个 il2cpp_* 导出齐全，可用）**：`frida-compile` 需要编译失败的 frida 原生
+模块 → 改用 **esbuild** 打包：`npm i esbuild --ignore-scripts` →
+`node node_modules/esbuild/bin/esbuild agent.ts --bundle --format=iife -o hook.js`。bridge 能按真实类名
+resolve（`RawDataManager`/`SpineInteractionPointTable` 没混淆）。agent 在 `/tmp/il2build/agent.ts`。
+拿单例：`Il2Cpp.gc.choose(RDM)` 启动早期为空；可 hook `RawDataManager.GetSQLite`(RVA 0x5B18AE8) 存
+`args[0]`(=this)。列文本读取方法 RVA `0x6CD45C4`（被动 hook 它 dump 所有查询出的字符串，安全）。
+
+**下次怎么真正拿到（按可行性）：**
+1. **root 设备**最省事：frida-server hook（无需重打包→能正常 Google 登录→进心契→被动 hook 抓），
+   或直接从内部存储/内存拿解密 db。当前 Galaxy S25(SM-S931U1) bootloader 锁死不能 root。
+2. 非 Google 登录（pmang/邮箱/游客）若可用，重打包客户端也许能进心契，被动 hook(`/tmp/hook_safe.js`,
+   hook 0x6CD45C4 + 正则过滤 voice) 自动抓。
+3. 被动抓 VFS 解密输出：启动期(登录前)游戏就读 `Data/<hash>` 并解密；若能 hook 到自定义 VFS 的
+   解密输出/sqlite 页读取，可拿明文 db 页——但解密原语在无符号 native sqlcipher 里，需深挖。
+
+---
+
 ## 在新机器上接手
 
 ```bash
