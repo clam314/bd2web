@@ -524,8 +524,8 @@
     }
 
     // 动画的播放逻辑还原游戏内的结构：
-    //  - 身体动画（轨道0）：idle/loop 类循环播放；motion/cut_a 类一次性动作播完
-    //    自动衔接回循环待机，而不是僵住或孤立循环
+    //  - 身体动画（轨道0）：idle/loop/motion 类循环播放；其它一次性动作播完
+    //    自动衔接回循环待机，而不是僵住
     //  - _face* 是表情（轨道1），叠加在身体动画上同时播，可点击开/关
     //  - 立绘形态的动作用友好名（待机/对话/互动），技能动画形态编号为 动作1、动作2…
     function renderEntries(p, animBox) {
@@ -671,10 +671,43 @@
         overlaysStarted = true;
       };
       const resetOverlays = () => { overlaysStarted = false; };
+      let showcaseActive = false;
+      let showcaseBtn = null;
+      let showcaseIdleName = null;
+      let showcaseMotionName = null;
+
+      const stopShowcase = () => {
+        showcaseActive = false;
+        if (showcaseBtn) showcaseBtn.classList.remove("active");
+      };
+
+      const queueShowcase = (idleName, motionName) => {
+        if (!player || !showcaseActive) return;
+        resetOverlays();
+        player.animationState.data.defaultMix = 0.3;
+        player.setAnimation(idleName, false);
+        player.animationState.addAnimation(0, motionName, false, 0);
+        player.animationState.addAnimation(0, idleName, false, 0);
+        player.play();
+      };
+
+      const playShowcase = (btn, idleName, motionName) => {
+        if (!player) return;
+        try {
+          showcaseActive = true;
+          showcaseBtn = btn;
+          showcaseIdleName = idleName;
+          showcaseMotionName = motionName;
+          entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+          btn.classList.add("active");
+          queueShowcase(idleName, motionName);
+        } catch (e) { showError("切换展示失败：" + e.message); }
+      };
 
       const playSeq = (seq, btn, entryIdx) => {
         if (!player) return;
         try {
+          stopShowcase();
           if (currentPart === "cutscene") {
             // 单次播放、停在末帧（完整定格姿态）+ 显示对应背景。
             // 不循环：黎维塔等变身系角色 cut_B 前段是"变身瞬间"（身体散开/无衣，游戏靠粒子
@@ -689,13 +722,16 @@
             btn.classList.add("active");
             return;
           }
-          // 立绘：motion 一次性播完串回 idle 循环；idle 自身循环。
+          // 立绘：待机/互动循环；其它一次性动作播完串回 idle 循环。
           resetOverlays();
           player.animationState.data.defaultMix = 0.3;
-          player.setAnimation(seq[0], seq.length === 1 && isLoopName(seq[0]));
-          seq.slice(1).forEach((n, i) => {
-            player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
-          });
+          const isMotion = seq[0] === "motion";
+          player.setAnimation(seq[0], isMotion || (seq.length === 1 && isLoopName(seq[0])));
+          if (!isMotion) {
+            seq.slice(1).forEach((n, i) => {
+              player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
+            });
+          }
           player.play();
           entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
           btn.classList.add("active");
@@ -715,6 +751,19 @@
         b.onclick = () => playSeq(seq, b, idx);
         entryBox.appendChild(b);
       });
+
+      if (currentPart === "idle" && bodies.includes("motion")) {
+        const idleName = bodies.includes("idle") ? "idle" : baseLoop;
+        if (idleName) {
+          const b = document.createElement("button");
+          b.className = "item body-anim showcase-anim";
+          b.textContent = "展示";
+          b.title = `${idleName} → motion → ${idleName}`;
+          b.dataset.showcase = "1";
+          b.onclick = () => playShowcase(b, idleName, "motion");
+          entryBox.appendChild(b);
+        }
+      }
 
       // 表情只属于立绘模型（叠加在轨道1）。数量可能很多（有的角色 _face0.._face26 +
       // 各自的 _talk 说话版＝50 多个），平铺会把菜单撑爆。所以：可折叠分组 + 紧凑编号网格，
@@ -776,18 +825,31 @@
           const nm = entry.animation.name;
           scheduleOverlaysFor(nm);
 
+          if (showcaseActive && showcaseBtn) {
+            entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+            showcaseBtn.classList.add("active");
+            return;
+          }
           const btns = [...entryBox.querySelectorAll(".body-anim")];
           const heads = btns.filter(x => (x.dataset.seq || "").split("|")[0] === nm);
           btns.forEach(x => x.classList.toggle("active",
             heads.length ? heads.includes(x) : (x.dataset.seq || "").split("|").includes(nm)));
         },
+        complete: (entry) => {
+          if (!showcaseActive || entry.trackIndex !== 0 || !entry.animation) return;
+          if (entry.next) return;
+          if (showcaseIdleName && showcaseMotionName && entry.animation.name === showcaseIdleName)
+            setTimeout(() => queueShowcase(showcaseIdleName, showcaseMotionName), 0);
+        },
       });
 
-      // 默认播放：立绘＝待机，技能动画＝第一个动作
+      // 默认播放：立绘优先展示循环；没有互动展示时回退待机。技能动画＝第一个动作。
       const defIdx = currentPart === "idle"
         ? Math.max(0, entries.findIndex(seq => seq[0] === "idle"))
         : 0;
-      if (entries[defIdx]) playSeq(entries[defIdx], entryBox.querySelectorAll(".body-anim")[defIdx], defIdx);
+      const defaultShowcase = currentPart === "idle" && entryBox.querySelector(".showcase-anim");
+      if (defaultShowcase) defaultShowcase.click();
+      else if (entries[defIdx]) playSeq(entries[defIdx], entryBox.querySelectorAll(".body-anim")[defIdx], defIdx);
     }
 
     function buildTree(roster) {
@@ -831,6 +893,46 @@
       });
     }
 
+    function shuffle(list) {
+      const a = list.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    async function idleTextureExists(costume) {
+      try {
+        const png = costume.idle.atlas.replace(/\.atlas$/, ".png");
+        const r = await fetch(assetUrl(png), { method: "HEAD", cache: "force-cache" });
+        return r.ok;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    async function pickInitialCostume(roster) {
+      const chars = roster.characters
+        .map((char, charIdx) => ({
+          charIdx,
+          costumes: char.costumes
+            .map((costume, costumeIdx) => ({ costume, costumeIdx }))
+            .filter(x => x.costume.idle),
+        }))
+        .filter(x => x.costumes.length);
+      if (!chars.length) return null;
+      for (const charPick of shuffle(chars)) {
+        for (const costumePick of shuffle(charPick.costumes)) {
+          if (await idleTextureExists(costumePick.costume))
+            return { charIdx: charPick.charIdx, costumeIdx: costumePick.costumeIdx };
+        }
+      }
+      const charPick = shuffle(chars)[0];
+      const costumePick = shuffle(charPick.costumes)[0];
+      return { charIdx: charPick.charIdx, costumeIdx: costumePick.costumeIdx };
+    }
+
     // ── 搜索过滤 ──
     search.addEventListener("input", () => {
       const q = search.value.trim().toLowerCase();
@@ -845,7 +947,7 @@
         .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
       resolveAssetBase(),
     ])
-      .then(([roster]) => {
+      .then(async ([roster]) => {
         buildTree(roster);
         const n = roster.characters.length;
         // document.lastModified 来自服务器 Last-Modified 头＝页面部署时间，
@@ -853,12 +955,13 @@
         const built = new Date(document.lastModified).toLocaleString("zh-CN", { hour12: false });
         document.getElementById("footer").innerHTML =
           `${n} 个角色 · ${roster.source}<br>页面版本：${built} · 素材源：${cdnHostUsed}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
-        // 默认加载第一个角色的第一套服装
-        const firstChar = tree.querySelector(".char");
-        if (firstChar) {
-          firstChar.classList.add("expanded");
-          const firstCostume = firstChar.querySelector(".sub .item");
-          if (firstCostume) firstCostume.click();
+        // 默认随机加载一个角色的一套立绘服装。
+        const pick = await pickInitialCostume(roster);
+        const charEl = pick ? tree.querySelectorAll(".char")[pick.charIdx] : tree.querySelector(".char");
+        if (charEl) {
+          charEl.classList.add("expanded");
+          const costumeBtn = charEl.querySelectorAll(".sub .item")[pick ? pick.costumeIdx : 0];
+          if (costumeBtn) costumeBtn.click();
         }
       })
       .catch(e => showError("roster.json 加载失败（先运行 tools/sync.sh）：" + e.message));
