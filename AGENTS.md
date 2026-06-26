@@ -319,6 +319,41 @@ resolve（`RawDataManager`/`SpineInteractionPointTable` 没混淆）。agent 在
 3. 被动抓 VFS 解密输出：启动期(登录前)游戏就读 `Data/<hash>` 并解密；若能 hook 到自定义 VFS 的
    解密输出/sqlite 页读取，可拿明文 db 页——但解密原语在无符号 native sqlcipher 里，需深挖。
 
+### 心契语音提取流程研究（2026-06-26，"补齐动作型角色"的结论）
+
+想给 dating.html 的角色补语音(像莎拉/dating18 那样)。研究了整套 FMOD 提取流程,结论如下。
+
+**流程机制(可复用,工具在 `/private/tmp`,产物已验证):**
+- 19 个角色的 interaction 语音 bundle **全在设备 UnityCache**:`files/UnityCache/Shared/<bundleName>/
+  <hash>/__data`。bundleName 从 `bd2-device-soundmaster/current-file.json` 按 readableName
+  `common-interactionvoice_assets_bundleinteractionvoice/interaction_charXXXXXX.bytes` 查。
+  ⚠️ adb 在 while-read 循环里会吃 stdin,加 `</dev/null`。
+- 本机解包:`PYTHONPATH=/private/tmp/bd2-python-deps`,用 `tools/extract_dating_audio.py` 的
+  `extract_bank()`(UnityPy)取出 RIFF FEV,再从 FEV 找 `FSB5` magic 碾出 .fsb。`parse_fev()` 给
+  events/timelines/multiInstruments/waits/waves。vgmstream-cli 在 `/private/tmp/vgmstream-build-r2117`。
+- `extract_dating_audio.py` 要 `--bundle`+`--fsb`+`--event-paths`(GUID<TAB>event:/path)。
+
+**改进点(已确认):**
+- ✅ 免设备工具:bank/FSB 本机就能取;**情绪事件名可从 FEV 内嵌的 sample 名推导**
+  (`CharXXXXXX_Int_Smile1_1` 这些 wave 名在 FEV 里,`strings` 即可读)。
+- ❌ **mix(动画绑定)事件名 + GUID→path 全表** 只能靠设备端 `dump_fmod_strings`(ARM,需
+  app_process + FMOD 音频上下文;单跑报 `FMOD error 28` 输出初始化失败)。FEV 里**没有** mix 字符串;
+  Master.strings bank(`SoundMaster/EBD132...`)里也**没有** interaction 路径——它们是运行时解析的。
+  Codex 的 `app_process/`(`bd2.DumpFmod` + `libdumpfmod-events.so`,硬编码读
+  `/data/local/tmp/bd2sound/Master.strings`)才能产出 `charXXXXXX-paths.tsv`,目前只有莎拉的。
+
+**关键战略结论:**
+- 普查全部 19 个 bank:**全部只有情绪命名的 sample(Smile/Sigh/Pain/Shy/Surprise/Embarrass/Neutral…),
+  0 个 mix 命名**。莎拉(char000396/dating18)能做,是因为她的**赌场小游戏**有动画绑定的专属语音
+  (`Int_mix6_2_long`,见 `dating_audio.json` 的 24 个 `actions`),很可能**莎拉独有**。
+- 因此 **"动作型角色"实际≈只有莎拉(已完成)**;其余角色都是纯情绪型,被同一道墙挡着:
+  点→情绪的触发映射在加密的 `SpineInteractionPointTable` 里。
+- **语音 sample 本身全可提取**(情绪 wave 都在 bank 里),缺的只是"哪个互动点播哪个情绪"。
+  **那张表是总钥匙——拿到它一次性解锁所有情绪型角色,比逐个抠音频划算得多。**(回到上一节的解密/
+  frida 路线。)
+
+dating1(Nebris/char003303)在 `dating_audio.json` 里只有 sfx、voice 为空,正是因为它是情绪型。
+
 ---
 
 ## 在新机器上接手
