@@ -371,72 +371,100 @@
       return box;
     }
 
-    // 舞台铺满浏览器（立绘和技能动画都全屏自适应，spine 默认取景让角色居中铺满）。
+    const CUTSCENE_ASPECT = 16 / 9;
+
+    // 舞台布局：立绘铺满浏览器；技能动画固定 16:9 并居中。
     function layoutStage() {
-      for (const el of [stage, vignette])
-        el.style.left = el.style.right = el.style.top = el.style.bottom = "0";
+      if (currentPart === "cutscene") {
+        const aspect = CUTSCENE_ASPECT;
+        let w = window.innerWidth;
+        let h = w / aspect;
+        if (h > window.innerHeight) {
+          h = window.innerHeight;
+          w = h * aspect;
+        }
+        const left = (window.innerWidth - w) / 2;
+        const top = (window.innerHeight - h) / 2;
+        for (const el of [stage, vignette]) {
+          el.style.left = left + "px";
+          el.style.right = (window.innerWidth - left - w) + "px";
+          el.style.top = top + "px";
+          el.style.bottom = (window.innerHeight - top - h) + "px";
+        }
+      } else {
+        for (const el of [stage, vignette])
+          el.style.left = el.style.right = el.style.top = el.style.bottom = "0";
+      }
     }
     window.addEventListener("resize", layoutStage);
 
-    // 技能动画取景：用游戏 prefab 挖出的固定取景参数（不再猜）。
-    // 游戏 cutscene 场景里角色容器 "object" 的 RectTransform 决定取景：
-    //   object.localScale = 角色放大倍数；object.anchoredPosition = 在 Anchors 窗口里的偏移；
-    //   Anchors.sizeDelta = 取景窗口尺寸。
-    // spine viewport（世界坐标）= Anchors 窗口反算到 spine 单位：
-    //   height = AnchorsSize / objScale；center = -objPos / objScale（容器偏移反向 = 取景中心）。
-    // 数值按角色存 CUTSCENE_CAM[charId]（gen 脚本从 prefab 挖）；缺省回退一组通用值。
-    // 黎维塔奇迹玫瑰(003803)实测：object scale 1.283, pos(1,-605), Anchors 1600。
-    const CUTSCENE_CAM = {
-      "003803": { scale: 1.283, x: 1, y: -605, anchors: 1600 },
-    };
-    const CUTSCENE_CAM_DEFAULT = { scale: 1.283, x: 0, y: -605, anchors: 1600 };
-    function cutsceneZoomTo(p, charId, zoomScale) {
-      try {
-        const cam = CUTSCENE_CAM[charId] || CUTSCENE_CAM_DEFAULT;
-        const s = zoomScale || cam.scale;            // 运镜 scale（默认静态值；可传动态运镜值）
-        const ASPECT = 16 / 9;                        // 游戏 cutscene 是 16:9 横屏宽幅
-        const h = cam.anchors / s;                    // 取景框高（spine 世界单位）；scale 大→框小→放大
-        const w = h * ASPECT;
-        const cx = -cam.x / s;                        // 取景中心（容器偏移反向 / scale）
-        const cy = -cam.y / s;
-        const vp = p.config.viewport;
-        vp.x = cx - w / 2; vp.y = cy - h / 2; vp.width = w; vp.height = h;
-        ["padLeft","padRight","padTop","padBottom"].forEach(k => delete vp[k]);
-      } catch (_) {}
+    function median(nums) {
+      const a = nums.filter(Number.isFinite).sort((x, y) => x - y);
+      if (!a.length) return 0;
+      return a[Math.floor(a.length / 2)];
     }
 
-    // ───── cutscene 动态运镜（镜头推拉）─────
-    // 游戏 Timeline 用 object 的 scale 曲线做推拉（cutscene_shots 里那条之前误标 "LocalPos.z"，
-    // 实为 Transform scale——初值 1.236≈静态 1.283 可证）。scale 大→框小→角色放大（推近）。
-    // 每帧（config.frame）按当前 trackTime 映射到 timeline 时间采样 scale，更新取景。
-    let cutsceneShots = null;
-    fetch("./data/cutscene_shots.json?v=" + Date.now())
-      .then(r => r.ok ? r.json() : null)
-      .then(d => { if (d) cutsceneShots = d.characters || d; })
-      .catch(() => {});
-    function sampleTrack(keys, t) {
-      if (!keys || !keys.length) return null;
-      if (t <= keys[0][0]) return keys[0][1];
-      const last = keys[keys.length - 1];
-      if (t >= last[0]) return last[1];
-      for (let i = 1; i < keys.length; i++) {
-        if (keys[i][0] >= t) { const [t0,v0]=keys[i-1],[t1,v1]=keys[i]; return v0+(v1-v0)*(t-t0)/(t1-t0); }
-      }
-      return last[1];
+    function sampleAnimationBox(p, animation, time) {
+      const offset = { x: 0, y: 0, set(x, y) { this.x = x; this.y = y; } };
+      const size = { x: 0, y: 0, set(x, y) { this.x = x; this.y = y; } };
+      p.skeleton.setToSetupPose();
+      animation.apply(p.skeleton, time, time, false, [], 1, 0, 0);
+      p.skeleton.updateWorldTransform();
+      p.skeleton.getBounds(offset, size);
+      if (![offset.x, offset.y, size.x, size.y].every(Number.isFinite) || size.x <= 0 || size.y <= 0)
+        return null;
+      return { x: offset.x, y: offset.y, width: size.x, height: size.y };
     }
-    // 各动作在 skill timeline 的起始时刻（scale 曲线按 timeline 时间，动作 trackTime 要加此偏移）。
-    // 来自 SKILL Timeline 的 Spine Track clip 起播 wall time（挖自 APK）。
-    const ACTION_TL_OFFSET = { "003803": { cut_A: 0, cut_B: 3.367 } };
-    function cutsceneCameraFrame(p) {
-      if (currentPart !== "cutscene" || !p?.currentViewport || !p._camCharId) return;
-      const cam = CUTSCENE_CAM[p._camCharId]; if (!cam) return;
-      const tt = p.animationState?.tracks?.[0]?.trackTime || 0;
-      let s = cam.scale;
-      if (p._camScaleKeys) { const v = sampleTrack(p._camScaleKeys, (p._camOffset || 0) + tt); if (v) s = v; }
-      const ASPECT = 16/9, h = cam.anchors/s, w = h*ASPECT, cx = -cam.x/s, cy = -cam.y/s;
-      const vp = p.currentViewport;
-      vp.x = cx - w/2; vp.y = cy - h/2; vp.width = w; vp.height = h;
-      vp.padLeft = vp.padRight = vp.padTop = vp.padBottom = 0;
+
+    function buildCutsceneViewports(p, entries) {
+      try {
+        const boxesByName = {};
+        entries.map(seq => seq[0]).forEach(name => {
+          const anim = p.skeleton.data.findAnimation(name);
+          if (!anim) return;
+          const boxes = boxesByName[name] = [];
+          [0.2, 0.5, 0.8].forEach(r => {
+            const b = sampleAnimationBox(p, anim, anim.duration * r);
+            if (b) boxes.push(b);
+          });
+        });
+        const allBoxes = Object.values(boxesByName).flat();
+        if (!allBoxes.length) return;
+
+        // 用较小的一批主体样本决定统一缩放，避开远端特效/临时骨骼。
+        allBoxes.sort((a, b) => (a.width * a.height) - (b.width * b.height));
+        const keep = allBoxes.slice(0, Math.max(1, Math.ceil(allBoxes.length * 0.5)));
+        let w = median(keep.map(b => b.width)) * 1.2;
+        let h = median(keep.map(b => b.height)) * 1.2;
+        const aspect = CUTSCENE_ASPECT;
+        if (w / h < aspect) w = h * aspect;
+        else h = w / aspect;
+
+        p._cutsceneViewports = {};
+        Object.entries(boxesByName).forEach(([name, boxes]) => {
+          if (!boxes.length) return;
+          const cx = median(boxes.map(b => b.x + b.width / 2));
+          const top = median(boxes.map(b => b.y + b.height));
+          p._cutsceneViewports[name] = {
+            x: cx - w / 2,
+            y: top + h * 0.08 - h,
+            width: w,
+            height: h,
+            padLeft: 0,
+            padRight: 0,
+            padTop: 0,
+            padBottom: 0,
+          };
+        });
+        p.config.viewport.transitionTime = 0;
+        p.skeleton.setToSetupPose();
+      } catch(_) {}
+    }
+
+    function applyCutsceneViewport(p, name) {
+      const vp = p?._cutsceneViewports?.[name];
+      if (!vp) return;
+      Object.assign(p.config.viewport, vp);
       p.previousViewport = null;
     }
 
@@ -462,8 +490,6 @@
         alpha: true,
         premultipliedAlpha: false,   // 占位，success 里按 atlas pma 标记修正
         viewport: { padLeft: "5%", padRight: "5%", padTop: "5%", padBottom: "5%" },
-        // cutscene 每帧动态运镜（按 timeline scale 曲线推拉）；立绘不挂
-        frame: (p) => { if (part === "cutscene") cutsceneCameraFrame(p); },
         success: (p) => {
           try {
             const atlas = Object.entries(p.assetManager.assets).find(([k]) => k.endsWith(".atlas"))[1];
@@ -483,7 +509,7 @@
               }
             } catch(_) {}
           }
-          // 技能动画的放大取景在 playSeq 里按各动作"末帧 hero 定格"包围盒单独设（见 cutsceneZoomTo）。
+          // 技能动画在 renderEntries 里按主动作稳定样本锁定一次取景，动作切换不再自动缩放。
           // 背景改用 #stage 的 CSS background（全屏 cover，spine canvas 透明叠前面），
           // 不再用 spine 的 backgroundImage（那个只在 viewport 框内画，竖框会留左右黑边）。
           renderEntries(p, animBox);
@@ -628,6 +654,7 @@
       // 当前服装的 cutscene 背景列表（按动作 1/2 对应 bg[0]/bg[1]，缺则共用）
       const bgs = (currentPart === "cutscene" && Array.isArray(currentCostume.bg))
         ? currentCostume.bg : [];
+      if (currentPart === "cutscene") buildCutsceneViewports(p, entries);
 
       // overlay 调度（立绘 motion 偶有光效部件叠加；cutscene 已简化为单动作循环播不用）。
       let overlaysStarted = false;
@@ -649,15 +676,10 @@
         if (!player) return;
         try {
           if (currentPart === "cutscene") {
-            // 取景：固定参数（prefab 挖）+ 动态运镜（timeline scale 曲线）。
-            const charId = (currentCostume?.cutscene?.skeleton || "").match(/cutscene_char(\d{6})/)?.[1];
-            player._camCharId = charId;
-            player._camScaleKeys = cutsceneShots?.[charId]?.tracks?.["Anchors/object.LocalPos.z"] || null;
-            player._camOffset = ACTION_TL_OFFSET[charId]?.[seq[0]] || 0;
-            cutsceneZoomTo(player, charId);   // 初始框（setAnimation 时 setViewport 读 config.viewport）
             // 单次播放、停在末帧（完整定格姿态）+ 显示对应背景。
             // 不循环：黎维塔等变身系角色 cut_B 前段是"变身瞬间"（身体散开/无衣，游戏靠粒子
             // 光盖住，我们没有就露馅）——循环会反复闪回这个缺件段。单次播完停末帧最干净。
+            applyCutsceneViewport(player, seq[0]);
             player.setAnimation(seq[0], false);
             // 背景：#stage CSS background 全屏 cover（spine canvas 透明叠前面）
             const bgUrl = bgs.length ? "./" + (bgs[entryIdx] || bgs[0]) : "";
@@ -761,7 +783,7 @@
         },
       });
 
-      // 默认播放：立绘＝待机，技能动画＝第一个条目（完整演出）
+      // 默认播放：立绘＝待机，技能动画＝第一个动作
       const defIdx = currentPart === "idle"
         ? Math.max(0, entries.findIndex(seq => seq[0] === "idle"))
         : 0;
