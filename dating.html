@@ -567,6 +567,13 @@
       23: "道具23",
       24: "道具24",
     };
+    const TOOL_LABEL_OVERRIDES = {
+      illust_dating5: {
+        1: "笔",
+        2: "按摩棒",
+        3: "鞭子",
+      },
+    };
     const STAGE_TOOL_SKINS = {
       illust_dating7: { 1: { 0: "idle1_1", 7: "idle1_1", 4: "idle1_2" }, 2: { 0: "idle1_0" } },
       illust_dating9: { 1: { 0: "default", 8: "default", 9: "default" }, 2: { 0: "default", 9: "default", 10: "default" } },
@@ -687,7 +694,55 @@
         "2_30_0": { kind: "touch", label: "衣物上药", mix: ["mix2_30_1"] },
       },
       illust_dating5: {
-        "1_18_0": { kind: "touch", mix: ["mix1_18_1"], motions: ["motion1_18"], nextStage: "next" },
+        "1_13_0": {
+          kind: "touch",
+          label: "点绳子",
+          mix: ["mix1_13_1"],
+          setFlag: "erisRopePulled",
+        },
+        "1_18_0": {
+          kind: "touch",
+          label: "点击锁",
+          mix: ["mix1_18_1"],
+          motions: ["motion1_18"],
+          requires: ["erisKeyTaken"],
+          blockedMessage: "按教程顺序：先点绳子，再点大腿钥匙，最后点锁。",
+          nextStage: "next",
+        },
+        "1_15_0": {
+          kind: "touch",
+          label: "取得大腿钥匙",
+          mix: ["mix1_15_1"],
+          requires: ["erisRopePulled"],
+          blockedMessage: "按教程顺序：先点绳子，再点大腿钥匙。",
+          setFlag: "erisKeyTaken",
+        },
+        "2_1_0": { kind: "drag", label: "手·拉衣带", mix: ["mix2_1_1", "mix2_1_2"] },
+        "2_2_0": { kind: "drag", label: "手·拉绳子", mix: ["mix2_2_1", "mix2_2_2"] },
+        "2_3_0": { kind: "drag", label: "手·拉绳子", mix: ["mix2_3_1", "mix2_3_2"] },
+        "2_4_0": { kind: "drag", label: "手·拉衣带", mix: ["mix2_4_1", "mix2_4_2"] },
+        "2_17_1": { kind: "touch", label: "笔·大腿", mix: ["mix2_17_1"] },
+        "2_18_1": { kind: "touch", label: "笔·大腿爱心", mix: ["mix2_18_1"] },
+        "2_19_1": { kind: "touch", label: "笔·大腿爱心", mix: ["mix2_19_1"] },
+        "2_20_1": { kind: "touch", label: "笔·绳边", mix: ["mix2_20_1"] },
+        "2_21_1": { kind: "touch", label: "笔·绳边", mix: ["mix2_21_1"] },
+        "2_22_2": { kind: "touch", label: "按摩棒·腿侧", mix: ["mix2_22_1"] },
+        "2_23_2": { kind: "touch", label: "按摩棒·腿侧", mix: ["mix2_23_1"] },
+        "2_24_2": { kind: "touch", label: "按摩棒·腿根", mix: ["mix2_24_1"] },
+        "2_25_2": { kind: "touch", label: "按摩棒·腿根", mix: ["mix2_25_1"] },
+        "2_26_3": { kind: "touch", label: "鞭子·腿侧", mix: ["mix2_26_1"] },
+        "2_27_3": { kind: "touch", label: "鞭子·腿侧", mix: ["mix2_27_1"] },
+        "2_28_3": {
+          kind: "touch",
+          label: "鞭子连击",
+          mix: ["mix2_28_1", "mix2_28_2", "mix2_28_3", "mix2_28_4", "mix2_28_5", "mix2_28_6", "mix2_28_7", "mix2_28_8", "mix2_28_9", "mix2_28_10"],
+          clickMax: 11,
+          progressiveMix: true,
+        },
+        "2_29_3": { kind: "touch", label: "鞭子·绳边", mix: ["mix2_29_1"] },
+        "2_30_3": { kind: "touch", label: "鞭子·腿根", mix: ["mix2_30_1"] },
+        "2_31_2": { kind: "touch", label: "按摩棒·腿根", mix: ["mix2_31_1"] },
+        "2_32_1": { kind: "touch", label: "笔·腿根", mix: ["mix2_32_1"] },
       },
       illust_dating6: {
         "1_6_0": { kind: "drag", mix: ["mix1_6_1", "mix1_6_2"], motions: ["motion1_6"], nextStage: "next" },
@@ -802,6 +857,8 @@
         "7_13_14": { kind: "gyro", label: "左右倾斜切回二阶段桌下视角", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
       },
     };
+    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
+    const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
         "1_1_0": { x: 645.7, y: 1062.3, width: 313.4, height: 313.5, shape: 0, source: "point1_1_drag [Override]", space: "skeleton" },
@@ -1418,7 +1475,7 @@
     }
 
     function prefabActionsFor(datingId) {
-      if (datingId === "illust_dating4") {
+      if (MERGED_PREFAB_ACTION_IDS.has(datingId)) {
         return { ...(datingActions[datingId] || {}), ...(PREFAB_POINT_ACTIONS[datingId] || {}) };
       }
       return datingActions[datingId] || PREFAB_POINT_ACTIONS[datingId] || null;
@@ -1791,7 +1848,7 @@
       resetCardGame(false);
       cancelLongPress(false);
       cancelGyroDrag();
-      if (currentEntry?.id === "illust_dating4" && stageNo === 1) {
+      if (STATEFUL_INTERACTION_IDS.has(currentEntry?.id) && stageNo === 1) {
         interactionState = {};
       }
       currentStage = stageNo;
@@ -1874,16 +1931,17 @@
       try {
         if (!canPlayAction(action)) return;
         clearError();
-        const targetStage = resolveActionNextStage(action);
+        const playbackAction = prepareActionPlayback(action, pointKey);
+        const targetStage = resolveActionNextStage(playbackAction);
         restoringIdle = false;
         advanceTargetStage = targetStage;
         advanceLastMotion = null;
         activeInteractionVoiceKey = pointKey;
-        activeInteractionMotionNames = new Set(action.motions || []);
+        activeInteractionMotionNames = new Set(playbackAction.motions || []);
         clearTimeout(advanceTimer);
         advanceTimer = null;
         player.animationState.data.defaultMix = 0.2;
-        const sequence = prefabActionSequence(action);
+        const sequence = prefabActionSequence(playbackAction);
         if (!sequence.length) {
           showError("这个 prefab 互动没有可播放的 Spine 动画。");
           return;
@@ -1895,7 +1953,7 @@
         player.setAnimation(sequence[0], false);
         sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
         player.play();
-        applyActionState(action);
+        applyActionState(playbackAction);
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
         if (btn) btn.classList.add("active");
         if (advanceTargetStage) {
@@ -1914,6 +1972,22 @@
         ? (action.motions || []).slice(destinationIndex, destinationIndex + 1)
         : (action.motions || []);
       return [...(action.mix || []), ...motions].filter(animationExists);
+    }
+
+    function prepareActionPlayback(action, pointKey) {
+      if (!action.progressiveMix || !action.clickMax) return action;
+      const progressKey = action.progressKey || `${currentEntry?.id || "entry"}:${pointKey || action.label || "action"}:progress`;
+      const previous = interactionState[progressKey] || 0;
+      const next = Math.min(previous + 1, action.clickMax);
+      const mixIndex = Math.min(next - 1, Math.max(0, (action.mix || []).length - 1));
+      interactionState = { ...interactionState, [progressKey]: next };
+      return {
+        ...action,
+        mix: action.mix?.length ? [action.mix[mixIndex]] : action.mix,
+        motions: next >= action.clickMax ? action.motions : [],
+        nextStage: next >= action.clickMax ? action.nextStage : null,
+        setFlag: next >= action.clickMax ? action.setFlag : null,
+      };
     }
 
     function canPlayAction(action) {
@@ -2519,6 +2593,8 @@
     }
 
     function toolName(toolId) {
+      const entryLabels = TOOL_LABEL_OVERRIDES[currentEntry?.id];
+      if (entryLabels?.[toolId]) return entryLabels[toolId];
       return TOOL_LABELS[toolId] || `道具${toolId}`;
     }
 
