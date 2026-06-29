@@ -452,6 +452,32 @@ Nebris(char003303 / `illust_dating1`) 接入页面：
 `SoundVoiceName`/`SoundMotionVoiceName` 映射到 point-based `interactionVoices`。不要再把情绪 voice
 绑定到 `actions[animationName]`；那条路线已被用户实测证明会错位。
 
+### dating 编号 ↔ charId 映射调查（2026-06-29，关键认知:其实是两套系统）
+
+dating.html 的 `illust_dating1..19` 把游戏里**两套不同系统**混在一个编号序列里,这决定了能否对到 charId:
+
+- **心契系统 = dating1-14(已自动、未来自动覆盖）**：在 `SpineInteractionPointTable`/`DatingCostumeTable`/
+  `DatingEpisodeTable` 里,gid==dating 编号,且数据**自带 charId**(语音路径 `Common/CharXXXXXX/...`、
+  episode 行 `TimelineName=Novel_CharXXXXXX`、`VoiceSoundBankPath=.../Local_CharXXXXXX`)。**以后新出的心契
+  角色就是 gid=15,16…,重跑 `capture_interaction_agent.ts` bulk dump 即自动带 charId,无需人工。**
+- **高级服装/客串系统 = dating15-19(及未来同类）**：另一套(付费服装/限时客串特殊立绘)。spine 资产只叫
+  `illust_datingN`、**完全不带 charId**;`DatingCostumeTableList` 只有 14、`DatingEpisodeTableList` 只有
+  g1-14、catalog 里 `Illust_datingN.prefab` 旁边也没有 charId。**游戏不通过 dating 表登记它们**,
+  illust 编号纯是资源包命名顺序。
+  - 已确认成员:dating15/16/17=客串(Refithea/Olivier/Palette,数据已删,见上文)、dating18=莎拉
+    (char000396,动作型,有 `interaction_char000396` 语音)、dating19=Granhildr 新服装(**推测
+    char067604**:0676 系新变体,有 cutscene/myroom 但**无 `interaction_char067604` 语音包**→当前无互动语音可配)。
+
+**dump 过的表**(`tools/il2cpp-re/dating_master_tables_raw.log`,frida gc.choose 拿 RawDataManager 单例后调):
+`GetDatingDefaultTable`(仅配置 DatingApMax=3)、`GetDatingCostumeTableList`(14)、
+`GetDatingEpisodeTableList`(g1-14,每 episode 带 charId/TimelineName/voice bank 路径)。
+
+**高级服装那批要根治 charId 映射的可选路线**(未定,等用户选)：
+A. 运行时 hook 游戏"按服装加载互动立绘(Illust_datingN.prefab)"的函数,在游戏内打开时抓
+   `Illust_datingN ↔ charId/costumeId`(对任意现/未来高级服装通用,需进游戏触发);
+B. 继续挖设计库的服装/skin 静态表里 `costumeId → 互动立绘名` 的链接(还没定位到);
+C. 人工认(高级服装一年就几个,ROI 最高)。
+
 ---
 
 ## 在新机器上接手
