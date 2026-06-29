@@ -1852,6 +1852,8 @@
         interactionState = {};
       }
       currentStage = stageNo;
+      const defaultToolId = defaultStageToolId(stageNo);
+      if (defaultToolId !== null) selectedToolId = defaultToolId;
       clearTimeout(advanceTimer);
       advanceTimer = null;
       renderStageControls();
@@ -2050,6 +2052,11 @@
     function nextStageId() {
       const idx = stageModel.stageIds.indexOf(currentStage);
       return idx >= 0 ? stageModel.stageIds[idx + 1] : null;
+    }
+
+    function defaultStageToolId(stageNo) {
+      if (currentEntry?.id === "illust_dating5" && stageNo === 2) return 0;
+      return null;
     }
 
     function uniq(values) {
