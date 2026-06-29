@@ -1,0 +1,33 @@
+=== READY (explore via PointTables trigger) 进 dating1 心契触发 ===
+=== COSTUME count=14 ===
+COSTUME CostumeId=3303  EpisodeGroupId=1  Id=1  CostumeDesignId=3303
+COSTUME CostumeId=3402  EpisodeGroupId=2  Id=2  CostumeDesignId=3402
+COSTUME CostumeId=3203  EpisodeGroupId=3  Id=3  CostumeDesignId=3203
+COSTUME CostumeId=1106  EpisodeGroupId=4  Id=4  CostumeDesignId=1106
+COSTUME CostumeId=60802  EpisodeGroupId=5  Id=5  CostumeDesignId=60802
+COSTUME CostumeId=67603  EpisodeGroupId=6  Id=6  CostumeDesignId=67603
+COSTUME CostumeId=1006  EpisodeGroupId=7  Id=7  CostumeDesignId=1006
+COSTUME CostumeId=66403  EpisodeGroupId=8  Id=8  CostumeDesignId=66403
+COSTUME CostumeId=706  EpisodeGroupId=9  Id=9  CostumeDesignId=706
+COSTUME CostumeId=4102  EpisodeGroupId=10  Id=10  CostumeDesignId=4102
+COSTUME CostumeId=67004  EpisodeGroupId=11  Id=11  CostumeDesignId=67004
+COSTUME CostumeId=3604  EpisodeGroupId=12  Id=12  CostumeDesignId=3604
+COSTUME CostumeId=4202  EpisodeGroupId=13  Id=13  CostumeDesignId=4202
+COSTUME CostumeId=67104  EpisodeGroupId=14  Id=14  CostumeDesignId=67104
+=== SpineInteractionTables bulk 1..60 ===
+SPINE gid=1 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=1  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Night_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V04_Interaction  SoundVoiceBankName=Interaction_Char003303  UnlockDatingId=10  UnlockDatinggroupId=1  IsIgnoreUnlockDating=false
+SPINE gid=2 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=2  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V04_Interaction  SoundVoiceBankName=Interaction_Char003402  UnlockDatingId=10  UnlockDatinggroupId=2  IsIgnoreUnlockDating=false
+SPINE gid=3 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=3  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V05  SoundVoiceBankName=Interaction_Char003203  UnlockDatingId=10  UnlockDatinggroupId=3  IsIgnoreUnlockDating=false
+SPINE gid=4 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=4  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Night_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V04_Interaction  SoundVoiceBankName=Interaction_Char001106  UnlockDatingId=10  UnlockDatinggroupId=4  IsIgnoreUnlockDating=false
+SPINE gid=5 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=5  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V05  SoundVoiceBankName=Interaction_Char060802  UnlockDatingId=10  UnlockDatinggroupId=5  IsIgnoreUnlockDating=false
+SPINE gid=6 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=6  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V05  SoundVoiceBankName=Interaction_Char067603  UnlockDatingId=10  UnlockDatinggroupId=6  IsIgnoreUnlockDating=false
+SPINE gid=7 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=7  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V05  SoundVoiceBankName=Interaction_Char001006  UnlockDatingId=10  UnlockDatinggroupId=7  IsIgnoreUnlockDating=false
+SPINE gid=8 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=8  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V05  SoundVoiceBankName=Interaction_Char066403  UnlockDatingId=10  UnlockDatinggroupId=8  IsIgnoreUnlockDating=false
+SPINE gid=9 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=9  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V05  SoundVoiceBankName=Interaction_Char000706  UnlockDatingId=10  UnlockDatinggroupId=9  IsIgnoreUnlockDating=false
+SPINE gid=10 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=10  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V05  SoundVoiceBankName=Interaction_Char004102  UnlockDatingId=10  UnlockDatinggroupId=10  IsIgnoreUnlockDating=false
+SPINE gid=11 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=11  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V06_Sad  SoundVoiceBankName=Interaction_Char067004  UnlockDatingId=10  UnlockDatinggroupId=11  IsIgnoreUnlockDating=false
+SPINE gid=12 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=12  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V04_Interaction  SoundVoiceBankName=Interaction_Char003604  UnlockDatingId=10  UnlockDatinggroupId=12  IsIgnoreUnlockDating=false
+SPINE gid=13 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=13  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V04_Interaction  SoundVoiceBankName=Interaction_Char004202  UnlockDatingId=10  UnlockDatinggroupId=13  IsIgnoreUnlockDating=false
+SPINE gid=14 HasSoundVoiceJP=0  HasSoundVoiceKR=1  Id=14  SoundAmbName=event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01  SoundBGMName=event:/BGM/Visual_Novel/BGM_V04_Interaction  SoundVoiceBankName=Interaction_Char067104  UnlockDatingId=10  UnlockDatinggroupId=14  IsIgnoreUnlockDating=false
+=== SpineInteractionTables DONE ===
+=== EXPLORE DONE ===

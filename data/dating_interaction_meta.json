@@ -1,0 +1,257 @@
+{
+  "note": "情绪型心契每角色互动元数据 SpineInteractionTable(gid 1-14)+ DatingCostumeTable。frida dump,BD2 apk_20260624",
+  "characters": {
+    "char003303": {
+      "gid": 1,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 1,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Night_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V04_Interaction",
+      "SoundVoiceBankName": "Interaction_Char003303",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 1,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 3303,
+        "EpisodeGroupId": 1,
+        "Id": 1,
+        "CostumeDesignId": 3303
+      }
+    },
+    "char003402": {
+      "gid": 2,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 2,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V04_Interaction",
+      "SoundVoiceBankName": "Interaction_Char003402",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 2,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 3402,
+        "EpisodeGroupId": 2,
+        "Id": 2,
+        "CostumeDesignId": 3402
+      }
+    },
+    "char003203": {
+      "gid": 3,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 3,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V05",
+      "SoundVoiceBankName": "Interaction_Char003203",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 3,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 3203,
+        "EpisodeGroupId": 3,
+        "Id": 3,
+        "CostumeDesignId": 3203
+      }
+    },
+    "char001106": {
+      "gid": 4,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 4,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Night_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V04_Interaction",
+      "SoundVoiceBankName": "Interaction_Char001106",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 4,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 1106,
+        "EpisodeGroupId": 4,
+        "Id": 4,
+        "CostumeDesignId": 1106
+      }
+    },
+    "char060802": {
+      "gid": 5,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 5,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V05",
+      "SoundVoiceBankName": "Interaction_Char060802",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 5,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 60802,
+        "EpisodeGroupId": 5,
+        "Id": 5,
+        "CostumeDesignId": 60802
+      }
+    },
+    "char067603": {
+      "gid": 6,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 6,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V05",
+      "SoundVoiceBankName": "Interaction_Char067603",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 6,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 67603,
+        "EpisodeGroupId": 6,
+        "Id": 6,
+        "CostumeDesignId": 67603
+      }
+    },
+    "char001006": {
+      "gid": 7,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 7,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V05",
+      "SoundVoiceBankName": "Interaction_Char001006",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 7,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 1006,
+        "EpisodeGroupId": 7,
+        "Id": 7,
+        "CostumeDesignId": 1006
+      }
+    },
+    "char066403": {
+      "gid": 8,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 8,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V05",
+      "SoundVoiceBankName": "Interaction_Char066403",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 8,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 66403,
+        "EpisodeGroupId": 8,
+        "Id": 8,
+        "CostumeDesignId": 66403
+      }
+    },
+    "char000706": {
+      "gid": 9,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 9,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V05",
+      "SoundVoiceBankName": "Interaction_Char000706",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 9,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 706,
+        "EpisodeGroupId": 9,
+        "Id": 9,
+        "CostumeDesignId": 706
+      }
+    },
+    "char004102": {
+      "gid": 10,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 10,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V05",
+      "SoundVoiceBankName": "Interaction_Char004102",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 10,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 4102,
+        "EpisodeGroupId": 10,
+        "Id": 10,
+        "CostumeDesignId": 4102
+      }
+    },
+    "char067004": {
+      "gid": 11,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 11,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V06_Sad",
+      "SoundVoiceBankName": "Interaction_Char067004",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 11,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 67004,
+        "EpisodeGroupId": 11,
+        "Id": 11,
+        "CostumeDesignId": 67004
+      }
+    },
+    "char003604": {
+      "gid": 12,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 12,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V04_Interaction",
+      "SoundVoiceBankName": "Interaction_Char003604",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 12,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 3604,
+        "EpisodeGroupId": 12,
+        "Id": 12,
+        "CostumeDesignId": 3604
+      }
+    },
+    "char004202": {
+      "gid": 13,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 13,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V04_Interaction",
+      "SoundVoiceBankName": "Interaction_Char004202",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 13,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 4202,
+        "EpisodeGroupId": 13,
+        "Id": 13,
+        "CostumeDesignId": 4202
+      }
+    },
+    "char067104": {
+      "gid": 14,
+      "HasSoundVoiceJP": 0,
+      "HasSoundVoiceKR": 1,
+      "Id": 14,
+      "SoundAmbName": "event:/Ambiences/Visual_Novel/AMB_P1007_Interior_01",
+      "SoundBGMName": "event:/BGM/Visual_Novel/BGM_V04_Interaction",
+      "SoundVoiceBankName": "Interaction_Char067104",
+      "UnlockDatingId": 10,
+      "UnlockDatinggroupId": 14,
+      "IsIgnoreUnlockDating": false,
+      "costume": {
+        "CostumeId": 67104,
+        "EpisodeGroupId": 14,
+        "Id": 14,
+        "CostumeDesignId": 67104
+      }
+    }
+  }
+}

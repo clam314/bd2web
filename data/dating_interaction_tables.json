@@ -1,0 +1,4126 @@
+{
+  "note": "心契(情绪型)互动点→语音映射母表全量。frida-il2cpp-bridge bulk 调 RawDataManager.GetSpineInteractionPointTables(gid) gid=1..800",
+  "source": "BD2 客户端 apk_20260624, S25 原生 arm",
+  "characters": {
+    "char003303": {
+      "gid": 1,
+      "interactionGroupId": 1,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1",
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ],
+            "motion": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise2"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Negative1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise2"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ],
+            "motion": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise2"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Excitement2"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Smile1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Sigh1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy2"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Joy2"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char003303/Interaction/Char003303_Int_Surprise1"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 18,
+        "2": 22,
+        "3": 24
+      }
+    },
+    "char003402": {
+      "gid": 2,
+      "interactionGroupId": 2,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1",
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1",
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1",
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1",
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "18": {
+            "voice": []
+          },
+          "19": {
+            "voice": [],
+            "motion": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise2"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise2"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "15": {
+            "voice": []
+          },
+          "16": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Neutral1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "18": {
+            "voice": []
+          },
+          "19": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Smile1"
+            ]
+          },
+          "22": {
+            "voice": [],
+            "motion": [
+              "Common/Char003402/Interaction/Char003402_Int_Surprise2"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "8": {
+            "voice": []
+          },
+          "9": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement2"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Sigh1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement2"
+            ]
+          },
+          "17": {
+            "voice": []
+          },
+          "18": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char003402/Interaction/Char003402_Int_Excitement2"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 19,
+        "2": 22,
+        "3": 19
+      }
+    },
+    "char003203": {
+      "gid": 3,
+      "interactionGroupId": 3,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": []
+          },
+          "2": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "3": {
+            "voice": []
+          },
+          "4": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1",
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Negative1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Negative1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Negative1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1",
+              "Common/Char003203/Interaction/Char003203_Int_Negative1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1",
+              "Common/Char003203/Interaction/Char003203_Int_Negative1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ],
+            "motion": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Excitement1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Excitement1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Excitement1",
+              "Common/Char003203/Interaction/Char003203_Int_Sigh1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1",
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1",
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Sigh1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Special1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1",
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1",
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Surprise1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Excitement1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Excitement1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char003203/Interaction/Char003203_Int_Neutral1"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 20,
+        "2": 19
+      }
+    },
+    "char001106": {
+      "gid": 4,
+      "interactionGroupId": 4,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Smile1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Neutral1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Surprise1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Smile2"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Excitement1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Surprise1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Excitement1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Excitement1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Neutral1",
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Neutral1",
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Smile2"
+            ]
+          },
+          "14": {
+            "voice": []
+          },
+          "15": {
+            "voice": []
+          },
+          "16": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Sigh1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Sigh1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Surprise1"
+            ]
+          },
+          "19": {
+            "voice": []
+          },
+          "20": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Sigh1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Sigh1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Surprise1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Neutral1",
+              "Common/Char001106/Interaction/Char001106_Int_Smile1"
+            ]
+          },
+          "24": {
+            "voice": []
+          },
+          "25": {
+            "voice": []
+          },
+          "26": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "28": {
+            "voice": [],
+            "motion": [
+              "Common/Char001106/Interaction/Char001106_Int_Special1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Smile1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Neutral1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Excitement1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Smile2"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Smile2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "16": {
+            "voice": []
+          },
+          "17": {
+            "voice": []
+          },
+          "18": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Pain1"
+            ]
+          },
+          "23": {
+            "voice": []
+          },
+          "24": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "25": {
+            "voice": []
+          },
+          "26": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Surprise1"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char001106/Interaction/Char001106_Int_Shy2"
+            ]
+          },
+          "29": {
+            "voice": []
+          },
+          "30": {
+            "voice": []
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 27,
+        "2": 29
+      }
+    },
+    "char060802": {
+      "gid": 5,
+      "interactionGroupId": 5,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Angry1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Smile1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Angry2"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement1",
+              "Common/Char060802/Interaction/Char060802_Int_Surprise1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Smile2"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Angry2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Angry2"
+            ]
+          },
+          "13": {
+            "voice": []
+          },
+          "14": {
+            "voice": []
+          },
+          "15": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Surprise1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement1"
+            ]
+          },
+          "18": {
+            "voice": [],
+            "motion": [
+              "Common/Char060802/Interaction/Char060802_Int_Surprise1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Pain1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Surprise2"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement2"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement2"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement3"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy2"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy2"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy3"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement3",
+              "Common/Char060802/Interaction/Char060802_Int_Excitement2"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Neutral1"
+            ]
+          },
+          "12": {
+            "voice": []
+          },
+          "13": {
+            "voice": []
+          },
+          "14": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Neutral1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Neutral1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement2"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Smile3"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy2"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy2"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Shy3"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Smile3"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement2"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement2"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Surprise2"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement3"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Pain1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Pain1"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Excitement2",
+              "Common/Char060802/Interaction/Char060802_Int_Pain1"
+            ]
+          },
+          "29": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Surprise2"
+            ]
+          },
+          "30": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Special1"
+            ]
+          },
+          "31": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Special2"
+            ]
+          },
+          "32": {
+            "voice": [
+              "Common/Char060802/Interaction/Char060802_Int_Special3"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 18,
+        "2": 32
+      }
+    },
+    "char067603": {
+      "gid": 6,
+      "interactionGroupId": 6,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Neutral1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Neutral1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Annoy1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Smile1"
+            ]
+          },
+          "6": {
+            "voice": [],
+            "motion": [
+              "Common/Char067603/Interaction/Char067603_Int_Surprise1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": []
+          },
+          "2": {
+            "voice": []
+          },
+          "3": {
+            "voice": [],
+            "motion": [
+              "Common/Char067603/Interaction/Char067603_Int_Sigh1"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": []
+          },
+          "2": {
+            "voice": []
+          },
+          "3": {
+            "voice": [],
+            "motion": [
+              "Common/Char067603/Interaction/Char067603_Int_Shy2"
+            ]
+          }
+        },
+        "4": {
+          "1": {
+            "voice": []
+          },
+          "2": {
+            "voice": [],
+            "motion": [
+              "Common/Char067603/Interaction/Char067603_Int_Neutral1"
+            ]
+          }
+        },
+        "5": {
+          "1": {
+            "voice": []
+          },
+          "2": {
+            "voice": [],
+            "motion": [
+              "Common/Char067603/Interaction/Char067603_Int_Surprise2"
+            ]
+          }
+        },
+        "6": {
+          "1": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Sigh2"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Sigh3"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Sigh3"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Special1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Annoy2"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Special2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Special3"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement2"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Shy2"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Special4"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Smile1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Smile2"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Smile1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Smile2"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement2"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Special5"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement2"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Special5"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement2"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement1"
+            ]
+          },
+          "29": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Sigh2"
+            ]
+          },
+          "30": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement3"
+            ]
+          },
+          "31": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Sigh2"
+            ]
+          },
+          "32": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Excitement3"
+            ]
+          },
+          "33": {
+            "voice": [
+              "Common/Char067603/Interaction/Char067603_Int_Special6"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 6,
+        "2": 3,
+        "3": 3,
+        "4": 2,
+        "5": 2,
+        "6": 33
+      }
+    },
+    "char001006": {
+      "gid": 7,
+      "interactionGroupId": 7,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Smile2"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Sigh1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Shy1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Smile1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Smile1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_OilSpread1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_OilSpread1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_OilSpread1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_OilSpread1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_OilSpread2"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_OilSpread2"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass2"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Neutral1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Smile1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Pain3"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Pain3"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Pain3"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Pain2"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass2"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Annoy1"
+            ]
+          },
+          "31": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "32": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "33": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "34": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass2"
+            ]
+          },
+          "35": {
+            "voice": [],
+            "motion": [
+              "Common/Char001006/Interaction/Char001006_Int_Motion1_35"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [],
+            "motion": [
+              "Common/Char001006/Interaction/Char001006_Int_Motion2_1"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Neutral1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Shy2"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Shy2"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Shy2"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Shy2"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Satisfy1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Smile2"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Smile2"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass2"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Embarrass2"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Shy1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Surprise2"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Pain3"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Mix3_25_1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char001006/Interaction/Char001006_Int_Surprise2"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 32,
+        "2": 1,
+        "3": 26
+      }
+    },
+    "char066403": {
+      "gid": 8,
+      "interactionGroupId": 8,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Surprise1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Sigh1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass2",
+              "Common/Char066403/Interaction/Char066403_Int_Sigh1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Smile1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Surprise1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Surprise1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1",
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1",
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "26": {
+            "voice": [],
+            "motion": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1",
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1",
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "2": {
+            "voice": [],
+            "motion": [
+              "Common/Char066403/Interaction/Char066403_Int_Surprise1"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Touch1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Touch1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy3"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy3"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy2"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Mix3_15_1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1",
+              "Common/Char066403/Interaction/Char066403_Int_Embarrass1",
+              "Common/Char066403/Interaction/Char066403_Int_Sigh1",
+              "Common/Char066403/Interaction/Char066403_Int_Surprise1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy3"
+            ]
+          },
+          "23": {
+            "voice": []
+          },
+          "24": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "26": {
+            "voice": []
+          },
+          "27": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Neutral1"
+            ]
+          },
+          "29": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          },
+          "30": {
+            "voice": [
+              "Common/Char066403/Interaction/Char066403_Int_Shy1"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 26,
+        "2": 2,
+        "3": 30
+      }
+    },
+    "char000706": {
+      "gid": 9,
+      "interactionGroupId": 9,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Satisfy1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Satisfy1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Neutral1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Neutral1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Neutral1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Neutral1"
+            ]
+          },
+          "9": {
+            "voice": [],
+            "motion": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [],
+            "motion": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [],
+            "motion": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Touch1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile2"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile2"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Embarrass1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Touch1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Neutral1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Touch1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Touch1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Satisfy1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Smile2"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Embarrass2"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Shy1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Embarrass2"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Special1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Satisfy1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Satisfy1"
+            ]
+          },
+          "22": {
+            "voice": []
+          }
+        },
+        "4": {
+          "1": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Satisfy1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Satisfy1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Embarrass1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Embarrass1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Shy2"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Neutral1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise2"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Shy1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Shy1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Sigh1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Pain1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Pain1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Shy1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Pain2"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise2"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Embarrass2"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Embarrass2"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise2"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Special2"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char000706/Interaction/Char000706_Int_Surprise1"
+            ]
+          },
+          "24": {
+            "voice": []
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 9,
+        "2": 2,
+        "3": 22,
+        "4": 24
+      }
+    },
+    "char004102": {
+      "gid": 10,
+      "interactionGroupId": 10,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Sleep1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Sleep1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Sleep2"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "5": {
+            "voice": []
+          },
+          "6": {
+            "voice": []
+          },
+          "7": {
+            "voice": []
+          },
+          "8": {
+            "voice": []
+          },
+          "9": {
+            "voice": []
+          },
+          "10": {
+            "voice": [],
+            "motion": [
+              "Common/Char004102/Interaction/Char004102_Int_Motion1_10"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Touch1",
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile2"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Shy2"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Shy2"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Shy2"
+            ]
+          },
+          "9": {
+            "voice": [],
+            "motion": [
+              "Common/Char004102/Interaction/Char004102_Int_Motion2_9"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Touch2",
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1",
+              "Common/Char004102/Interaction/Char004102_Int_Shy2"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile2"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Special1",
+              "Common/Char004102/Interaction/Char004102_Int_Special2",
+              "Common/Char004102/Interaction/Char004102_Int_Special3"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Special1",
+              "Common/Char004102/Interaction/Char004102_Int_Special2",
+              "Common/Char004102/Interaction/Char004102_Int_Special3"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Special1",
+              "Common/Char004102/Interaction/Char004102_Int_Special2",
+              "Common/Char004102/Interaction/Char004102_Int_Special3"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Mix3_7_1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Shy4"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Shy2"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Mix3_10_1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile4"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile3"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Annoy1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile4"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1",
+              "Common/Char004102/Interaction/Char004102_Int_Shy1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Mix3_18_1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Neutral1",
+              "Common/Char004102/Interaction/Char004102_Int_Smile2"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Surprise2"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Surprise2",
+              "Common/Char004102/Interaction/Char004102_Int_Shy1",
+              "Common/Char004102/Interaction/Char004102_Int_Shy3"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Mix3_22_1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Shy2"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile2"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Mix3_26_1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile2"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Shy2"
+            ]
+          },
+          "29": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Smile2"
+            ]
+          },
+          "30": {
+            "voice": [
+              "Common/Char004102/Interaction/Char004102_Int_Mix3_30_1"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 10,
+        "2": 9,
+        "3": 30
+      }
+    },
+    "char067004": {
+      "gid": 11,
+      "interactionGroupId": 11,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Smile1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Angry1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Angry1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Angry1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shout1"
+            ]
+          },
+          "10": {
+            "voice": [],
+            "motion": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Angry1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Smile1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Angry3"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Special1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Special2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1",
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shout1"
+            ]
+          },
+          "20": {
+            "voice": [],
+            "motion": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy2"
+            ]
+          }
+        },
+        "3": {
+          "1": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1",
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy3"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy3"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise2"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy2"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Smile1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Smile1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Kiss2"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_13_1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_15_1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy3"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_17_1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_17_1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise2"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_15_1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_21_1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise2"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_23_1"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_24_1"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_1_1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy1"
+            ]
+          },
+          "29": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy3"
+            ]
+          },
+          "30": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Shy3"
+            ]
+          },
+          "31": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Surprise1"
+            ]
+          },
+          "32": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "33": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "34": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Neutral1"
+            ]
+          },
+          "35": {
+            "voice": [
+              "Common/Char067004/Interaction/Char067004_Int_Mix3_35_1"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 10,
+        "2": 20,
+        "3": 35
+      }
+    },
+    "char003604": {
+      "gid": 12,
+      "interactionGroupId": 12,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Eat1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix1_2_1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix1_3_1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix1_3_1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Surprise1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Surprise1",
+              "Common/Char003604/Interaction/Char003604_Int_Sigh1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "15": {
+            "voice": [],
+            "motion": [
+              "Common/Char003604/Interaction/Char003604_Int_motion1_15"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Smile1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Surprise1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Angry1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Sigh1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Sigh1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Kiss1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Angry1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_14_1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_15_1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Kiss1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_17_1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_18_1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Pain1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_21_1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Sigh1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Smile1",
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_26_1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Eat1"
+            ]
+          },
+          "29": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_29_1"
+            ]
+          },
+          "30": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_30_1"
+            ]
+          },
+          "31": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "32": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_32_1"
+            ]
+          },
+          "33": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_33_1"
+            ]
+          },
+          "34": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_34_1"
+            ]
+          },
+          "35": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_35_1"
+            ]
+          },
+          "36": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_mix2_36_1"
+            ]
+          },
+          "37": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "38": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "39": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy2"
+            ]
+          },
+          "40": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "41": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Neutral1"
+            ]
+          },
+          "42": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Angry1"
+            ]
+          },
+          "43": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Shy1"
+            ]
+          },
+          "44": {
+            "voice": [
+              "Common/Char003604/Interaction/Char003604_Int_Sigh1"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 15,
+        "2": 44
+      }
+    },
+    "char004202": {
+      "gid": 13,
+      "interactionGroupId": 13,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_1_1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_2_1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Embarrass1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Surprise1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Shy1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Embarrass1",
+              "Common/Char004202/Interaction/Char004202_Int_Smile2"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Embarrass1",
+              "Common/Char004202/Interaction/Char004202_Int_Surprise1",
+              "Common/Char004202/Interaction/Char004202_Int_Sigh1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Shy1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_9_1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_10_1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_11_1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_12_1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_13_1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_13_1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_13_1"
+            ]
+          },
+          "16": {
+            "voice": []
+          },
+          "17": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_17_1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_18_1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix1_19_1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Worry1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral1"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Worry1"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Worry1"
+            ]
+          },
+          "26": {
+            "voice": [],
+            "motion": [
+              "Common/Char004202/Interaction/Char004202_Int_Magic1"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Kiss1",
+              "Common/Char004202/Interaction/Char004202_Int_Kiss2"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral2"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Sigh2"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Surprise1",
+              "Common/Char004202/Interaction/Char004202_Int_Sigh1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Shy1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Shy2"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Shy2"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Shy2"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Shy2"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral1",
+              "Common/Char004202/Interaction/Char004202_Int_Smile3"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_12_1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_13_1"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_13_1"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_15_1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_16_1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_17_1"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Worry1"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_19_1"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Worry1"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004102_Int_Mix2_21_1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Smile2"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Worry1"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Worry1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Embarrass1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Neutral1"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char004202/Interaction/Char004202_Int_Sigh2"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 26,
+        "2": 28
+      }
+    },
+    "char067104": {
+      "gid": 14,
+      "interactionGroupId": 14,
+      "stages": {
+        "1": {
+          "1": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Neutral1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Annoy1"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Annoy1"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Surprise1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Touch1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Sigh1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Sigh1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Angry1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Shy1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Surprise1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Touch1"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Touch1"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Surprise2"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Surprise2"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass1"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass1"
+            ]
+          },
+          "18": {
+            "voice": [],
+            "motion": [
+              "Common/Char067104/Interaction/Char067104_Int_Motion1_18"
+            ]
+          }
+        },
+        "2": {
+          "1": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Shy1"
+            ]
+          },
+          "2": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Sigh2"
+            ]
+          },
+          "3": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Sigh2"
+            ]
+          },
+          "4": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass1"
+            ]
+          },
+          "5": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Smile1"
+            ]
+          },
+          "6": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Smile1"
+            ]
+          },
+          "7": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Angry1"
+            ]
+          },
+          "8": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Touch1"
+            ]
+          },
+          "9": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Touch1"
+            ]
+          },
+          "10": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass1"
+            ]
+          },
+          "11": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass2"
+            ]
+          },
+          "12": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Surprise2"
+            ]
+          },
+          "13": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Shy2"
+            ]
+          },
+          "14": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass2"
+            ]
+          },
+          "15": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Sigh2"
+            ]
+          },
+          "16": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_16_1"
+            ]
+          },
+          "17": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass3"
+            ]
+          },
+          "18": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass3"
+            ]
+          },
+          "19": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass3"
+            ]
+          },
+          "20": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Embarrass3"
+            ]
+          },
+          "21": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_16_1"
+            ]
+          },
+          "22": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_16_1"
+            ]
+          },
+          "23": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_16_1"
+            ]
+          },
+          "24": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_24_1"
+            ]
+          },
+          "25": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_25_1"
+            ]
+          },
+          "26": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_26_1"
+            ]
+          },
+          "27": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_26_1"
+            ]
+          },
+          "28": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_28_1"
+            ]
+          },
+          "29": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Sigh3"
+            ]
+          },
+          "30": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Mix2_30_1"
+            ]
+          },
+          "31": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Sigh3"
+            ]
+          },
+          "32": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Annoy1"
+            ]
+          },
+          "33": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Neutral1"
+            ]
+          },
+          "34": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Neutral1"
+            ]
+          },
+          "35": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Neutral1"
+            ]
+          },
+          "36": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Neutral1"
+            ]
+          },
+          "37": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Touch1"
+            ]
+          },
+          "38": {
+            "voice": [
+              "Common/Char067104/Interaction/Char067104_Int_Shy2"
+            ]
+          }
+        }
+      },
+      "stagePointCounts": {
+        "1": 18,
+        "2": 38
+      }
+    }
+  }
+}
