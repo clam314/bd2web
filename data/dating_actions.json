@@ -1,0 +1,6399 @@
+{
+  "illust_dating1": {
+    "1_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_2"
+      ]
+    },
+    "1_2_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_2_1",
+        "mix1_2_2"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1"
+      ]
+    },
+    "1_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1"
+      ]
+    },
+    "1_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1"
+      ]
+    },
+    "1_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1"
+      ]
+    },
+    "1_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_12_1"
+      ]
+    },
+    "1_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1",
+        "mix1_16_2",
+        "mix1_16_3"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1",
+        "mix1_17_2",
+        "mix1_17_3"
+      ]
+    },
+    "1_18_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_18_1",
+        "mix1_18_2"
+      ],
+      "motions": [
+        "motion1_18"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_2"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ]
+    },
+    "2_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1"
+      ]
+    },
+    "2_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_4_1"
+      ]
+    },
+    "2_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1"
+      ]
+    },
+    "2_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_6_1"
+      ]
+    },
+    "2_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1"
+      ]
+    },
+    "2_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_8_1"
+      ]
+    },
+    "2_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_9_1"
+      ]
+    },
+    "2_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1"
+      ]
+    },
+    "2_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_11_1"
+      ]
+    },
+    "2_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_12_1"
+      ]
+    },
+    "2_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_13_1"
+      ]
+    },
+    "2_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1"
+      ]
+    },
+    "2_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1"
+      ]
+    },
+    "2_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_1"
+      ]
+    },
+    "2_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1"
+      ]
+    },
+    "2_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1"
+      ]
+    },
+    "2_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1"
+      ]
+    },
+    "2_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_20_1",
+        "mix2_20_2",
+        "mix2_20_3"
+      ]
+    },
+    "2_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1",
+        "mix2_21_2",
+        "mix2_21_3"
+      ]
+    },
+    "2_22_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_22_1",
+        "mix2_22_2"
+      ],
+      "motions": [
+        "motion2_22"
+      ],
+      "nextStage": "next"
+    },
+    "3_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_1_1",
+        "mix3_1_2"
+      ]
+    },
+    "3_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_2_1"
+      ]
+    },
+    "3_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_3_1"
+      ]
+    },
+    "3_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_4_1"
+      ]
+    },
+    "3_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_5_1"
+      ]
+    },
+    "3_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_6_1"
+      ],
+      "hidden": true
+    },
+    "3_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_7_1"
+      ],
+      "hidden": true
+    },
+    "3_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_8_1"
+      ]
+    },
+    "3_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_9_1"
+      ]
+    },
+    "3_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_10_1"
+      ]
+    },
+    "3_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_11_1"
+      ]
+    },
+    "3_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_12_1"
+      ]
+    },
+    "3_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_13_1"
+      ]
+    },
+    "3_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_14_1"
+      ]
+    },
+    "3_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_15_1"
+      ]
+    },
+    "3_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_16_1"
+      ]
+    },
+    "3_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_17_1"
+      ]
+    },
+    "3_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_18_1"
+      ]
+    },
+    "3_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_19_1"
+      ]
+    },
+    "3_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_20_1"
+      ]
+    },
+    "3_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_21_1"
+      ]
+    },
+    "3_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_22_1"
+      ]
+    },
+    "3_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_23_1",
+        "mix3_23_2",
+        "mix3_23_3",
+        "mix3_23_4",
+        "mix3_23_5"
+      ]
+    },
+    "3_24_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_24_1",
+        "mix3_24_2",
+        "mix3_24_3",
+        "mix3_24_4",
+        "mix3_24_5"
+      ]
+    }
+  },
+  "illust_dating10": {
+    "1_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_2"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_4_1",
+        "mix1_4_2"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_7_1",
+        "mix1_7_2"
+      ]
+    },
+    "1_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_2"
+      ]
+    },
+    "1_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_2"
+      ]
+    },
+    "1_10_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_10_1",
+        "mix1_10_2"
+      ]
+    },
+    "1_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_12_1",
+        "mix1_12_2"
+      ]
+    },
+    "1_13_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_13_1",
+        "mix1_13_2"
+      ]
+    },
+    "1_14_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_14_1",
+        "mix1_14_2"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1",
+        "mix1_15_2"
+      ]
+    },
+    "1_16_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1",
+        "mix1_16_2"
+      ]
+    },
+    "1_17_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1",
+        "mix1_17_2",
+        "mix1_17_3",
+        "mix1_17_4",
+        "mix1_17_5"
+      ]
+    },
+    "1_18_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1",
+        "mix1_18_3",
+        "mix1_18_2"
+      ],
+      "clickMax": 3
+    },
+    "1_19_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_2",
+        "mix1_19_1",
+        "mix1_19_3"
+      ]
+    },
+    "1_20_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_2",
+        "mix1_20_3",
+        "mix1_20_1"
+      ]
+    },
+    "1_21_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_3",
+        "mix1_21_2",
+        "mix1_21_1"
+      ]
+    },
+    "1_22_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_22_1",
+        "mix1_22_2",
+        "mix1_22_3"
+      ]
+    },
+    "1_23_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_23_1",
+        "mix1_23_2",
+        "mix1_23_3"
+      ]
+    },
+    "1_24_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_24_1",
+        "mix1_24_2",
+        "mix1_24_3"
+      ]
+    },
+    "1_25_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_25_1"
+      ]
+    },
+    "1_26_13": {
+      "kind": "touch",
+      "mix": [
+        "mix1_26_1"
+      ],
+      "motions": [
+        "motion1_26"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_2",
+        "mix2_1_3",
+        "mix2_1_4",
+        "mix2_1_5",
+        "mix2_1_6",
+        "mix2_1_7",
+        "mix2_1_8",
+        "mix2_1_9"
+      ],
+      "clickMax": 9
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ],
+      "motions": [
+        "motion2_2"
+      ],
+      "nextStage": "next"
+    },
+    "3_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_1_1",
+        "mix3_1_2"
+      ]
+    },
+    "3_2_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_2_1",
+        "mix3_2_2"
+      ]
+    },
+    "3_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_3_1"
+      ]
+    },
+    "3_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_4_1"
+      ]
+    },
+    "3_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_5_1"
+      ]
+    },
+    "3_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_6_1",
+        "mix3_6_2"
+      ]
+    },
+    "3_7_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_7_1",
+        "mix3_7_2"
+      ]
+    },
+    "3_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_8_1",
+        "mix3_8_2"
+      ]
+    },
+    "3_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_9_1"
+      ]
+    },
+    "3_10_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_10_1",
+        "mix3_10_2"
+      ]
+    },
+    "3_11_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_11_1",
+        "mix3_11_2"
+      ]
+    },
+    "3_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_12_1",
+        "mix3_12_2"
+      ]
+    },
+    "3_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_13_1"
+      ]
+    },
+    "3_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_14_1"
+      ]
+    },
+    "3_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_15_1"
+      ]
+    },
+    "3_16_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_16_1"
+      ]
+    },
+    "3_17_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_17_1"
+      ]
+    },
+    "3_18_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_18_1"
+      ]
+    },
+    "3_19_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_19_1"
+      ]
+    },
+    "3_20_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_20_1"
+      ]
+    },
+    "3_21_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_21_1",
+        "mix3_21_2",
+        "mix3_21_3",
+        "mix3_21_4",
+        "mix3_21_5",
+        "mix3_21_6",
+        "mix3_21_7",
+        "mix3_21_8",
+        "mix3_21_9",
+        "mix3_21_10"
+      ],
+      "clickMax": 10
+    },
+    "3_22_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_22_1"
+      ]
+    },
+    "3_23_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_23_1"
+      ]
+    },
+    "3_24_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_24_1"
+      ]
+    },
+    "3_25_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_25_1"
+      ]
+    },
+    "3_26_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_26_1"
+      ]
+    },
+    "3_27_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_27_1"
+      ]
+    },
+    "3_28_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_28_1"
+      ]
+    },
+    "3_29_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_29_1"
+      ]
+    },
+    "3_30_13": {
+      "kind": "touch",
+      "mix": [
+        "mix3_30_1"
+      ]
+    }
+  },
+  "illust_dating11": {
+    "1_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix1_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 8000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1"
+      ]
+    },
+    "1_2_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_2_1",
+        "mix1_2_2"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_4_1",
+        "mix1_4_2"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1"
+      ]
+    },
+    "1_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1"
+      ]
+    },
+    "1_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1"
+      ],
+      "motions": [
+        "motion1_9"
+      ],
+      "nextStage": "next"
+    },
+    "2_0_14": {
+      "kind": "gyro",
+      "mix": [
+        "mix2_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 8000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "2_1_14": {
+      "kind": "gyro",
+      "mix": [
+        "mix2_0_1"
+      ],
+      "motions": [
+        "motion2_1"
+      ],
+      "nextStage": 3,
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 27.0,
+        "moveSensitivity": 1500.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "2_2_14": {
+      "kind": "gyro",
+      "mix": [
+        "mix2_0_1"
+      ],
+      "motions": [
+        "motion2_2"
+      ],
+      "nextStage": 4,
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 27.0,
+        "moveSensitivity": 1500.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "3_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix3_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 10000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "3_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_1_1",
+        "mix3_1_2"
+      ]
+    },
+    "3_2_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_2_1",
+        "mix3_2_2"
+      ]
+    },
+    "3_3_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_3_1",
+        "mix3_3_2"
+      ]
+    },
+    "3_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_4_1"
+      ]
+    },
+    "3_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_5_1"
+      ]
+    },
+    "3_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_6_1"
+      ]
+    },
+    "3_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_7_1"
+      ]
+    },
+    "3_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_8_1"
+      ]
+    },
+    "3_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_9_1"
+      ]
+    },
+    "3_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_10_1"
+      ],
+      "hidden": true
+    },
+    "3_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_11_1"
+      ],
+      "hidden": true,
+      "gyro": {
+        "actionType": 2,
+        "moveThreshold": 10.0,
+        "moveSensitivity": 500.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "3_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_12_1"
+      ],
+      "hidden": true
+    },
+    "3_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_13_1"
+      ],
+      "hidden": true,
+      "gyro": {
+        "actionType": 2,
+        "moveThreshold": 10.0,
+        "moveSensitivity": 500.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "3_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_14_1"
+      ]
+    },
+    "3_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_15_1"
+      ]
+    },
+    "3_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_16_1"
+      ]
+    },
+    "3_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_17_1"
+      ],
+      "hidden": true
+    },
+    "3_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_18_1"
+      ],
+      "gyro": {
+        "actionType": 2,
+        "moveThreshold": 10.0,
+        "moveSensitivity": 500.0,
+        "shakingThreshold": 0.5,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "3_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_19_1"
+      ]
+    },
+    "3_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_20_1"
+      ]
+    },
+    "3_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_21_1"
+      ]
+    },
+    "3_22_14": {
+      "kind": "gyro",
+      "mix": [
+        "mix3_0_1"
+      ],
+      "motions": [
+        "motion3_0"
+      ],
+      "nextStage": 2,
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 25.0,
+        "moveSensitivity": 1000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "4_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix4_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 10000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "4_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_1_1"
+      ]
+    },
+    "4_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_2_1"
+      ]
+    },
+    "4_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_3_1"
+      ]
+    },
+    "4_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_4_1"
+      ]
+    },
+    "4_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_5_1"
+      ]
+    },
+    "4_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix4_6_1",
+        "mix4_6_2"
+      ]
+    },
+    "4_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_7_1"
+      ]
+    },
+    "4_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_8_1"
+      ],
+      "hidden": true
+    },
+    "4_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_9_1"
+      ],
+      "hidden": true,
+      "gyro": {
+        "actionType": 2,
+        "moveThreshold": 10.0,
+        "moveSensitivity": 500.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "4_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_10_1"
+      ],
+      "hidden": true
+    },
+    "4_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_11_1"
+      ],
+      "hidden": true,
+      "gyro": {
+        "actionType": 2,
+        "moveThreshold": 10.0,
+        "moveSensitivity": 500.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "4_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_12_1"
+      ]
+    },
+    "4_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_13_1"
+      ]
+    },
+    "4_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_14_1"
+      ]
+    },
+    "4_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_15_1"
+      ]
+    },
+    "4_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_16_1"
+      ]
+    },
+    "4_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_17_1"
+      ]
+    },
+    "4_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_18_1"
+      ]
+    },
+    "4_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_19_1"
+      ]
+    },
+    "4_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_20_1"
+      ],
+      "gyro": {
+        "actionType": 2,
+        "moveThreshold": 10.0,
+        "moveSensitivity": 500.0,
+        "shakingThreshold": 0.5,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "4_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_21_1"
+      ]
+    },
+    "4_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_22_1"
+      ]
+    },
+    "4_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_23_1"
+      ]
+    },
+    "4_24_14": {
+      "kind": "gyro",
+      "mix": [
+        "mix4_0_1"
+      ],
+      "motions": [
+        "motion4_0"
+      ],
+      "nextStage": 2,
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 25.0,
+        "moveSensitivity": 1000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    }
+  },
+  "illust_dating12": {
+    "1_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix1_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 20000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_5_1",
+        "mix1_5_2"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_7_1",
+        "mix1_7_2"
+      ]
+    },
+    "1_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_2"
+      ]
+    },
+    "1_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1"
+      ]
+    },
+    "1_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1"
+      ]
+    },
+    "1_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_12_1"
+      ]
+    },
+    "1_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1"
+      ]
+    },
+    "1_19_17": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1"
+      ]
+    },
+    "1_20_17": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1"
+      ]
+    },
+    "1_21_17": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_1"
+      ]
+    },
+    "1_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_22_1"
+      ]
+    },
+    "1_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_23_1",
+        "mix1_23_2",
+        "mix1_23_3",
+        "mix1_23_4",
+        "mix1_23_5",
+        "mix1_23_6",
+        "mix1_23_7",
+        "mix1_23_8",
+        "mix1_23_9",
+        "mix1_23_10"
+      ],
+      "clickMax": 11
+    },
+    "1_24_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_24_1"
+      ]
+    },
+    "1_25_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_25_1"
+      ]
+    },
+    "1_26_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_26_1"
+      ]
+    },
+    "1_27_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_27_1"
+      ]
+    },
+    "1_28_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_28_1"
+      ]
+    },
+    "1_29_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_29_1"
+      ]
+    },
+    "1_30_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_30_1"
+      ]
+    },
+    "1_31_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_31_1"
+      ]
+    },
+    "1_32_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_32_1"
+      ]
+    },
+    "1_33_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_33_1"
+      ]
+    },
+    "1_35_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_35_1"
+      ],
+      "motions": [
+        "motion1_35"
+      ],
+      "nextStage": "next"
+    },
+    "2_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix2_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 20000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1"
+      ],
+      "motions": [
+        "motion2_1"
+      ],
+      "nextStage": "next"
+    },
+    "3_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix3_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 20000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "3_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_1_1"
+      ]
+    },
+    "3_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_2_1",
+        "mix3_2_2"
+      ]
+    },
+    "3_3_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_3_1",
+        "mix3_3_2"
+      ]
+    },
+    "3_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_4_1"
+      ]
+    },
+    "3_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_5_1"
+      ]
+    },
+    "3_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_6_1",
+        "mix3_6_2"
+      ]
+    },
+    "3_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_7_1",
+        "mix3_7_2",
+        "mix3_7_3",
+        "mix3_7_4",
+        "mix3_7_5",
+        "mix3_7_6",
+        "mix3_7_7",
+        "mix3_7_8",
+        "mix3_7_9"
+      ],
+      "clickMax": 10
+    },
+    "3_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_8_1"
+      ]
+    },
+    "3_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_9_1",
+        "mix3_9_2",
+        "mix3_9_3",
+        "mix3_9_4",
+        "mix3_9_5",
+        "mix3_9_6",
+        "mix3_9_7",
+        "mix3_9_8",
+        "mix3_9_9"
+      ],
+      "clickMax": 10
+    },
+    "3_10_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_10_1",
+        "mix3_10_2"
+      ]
+    },
+    "3_11_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_11_1",
+        "mix3_11_2"
+      ]
+    },
+    "3_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_12_1"
+      ]
+    },
+    "3_13_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_13_1",
+        "mix3_13_2"
+      ]
+    },
+    "3_14_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_14_1",
+        "mix3_14_2"
+      ]
+    },
+    "3_15_17": {
+      "kind": "touch",
+      "mix": [
+        "mix3_15_1"
+      ]
+    },
+    "3_16_17": {
+      "kind": "touch",
+      "mix": [
+        "mix3_16_1"
+      ]
+    },
+    "3_17_17": {
+      "kind": "touch",
+      "mix": [
+        "mix3_17_1"
+      ]
+    },
+    "3_18_17": {
+      "kind": "touch",
+      "mix": [
+        "mix3_18_1"
+      ]
+    },
+    "3_19_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_19_1"
+      ]
+    },
+    "3_20_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_20_1"
+      ]
+    },
+    "3_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_21_1",
+        "mix3_21_2",
+        "mix3_21_3",
+        "mix3_21_4",
+        "mix3_21_5",
+        "mix3_21_6",
+        "mix3_21_7",
+        "mix3_21_8",
+        "mix3_21_9"
+      ],
+      "clickMax": 10
+    },
+    "3_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_22_1"
+      ]
+    },
+    "3_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_23_1"
+      ]
+    },
+    "3_24_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_24_1"
+      ]
+    },
+    "3_25_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_25_1"
+      ]
+    },
+    "3_26_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_26_1"
+      ]
+    },
+    "3_27_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_27_1"
+      ]
+    },
+    "3_28_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_28_1"
+      ]
+    },
+    "3_29_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_29_1"
+      ]
+    },
+    "3_30_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_30_1"
+      ]
+    },
+    "3_31_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_31_1"
+      ]
+    },
+    "3_32_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_32_1"
+      ]
+    },
+    "3_33_17": {
+      "kind": "touch",
+      "mix": [
+        "mix3_33_1"
+      ]
+    },
+    "3_34_17": {
+      "kind": "touch",
+      "mix": [
+        "mix3_34_1"
+      ]
+    },
+    "3_35_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_35_1"
+      ]
+    },
+    "3_36_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_36_1"
+      ]
+    },
+    "3_37_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_37_1"
+      ]
+    },
+    "3_38_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_38_1"
+      ]
+    },
+    "3_39_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_39_1"
+      ]
+    },
+    "3_40_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_40_1"
+      ]
+    },
+    "3_41_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_41_1"
+      ]
+    },
+    "3_42_18": {
+      "kind": "touch",
+      "mix": [
+        "mix3_42_1"
+      ]
+    },
+    "3_43_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_43_1"
+      ]
+    },
+    "3_44_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_44_1"
+      ]
+    },
+    "3_45_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_45_1"
+      ]
+    },
+    "3_46_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_46_1"
+      ]
+    },
+    "3_47_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_47_1"
+      ]
+    },
+    "3_48_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_48_1"
+      ],
+      "gyro": {
+        "actionType": 2,
+        "moveThreshold": 10.0,
+        "moveSensitivity": 500.0,
+        "shakingThreshold": 0.5,
+        "shakingHoldTime": 0.5
+      }
+    }
+  },
+  "illust_dating13": {
+    "1_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix1_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 18000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_4_1",
+        "mix1_4_2"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1"
+      ]
+    },
+    "1_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1"
+      ]
+    },
+    "1_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1"
+      ]
+    },
+    "1_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1"
+      ],
+      "motions": [
+        "motion1_10"
+      ],
+      "nextStage": "next"
+    },
+    "2_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix2_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 18000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "2_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_2"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ]
+    },
+    "2_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1"
+      ]
+    },
+    "2_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_4_1",
+        "mix2_4_2"
+      ]
+    },
+    "2_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1"
+      ],
+      "hidden": true
+    },
+    "2_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_6_1"
+      ],
+      "hidden": true
+    },
+    "2_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1"
+      ],
+      "hidden": true
+    },
+    "2_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_8_1",
+        "mix2_8_2"
+      ],
+      "hidden": true
+    },
+    "2_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_9_1"
+      ],
+      "motions": [
+        "motion2_9"
+      ],
+      "nextStage": "next"
+    },
+    "3_0_0": {
+      "kind": "gyro",
+      "mix": [
+        "mix3_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 18000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "3_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_1_1",
+        "mix3_1_2"
+      ]
+    },
+    "3_2_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_2_1",
+        "mix3_2_2"
+      ]
+    },
+    "3_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_3_1"
+      ]
+    },
+    "3_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_4_1",
+        "mix3_4_2",
+        "mix3_4_3"
+      ]
+    },
+    "3_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_5_1",
+        "mix3_5_2",
+        "mix3_5_3"
+      ]
+    },
+    "3_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_6_1",
+        "mix3_6_2",
+        "mix3_6_3"
+      ]
+    },
+    "3_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_7_1"
+      ]
+    },
+    "3_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_8_1"
+      ]
+    },
+    "3_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_9_1"
+      ]
+    },
+    "3_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_10_1"
+      ]
+    },
+    "3_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_11_1"
+      ]
+    },
+    "3_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_12_1"
+      ]
+    },
+    "3_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_13_1"
+      ]
+    },
+    "3_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_14_1"
+      ]
+    },
+    "3_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_15_1"
+      ]
+    },
+    "3_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_16_1"
+      ]
+    },
+    "3_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_17_1",
+        "mix3_17_2",
+        "mix3_17_3",
+        "mix3_17_4",
+        "mix3_17_5",
+        "mix3_17_6",
+        "mix3_17_7",
+        "mix3_17_8",
+        "mix3_17_9"
+      ],
+      "clickMax": 9
+    },
+    "3_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_18_1"
+      ]
+    },
+    "3_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_19_1",
+        "mix3_19_2"
+      ],
+      "clickMax": 3
+    },
+    "3_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_20_1"
+      ]
+    },
+    "3_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_21_1",
+        "mix3_21_2",
+        "mix3_21_3",
+        "mix3_21_4"
+      ],
+      "clickMax": 4
+    },
+    "3_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_22_1"
+      ]
+    },
+    "3_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_23_1",
+        "mix3_23_2",
+        "mix3_23_3"
+      ]
+    },
+    "3_24_16": {
+      "kind": "touch",
+      "mix": [
+        "mix3_24_1"
+      ]
+    },
+    "3_25_16": {
+      "kind": "touch",
+      "mix": [
+        "mix3_25_1"
+      ]
+    },
+    "3_26_16": {
+      "kind": "touch",
+      "mix": [
+        "mix3_26_1"
+      ]
+    },
+    "3_27_16": {
+      "kind": "touch",
+      "mix": [
+        "mix3_27_1"
+      ]
+    },
+    "3_28_15": {
+      "kind": "touch",
+      "mix": [
+        "mix3_28_1"
+      ]
+    },
+    "3_29_15": {
+      "kind": "touch",
+      "mix": [
+        "mix3_29_1"
+      ]
+    },
+    "3_30_15": {
+      "kind": "touch",
+      "mix": [
+        "mix3_30_1"
+      ]
+    }
+  },
+  "illust_dating14": {
+    "1_0_19": {
+      "kind": "gyro",
+      "mix": [
+        "mix1_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 20000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "1_0_20": {
+      "kind": "gyro",
+      "mix": [
+        "mix1_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 20000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "1_1_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_1_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_2_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1",
+        "mix1_2_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_2_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1",
+        "mix1_2_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_3_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1",
+        "mix1_3_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_3_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1",
+        "mix1_3_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_4_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1",
+        "mix1_4_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_4_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1",
+        "mix1_4_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_5_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1",
+        "mix1_5_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_5_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1",
+        "mix1_5_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_6_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1",
+        "mix1_6_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_6_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1",
+        "mix1_6_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_7_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1",
+        "mix1_7_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_7_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1",
+        "mix1_7_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_8_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_8_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_9_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_9_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_10_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1",
+        "mix1_10_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_10_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1",
+        "mix1_10_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_11_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_11_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_12_1"
+      ]
+    },
+    "1_12_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_12_1"
+      ]
+    },
+    "1_13_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1",
+        "mix1_13_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_13_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1",
+        "mix1_13_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_14_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1",
+        "mix1_14_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_14_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1",
+        "mix1_14_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_15_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1",
+        "mix1_15_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_15_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1",
+        "mix1_15_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_16_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_16_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_17_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1",
+        "mix1_19_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_18_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1",
+        "mix1_19_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "1_20_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1",
+        "mix1_20_2",
+        "mix1_20_3",
+        "mix1_20_4",
+        "mix1_20_5"
+      ]
+    },
+    "1_20_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1",
+        "mix1_20_2",
+        "mix1_20_3",
+        "mix1_20_4",
+        "mix1_20_5"
+      ]
+    },
+    "1_21_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_1"
+      ],
+      "gauge": true
+    },
+    "1_21_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_1"
+      ],
+      "gauge": true
+    },
+    "1_22_19": {
+      "kind": "touch",
+      "mix": [
+        "mix1_23_1"
+      ],
+      "motions": [
+        "motion1_23"
+      ],
+      "nextStage": "next",
+      "gauge": true
+    },
+    "1_22_20": {
+      "kind": "touch",
+      "mix": [
+        "mix1_22_1"
+      ],
+      "motions": [
+        "motion1_22"
+      ],
+      "nextStage": "next",
+      "gauge": true
+    },
+    "2_0_19": {
+      "kind": "gyro",
+      "mix": [
+        "mix2_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 20000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "2_0_20": {
+      "kind": "gyro",
+      "mix": [
+        "mix2_0_1"
+      ],
+      "gyro": {
+        "actionType": 1,
+        "moveThreshold": 0.10000000149011612,
+        "moveSensitivity": 20000.0,
+        "shakingThreshold": 0.15000000596046448,
+        "shakingHoldTime": 0.5
+      }
+    },
+    "2_1_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_1_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_2_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1",
+        "mix2_2_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_2_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1",
+        "mix2_2_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_3_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1",
+        "mix2_3_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_3_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1",
+        "mix2_3_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_4_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_4_1"
+      ],
+      "gauge": true
+    },
+    "2_4_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_4_1"
+      ],
+      "gauge": true
+    },
+    "2_5_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1",
+        "mix2_5_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_5_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1",
+        "mix2_5_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_6_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_6_1",
+        "mix2_6_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_6_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_6_1",
+        "mix2_6_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_7_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1",
+        "mix2_7_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_7_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1",
+        "mix2_7_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_8_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_8_1",
+        "mix2_8_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_8_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_8_1",
+        "mix2_8_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_9_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_9_1",
+        "mix2_9_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_9_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_9_1",
+        "mix2_9_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_10_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1",
+        "mix2_10_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_10_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1",
+        "mix2_10_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_11_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_11_1",
+        "mix2_11_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_11_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_11_1",
+        "mix2_11_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_12_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_12_1",
+        "mix2_12_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_12_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_12_1",
+        "mix2_12_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_13_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_13_1",
+        "mix2_13_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_13_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_13_1",
+        "mix2_13_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_14_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1",
+        "mix2_14_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_14_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1",
+        "mix2_14_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_15_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1",
+        "mix2_15_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_15_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1",
+        "mix2_15_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_16_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_1",
+        "mix2_16_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_16_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_39_1",
+        "mix2_39_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_17_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1",
+        "mix2_17_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_17_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1",
+        "mix2_17_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_18_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1",
+        "mix2_18_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_18_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1",
+        "mix2_18_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_19_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1",
+        "mix2_19_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_19_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1",
+        "mix2_19_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_20_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_20_1",
+        "mix2_20_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_20_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_20_1",
+        "mix2_20_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_21_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1",
+        "mix2_21_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_21_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1",
+        "mix2_21_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_22_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_22_1",
+        "mix2_22_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_22_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_22_1",
+        "mix2_22_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_23_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_23_1",
+        "mix2_23_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_23_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_23_1",
+        "mix2_23_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_24_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_24_1",
+        "mix2_24_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_24_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_24_1",
+        "mix2_24_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_25_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_25_1",
+        "mix2_25_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_25_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_25_1",
+        "mix2_25_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_26_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_26_1",
+        "mix2_26_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_26_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_26_1",
+        "mix2_26_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_27_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_27_1",
+        "mix2_27_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_27_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_27_1",
+        "mix2_27_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_28_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_28_1",
+        "mix2_28_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_28_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_28_1",
+        "mix2_28_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_29_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_29_1",
+        "mix2_29_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_29_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_29_1",
+        "mix2_29_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_30_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_30_1",
+        "mix2_30_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_30_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_30_1",
+        "mix2_30_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_31_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_31_1",
+        "mix2_31_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_31_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_31_1",
+        "mix2_31_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_32_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_32_1",
+        "mix2_32_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_32_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_32_1",
+        "mix2_32_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_33_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_33_1",
+        "mix2_33_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_33_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_33_1",
+        "mix2_33_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_34_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_34_1",
+        "mix2_34_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_34_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_34_1",
+        "mix2_34_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_35_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_35_1",
+        "mix2_35_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_35_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_35_1",
+        "mix2_35_1"
+      ],
+      "clickMax": 2,
+      "gauge": true
+    },
+    "2_36_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_36_1"
+      ],
+      "gauge": true
+    },
+    "2_36_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_36_1"
+      ],
+      "gauge": true
+    },
+    "2_37_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_37_1"
+      ],
+      "gauge": true
+    },
+    "2_37_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_37_1"
+      ],
+      "gauge": true
+    },
+    "2_38_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_38_1"
+      ],
+      "gauge": true
+    },
+    "2_38_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_38_1"
+      ],
+      "gauge": true
+    },
+    "2_40_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_40_1"
+      ]
+    },
+    "2_40_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_40_1"
+      ]
+    },
+    "2_41_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_41_1"
+      ]
+    },
+    "2_41_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_41_1"
+      ]
+    },
+    "2_42_19": {
+      "kind": "touch",
+      "mix": [
+        "mix2_42_1"
+      ]
+    },
+    "2_42_20": {
+      "kind": "touch",
+      "mix": [
+        "mix2_42_1"
+      ]
+    }
+  },
+  "illust_dating2": {
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_2"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1",
+        "mix1_5_2"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_7_1",
+        "mix1_7_2"
+      ]
+    },
+    "1_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1"
+      ]
+    },
+    "1_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1"
+      ]
+    },
+    "1_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1"
+      ]
+    },
+    "1_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_12_1",
+        "mix1_12_2"
+      ]
+    },
+    "1_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1"
+      ]
+    },
+    "1_19_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_19_1",
+        "mix1_19_2"
+      ],
+      "motions": [
+        "motion1_19"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_2"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ]
+    },
+    "2_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1"
+      ]
+    },
+    "2_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_4_1"
+      ]
+    },
+    "2_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1"
+      ]
+    },
+    "2_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_6_1",
+        "mix2_6_2"
+      ]
+    },
+    "2_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1"
+      ]
+    },
+    "2_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_8_1"
+      ]
+    },
+    "2_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_9_1"
+      ]
+    },
+    "2_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1"
+      ]
+    },
+    "2_11_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_11_1",
+        "mix2_11_2"
+      ]
+    },
+    "2_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_12_1"
+      ]
+    },
+    "2_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_13_1"
+      ]
+    },
+    "2_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1"
+      ]
+    },
+    "2_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1"
+      ]
+    },
+    "2_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_1"
+      ]
+    },
+    "2_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1"
+      ]
+    },
+    "2_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1"
+      ]
+    },
+    "2_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1",
+        "mix2_19_2",
+        "mix2_19_3"
+      ]
+    },
+    "2_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_20_1",
+        "mix2_20_2",
+        "mix2_20_3"
+      ]
+    },
+    "2_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1",
+        "mix2_21_2",
+        "mix2_21_3"
+      ]
+    },
+    "2_22_0": {
+      "kind": "drag",
+      "mix": [],
+      "motions": [
+        "motion2_22"
+      ],
+      "nextStage": "next"
+    },
+    "3_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_1_1",
+        "mix3_1_2",
+        "mix3_1_3"
+      ]
+    },
+    "3_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_2_1"
+      ]
+    },
+    "3_3_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_3_1",
+        "mix3_3_2"
+      ]
+    },
+    "3_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_4_1"
+      ]
+    },
+    "3_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_5_1"
+      ]
+    },
+    "3_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_6_1"
+      ]
+    },
+    "3_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_7_1"
+      ]
+    },
+    "3_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_8_1"
+      ]
+    },
+    "3_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_9_1"
+      ]
+    },
+    "3_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_10_1"
+      ]
+    },
+    "3_11_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_11_1",
+        "mix3_11_2"
+      ]
+    },
+    "3_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_12_1"
+      ]
+    },
+    "3_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_13_1"
+      ]
+    },
+    "3_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_14_1"
+      ]
+    },
+    "3_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_15_1"
+      ]
+    },
+    "3_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_16_1"
+      ]
+    },
+    "3_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_17_1"
+      ]
+    },
+    "3_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_18_1",
+        "mix3_18_2"
+      ]
+    },
+    "3_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_19_1",
+        "mix3_19_2"
+      ]
+    }
+  },
+  "illust_dating3": {
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_5_1",
+        "mix1_5_2"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1",
+        "mix1_6_2"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1",
+        "mix1_7_2"
+      ]
+    },
+    "1_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_2"
+      ]
+    },
+    "1_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_2"
+      ]
+    },
+    "1_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1"
+      ]
+    },
+    "1_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_12_1"
+      ]
+    },
+    "1_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1",
+        "mix1_15_2"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1",
+        "mix1_16_2"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1",
+        "mix1_17_2"
+      ]
+    },
+    "1_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1",
+        "mix1_18_2"
+      ]
+    },
+    "1_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1",
+        "mix1_19_2"
+      ]
+    },
+    "1_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1",
+        "mix1_20_2",
+        "mix1_20_3",
+        "mix1_20_4",
+        "mix1_20_5",
+        "mix1_20_6",
+        "mix1_20_7",
+        "mix1_20_8",
+        "mix1_20_9"
+      ],
+      "motions": [
+        "motion1_20"
+      ],
+      "nextStage": "next",
+      "clickMax": 10
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ]
+    },
+    "2_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1",
+        "mix2_3_2"
+      ]
+    },
+    "2_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_4_1",
+        "mix2_4_2"
+      ]
+    },
+    "2_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1"
+      ]
+    },
+    "2_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_6_1"
+      ]
+    },
+    "2_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1"
+      ]
+    },
+    "2_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_8_1",
+        "mix2_8_2",
+        "mix2_8_3",
+        "mix2_8_4",
+        "mix2_8_5"
+      ],
+      "clickMax": 6
+    },
+    "2_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_9_1"
+      ]
+    },
+    "2_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1"
+      ]
+    },
+    "2_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_11_1"
+      ]
+    },
+    "2_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_12_1",
+        "mix2_12_2"
+      ]
+    },
+    "2_13_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_13_1",
+        "mix2_13_2"
+      ]
+    },
+    "2_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1"
+      ]
+    },
+    "2_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1"
+      ]
+    },
+    "2_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_1"
+      ]
+    },
+    "2_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1"
+      ]
+    },
+    "2_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1",
+        "mix2_18_2"
+      ]
+    },
+    "2_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1",
+        "mix2_19_2"
+      ]
+    }
+  },
+  "illust_dating4": {
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_2"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_7_1",
+        "mix1_7_2"
+      ]
+    },
+    "1_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_2",
+        "mix1_8_3",
+        "mix1_8_4",
+        "mix1_8_5"
+      ]
+    },
+    "1_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_2"
+      ]
+    },
+    "1_10_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_10_1",
+        "mix1_10_2"
+      ]
+    },
+    "1_11_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_11_1",
+        "mix1_11_2"
+      ]
+    },
+    "1_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_12_1",
+        "mix1_12_2"
+      ]
+    },
+    "1_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1"
+      ]
+    },
+    "1_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1"
+      ]
+    },
+    "1_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1"
+      ]
+    },
+    "1_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_1"
+      ]
+    },
+    "1_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_22_1"
+      ]
+    },
+    "1_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_23_1",
+        "mix1_23_2"
+      ]
+    },
+    "1_24_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_24_1"
+      ]
+    },
+    "1_25_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_25_1"
+      ]
+    },
+    "1_26_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_26_1"
+      ]
+    },
+    "1_27_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_27_1"
+      ]
+    },
+    "1_28_0": {
+      "kind": "touch",
+      "mix": [],
+      "motions": [
+        "motion1_28"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1",
+        "mix2_2_2"
+      ]
+    },
+    "2_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1",
+        "mix2_3_2",
+        "mix2_3_3"
+      ]
+    },
+    "2_5_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_5_1",
+        "mix2_5_2"
+      ]
+    },
+    "2_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_6_1",
+        "mix2_6_2"
+      ]
+    },
+    "2_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1"
+      ]
+    },
+    "2_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_8_1",
+        "mix2_8_2"
+      ]
+    },
+    "2_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_9_1",
+        "mix2_9_2"
+      ]
+    },
+    "2_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1"
+      ]
+    },
+    "2_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_11_1"
+      ]
+    },
+    "2_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_12_1"
+      ]
+    },
+    "2_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_13_1"
+      ]
+    },
+    "2_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1"
+      ]
+    },
+    "2_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1",
+        "mix2_15_2",
+        "mix2_15_3",
+        "mix2_15_4",
+        "mix2_15_5"
+      ]
+    },
+    "2_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_1"
+      ]
+    },
+    "2_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1"
+      ]
+    },
+    "2_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1"
+      ]
+    },
+    "2_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1"
+      ]
+    },
+    "2_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_20_1"
+      ]
+    },
+    "2_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1"
+      ]
+    },
+    "2_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_22_1"
+      ]
+    },
+    "2_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_23_1"
+      ]
+    },
+    "2_24_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_24_1"
+      ]
+    },
+    "2_25_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_25_1"
+      ]
+    },
+    "2_26_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_26_1"
+      ]
+    },
+    "2_27_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_27_1"
+      ]
+    },
+    "2_28_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_28_1"
+      ]
+    },
+    "2_29_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_29_1"
+      ]
+    },
+    "2_30_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_30_1"
+      ]
+    }
+  },
+  "illust_dating5": {
+    "1_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_2"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_5_1",
+        "mix1_5_2"
+      ]
+    },
+    "1_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_6_1",
+        "mix1_6_2"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1"
+      ]
+    },
+    "1_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_2"
+      ]
+    },
+    "1_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_2"
+      ]
+    },
+    "1_10_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_10_1",
+        "mix1_10_2"
+      ]
+    },
+    "1_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_12_1"
+      ]
+    },
+    "1_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1"
+      ],
+      "motions": [
+        "motion1_18"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_2"
+      ]
+    },
+    "2_2_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_2_1",
+        "mix2_2_2"
+      ]
+    },
+    "2_3_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_3_1",
+        "mix2_3_2"
+      ]
+    },
+    "2_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_4_1",
+        "mix2_4_2"
+      ]
+    },
+    "2_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1"
+      ]
+    },
+    "2_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_6_1"
+      ]
+    },
+    "2_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1"
+      ]
+    },
+    "2_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_8_1"
+      ]
+    },
+    "2_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_9_1",
+        "mix2_9_2"
+      ]
+    },
+    "2_10_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_10_1",
+        "mix2_10_2"
+      ]
+    },
+    "2_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_11_1"
+      ]
+    },
+    "2_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_12_1"
+      ]
+    },
+    "2_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_13_1"
+      ]
+    },
+    "2_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1"
+      ]
+    },
+    "2_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1"
+      ]
+    },
+    "2_16_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_16_1",
+        "mix2_16_2"
+      ]
+    },
+    "2_17_1": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1"
+      ]
+    },
+    "2_18_1": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1"
+      ]
+    },
+    "2_19_1": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1"
+      ]
+    },
+    "2_20_1": {
+      "kind": "touch",
+      "mix": [
+        "mix2_20_1"
+      ]
+    },
+    "2_21_1": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1"
+      ]
+    },
+    "2_22_2": {
+      "kind": "touch",
+      "mix": [
+        "mix2_22_1"
+      ]
+    },
+    "2_23_2": {
+      "kind": "touch",
+      "mix": [
+        "mix2_23_1"
+      ]
+    },
+    "2_24_2": {
+      "kind": "touch",
+      "mix": [
+        "mix2_24_1"
+      ]
+    },
+    "2_25_2": {
+      "kind": "touch",
+      "mix": [
+        "mix2_25_1"
+      ]
+    },
+    "2_26_3": {
+      "kind": "touch",
+      "mix": [
+        "mix2_26_1"
+      ]
+    },
+    "2_27_3": {
+      "kind": "touch",
+      "mix": [
+        "mix2_27_1"
+      ]
+    },
+    "2_28_3": {
+      "kind": "touch",
+      "mix": [
+        "mix2_28_1",
+        "mix2_28_2",
+        "mix2_28_3",
+        "mix2_28_4",
+        "mix2_28_5",
+        "mix2_28_6",
+        "mix2_28_7",
+        "mix2_28_8",
+        "mix2_28_9",
+        "mix2_28_10"
+      ],
+      "clickMax": 11
+    },
+    "2_29_3": {
+      "kind": "touch",
+      "mix": [
+        "mix2_29_1"
+      ]
+    },
+    "2_30_3": {
+      "kind": "touch",
+      "mix": [
+        "mix2_30_1"
+      ]
+    },
+    "2_31_2": {
+      "kind": "touch",
+      "mix": [
+        "mix2_31_1"
+      ]
+    },
+    "2_32_1": {
+      "kind": "touch",
+      "mix": [
+        "mix2_32_1"
+      ]
+    }
+  },
+  "illust_dating6": {
+    "1_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_1_1",
+        "mix1_1_2"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_6_1",
+        "mix1_6_2"
+      ],
+      "motions": [
+        "motion1_6"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1",
+        "mix2_1_1",
+        "mix2_1_1",
+        "mix2_1_1",
+        "mix2_1_end"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ]
+    },
+    "2_3_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_3_1",
+        "mix2_2_2"
+      ],
+      "motions": [
+        "motion2_3"
+      ],
+      "nextStage": "next"
+    },
+    "3_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_1_1",
+        "mix3_1_1",
+        "mix3_1_1",
+        "mix3_1_1",
+        "mix3_1_end"
+      ]
+    },
+    "3_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_2_1"
+      ]
+    },
+    "3_3_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_3_1",
+        "mix3_2_2"
+      ],
+      "motions": [
+        "motion3_3"
+      ],
+      "nextStage": "next"
+    },
+    "4_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix4_1_1",
+        "mix4_1_1",
+        "mix4_1_1",
+        "mix4_1_1",
+        "mix4_1_end"
+      ]
+    },
+    "4_2_0": {
+      "kind": "drag",
+      "mix": [
+        "mix4_2_1",
+        "mix4_2_2"
+      ],
+      "motions": [
+        "motion4_2"
+      ],
+      "nextStage": "next"
+    },
+    "5_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix5_1_1",
+        "mix5_1_1",
+        "mix5_1_1",
+        "mix5_1_1",
+        "mix5_1_end"
+      ]
+    },
+    "5_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix5_2_1"
+      ],
+      "motions": [
+        "motion5_2"
+      ],
+      "nextStage": "next"
+    },
+    "6_1_0": {
+      "kind": "drag",
+      "mix": [
+        "mix6_1_1",
+        "mix6_1_2"
+      ]
+    },
+    "6_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_2_1"
+      ]
+    },
+    "6_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_3_1"
+      ]
+    },
+    "6_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_4_1"
+      ]
+    },
+    "6_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_5_1"
+      ]
+    },
+    "6_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_6_1"
+      ]
+    },
+    "6_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_7_1"
+      ]
+    },
+    "6_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_8_1"
+      ]
+    },
+    "6_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix6_9_1",
+        "mix6_9_2"
+      ]
+    },
+    "6_10_0": {
+      "kind": "drag",
+      "mix": [
+        "mix6_10_1",
+        "mix6_10_2"
+      ]
+    },
+    "6_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_11_1"
+      ]
+    },
+    "6_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_12_1"
+      ]
+    },
+    "6_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_13_1"
+      ]
+    },
+    "6_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_14_1"
+      ]
+    },
+    "6_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_15_1"
+      ]
+    },
+    "6_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_16_1"
+      ]
+    },
+    "6_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_17_1"
+      ]
+    },
+    "6_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_18_1"
+      ]
+    },
+    "6_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_19_1"
+      ]
+    },
+    "6_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_20_1"
+      ]
+    },
+    "6_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_21_1"
+      ]
+    },
+    "6_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_22_1"
+      ]
+    },
+    "6_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_23_1"
+      ]
+    },
+    "6_24_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_24_1"
+      ]
+    },
+    "6_25_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_25_1"
+      ]
+    },
+    "6_26_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_26_1"
+      ]
+    },
+    "6_27_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_27_1"
+      ]
+    },
+    "6_28_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_28_1"
+      ]
+    },
+    "6_29_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_29_1"
+      ]
+    },
+    "6_30_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_30_1"
+      ]
+    },
+    "6_31_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_31_1"
+      ]
+    },
+    "6_32_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_32_1"
+      ]
+    },
+    "6_33_0": {
+      "kind": "touch",
+      "mix": [
+        "mix6_33_1"
+      ]
+    }
+  },
+  "illust_dating7": {
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1"
+      ]
+    },
+    "1_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1"
+      ]
+    },
+    "1_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_2"
+      ]
+    },
+    "1_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1"
+      ]
+    },
+    "1_11_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_11_1",
+        "mix1_11_2"
+      ]
+    },
+    "1_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_12_1",
+        "mix1_12_2"
+      ]
+    },
+    "1_13_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_13_1",
+        "mix1_13_2"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1"
+      ]
+    },
+    "1_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1"
+      ]
+    },
+    "1_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1"
+      ]
+    },
+    "1_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_1"
+      ]
+    },
+    "1_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_22_1"
+      ]
+    },
+    "1_23_7": {
+      "kind": "touch",
+      "mix": [
+        "mix1_23_1"
+      ]
+    },
+    "1_24_7": {
+      "kind": "touch",
+      "mix": [
+        "mix1_24_1"
+      ]
+    },
+    "1_25_7": {
+      "kind": "touch",
+      "mix": [
+        "mix1_25_1"
+      ]
+    },
+    "1_26_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_26_1"
+      ]
+    },
+    "1_27_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_27_1"
+      ]
+    },
+    "1_28_4": {
+      "kind": "touch",
+      "mix": [
+        "mix1_28_1"
+      ]
+    },
+    "1_29_4": {
+      "kind": "touch",
+      "mix": [
+        "mix1_29_1"
+      ]
+    },
+    "1_30_4": {
+      "kind": "touch",
+      "mix": [
+        "mix1_30_1"
+      ]
+    },
+    "1_31_4": {
+      "kind": "touch",
+      "mix": [
+        "mix1_31_1"
+      ]
+    },
+    "1_32_4": {
+      "kind": "touch",
+      "mix": [
+        "mix1_32_1"
+      ],
+      "motions": [
+        "motion1_32"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ]
+    },
+    "2_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1"
+      ]
+    },
+    "2_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_4_1"
+      ]
+    },
+    "2_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_5_1"
+      ]
+    },
+    "2_6_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_6_1",
+        "mix2_6_2"
+      ]
+    },
+    "2_7_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_7_1",
+        "mix2_7_2"
+      ]
+    },
+    "2_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_8_1",
+        "mix2_8_2"
+      ]
+    },
+    "2_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_9_1",
+        "mix2_9_2"
+      ]
+    },
+    "2_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1"
+      ]
+    },
+    "2_11_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_11_1",
+        "mix2_11_2"
+      ]
+    },
+    "2_12_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_12_1"
+      ]
+    },
+    "2_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_13_1"
+      ]
+    },
+    "2_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1"
+      ]
+    },
+    "2_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1"
+      ]
+    },
+    "2_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_1"
+      ]
+    },
+    "2_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1"
+      ]
+    },
+    "2_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1"
+      ]
+    },
+    "2_19_5": {
+      "kind": "drag",
+      "mix": [
+        "mix2_19_1",
+        "mix2_19_2"
+      ]
+    },
+    "2_20_5": {
+      "kind": "drag",
+      "mix": [
+        "mix2_20_1",
+        "mix2_20_2"
+      ]
+    },
+    "2_21_5": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1"
+      ]
+    },
+    "2_22_5": {
+      "kind": "touch",
+      "mix": [
+        "mix2_22_1"
+      ]
+    },
+    "2_23_5": {
+      "kind": "drag",
+      "mix": [
+        "mix2_23_1",
+        "mix2_23_2"
+      ]
+    },
+    "2_24_5": {
+      "kind": "touch",
+      "mix": [
+        "mix2_24_1"
+      ]
+    },
+    "2_25_6": {
+      "kind": "touch",
+      "mix": [
+        "mix2_25_1"
+      ]
+    },
+    "2_26_6": {
+      "kind": "touch",
+      "mix": [
+        "mix2_26_1"
+      ]
+    },
+    "2_27_6": {
+      "kind": "touch",
+      "mix": [
+        "mix2_27_1"
+      ]
+    },
+    "2_28_6": {
+      "kind": "touch",
+      "mix": [
+        "mix2_28_1"
+      ]
+    },
+    "2_29_6": {
+      "kind": "touch",
+      "mix": [
+        "mix2_29_1"
+      ]
+    },
+    "2_30_7": {
+      "kind": "touch",
+      "mix": [
+        "mix2_30_1"
+      ]
+    },
+    "2_31_7": {
+      "kind": "touch",
+      "mix": [
+        "mix2_31_1"
+      ]
+    }
+  },
+  "illust_dating8": {
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1"
+      ]
+    },
+    "1_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_8_1"
+      ]
+    },
+    "1_9_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_9_1"
+      ]
+    },
+    "1_10_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1"
+      ]
+    },
+    "1_11_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_12_1"
+      ]
+    },
+    "1_13_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1"
+      ]
+    },
+    "1_15_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1"
+      ]
+    },
+    "1_19_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1"
+      ]
+    },
+    "1_20_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1"
+      ]
+    },
+    "1_21_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_1"
+      ]
+    },
+    "1_22_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_22_1"
+      ]
+    },
+    "1_23_12": {
+      "kind": "touch",
+      "mix": [
+        "mix1_23_1"
+      ]
+    },
+    "1_24_12": {
+      "kind": "touch",
+      "mix": [
+        "mix1_24_1"
+      ]
+    },
+    "1_25_12": {
+      "kind": "touch",
+      "mix": [
+        "mix1_25_1"
+      ]
+    },
+    "1_26_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_26_1"
+      ]
+    },
+    "1_27_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_27_1"
+      ]
+    },
+    "1_27_2": {
+      "kind": "touch",
+      "mix": [
+        "mix1_29_1"
+      ]
+    },
+    "1_27_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_28_1"
+      ]
+    },
+    "1_27_12": {
+      "kind": "touch",
+      "mix": [
+        "mix1_30_1"
+      ]
+    },
+    "1_31_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_31_1"
+      ]
+    },
+    "1_32_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_32_1"
+      ]
+    },
+    "1_33_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_33_1"
+      ]
+    },
+    "1_34_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_34_1"
+      ]
+    },
+    "1_35_11": {
+      "kind": "touch",
+      "mix": [
+        "mix1_35_1"
+      ],
+      "motions": [
+        "motion1_35"
+      ],
+      "nextStage": "next"
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1"
+      ],
+      "motions": [
+        "motion2_1"
+      ],
+      "nextStage": "next"
+    },
+    "3_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_1_1"
+      ]
+    },
+    "3_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_2_1"
+      ]
+    },
+    "3_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_3_1"
+      ]
+    },
+    "3_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_4_1",
+        "mix3_4_2"
+      ]
+    },
+    "3_5_0": {
+      "kind": "drag",
+      "mix": [
+        "mix3_5_1",
+        "mix3_5_2"
+      ]
+    },
+    "3_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_6_1"
+      ]
+    },
+    "3_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_7_1"
+      ]
+    },
+    "3_8_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_8_1"
+      ]
+    },
+    "3_9_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_9_1"
+      ]
+    },
+    "3_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_10_1"
+      ]
+    },
+    "3_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix3_11_1"
+      ]
+    },
+    "3_12_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_12_1"
+      ]
+    },
+    "3_13_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_13_1"
+      ]
+    },
+    "3_14_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_14_1"
+      ]
+    },
+    "3_15_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_15_1"
+      ]
+    },
+    "3_16_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_16_1"
+      ]
+    },
+    "3_17_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_17_1"
+      ]
+    },
+    "3_18_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_18_1"
+      ]
+    },
+    "3_19_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_19_1"
+      ]
+    },
+    "3_20_12": {
+      "kind": "touch",
+      "mix": [
+        "mix3_20_1"
+      ]
+    },
+    "3_21_12": {
+      "kind": "touch",
+      "mix": [
+        "mix3_21_1"
+      ]
+    },
+    "3_22_12": {
+      "kind": "touch",
+      "mix": [
+        "mix3_22_1"
+      ]
+    },
+    "3_23_12": {
+      "kind": "touch",
+      "mix": [
+        "mix3_23_1"
+      ]
+    },
+    "3_24_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_24_1"
+      ]
+    },
+    "3_25_12": {
+      "kind": "touch",
+      "mix": [
+        "mix3_25_1"
+      ]
+    },
+    "3_26_2": {
+      "kind": "touch",
+      "mix": [
+        "mix3_26_1"
+      ]
+    }
+  },
+  "illust_dating9": {
+    "1_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_1_1"
+      ]
+    },
+    "1_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_2_1"
+      ]
+    },
+    "1_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_3_1"
+      ]
+    },
+    "1_4_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_4_1"
+      ]
+    },
+    "1_5_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_5_1"
+      ]
+    },
+    "1_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_6_1"
+      ]
+    },
+    "1_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_7_1"
+      ]
+    },
+    "1_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_8_1",
+        "mix1_8_2"
+      ]
+    },
+    "1_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_9_1",
+        "mix1_9_2"
+      ]
+    },
+    "1_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_1",
+        "mix1_10_2",
+        "mix1_10_3",
+        "mix1_10_4",
+        "mix1_10_5",
+        "mix1_10_6",
+        "mix1_10_7"
+      ],
+      "clickMax": 8
+    },
+    "1_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_11_1"
+      ]
+    },
+    "1_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix1_12_1",
+        "mix1_12_2"
+      ]
+    },
+    "1_13_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_13_1"
+      ]
+    },
+    "1_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_1",
+        "mix1_14_2",
+        "mix1_14_3",
+        "mix1_14_4",
+        "mix1_14_5",
+        "mix1_14_6",
+        "mix1_14_7",
+        "mix1_14_8",
+        "mix1_14_9"
+      ],
+      "clickMax": 10
+    },
+    "1_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_15_1"
+      ]
+    },
+    "1_16_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_16_1"
+      ]
+    },
+    "1_17_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_17_1"
+      ]
+    },
+    "1_18_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_18_1"
+      ]
+    },
+    "1_19_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_19_1"
+      ]
+    },
+    "1_20_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_20_1"
+      ]
+    },
+    "1_21_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_21_1"
+      ]
+    },
+    "1_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_22_1"
+      ]
+    },
+    "1_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_23_1"
+      ]
+    },
+    "1_24_8": {
+      "kind": "touch",
+      "mix": [
+        "mix1_24_1"
+      ]
+    },
+    "1_25_9": {
+      "kind": "touch",
+      "mix": [
+        "mix1_25_1"
+      ]
+    },
+    "1_26_9": {
+      "kind": "touch",
+      "mix": [
+        "mix1_26_1"
+      ]
+    },
+    "1_27_9": {
+      "kind": "touch",
+      "mix": [
+        "mix1_27_1"
+      ]
+    },
+    "1_28_9": {
+      "kind": "touch",
+      "mix": [
+        "mix1_28_1"
+      ]
+    },
+    "1_29_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_29_1"
+      ]
+    },
+    "1_30_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_30_1"
+      ]
+    },
+    "1_31_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_31_1"
+      ]
+    },
+    "1_32_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_32_1"
+      ]
+    },
+    "1_33_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_33_1"
+      ]
+    },
+    "1_34_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_34_1"
+      ]
+    },
+    "1_35_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_35_1"
+      ]
+    },
+    "1_36_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_36_1"
+      ]
+    },
+    "1_37_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_37_1"
+      ],
+      "motions": [
+        "motion1_37"
+      ],
+      "nextStage": "next"
+    },
+    "1_38_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_10_8"
+      ]
+    },
+    "1_39_0": {
+      "kind": "touch",
+      "mix": [
+        "mix1_14_10"
+      ]
+    },
+    "1_40_8": {
+      "kind": "touch",
+      "mix": [
+        "mix1_37_1"
+      ]
+    },
+    "1_41_8": {
+      "kind": "touch",
+      "mix": [
+        "mix1_38_1"
+      ]
+    },
+    "2_1_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_1_1"
+      ]
+    },
+    "2_2_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_2_1"
+      ]
+    },
+    "2_3_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_3_1"
+      ]
+    },
+    "2_4_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_4_1",
+        "mix2_4_2"
+      ]
+    },
+    "2_5_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_5_1",
+        "mix2_5_2"
+      ]
+    },
+    "2_6_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_6_1"
+      ]
+    },
+    "2_7_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_7_1"
+      ]
+    },
+    "2_8_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_8_1",
+        "mix2_8_2"
+      ]
+    },
+    "2_9_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_9_1",
+        "mix2_9_2"
+      ]
+    },
+    "2_10_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_10_1"
+      ]
+    },
+    "2_11_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_11_1"
+      ]
+    },
+    "2_12_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_12_1",
+        "mix2_12_2"
+      ]
+    },
+    "2_13_0": {
+      "kind": "drag",
+      "mix": [
+        "mix2_13_1",
+        "mix2_13_2"
+      ]
+    },
+    "2_14_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_14_1"
+      ]
+    },
+    "2_15_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_15_1"
+      ]
+    },
+    "2_16_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_1",
+        "mix2_16_2",
+        "mix2_16_3",
+        "mix2_16_4",
+        "mix2_16_5",
+        "mix2_16_6",
+        "mix2_16_7",
+        "mix2_16_8",
+        "mix2_16_9",
+        "mix2_16_10",
+        "mix2_16_11",
+        "mix2_16_12",
+        "mix2_16_13",
+        "mix2_16_14",
+        "mix2_16_15",
+        "mix2_16_16",
+        "mix2_16_17",
+        "mix2_16_18",
+        "mix2_16_19",
+        "mix2_16_20",
+        "mix2_16_21",
+        "mix2_16_22",
+        "mix2_16_23",
+        "mix2_16_24"
+      ],
+      "clickMax": 25
+    },
+    "2_17_9": {
+      "kind": "touch",
+      "mix": [
+        "mix2_17_1"
+      ]
+    },
+    "2_18_9": {
+      "kind": "touch",
+      "mix": [
+        "mix2_18_1"
+      ]
+    },
+    "2_19_9": {
+      "kind": "touch",
+      "mix": [
+        "mix2_19_1"
+      ]
+    },
+    "2_20_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_16_25"
+      ]
+    },
+    "2_21_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_21_1"
+      ]
+    },
+    "2_22_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_22_1"
+      ]
+    },
+    "2_23_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_23_1"
+      ]
+    },
+    "2_24_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_24_1",
+        "mix2_24_2",
+        "mix2_24_3",
+        "mix2_24_4",
+        "mix2_24_5"
+      ]
+    },
+    "2_25_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_25_1"
+      ]
+    },
+    "2_26_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_26_1"
+      ]
+    },
+    "2_27_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_27_1"
+      ]
+    },
+    "2_28_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_28_1"
+      ]
+    },
+    "2_29_10": {
+      "kind": "touch",
+      "mix": [
+        "mix2_29_1"
+      ]
+    },
+    "2_30_9": {
+      "kind": "touch",
+      "mix": [
+        "mix2_30_1"
+      ]
+    },
+    "2_31_9": {
+      "kind": "touch",
+      "mix": [
+        "mix2_31_1"
+      ]
+    },
+    "2_32_9": {
+      "kind": "touch",
+      "mix": [
+        "mix2_32_1"
+      ]
+    },
+    "2_33_0": {
+      "kind": "touch",
+      "mix": [
+        "mix2_33_1"
+      ]
+    }
+  }
+}

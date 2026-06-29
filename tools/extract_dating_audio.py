@@ -369,25 +369,41 @@ def decode_ogg(
             check=True,
             stdout=subprocess.DEVNULL,
         )
-        subprocess.run(
-            [
-                str(ffmpeg),
-                "-hide_banner",
-                "-loglevel",
-                "error",
-                "-y",
-                "-i",
-                str(wav),
-                "-ar",
-                "48000",
-                "-c:a",
-                "libvorbis",
-                "-q:a",
-                "4",
-                str(output),
-            ],
-            check=True,
-        )
+        base_cmd = [
+            str(ffmpeg),
+            "-hide_banner",
+            "-loglevel",
+            "error",
+            "-y",
+            "-i",
+            str(wav),
+            "-ar",
+            "48000",
+        ]
+        try:
+            subprocess.run(
+                [*base_cmd, "-c:a", "libvorbis", "-q:a", "4", str(output)],
+                check=True,
+            )
+        except subprocess.CalledProcessError:
+            # Some Homebrew/macOS FFmpeg builds expose the native Vorbis encoder
+            # but not libvorbis. Native vorbis is good enough for browser OGG
+            # delivery, so fall back instead of forcing a custom FFmpeg build.
+            subprocess.run(
+                [
+                    *base_cmd,
+                    "-ac",
+                    "2",
+                    "-strict",
+                    "-2",
+                    "-c:a",
+                    "vorbis",
+                    "-q:a",
+                    "4",
+                    str(output),
+                ],
+                check=True,
+            )
 
 
 def short_event_name(event_path: str, char_id: str, language: str) -> str | None:
@@ -397,6 +413,21 @@ def short_event_name(event_path: str, char_id: str, language: str) -> str | None
     if not basename.startswith(prefix) or not basename.endswith(suffix):
         return None
     return basename[len(prefix) : -len(suffix)]
+
+
+def short_event_name_from_sample(sample_name: str, char_id: str) -> str | None:
+    """从 FSB stream 名反推事件短名。
+
+    情绪型 interaction bank 的 SoundMaster 路径有时拿不到，但 FEV/FSB 的 wave
+    名仍是 ``Char003303_Int_Smile1_1`` 这种结构。去掉末尾 sample 序号后即可
+    得到和普通 event path 相同的短名 ``Smile1``。
+    """
+    prefix = f"{char_id.capitalize()}_Int_"
+    if not sample_name.startswith(prefix):
+        return None
+    tail = sample_name[len(prefix) :]
+    m = re.match(r"(.+)_\d+$", tail)
+    return m.group(1) if m else tail
 
 
 def round_seconds(ticks: int) -> float:
@@ -414,6 +445,7 @@ def build_character_data(
     bundle_hash: str | None,
     bank_hash: str,
     fsb_hash: str,
+    infer_event_paths_from_samples: bool = False,
     expect_events: int | None = None,
     expect_samples: int | None = None,
 ) -> dict:
@@ -421,13 +453,19 @@ def build_character_data(
     events = {}
     actions = {}
     used_streams = set()
+    skipped_waits: set[str] = set()
+    skipped_waves: set[str] = set()
 
     for event_guid, timeline_guid in graph["events"].items():
         event_path = paths.get(event_guid)
-        if not event_path or not event_path.endswith(f"_{language}"):
-            continue
-        name = short_event_name(event_path, char_id, language)
-        if name is None:
+        if event_path and event_path.endswith(f"_{language}"):
+            name = short_event_name(event_path, char_id, language)
+            if name is None:
+                continue
+        elif infer_event_paths_from_samples:
+            event_path = None
+            name = None
+        else:
             continue
 
         triggers = []
@@ -446,14 +484,18 @@ def build_character_data(
             for choice in raw_choices:
                 wav_guid = graph["waits"].get(choice["wait"])
                 if wav_guid is None:
-                    raise ValueError(f"未知 WAIT：{choice['wait']}")
+                    skipped_waits.add(choice["wait"])
+                    continue
                 stream_index = graph["waves"].get(wav_guid)
                 if stream_index is None:
-                    raise ValueError(f"未知 WAV：{wav_guid}")
+                    skipped_waves.add(wav_guid)
+                    continue
                 if stream_index not in metadata:
                     raise ValueError(f"FSB 缺少 stream index {stream_index}")
                 sample = metadata[stream_index]
                 sample_name = sample["name"]
+                if name is None:
+                    name = short_event_name_from_sample(sample_name, char_id)
                 used_streams.add(stream_index)
                 choices.append(
                     {
@@ -465,18 +507,25 @@ def build_character_data(
                     **sample,
                     "file": f"{safe_filename(sample_name)}.ogg",
                 }
-            triggers.append(
-                {
-                    "at": round_seconds(ref["startTicks"]),
-                    "window": round_seconds(ref["durationTicks"]),
-                    "choices": choices,
-                }
-            )
+            if choices:
+                triggers.append(
+                    {
+                        "at": round_seconds(ref["startTicks"]),
+                        "window": round_seconds(ref["durationTicks"]),
+                        "choices": choices,
+                    }
+                )
 
+        if name is None:
+            continue
         triggers.sort(key=lambda item: item["at"])
         events[name] = {
             "guid": event_guid,
-            "path": event_path,
+            "path": event_path or (
+                f"event:/Voices/Common/{char_id.capitalize()}/Interaction/"
+                f"{char_id.capitalize()}_Int_{name}_{language}"
+            ),
+            **({"pathInferredFromSamples": True} if event_path is None else {}),
             "triggers": triggers,
         }
         if re.match(r"^(?:mix|motion)\d+_", name):
@@ -489,6 +538,18 @@ def build_character_data(
     if expect_samples is not None and len(used_streams) != expect_samples:
         raise ValueError(
             f"预期引用 {expect_samples} 个 sample，实际 {len(used_streams)}"
+        )
+    if skipped_waits:
+        print(
+            "warning: 跳过未知 WAIT 候选 "
+            f"{len(skipped_waits)} 个：{', '.join(sorted(skipped_waits)[:8])}",
+            file=sys.stderr,
+        )
+    if skipped_waves:
+        print(
+            "warning: 跳过未知 WAV 候选 "
+            f"{len(skipped_waves)} 个：{', '.join(sorted(skipped_waves)[:8])}",
+            file=sys.stderr,
         )
 
     return {
@@ -520,6 +581,11 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         required=True,
         help="Master.strings 导出的 GUID<TAB>event path",
+    )
+    parser.add_argument(
+        "--infer-event-paths-from-samples",
+        action="store_true",
+        help="当 event-paths 缺失目标事件时，从 FSB stream 名反推情绪事件名。",
     )
     parser.add_argument("--dating-id", required=True, help="例如 illust_dating18")
     parser.add_argument("--char-id", required=True, help="例如 char000396")
@@ -595,6 +661,7 @@ def main():
         bundle_hash=bundle_hash,
         bank_hash=bank_hash,
         fsb_hash=sha256(fsb),
+        infer_event_paths_from_samples=args.infer_event_paths_from_samples,
         expect_events=args.expect_events,
         expect_samples=args.expect_samples,
     )
@@ -609,6 +676,8 @@ def main():
     existing = document["characters"].get(args.dating_id)
     if existing and "sfx" in existing:
         character["sfx"] = existing["sfx"]
+    if existing and "interactionVoices" in existing:
+        character["interactionVoices"] = existing["interactionVoices"]
     document["characters"][args.dating_id] = character
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(

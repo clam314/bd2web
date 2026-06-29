@@ -1193,13 +1193,556 @@ event:/Cinematic/Visual_Novel/Char003303/Interaction/idle2/motion2_22
 - 15 个 multi instrument
 - 42 个 WAIT/WAV/sample
 
-但 Nebris voice 和莎拉不同：莎拉 voice event path 是 `mix/motion` 动作名，
-例如 `Char000396_Int_mix6_7_1_KR`；Nebris voice sample 是 `Joy1`、`Smile1`、
-`Sigh1`、`Pain1` 这类情绪池，而且 prefab 的互动点脚本只包含 Spine 动作/SFX 信息，
+但 Nebris voice 和莎拉不同：莎拉已经从 SoundMaster 导出了完整 event path，能看到
+`event:/Voices/Common/Char000396/Interaction/Char000396_Int_mix6_7_1_KR`
+这类“动作名 voice event”；Nebris 目前只解析了 interaction voice bank 本体，能看到
+`Joy1`、`Smile1`、`Sigh1`、`Pain1` 这类情绪 sample，但还没有拿到 Nebris voice bank
+对应的 SoundMaster event path。prefab 的互动点脚本只包含 Spine 动作/SFX 信息，
 没有发现“某个 point 对应某个情绪 voice”的字段。
 
 所以当前不能把 voice 随机硬配到动作上，否则会出现“声音有了但语义不对”。后续要接 voice，
 需要继续找游戏运行时的动作→情绪映射来源；找不到证据前只保留已证实的 SFX。
+
+#### 2026-06-24 继续追 Nebris voice 映射：当前结论
+
+为了绕开 `/private/tmp` 和 adb pull 的权限/稳定性问题，本地新增仓库内临时目录
+`local_device_cache/`，并写入 `.gitignore`。手机缓存文件可以拉到这里做分析，但该目录不进 git。
+
+已从当前手机缓存拉到：
+
+- `com.unity.addressables/file.json`
+- `com.unity.addressables/catalog_alpha.json`
+- `SoundData/catalog_sound_hd.json`
+- `Data/`
+- `Neo/`
+
+当前 `file.json` 显示版本/构建时间为：
+
+- `version = 20260616170924`
+- `buildTime = 2026-06-16T17:09:24Z`
+- `bundles = 1891`
+
+`file.json` 中确认 `interaction_char003303.bytes` 仍存在，且与旧备份中已分析的
+Nebris interaction voice bank 对应：
+
+```text
+common-interactionvoice_assets_bundleinteractionvoice/interaction_char003303.bytes
+bundleName = a95eeb8e3db465231e037bdca581ebe2
+hash       = 77705eb8a0103dcb9b9982ebac3d2162
+size       = 829109
+```
+
+这说明“音频资源本身缺失”不是问题；问题仍是缺少互动动作到情绪 voice 池的映射。
+
+进一步查 IL2CPP metadata 得到更明确的映射字段位置：游戏代码中存在
+`SpineInteractionPointTable`，并且该表有以下字段/访问器：
+
+- `SoundVoiceName`
+- `SoundMotionVoiceName`
+- `LongPressFailVoiceName`
+- `LongPressLoopVoiceName`
+- `LongPressSuccessVoiceName`
+- `InteractionDatingTextId`
+
+`SpineInteractionTable` 里还存在：
+
+- `HasSoundVoiceJP`
+- `HasSoundVoiceKR`
+- `SoundVoiceBankName`
+- `SoundBGMName`
+- `SoundAmbName`
+
+因此 Nebris 的正确 voice 接法应当读 `SpineInteractionPointTable`，而不是从 FEV event
+或 Spine 动画名反推。
+
+当前手机 `Data/` 缓存共 78 个文件，全部表现为加密/封装数据：
+
+- 文件大小均按 4096 字节页对齐。
+- 所有文件前 16 字节相同：`b3 d5 0c 27 2f 43 ab d8 f9 cf f1 4f 9a 24 6c a9`。
+- 从第 32 字节开始每个文件都不同。
+- 普通 `sqlite3` 打开会报 `file is not a database`。
+- 在 `Data/` 和 `Neo/` 中搜不到明文 `SpineInteractionPointTable`、
+  `SoundVoiceName`、`Char003303`、`Joy1`、`Smile2` 等关键词。
+
+metadata 中同时能看到 SQLCipher/SQLite 相关字符串，例如：
+
+- `ConnectDB RawDataManager.Instance.SetSQLite completed`
+- `ConnectDB new SQLiteDB => filePath : {0} / isEncrypted : {1}`
+- `SQLite fail set key`
+- `codec_key_derive: deriving key using AES256`
+
+所以当前判断：`Data/` 很可能是 SQLCipher/加密 SQLite 表缓存，`SpineInteractionPointTable`
+在里面，但需要数据库 key 或运行时解密结果才能读取。
+
+已经排除的方向：
+
+- `catalog_alpha.json` / `file.json`：只证明互动资源存在，不包含 point→voice 映射。
+- Nebris interaction voice FEV/FSB：只有情绪事件池，没有动作点路径。
+- `illust_dating1.skel`：只有 `point/mix/motion` 动画名，没有情绪 voice 名。
+- Unity prefab 互动脚本：有 action/motion/hotzone/隐藏点信息，没有 voice 字段。
+- Data 文件名：不是 `SpineInteractionPointTable` 等表名的常规 SHA1/MD5。
+- IL2CPP 字符串字面量表：没有明文 `key` / `AES` / `sqlite` / `cipher` / `password` / `db`
+  等可直接作为 SQLCipher 密钥的字符串。
+
+补充排查：重新用 UnityPy 直接读取 6/02 备份中的
+`common-char-datingillust_assets_all` typetree，确认 prefab 体系里确实存在
+`VoiceSoundEventName` 字段，但只出现在部分资源的根配置
+`_defaultSpineMotionByGroup[*]._GaugeSettingData.MotionNameByScoreList[*]` 中：
+
+| 资源 | `VoiceSoundEventName` 数量 | 备注 |
+|---|---:|---|
+| `Illust_dating1` | 0 | Nebris，没有 voice 字段 |
+| `Illust_dating15` | 2 | gauge 分数配置，值为 `Common/Char067004/Interaction/Char067004_Int_Shout1` |
+| `Illust_dating16` | 1 | gauge 分数配置，值为空字符串 |
+| `Illust_dating18` | 2 | gauge 分数配置，值为 `Common/Char067004/Interaction/Char067004_Int_Shout1` |
+
+其余 `Illust_dating2` 到 `Illust_dating14`、`Illust_dating17` 均为 0。Nebris 的根配置
+只有三段默认待机与空 gauge 设置；相关 `point1_18` / `point2_22` 等互动点 typetree 只有
+`PlayMixAnimNames`、`PlayMotionName`、`_playMotionNames`、gauge/longPress/hidden/hotzone 等字段，
+没有 `VoiceSoundEventName`、`SoundVoiceName` 或情绪 voice 名。
+
+所以更准确的结论是：prefab 体系不是完全没有 voice 字段，但 Nebris / `Illust_dating1`
+没有把 voice 映射写在 prefab 里；它仍应来自 `SpineInteractionPointTable` 或运行时代码/表。
+
+#### 2026-06-24 横向审计：不要把 sample 名误判成工作量
+
+当前 `file.json` 中共有 19 个 `common-interactionvoice.../interaction_charXXXXXX.bytes`
+角色 bank。快速横扫这些 bank 的 FSB stream/sample 名发现：几乎所有 sample 都是
+`CharXXXXXX_Int_Joy/Smile/Sigh/Pain/...` 这类情绪池命名；莎拉 `char000396` 也是如此。
+
+这说明 sample 名本身不能判断是否可自动接入。莎拉之所以能自动，是因为 SoundMaster
+里的 FMOD event path 额外提供了动作名，例如：
+
+```text
+event:/Voices/Common/Char000396/Interaction/Char000396_Int_mix6_30_1_KR
+event:/Voices/Common/Char000396/Interaction/Char000396_Int_mix1_8_long_JP
+```
+
+因此后续新增角色的工作量不应按“每个 sample 都要人工听”估算，而应先批量导出
+SoundMaster 的 `event GUID -> event path`：
+
+- 如果某个角色有 `CharXXXXXX_Int_mix..._KR` / `CharXXXXXX_Int_motion..._KR`，
+  这类 voice 可以像莎拉一样按动作名自动接入。
+- 如果某个角色只有 `CharXXXXXX_Int_Joy..._KR` / `Smile..._KR` 这类情绪 event，
+  才需要 `SpineInteractionPointTable` 或运行态表映射。
+
+临时验证工具：
+
+- 已在 `local_device_cache/` 下放置临时 UnityPy 依赖和 patched dump so，不进 git。
+- 已把 `/data/local/tmp/bd2sound/` 临时工具目录推到设备，包括
+  `libfmod.so`、`libfmodstudio.so`、`dumpfmod.jar`、patched `libdumpfmod.so` 和 `Master.strings`。
+- patched so 将原本只过滤 `event:/Cin` 的条件放宽为 `event:/`，目标是一次 dump 出
+  `event:/Voices/Common/...` 与 `event:/Cinematic/...` 两类路径。
+- 当前卡点不是资源或脚本，而是 adb daemon 在 Codex 沙箱内无法重启；外部终端保持
+  `adb start-server` 后即可继续运行。2026-06-24 复查时确认设备本身一直在线：
+  `adb devices` 曾返回 `RFCY71DH3RW device`；失败发生在 daemon 不存在时，Codex 沙箱尝试
+  启动 adb server 并绑定 smartsocket，被系统拒绝：
+  `could not install *smartsocket* listener: Operation not permitted`。因此不要再把这类失败判断为
+  “设备不在”，正确处理是让本机终端先启动/保持 adb daemon，然后 Codex 只复用连接。
+
+```bash
+CLASSPATH=/data/local/tmp/bd2sound/dumpfmod.jar app_process /data/local/tmp bd2.DumpFmod
+```
+
+另发现一个更轻量的旧验证工具：`/private/tmp/bd2-device-soundmaster/dump_fmod_strings`
+是 ARM64 独立程序，硬编码过滤 `Char000396` 和
+`/data/local/tmp/bd2sound/Master.strings`，不依赖 Java `app_process` / NativeActivity。
+已在 `local_device_cache/bd2_current_20260624/dump_fmod_by_char/` 生成 19 个同长度角色号的
+patched 版本，并准备了忽略目录内脚本：
+
+```bash
+./local_device_cache/bd2_current_20260624/run_dump_interaction_voice_paths.sh
+```
+
+用途：本地终端先执行 `adb start-server` 后，批量导出 19 个 interaction voice 角色的
+`GUID -> event path` 到
+`local_device_cache/bd2_current_20260624/voice_event_paths/CharXXXXXX.tsv`。该目录不进 git，
+只作为 Nebris 与后续角色工作量评估的证据缓存。
+
+2026-06-24 实测该轻量工具当前也不可用：用户本机运行已知应有输出的校准样本
+`dump_fmod_strings_Char000396`，结果为：
+
+```text
+FMOD create failed: 28
+EXIT:0
+```
+
+FMOD 结果码 28 对应 `FMOD_ERR_INTERNAL`，而且发生在
+`FMOD_Studio_System_Create`，还没进入 `Master.strings` 加载或角色过滤。因此这次 19 个
+`voice_event_paths/Char*.tsv` 全部 0 行不是“角色没有 voice 路径”，而是 FMOD runtime
+初始化环境不满足。该路线不要继续作为证据使用；后续应改走：
+
+- 重新复原当时成功的 `app_process + 游戏 APK classpath + JavaVM/NativeActivity` 上下文；
+- 或直接静态解析 `Master.strings` 的 `STDT` 字符串/路径字典；
+- 或在游戏进程运行态 hook `FMOD_Studio_Bank_GetStringInfo` / 数据表读取。
+
+后续可行路线：
+
+1. 反出游戏给 SQLite/SQLCipher 设置的 key，然后离线打开 `Data/` 表。
+2. 在设备运行态 hook `sqlite3_key` / `sqlite3_key_v2` 或 RawDataManager 读表流程，直接拿 key
+   或导出解密后的 `SpineInteractionPointTable`。
+3. 如果 adb daemon 在当前沙箱内又无法启动，可让外部终端保持 adb server 运行后再继续；
+   否则不要在这里反复重试 adb。
+
+#### 2026-06-24 静态解析 `Master.strings/STDT` 的初步结论
+
+`Master.strings` 的 RIFF/FEV 结构为：
+
+```text
+RIFF/FEV
+  FMT
+  LIST/PROJ
+    BNKI
+    LIST/IBSS ... LIST/WAVS 等空壳
+    STDT  2,137,904 bytes
+```
+
+可用字符串都集中在 `STDT`。虽然还没完整还原 `GUID -> path` 的二进制索引，
+但直接扫描 null-terminated 字符串已经能看到完整/半压缩的路径字典碎片：
+
+- 通用前缀：`event:/`、`Voices`、`Common`、`Interaction`
+- 莎拉：`Interaction/Char000396_Int_`，后面既有情绪名，也有 `mix...` 动作名
+- Nebris：`Interaction/Char003303_Int_`，后面只有情绪名
+
+Nebris (`Char003303`) 的 voice 片段为：
+
+```text
+Interaction/Char003303_Int_
+Excitement1/2
+Joy1/2
+Negative1
+Neutral1/2
+Pain1
+Positive1
+Sigh1
+Smile1/2
+Surprise1/2/3
+JP/KR
+```
+
+没有看到 `mix...`、`motion...`、`touch...` 这类可直接和 Spine 动作名对应的 voice event。
+因此 Nebris 的问题不是“没有 voice bank”，而是 voice event 是情绪池命名；要接到具体点击/动作，
+仍需要 `SpineInteractionPointTable`、运行态表映射，或手工/录屏辅助映射。
+
+横向扫当前 19 个 interaction voice 角色，按 `STDT` 字符串片段粗分：
+
+| 类型 | 角色 |
+|---|---|
+| 含动作型片段（`mix` / `motion` / `touch` 等） | `Char000396`, `Char000706`, `Char001006`, `Char001197`, `Char003604`, `Char003892`, `Char004102`, `Char061492`, `Char066403`, `Char067004`, `Char067104` |
+| 只有情绪型片段 | `Char000296`, `Char001106`, `Char003203`, `Char003303`, `Char003402`, `Char060802`, `Char067603` |
+| 当前 `STDT` 未找到 `Interaction/CharXXXXXX_Int_` 区段 | `Char004202` |
+
+注意：这只是路径字典级别的分类，不等于已经生成了可用的 `GUID -> path` TSV。
+但它足够判断工作量趋势：后续角色不会都像 Nebris 一样困难；有动作型片段的角色更接近莎拉，
+可以优先走自动化。
+
+#### M 系列 Mac 备选方案记录
+
+如果后续换到 Apple Silicon / M 系列 Mac：
+
+- 可以直接使用更多 **macOS arm64** 预编译工具，例如 vgmstream arm64 release；
+  Intel Mac 上这些工具需要本地编译或找 x86_64 版本。
+- 不能因为 CPU 都是 arm64 就直接运行 Android APK 里的 `dump_fmod_strings` /
+  `libfmodstudio.so`：它们是 Android/Bionic ELF，不是 macOS Mach-O。M 系列 Mac 不能原生执行。
+- M 系列更适合跑 arm64 Android Emulator 或相关虚拟化环境；如果要复原 FMOD Android 上下文，
+  可以尝试在 Android arm64 emulator/真机里跑，而不是在 macOS 里直接跑 Android ELF。
+- 对本项目最有价值的 M 系列路线仍是两条：
+  1. 用 arm64 工具链更方便地编译/调试 Android 侧小工具或 Frida/hook 方案；
+  2. 用 macOS arm64 原生音频/解码工具减少 vgmstream、ffmpeg 等依赖编译成本。
+
+结论：M 系列 Mac 会让工具链更顺，不会自动解决 `FMOD_Studio_System_Create` 需要 Android
+运行上下文的问题。
+
+#### 2026-06-24 `067104` 战地医疗兵格兰希特：语音是否存在
+
+`067104` 不是新角色，而是格兰希特 (`0671 / Granhildr`) 的新服装。当前 myssal 上游只同步到了
+立绘：
+
+```text
+spine/char/char067104
+```
+
+因此网页能显示立绘，但没有技能动画；上游还没有：
+
+```text
+spine/cutscenes/cutscene_char067104
+```
+
+不过当前游戏 `catalog_alpha.json` 已经能看到 `cutscene_char067104` 的 skel/atlas/png 资源名，
+说明游戏本体已具备技能动画资源，只是 myssal 公开素材仓库还没跟上。
+
+语音方面，当前手机 `file.json` 明确登记了 interaction voice bank：
+
+```text
+common-interactionvoice_assets_bundleinteractionvoice/interaction_char067104.bytes
+bundleName = 945a97e12197d928b1ecb0c8c9d84700
+hash       = 8cc0e66f4cfed48b14c5e1d5f29dd40e
+fileHash   = 3E1C183F72BFB20DA7CDA7D46EC7D865
+size       = 1905334
+```
+
+同时 `Master.strings/STDT` 中存在：
+
+```text
+Interaction/Char067104_Int_
+Angry1
+Annoy1
+Embarrass1/2/3
+Endure1/2
+Mix2_16_1
+Mix2_24_1
+Mix2_5_1
+Mix2_6_1
+Mix2_8_1
+Mix2_30_1
+motion1_18
+Neutral1/2
+Shy1/2
+Sigh1/2/3
+Smile1/2
+Surprise1/2/3
+Touch1
+JP/KR
+```
+
+所以结论是：`067104` **不是没有互动语音**。它有 interaction voice bank，也有动作型
+event 名（`Mix2...`、`motion1_18`、`Touch1`），比 Nebris 那种纯情绪池更接近莎拉，
+理论上可以走较自动化的挂载路线。
+
+当前限制：`/Users/woods/bd2_gamedata_backup/UnityCache/Shared/945a97e.../` 里只有旧的
+`7ff5.../__data`，大小 1.4KB，不是当前 `file.json` 里的 1.9MB bank。因此要真正解码
+`067104` 的 OGG，需要从当前手机缓存或 CDN 拉到 hash 为 `8cc0e66f...` 的 bundle。
+
+#### 后续“自动挂载游戏语音”的可行方案
+
+目标不是为每个角色手写映射，而是形成一条证据优先的流水线：
+
+1. 从 `file.json` 自动发现 `common-interactionvoice.../interaction_charXXXXXX.bytes`。
+2. 拉取对应 Unity bundle（优先手机 UnityCache；缺失时走游戏 CDN/当前设备缓存）。
+3. 用 UnityPy 提取 RIFF FEV 和 FSB5。
+4. 用现有 `tools/extract_dating_audio.py` 的 FEV 解析逻辑读取：
+   - event GUID
+   - timeline 触发点
+   - random selector / weight
+   - sample stream 名和时长
+5. 解析 `Master.strings/STDT` 或通过可运行的 FMOD `GetStringInfo` 导出 `GUID -> event path`。
+6. 对 KR event path 做规范化匹配：
+   - `mix...` / `motion...` / `touch...`：优先自动映射到 Spine 动作名。
+   - 只有 `Joy/Smile/Sigh/Pain/...` 的角色：标记为“需要 `SpineInteractionPointTable` / 运行态表映射”，不要硬配。
+7. 用 vgmstream + ffmpeg 只转码网页实际引用的 KR OGG。
+8. 生成/合并 `data/dating_audio.json`，前端统一用 `costumeId + animationName` 调度。
+
+按这个分类，`067104` 属于“动作型片段存在，值得优先自动化”的角色；`003303` Nebris 属于
+“纯情绪池，需要表映射”的角色。
+
+#### 2026-06-24 全量 interaction voice bank 审计
+
+当前 `file.json` 中登记的 `common-interactionvoice.../interaction_charXXXXXX.bytes`
+共有 19 套；这不是全 192 套服装都有的资源，而是当前客户端实际下发的 interaction voice bank。
+
+按 `Master.strings/STDT` 的路径字典片段分类：
+
+| costumeId | 角色 | 服装 | 类型 | 证据 |
+|---|---|---|---|---|
+| `001197` | 泰瑞丝 |  | 动作型 | `mix` / `motion` |
+| `000396` | 莎赫拉查德 |  | 动作型 | `mix` / `long` |
+| `067004` | 班塔纳 | 温泉修行者 | 动作型 | `mix` |
+| `061492` | 杰尼斯 |  | 动作型 | `mix` / `motion` |
+| `067603` | 威廉明娜 | 水上乐园女王 | 情绪型 | 只有情绪名 |
+| `066403` | 安洁莉卡 | 霓虹救星 | 动作型 | `mix` / `touch` |
+| `001106` | 泰瑞丝 | 保健部 | 情绪型 | 只有情绪名 |
+| `003604` | 奥利维尔 | 传奇退役 | 动作型 | `mix` / `motion` |
+| `004202` | 英格利得 | 卡迪斯的子弹 | 未找到 STDT interaction 区段 | bank 存在，但 Master 字典未扫到 `Interaction/Char004202_Int_` |
+| `003203` | 罗安 | 名人兔女郎 | 情绪型 | 只有情绪名 |
+| `004102` | 提尔 | 澄心无邪兔女郎 | 动作型 | `mix` / `motion` / `touch` |
+| `000296` | 悠丝缇亚 |  | 情绪型 | 只有情绪名 |
+| `067104` | 格兰希特 | 战地医疗兵 | 动作型 | `mix` / `motion` / `touch` |
+| `003892` | 黎维塔 |  | 动作型 | `mix` / `motion` |
+| `003303` | 内布利斯 | 新进员工 | 情绪型 | 只有情绪名 |
+| `000706` | 伊柯利普斯 | 恶梦兔女郎 | 动作型 | `touch` |
+| `001006` | 席比雅 | 比基尼特工 | 动作型 | `mix` / `motion` |
+| `003402` | 墨菲亚 | 白日梦兔女郎 | 情绪型 | 只有情绪名 |
+| `060802` | 爱丽洁 | 代号O | 情绪型 | 只有情绪名 |
+
+临时审计输出保存在忽略目录：
+
+```text
+local_device_cache/bd2_current_20260624/interaction_voice_audit.tsv
+```
+
+结论：
+
+- 不能再按单个 Nebris 推断全局工作量；当前 19 套中约 12 套有动作型片段，可优先自动化。
+- Nebris (`003303`) 确实有 interaction voice bank 和 15 个 KR voice event 名，但都是
+  `Excitement/Joy/Negative/Neutral/Pain/Positive/Sigh/Smile/Surprise` 这类情绪名。
+- 对动作型角色，自动化可以先用 `event path` 里的 `mix/motion/touch` 匹配 Spine 动作。
+- 对情绪型角色，必须继续找 `SpineInteractionPointTable` 或运行态映射；否则硬配会语义错。
+
+#### ADB 协作协议
+
+Codex 当前沙箱经常无法启动 adb daemon（`smartsocket Operation not permitted`），但用户本机
+终端可以正常运行 adb。后续遇到 adb 卡点时：
+
+1. Codex 先给出最小可复现命令，不再反复尝试启动 daemon。
+2. 用户在本机终端运行命令。
+3. 用户把 stdout/stderr 或生成文件路径贴回。
+4. Codex 继续解析结果。
+
+优先需要用户协助拉取的当前资源示例：
+
+```bash
+adb pull \
+  /sdcard/Android/data/com.neowizgames.game.browndust2/files/UnityCache/Shared/945a97e12197d928b1ecb0c8c9d84700/8cc0e66f4cfed48b14c5e1d5f29dd40e/__data \
+  /Users/woods/bd2web/local_device_cache/bd2_current_20260624/interaction_char067104.bundle
+```
+
+如果路径不存在，先在设备上查：
+
+```bash
+adb shell 'find /sdcard/Android/data/com.neowizgames.game.browndust2/files -path "*945a97e12197d928b1ecb0c8c9d84700*" -o -path "*8cc0e66f4cfed48b14c5e1d5f29dd40e*"'
+```
+
+#### 2026-06-24 当前版本 dating prefab 复查
+
+用户已从手机拉取当前版本：
+
+```text
+local_device_cache/bd2_current_20260624/common-char-datingillust_assets_all.bundle
+size = 385,932,491
+bundleName = f17229717fff2baf0b72e1eb98e19b91
+hash = cf55f1e92adbc7dfe8e085fd5d4ac062
+```
+
+用 UnityPy 扫当前大包确认：
+
+- 当前包有 19 个 `Illust_datingX` 根配置（`Illust_dating1` 到 `Illust_dating19`）。
+- `Illust_dating1`（Nebris）当前版本根配置仍然没有 `VoiceSoundEventName`：
+
+```text
+InteractionPointGroupId = 1/2/3
+GroupDefaultSpineMotionName = idle1 / idle2 / idle3
+MotionNameByScoreList = []
+```
+
+- `Illust_dating19`（`067104` 战地医疗兵格兰希特）存在明确 prefab 级语音映射：
+
+```text
+MixAnimationName = mix1_14_1
+VoiceSoundEventName = Common/Char067104/Interaction/Char067104_Int_Surprise2
+SFXSoundEventName = event:/Cinematic/Visual_Novel/Char067104/Interaction/Idle1/mix1_14_1
+```
+
+- `Illust_dating15` / `Illust_dating18` 也仍有 `Char067004_Int_Shout1` 的 gauge 配置。
+
+因此结论更精确：
+
+- “prefab 层可能直接有 voice 映射”是真的，`067104` 已经是正例。
+- 但 Nebris 的普通点击/动作 voice 映射不在 `Illust_dating1` 根配置中；它要么在
+  `SpineInteractionPointTable`，要么在运行时代码按情绪/状态选择，要么在还没定位到的其他资源层。
+- 这次 logcat 命中的是 `adbd service requested ... dump_fmod_strings_Char003303`，只是之前 shell
+  命令的 adb 日志，不是游戏运行时播放语音的日志。
+
+#### 2026-06-24 情绪型角色 prefab / point / Spine 复查
+
+继续检查 Nebris 以及其他情绪型角色后，当前结论如下：
+
+1. 全量扫描当前 `common-char-datingillust_assets_all.bundle` 的所有 `MonoBehaviour` typetree，
+   `VoiceSoundEventName` 只出现在 4 个组件：
+   - `Illust_dating15`：`Char067004_Int_Shout1`
+   - `Illust_dating18`：`Char067004_Int_Shout1` 残留/复用配置
+   - `Illust_dating19`：`Char067104_Int_Surprise2`
+   - `Illust_dating16`：字段存在但值为空
+2. 扫描 Nebris 与其他情绪型角色相关关键词：
+   - `003303` Nebris
+   - `003203`
+   - `003402`
+   - `060802`
+   - `067603`
+   - `001106`
+   - `000296`
+
+   没有发现 `VoiceSoundEventName` / `SoundVoiceName` / `SoundMotionVoiceName` 与这些角色的
+   point 组件绑定；命中的 `000296` / `060802` / `067603` 只是 point GameObject、boneName
+   或普通组件上下文，不是 voice 字段。
+3. 扫描 `illust_dating1.skel`：
+   - 能看到 `point1_18_drag_event`、`point2_22_drag_event` 等 Spine 事件/点名。
+   - 没有 `Joy/Smile/Sigh/Pain/Excitement/Surprise` 等 voice event 名。
+   - 其他 skel 中的 `Smile/Surprise` 命中多为表情/贴图 attachment 名，不是音频映射。
+
+因此对情绪型角色的判断更稳了：它们不是“没声音”，而是 **当前可直接解包的 dating prefab、
+point 组件、Spine skeleton 里都没有动作→情绪语音映射**。这类映射下一步最可能在：
+
+- `SpineInteractionPointTable` / `SpineInteractionTable` 等加密 Data 表；
+- 或游戏运行时根据 point/action 状态动态选择情绪 voice；
+- 或还未定位到的其他配置资源层。
+
+非 root 下一步可继续尝试：
+
+```bash
+adb logcat -c
+# 在游戏里进入 Nebris 心契并点击一个确定动作
+adb logcat -d | grep -i -E 'Char003303|InteractionVoice|SoundVoice|Joy1|Smile1|Sigh1|Surprise1|FMOD|SoundMgr'
+```
+
+如果 logcat 仍没有游戏自己的声音日志，就需要从“离线解 Data 表 / 非 root 动态插桩 / 黑盒音频指纹”
+三条路线里选。
+
+#### 2026-06-24 Nebris logcat 样本结论
+
+用户提供了一份命令输出：
+
+```bash
+adb logcat -d | grep -i -E 'Char003303|InteractionVoice|SoundVoice|Joy1|Smile1|Sigh1|Surprise1|FMOD|SoundMgr'
+```
+
+样本共 293 行，结论：
+
+- 没有任何真正的 `Char003303` / `003303` 命中；唯一命中来自第 1 行命令本身。
+- 没有 `Joy1` / `Smile1` / `Sigh1` / `Surprise1` / `SoundVoiceName` / `SoundMgr` 播放事件日志。
+- 有大量 `Internal FMOD Unload Back Completed`，说明这是 FMOD bank 生命周期日志，主要是卸载日志。
+- 只看到一个交互语音 bank：
+
+```text
+BundleInteractionVoice/Interaction_Char061492.bytes
+```
+
+这不是 Nebris 的 `Interaction_Char003303.bytes`。
+
+用户确认当时确实点击的是 Nebris。因此不能把 `Interaction_Char061492.bytes` 解释成“用户点了
+061492”。更合理的解释是：logcat 窗口中混入了异步资源清理 / 旧场景 / 全局 FMOD bank
+卸载日志；`Internal FMOD Unload Back Completed` 本身也不是播放事件，而是卸载完成回调。
+
+因此这份 logcat 不能证明 Nebris 点击时触发了哪个情绪事件，也不能反推用户点错了角色；它只证明
+当前过滤方式能看到 FMOD bank 的加载/卸载生命周期。后续如果继续用 logcat，需要抓“进入 Nebris
+页面并点击某个点”前后的完整窗口，最好限制到游戏进程 PID 和明确时间段，且不要只 grep 情绪名，
+否则游戏如果只输出 bank 名或内部 ID 会被过滤掉。
+
+随后按更严格方式重抓：
+
+```bash
+adb logcat -c
+adb shell pidof com.neowizgames.game.browndust2   # 13411
+adb logcat -d --pid 13411 > local_device_cache/nebris_click_full.log
+```
+
+完整日志 453 行。能看到多次真实触摸输入：
+
+```text
+ViewPostIme pointer 0
+ViewPostIme pointer 1
+```
+
+说明用户点击确实进入了游戏进程。但同一窗口内仍没有：
+
+- `Char003303` / `003303`
+- `Interaction_Char003303`
+- `Joy` / `Smile` / `Sigh` / `Surprise` 等情绪事件
+- `VoiceSoundEventName` / `SoundVoiceName`
+- `FMOD` 播放事件或 bank 加载事件
+
+该窗口只出现 Android/AAudio 音频流初始化、Unity 界面触摸、avatar duplicate load、
+网络短暂断连等日志。由此可判定：**普通 logcat 无法直接看到 Nebris 心契点击触发的 voice event**。
+继续在 logcat 里换关键词的收益很低；下一步应转向 Data 表解密/静态逆向，或黑盒录音指纹匹配。
 
 下一步如果继续做 Nebris，应优先：
 
@@ -1207,3 +1750,787 @@ event:/Cinematic/Visual_Novel/Char003303/Interaction/idle2/motion2_22
 2. 只把页面实际引用的 voice OGG 和 manifest 加进仓库。
 3. 再考虑普通 touch 点的画面热区；目前只有两个推进点有 prefab 坐标，其他普通点建议走
    Spine 运行时 bone 坐标，不要直接用静态矩阵生成假热区。
+
+#### 2026-06-24 Data 表 / IL2CPP 静态逆向阶段结论
+
+用户已从设备拉取当前 APK：
+
+```text
+local_device_cache/apk_20260624/base.apk
+local_device_cache/apk_20260624/split_base_assets.apk
+local_device_cache/apk_20260624/split_config.arm64_v8a.apk
+local_device_cache/apk_20260624/lib/arm64-v8a/libil2cpp.so
+local_device_cache/apk_20260624/assets/bin/Data/Managed/Metadata/global-metadata.dat
+```
+
+当前能确认：
+
+- `split_base_assets.apk` 内的 `assets/DefaultDB.db` 是合法 SQLite，但没有表结构，不能用于
+  `SpineInteractionPointTable`。
+- `global-metadata.dat` 明确包含交互表与字段：
+  - `SpineInteractionPointTable`
+  - `SpineInteractionTable`
+  - `SoundVoiceName`
+  - `SoundMotionVoiceName`
+  - `LongPressFailVoiceName`
+  - `LongPressLoopVoiceName`
+  - `LongPressSuccessVoiceName`
+- metadata 中还能看到直接 SQL：
+
+```text
+SELECT * FROM SpineInteractionPointTable WHERE interactionGroupId = {0}
+SELECT * FROM SpineInteractionPointTable WHERE interactionGroupId = {0} AND groupId = {1}
+SELECT * FROM SpineInteractionTable WHERE id = {0}
+```
+
+这进一步证明 Nebris 这类“情绪型 voice”的映射目标表就是
+`SpineInteractionPointTable`，不是猜测。
+
+当前 `Data/` 目录特征：
+
+- 共有 78 个文件。
+- 每个文件大小都是 4096 对齐。
+- 每个文件前 16 字节完全相同：
+
+```text
+b3 d5 0c 27 2f 43 ab d8 f9 cf f1 4f 9a 24 6c a9
+```
+
+- 前 8KB 熵约 `7.97~7.98`，接近随机。
+- 最大文件：
+
+```text
+local_device_cache/bd2_current_20260624/Data/t/9F251C63BC72551C681EE75D328FA090D56E444B
+size = 77,307,904
+sha1(content) = 4488809557D8AC343670AA1124ED6C891D931649
+```
+
+所以 `Data/` 很像多个加密 DB/表分片，不是 Unity bundle，也不是 gzip/protobuf 明文。
+固定 16 字节头意味着它不是标准“每个 SQLCipher DB 随机 salt 不同”的裸格式；更可能是游戏封装过的
+SQLCipher/加密页格式，或固定 header + 页级加密。
+
+metadata 中有 SQLCipher/加密相关字符串：
+
+```text
+SQLite fail set key
+SQLite success set
+sqlite3_key: entered db={0} pKey={1} nKey={2}
+codec_set_pass_key: entered db={0} nDb={1} cipher_name={2} nKey={3} for_ctx={4}
+codec_key_derive: deriving key using AES256
+```
+
+这些字符串来自 `global-metadata.dat`，不是 `libil2cpp.so` 的明文符号。`libil2cpp.so` 本身没有
+可直接用 `nm` 定位的 `sqlite3_key/sqlcipher` 符号；macOS 自带 `otool` 也不能直接解析 Android
+ELF。因此需要 IL2CPP dump/反汇编才能从 `RawDataManager`、`SQLiteManager`、`AESDecrypt256`、
+`GetGameDataFromStreamingAsset` 等方法继续追。
+
+Neon 配置缓存：
+
+```text
+local_device_cache/bd2_current_20260624/Neo/Http/metadata.json
+url = https://neon-file.akamaized.net/app/5063/config/android
+contentLength = 368
+```
+
+对应 `Neo/Http/3` 是 368 字节高熵密文，不是 JSON 明文。它可能包含 CDN / GameData 配置，
+但需要 Neon SDK 的解密逻辑，当前不能直接读。
+
+已尝试但暂时不成立：
+
+- 用 `common-dbdata.bin/info`、CDN URL、路径等常见字符串计算 SHA1/MD5/SHA256，未匹配
+  `Data/` 文件名。
+- 盲跑 SQLCipher key candidate 成本很高，且没有可靠 key 候选，暂时停止。
+- 普通 logcat 看不到 `SoundVoiceName` 或具体 emotion voice 播放事件。
+- 当前沙箱无法从 NuGet 拉 `Cpp2IL/Il2CppDumper`，本机 dotnet 可用但网络/配置受限。
+
+下一步推荐路线：
+
+1. **优先 IL2CPP dump**：在能联网/能装工具的环境用 `libil2cpp.so + global-metadata.dat`
+   跑 Cpp2IL 或 Il2CppDumper，定位：
+   - `RawDataManager.GetSQLite/SetSQLite`
+   - `SQLiteManager.GetSQLiteAsync`
+   - `AESDecrypt256/AESEncrypt256`
+   - `GetGameDataFromStreamingAsset`
+   - `PatchGameData`
+   - `ServerGameData`
+   然后找真正传给 SQLite/SQLCipher 的 key。
+2. **运行态 hook**：如果设备能 root 或能跑 frida-server，hook `sqlite3_key` / `sqlite3_key_v2`
+   或 `codec_set_pass_key`，直接打印 key 与 DB path。非 root 普通设备暂时做不了。
+3. **黑盒录音指纹**：作为最后兜底，对每个点击动作录音，与 15 个 Nebris emotion OGG 做声纹匹配。
+   这能做，但自动化成本较高，而且只解决单角色，不如先攻 Data 表。
+
+## 2026-06-29 Nebris / illust_dating1 情绪型互动语音接入完成
+
+Claude 已通过 frida-il2cpp-bridge 抓到 `SpineInteractionPointTable` 全量母表，并生成：
+
+```text
+data/dating_interaction_tables.json
+data/illust_dating1_interaction.json
+tools/il2cpp-re/all_interaction_tables_raw.log
+tools/il2cpp-re/char003303_table_raw.log
+```
+
+本轮在此基础上完成 Nebris (`illust_dating1` / `char003303`) 的 voice 接入。
+
+### 资源定位
+
+`file.json` 中 Nebris interaction voice bank：
+
+```text
+readableName = common-interactionvoice_assets_bundleinteractionvoice/interaction_char003303.bytes
+bundleName   = a95eeb8e3db465231e037bdca581ebe2
+hash         = 77705eb8a0103dcb9b9982ebac3d2162
+fileHash     = 04D5B1622A98907260608FD5278A5882
+size         = 829109
+```
+
+旧备份中已存在对应 UnityCache 文件，大小与 `file.json` 一致：
+
+```text
+/Users/woods/bd2_gamedata_backup/UnityCache/Shared/a95eeb8e3db465231e037bdca581ebe2/77705eb8a0103dcb9b9982ebac3d2162/__data
+```
+
+从该 bundle 解出：
+
+```text
+local_device_cache/bd2_current_20260624/interaction_char003303/interaction_char003303.bank
+local_device_cache/bd2_current_20260624/interaction_char003303/interaction_char003303.fsb
+```
+
+FEV 解析结果：
+
+```text
+events = 30
+timelines = 30
+multiInstruments = 15
+waits = 42
+waves = 42
+```
+
+其中 KR 可用事件为 15 个，引用 42 个 sample。30 个 event 里另一半不是当前 KR 可播事件；
+因此验收断言应是 `--expect-events 15 --expect-samples 42`，不是 30。
+
+### 工具改动
+
+`tools/extract_dating_audio.py` 新增：
+
+- `--infer-event-paths-from-samples`
+- `short_event_name_from_sample()`
+
+用途：当 `GUID<TAB>event path` 文件为空或缺少目标角色路径时，从 FSB stream name 反推事件名。
+Nebris 的 stream name 形如：
+
+```text
+Char003303_Int_Smile1_1
+Char003303_Int_Surprise2_1
+```
+
+去掉 `Char003303_Int_` 前缀和末尾 sample 序号即可得到 manifest event key：
+
+```text
+Smile1
+Surprise2
+```
+
+这只在显式传 `--infer-event-paths-from-samples` 时启用，不影响 dating18 莎拉已有的
+SoundMaster event path 流程。
+
+另外，当前 Homebrew `ffmpeg 8.1.2` 没有 `libvorbis` encoder。工具已改为：
+
+1. 优先 `libvorbis`
+2. 失败后 fallback 到内置 `vorbis`
+3. 内置 vorbis 需要 `-strict -2`，且只支持 2 声道，因此 fallback 时加 `-ac 2`
+
+### 生成命令
+
+```bash
+PYTHONPATH=/Users/woods/bd2web/local_device_cache/pydeps \
+python3 tools/extract_dating_audio.py \
+  --dating-id illust_dating1 \
+  --char-id char003303 \
+  --source-version 202606240959 \
+  --bundle /Users/woods/bd2_gamedata_backup/UnityCache/Shared/a95eeb8e3db465231e037bdca581ebe2/77705eb8a0103dcb9b9982ebac3d2162/__data \
+  --fsb local_device_cache/bd2_current_20260624/interaction_char003303/interaction_char003303.fsb \
+  --event-paths local_device_cache/bd2_current_20260624/voice_event_paths/Char003303.tsv \
+  --infer-event-paths-from-samples \
+  --language KR \
+  --decode \
+  --expect-events 15 \
+  --expect-samples 42
+```
+
+产物：
+
+```text
+audio/dating/illust_dating1/voice/*.ogg   # 42 条
+data/dating_audio.json                    # illust_dating1.samples/events 已填充
+```
+
+### actions 映射生成
+
+新增 `tools/apply_dating_interaction_voice_actions.py`，将
+`tools/il2cpp-re/all_interaction_tables_raw.log` 中的 repeated voice/motion 映射合并到
+`data/dating_audio.json.characters.illust_dating1.actions`。
+
+生成命令：
+
+```bash
+python3 tools/apply_dating_interaction_voice_actions.py \
+  --dating-id illust_dating1 \
+  --char-id char003303 \
+  --gid 1
+```
+
+结果：
+
+```text
+64 table rows -> 88 voice actions
+```
+
+映射规则：
+
+- `SoundVoiceName` → `mix<groupId>_<id>_*`
+- `SoundMotionVoiceName` → `motion<groupId>_<id>`
+- raw log 中 repeated 字段的重复项保留为数组重复项；前端随机选数组里的一个 event，
+  因此重复次数自然成为简易权重。
+
+例子：
+
+```json
+"mix1_18_1": ["Surprise1", "Smile1", "Surprise1", "Smile1"],
+"mix1_18_2": ["Surprise1", "Smile1", "Surprise1", "Smile1"],
+"motion1_18": ["Surprise2"]
+```
+
+### 前端改动
+
+`dating.html` 的 `DatingAudioController` 原本只支持：
+
+```js
+actions[animationName] = "Smile1"
+```
+
+现在兼容：
+
+```js
+actions[animationName] = ["Surprise1", "Smile1", "Surprise1", "Smile1"]
+```
+
+数组时随机选择一个已存在的 event；字符串路径保持原行为。这样不影响 dating18。
+
+### 验证
+
+已完成静态验证：
+
+```text
+node --check /tmp/dating-script.js                 # dating.html script 语法 OK
+python3 -m json.tool data/dating_audio.json        # JSON OK
+python3 -m json.tool data/dating_interaction_tables.json
+python3 -m json.tool data/illust_dating1_interaction.json
+```
+
+manifest 引用检查：
+
+```text
+illust_dating1 bad voice refs = 0
+illust_dating1 bad sfx refs   = 0
+illust_dating18 bad voice refs = 0
+illust_dating18 bad sfx refs   = 0
+```
+
+文件检查：
+
+```text
+audio/dating/illust_dating1/voice/*.ogg = 42
+missing voice files = 0
+audio/dating/illust_dating1/voice size ≈ 896 KB
+```
+
+本地 HTTP server 在 Codex 沙箱中出现端口连接异常（server 显示正常监听但 curl 连接失败），
+未继续死磕。建议用户本机浏览器验证：
+
+```text
+http://localhost:8080/dating.html?dating=1&audioDebug=1&v=20260629
+```
+
+预期：Nebris 点击/拖拽互动时同时播放 SFX 和 KR emotion voice；`audioDebug=1` 下
+`document.documentElement.dataset.datingAudioChannel` 会在 voice/sfx 间更新。
+
+## 2026-06-29 纠偏：Nebris 语音从 animation-based 改为 point-based
+
+用户实测反馈：Nebris / `illust_dating1` 的互动语音“都有声音但都对不上”。复查后确认上一版接法的核心问题是抽象层错了：
+
+- `SpineInteractionPointTable` 的语义是“互动点 → 语音”：`(interactionGroupId, groupId, id)` 对应 `SoundVoiceName` / `SoundMotionVoiceName`。
+- 上一版把它硬映射成 `actions[animationName]`，即 `mix<groupId>_<id>_*` / `motion<groupId>_<id>`。
+- 这会带来两个问题：
+  1. 页面按 Spine animation `start` 事件播 voice，连续动作 `mix -> motion` 时后一个 animation 会停止前一个音频，导致实际听到的很可能不是点击点的 `SoundVoiceName`。
+  2. 游戏表本来绑定的是互动点，不是动画名；把点表挂到动画名上会让后续角色继续沿错抽象扩展。
+
+### 修正方案
+
+`tools/apply_dating_interaction_voice_actions.py` 改为默认生成 point-based 字段：
+
+```json
+"interactionVoices": {
+  "1_18_0": {
+    "voice": ["Surprise1", "Smile1", "Surprise1", "Smile1"],
+    "motion": ["Surprise2"]
+  }
+}
+```
+
+字段约定：
+
+- key = `<groupId>_<pointId>_<toolId>`，当前 Nebris 的表没有 tool 维度，因此写为 tool `0`，与 `PREFAB_POINT_ACTIONS` key 形状保持一致。
+- `voice` 来自 `SoundVoiceName`，在用户点击该互动点时播放。
+- `motion` 来自 `SoundMotionVoiceName`，在同一互动点后续的 motion 动画开始时播放。
+- repeated voice 项继续保留重复，用作简单随机权重。
+
+同时清空 `characters.illust_dating1.actions`，避免旧 animation-based voice 继续触发。莎拉 / `illust_dating18` 仍保留原本的 animation actions，不受影响。
+
+### 前端修正
+
+`dating.html` 的 `DatingAudioController` 改为分频道管理播放代次：
+
+- voice 和 sfx 使用独立 generation，避免连续动画开始时 sfx 调度把 point voice 取消。
+- `stop("voice")` 只停 voice，`stop("sfx")` 只停 sfx。
+- 新增 `playInteractionVoice(datingId, pointKey, phase)`，直接按 `interactionVoices[pointKey].voice/motion` 播放。
+
+互动入口调整：
+
+- `playPoint(name, btn)` 从 `point<stage>_<id>...` 推导 pointKey，点击时播放 `voice`。
+- `playPrefabAction(action, btn, key)` 接收 prefab key，点击时播放 `voice`。
+- Spine track start 监听中，如果当前动画属于本次互动点的 `motions`，再播放该点的 `motion` voice。
+
+### 当前验证
+
+```text
+python3 -m json.tool data/dating_audio.json                 OK
+python3 -m json.tool data/dating_interaction_tables.json    OK
+python3 -m json.tool data/illust_dating1_interaction.json   OK
+node --check /tmp/dating-script.js                          OK
+```
+
+引用检查：
+
+```text
+illust_dating1 voice actions = 0
+illust_dating1 interaction voices = 64
+illust_dating1 bad voice refs = 0
+illust_dating1 bad sfx refs = 0
+illust_dating18 voice actions = 24
+illust_dating18 bad voice refs = 0
+illust_dating18 bad sfx refs = 0
+illust_dating1 OGG = 42，missing referenced files = 0
+```
+
+浏览器验证建议：
+
+```text
+http://localhost:8080/dating.html?dating=1&audioDebug=1&v=20260629b
+```
+
+`audioDebug=1` 下，点击互动时应先看到 `datingAudioPhase=point:<key>:voice...`；推进 motion 开始时再看到 `point:<key>:motion...`。如果用户仍觉得语义不对，下一步不要再改音频管线，而要回到运行态：在真机上对同一个 point 点击抓 `SpineInteractionPointTable` 使用路径或 hook `PlayVoiceSFX(eventName)`，确认客户端实际传入的 eventName。
+
+## 2026-06-29 再纠偏：Nebris SFX 误接导致“机关枪/战斗音效”
+
+用户再次实测反馈：Nebris 点击后听到类似战斗/机关枪的声音，并且热区点击体验很差。复查 `data/dating_audio.json.characters.illust_dating1.sfx` 后确认：
+
+- SFX 样本不是干净的 Nebris 心契互动音效，里面混有大量通用/其他角色/战斗感 sample，例如：
+  - `Common_Punch_Mid_Hit_05`
+  - `Char004202_Glitch_01`
+  - `Char003604_motion1_2`
+  - `Char067004_Blanket_Throw_01`
+- 这些 SFX 事件虽然路径长得像 `event:/Cinematic/Visual_Novel/Char003303/Interaction/...`，但实际 choices 指向的 sample 池明显不可靠。
+- 用户听到的“机关枪/战斗机关声”来自这条 SFX 自动播放链，而不是 Nebris voice OGG。
+
+### 当前止血处理
+
+在 `data/dating_audio.json` 中为 Nebris 增加：
+
+```json
+"sfx": {
+  "disabled": true
+}
+```
+
+`dating.html` 已识别该标记：
+
+- `character.sfx.disabled === true` 时，不再预加载 SFX。
+- `character.sfx.disabled === true` 时，不再按 animationName 自动播放 SFX。
+- Nebris 仍保留 voice：42 个 voice OGG、15 个情绪事件、64 个 point-based `interactionVoices`。
+
+### 验证
+
+```text
+python3 -m json.tool data/dating_audio.json   OK
+node --check /tmp/dating-script.js            OK
+illust_dating1 sfx.disabled = true
+voice samples = 42
+interactionVoices = 64
+sfx samples 仍保留索引但不会播放 = 66
+```
+
+### 后续原则
+
+Nebris / 情绪型角色后续不要自动接 SFX，除非能从运行态或更精确的 FMOD event graph 证明 choices 确实是该角色该互动点的音效。当前阶段应先只验证 voice。
+
+热区问题单独看：Nebris 当前只有两个有坐标证据的推进热区 `1_18_0` / `2_22_0`，普通互动点主要通过左侧按钮触发；不要把“全身任意点击都可触发”当作已完成能力。
+
+## 2026-06-29 修复：热区点击没有 voice，菜单点击才有
+
+用户实测：禁用 Nebris 错误 SFX 后声音明显正常，但“点击热区没有声音，点击左侧菜单栏互动才有”。
+
+根因：左侧菜单按钮调用：
+
+```js
+playPrefabAction(action, b, key)
+```
+
+会把 prefab point key（例如 `1_18_0`）传入，因此可以查到：
+
+```js
+interactionVoices["1_18_0"].voice
+```
+
+但热区渲染分支之前调用的是：
+
+```js
+playPrefabAction(item.action, null)
+```
+
+没有传 `item.key`，所以动画能播放，但 `playInteractionVoice()` 没有 pointKey，自然没有 voice。
+
+### 修复
+
+`renderHotzones()` 普通热区分支改为：
+
+```js
+b.onclick = () => playPrefabAction(item.action, null, item.key);
+```
+
+同时补齐同类交互：
+
+- longPress 热区：`beginLongPress(item.action, b, event, item.key)`
+- gyro drag 热区：`beginGyroDrag(item.action, b, event, item.key)`
+- deviceorientation 触发：保留 `activeGyroPointKey`，倾斜触发时传给 `playGyroAction(..., pointKey)`
+
+### 验证
+
+```text
+python3 -m json.tool data/dating_audio.json   OK
+node --check /tmp/dating-script.js            OK
+menu passes key                               True
+hotzone passes key                            True
+longpress receives key                        True
+sfx disabled respected                        True
+```
+
+## 2026-06-29 热区坐标方案纠偏：撤回手猜 scale，改用 skeleton-space 导出
+
+用户反馈：Nebris 热区已经有声音，但位置感觉对不上，怀疑和之前莎拉一样是图片/Spine 坐标和热区坐标没对上。
+
+一开始曾按 `illust_dating1` 的 `Parent scale=0.5` 推断需要 `HOTZONE_WORLD_SCALES.illust_dating1 = 2`。
+用户提醒这是通用问题，不能靠猜。该思路已撤回。
+
+参考莎拉当时的成功方案，重新从 Unity prefab 做坐标证据链：
+
+- 旧 `PREFAB_HOTZONES` 的 Nebris 数值是沿 RectTransform 父链算到 `Illust_dating1` 根画布的 root-space。
+- 前端 `hotzoneToScreenBox()` 投影时使用的是 SpinePlayer 的 skeleton world 坐标。
+- 两者不是同一个坐标系；直接投影 root-space 必然错位。
+- 莎拉的 `HOTZONE_WORLD_SCALES=4` 本质是在把 root-space 恢复成 skeleton-space。
+
+实测重新导出 Nebris `1_18_0`：
+
+```text
+box -> root:
+  x=-509.1, y=-959.6, width=641.2, height=721.2
+
+box -> SkeletonGraphic:
+  x=-1018.1, y=-1319.1, width=1282.4, height=1442.4
+```
+
+前端旧值正是 `box -> root`，所以问题坐实。
+
+### 通用修复
+
+新增脚本：
+
+```bash
+PYTHONPATH=/Users/woods/bd2web/local_device_cache/pydeps \
+python3 tools/extract_dating_hotzones.py
+```
+
+脚本读取 `common-char-datingillust_assets_all.bundle`，对所有 `IsNextStateWhenActionEnd=1` 的 prefab
+推进热区，将 `_interactionBoxZoneRectTransform` 换算到对应 `SkeletonGraphic (illust_datingX)` 坐标系。
+
+`dating.html` 调整：
+
+- Nebris 两个推进热区替换为 skeleton-space：
+  - `1_18_0`: `x=-1018.1, y=-1319.1, width=1282.4, height=1442.4`
+  - `2_22_0`: `x=304.2, y=257.6, width=491.5, height=664.4`
+- 新坐标增加 `space: "skeleton"`。
+- `hotzoneToScreenBox()` 对 `space: "skeleton"` 的热区不再应用 `HOTZONE_WORLD_SCALES`。
+- 莎拉既有已验证的普通身体点/牌局点暂不一刀切迁移，继续保留旧路径，避免破坏已还原好的行为。
+
+### 验证
+
+```text
+node --check /tmp/dating-script.js                    OK
+tools/extract_dating_hotzones.py 可导出 Nebris 2 点   OK
+```
+
+后续原则：新增/修复热区时优先生成 skeleton-space 坐标，不要手调 x/y，也不要仅凭 `scale` 字段猜补偿。
+
+## 2026-06-29 Nebris 普通热区补全
+
+在用户确认 Nebris 两个推进热区坐标已经对齐后，继续按同一条“莎拉方案”的证据链补齐普通互动热区。
+
+### 方法
+
+不手画、不按比例猜。使用：
+
+```bash
+PYTHONPATH=/Users/woods/bd2web/local_device_cache/pydeps \
+python3 tools/extract_dating_hotzones.py
+```
+
+该脚本默认导出所有 prefab 互动点的 skeleton-space 热区；如只想审计阶段推进点，可加：
+
+```bash
+python3 tools/extract_dating_hotzones.py --only-advancing
+```
+
+### 本轮结果
+
+`dating.html` 的 `PREFAB_HOTZONES.illust_dating1` 从只有 2 个推进热区扩展为 64 个 prefab action key：
+
+```text
+stage 1: 18
+stage 2: 22
+stage 3: 24
+unique: 64
+```
+
+阶段 3 的 `3_6_0` / `3_7_0` 是 prefab hidden 点：坐标证据保留在 `PREFAB_HOTZONES` 中，但页面的
+`currentPrefabActions()` 仍按 `action.hidden` 过滤，不会在正常交互中显示。
+
+### 验证
+
+```text
+node --check /tmp/dating-script.js                     OK
+illust_dating1 hotzone keys = 64
+unique = 64
+stage counts = {1:18, 2:22, 3:24}
+--only-advancing illust_dating1 = [1_18_0, 2_22_0]
+```
+
+浏览器验证建议：打开 `dating.html?dating=1&audioDebug=1&v=20260629f`，打开“显示热区”检查普通点覆盖区域。
+
+## 2026-06-29 单角色自动化接入工具
+
+在 Nebris 路线验证后，新增 `tools/build_dating_character.py`，把单角色接入流程串成一个批处理入口。
+
+### 能自动完成
+
+1. 从 `common-char-datingillust_assets_all.bundle` 导出指定 `dating-id` 的 skeleton-space 热区 JSON。
+2. 从 `interaction_charXXXXXX.bytes` Unity bundle 中提取 RIFF FEV bank，并从 bank 中切出 FSB5。
+3. 调用 `tools/extract_dating_audio.py` 生成 voice manifest；可选 `--decode` 生成 OGG。
+4. 调用 `tools/apply_dating_interaction_voice_actions.py`，用 `SpineInteractionPointTable` raw log 合并 point-based `interactionVoices`。
+5. 默认写入 `sfx.disabled=true`，避免 Nebris 那类混杂 SFX 自动误播。
+6. 校验 voice event 引用与 OGG 文件存在性。
+
+### Nebris smoke test
+
+```bash
+PYTHONPATH=/Users/woods/bd2web/local_device_cache/pydeps \
+python3 tools/build_dating_character.py \
+  --dating-id illust_dating1 \
+  --char-id char003303 \
+  --gid 1 \
+  --source-version 202606240959 \
+  --voice-bundle /Users/woods/bd2_gamedata_backup/UnityCache/Shared/a95eeb8e3db465231e037bdca581ebe2/77705eb8a0103dcb9b9982ebac3d2162/__data \
+  --expect-events 15 \
+  --expect-samples 42 \
+  --no-decode
+```
+
+输出摘要：
+
+```text
+hotzones illust_dating1: 64
+完成：15 个 KR 事件，15 个时间触发点，0 个动作映射，42 个 sample
+illust_dating1: 64 table rows -> 64 interaction voice points, 0 legacy actions
+illust_dating1: sfx.disabled=true
+verify illust_dating1: events=15, samples=42, interactionVoices=64, badVoiceRefs=0, missingFiles=0
+```
+
+### 当前边界
+
+- 工具不会自动改 `dating.html` 的 `PREFAB_HOTZONES` 常量；它会把热区证据写到
+  `local_device_cache/dating_build/dating_hotzones.json`。确认后再接入前端，后续可进一步改成页面读取外部 JSON。
+- 对有 toolId 的角色，`apply_dating_interaction_voice_actions.py` 现在会读取 hotzone key，把同一 `groupId/id`
+  映射到所有 `stage_point_tool` 变体，不再只写 `_0`。
+- SFX 仍默认禁用。除非有运行态证据证明 SFX event graph 干净，否则不要自动接。
+
+## 2026-06-29 前端改为读取外部热区 JSON
+
+为进一步自动化新增角色，`dating.html` 已接入外部热区数据：
+
+```text
+data/dating_hotzones.json
+```
+
+当前该文件只包含已验证的 Nebris / `illust_dating1` 64 个 skeleton-space 热区，避免一次性覆盖莎拉等已调好的特殊角色。
+
+### 前端行为
+
+- 页面启动/切换心契时异步 fetch `./data/dating_hotzones.json`。
+- `prefabHotzone(datingId, key)` 优先读取外部 JSON：
+  1. `data/dating_hotzones.json[datingId][key]`
+  2. 旧 `PREFAB_HOTZONES[datingId][key]` 兜底
+- 外部 JSON 加载完成后会重新 schedule 热区投影。
+
+### 自动化更新
+
+`tools/build_dating_character.py` 新增：
+
+```text
+--update-hotzones-data
+```
+
+传入后会把本角色热区合并到 `data/dating_hotzones.json`。Nebris smoke test 已确认：
+
+```text
+/Users/woods/bd2web/data/dating_hotzones.json: updated illust_dating1 hotzones=64
+verify illust_dating1: events=15, samples=42, interactionVoices=64, badVoiceRefs=0, missingFiles=0
+```
+
+后续新增普通情绪型角色的理想流程：跑 `build_dating_character.py --update-hotzones-data --decode`，确认页面效果后提交生成的 audio、manifest、hotzones JSON；除非角色有特殊交互，否则不再需要手改 `dating.html` 热区块。
+
+## 2026-06-29 情绪型心契批量接入 1–14
+
+在 Nebris 方案稳定后，继续把“互动动作、热区、语音”三张表全部数据化，验证能否批量接其他角色。
+
+### 前端数据化
+
+新增外部 action 数据：
+
+```text
+data/dating_actions.json
+```
+
+`dating.html` 行为：
+
+- 切换心契时异步 fetch `./data/dating_actions.json`。
+- `prefabActionsFor(datingId)` 优先读取外部 JSON，旧 `PREFAB_POINT_ACTIONS` 只作为兜底。
+- 外部 action 加载完成后会重新渲染阶段按钮和热区。
+
+这一步很关键：此前很多角色页面没自动出现完整互动，不是资源没有，而是 `dating.html` 里只手写了少量推进点。
+现在 action 来自 `common-char-datingillust_assets_all.bundle`，普通触摸/拖拽/gyro/连点/hidden 等都能被导出。
+
+### 新增工具
+
+`tools/extract_dating_actions.py`：
+
+```bash
+PYTHONPATH=/Users/woods/bd2web/local_device_cache/pydeps \
+python3 tools/extract_dating_actions.py --dating-id illust_dating1
+```
+
+输出与 `PREFAB_POINT_ACTIONS` 兼容，key 与热区/语音统一为：
+
+```text
+<groupId>_<interactionId>_<toolId>
+```
+
+`tools/build_dating_character.py` 新增：
+
+```text
+--update-actions-data
+```
+
+传入后会把本角色 action 合并到 `data/dating_actions.json`。
+
+### FEV 兼容修正
+
+批量到 Eris / `char060802` 时遇到 FEV playlist 中引用不存在的 WAIT 候选。复核后这些 GUID 既不是 WAIT，
+也不是 WAV 或嵌套 instrument，更像 FMOD 随机池里的空/不可用候选。
+
+`tools/extract_dating_audio.py` 已调整为：
+
+- 跳过未知 WAIT / WAV 候选；
+- 同一个触发点只要还有有效 choice 就保留；
+- 没有有效 choice 的触发点不写；
+- stderr 打 warning，方便后续审计。
+
+不要把未知候选硬接成其它声音；这正是之前会错播战斗/机关枪声音的风险方向。
+
+### 已批量完成
+
+本轮实际解码 OGG，并完成 JSON/引用/文件校验：
+
+```text
+illust_dating1  char003303 gid=1   events=15 samples=42 files=42 voices=64
+illust_dating2  char003402 gid=2   events= 7 samples=28 files=28 voices=55
+illust_dating3  char003203 gid=3   events= 7 samples=24 files=24 voices=36
+illust_dating4  char001106 gid=4   events=10 samples=40 files=40 voices=44
+illust_dating5  char060802 gid=5   events=15 samples=60 files=60 voices=43
+illust_dating6  char067603 gid=6   events=17 samples=68 files=68 voices=36
+illust_dating7  char001006 gid=7   events=16 samples=64 files=64 voices=50
+illust_dating8  char066403 gid=8   events=12 samples=48 files=48 voices=55
+illust_dating9  char000706 gid=9   events=15 samples=60 files=60 voices=53
+illust_dating10 char004102 gid=10  events=19 samples=76 files=76 voices=33
+illust_dating11 char067004 gid=11  events=18 samples=72 files=72 voices=53
+illust_dating12 char003604 gid=12  events=15 samples=60 files=60 voices=45
+illust_dating13 char004202 gid=13  events=20 samples=80 files=80 voices=33
+illust_dating14 char067104 gid=14  events=20 samples=79 files=79 voices=90
+```
+
+全部校验结果：
+
+```text
+badVoiceRefs=0
+missingFiles=0
+sfx.disabled=true
+```
+
+也就是说：写进 `data/dating_audio.json` 的 voice 引用都能找到真实 event，且对应 OGG 文件都已生成。
+表里引用但 bank 不存在的 `Special*` / `Motion*` / `Mix*` 不会写入前端，相关点静默，不错播。
+
+### 14 号补齐记录
+
+`illust_dating14` / `char067104` 的 voice bundle 一开始在本地大包里缺当前 hash。catalog 记录：
+
+```text
+bundleName = 945a97e12197d928b1ecb0c8c9d84700
+hash       = 8cc0e66f4cfed48b14c5e1d5f29dd40e
+readable   = common-interactionvoice_assets_bundleinteractionvoice/interaction_char067104.bytes
+size       = 1905334
+```
+
+已从设备 UnityCache 拉到：
+
+```text
+/Users/woods/bd2_gamedata_backup/UnityCache/Shared/945a97e12197d928b1ecb0c8c9d84700/8cc0e66f4cfed48b14c5e1d5f29dd40e/__data
+```
+
+然后用同一套 `build_dating_character.py` 跑通。校验：
+
+```text
+hotzones=128
+actions=128
+events=20
+samples/files=79
+interactionVoices=90
+badVoiceRefs=0
+missingFiles=0
+```
+
+注意：运行日志里出现过 ffmpeg `Unknown encoder 'libvorbis'` warning，但最终产物已用 `file` 验证为
+`Ogg data, Vorbis audio, stereo, 48000 Hz`，79 个 OGG 均非空。
+
+### 当前边界
+
+- `illust_dating15–18` 不在这批 `SpineInteractionPointTable` 全量表里；莎拉 / `illust_dating18` 保留既有特殊实现。
+- SFX 继续默认禁用。没有运行态证据前，不要自动接 SFX。

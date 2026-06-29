@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BD2 心契之约 Spine 播放器</title>
+  <title>BD2 有缘之客 Spine 播放器</title>
 
   <link rel="stylesheet" href="./vendor/spine-player-4.1.56.css" />
   <script src="./vendor/spine-player-4.1.56.js"></script>
@@ -326,10 +326,10 @@
     <header>
       <div class="nav-row">
         <a class="nav-link" href="./index.html">角色动画</a>
-        <a class="nav-link active" href="./dating.html">心契之约</a>
+        <a class="nav-link active" href="./dating.html">有缘之客</a>
       </div>
       <button id="hotzone-toggle" class="debug-toggle" type="button" aria-pressed="false">显示热区</button>
-      <input id="search" type="text" placeholder="搜索心契资源…" autocomplete="off" />
+      <input id="search" type="text" placeholder="搜索有缘之客资源…" autocomplete="off" />
     </header>
     <div id="list"></div>
     <div id="anim-list"></div>
@@ -450,7 +450,7 @@
       id,
       character,
       tag,
-      label: `${id.replace("illust_dating", "心契 ")} · ${character}`,
+      label: `${id.replace("illust_dating", "有缘之客 ")} · ${character}`,
       skeleton: `spine/illust/illust_dating/${id}/${id}.skel`,
       atlas: `spine/illust/illust_dating/${id}/${id}.atlas`,
     }));
@@ -769,8 +769,70 @@
     };
     const PREFAB_HOTZONES = {
       illust_dating1: {
-        "1_18_0": { x: -509.1, y: -959.6, width: 641.2, height: 721.2, shape: 1, source: "InteractionZone" },
-        "2_22_0": { x: 152.1, y: -171.2, width: 245.7, height: 332.2, shape: 1, source: "InteractionZone" },
+        "1_1_0": { x: 645.7, y: 1062.3, width: 313.4, height: 313.5, shape: 0, source: "point1_1_drag [Override]", space: "skeleton" },
+        "1_2_0": { x: 485.5, y: 759.9, width: 300.2, height: 300.8, shape: 0, source: "point1_2_drag [Override]", space: "skeleton" },
+        "1_3_0": { x: 509.1, y: 268.3, width: 338.1, height: 338.3, shape: 0, source: "point1_3_touch2 [Override]", space: "skeleton" },
+        "1_4_0": { x: 29.1, y: -144.4, width: 341.5, height: 341.5, shape: 0, source: "point1_4_touch [Override]", space: "skeleton" },
+        "1_5_0": { x: 767.7, y: 536.3, width: 237.9, height: 287.9, shape: 0, source: "point1_5_touch [Override]", space: "skeleton" },
+        "1_6_0": { x: 393.2, y: 724.8, width: 208.9, height: 280.3, shape: 0, source: "point1_6_touch [Override]", space: "skeleton" },
+        "1_7_0": { x: 489.1, y: 573.9, width: 305.3, height: 305.3, shape: 0, source: "point1_7_touch [Override]", space: "skeleton" },
+        "1_8_0": { x: 655.9, y: 57.5, width: 305.6, height: 305.6, shape: 0, source: "point1_8_touch [Override]", space: "skeleton" },
+        "1_9_0": { x: -55.6, y: 345, width: 305.6, height: 305.6, shape: 0, source: "point1_9_touch [Override]", space: "skeleton" },
+        "1_10_0": { x: 849.1, y: 455.4, width: 305.6, height: 305.6, shape: 0, source: "point1_10_touch [Override]", space: "skeleton" },
+        "1_11_0": { x: 137.4, y: 717.4, width: 305.6, height: 305.6, shape: 0, source: "point1_11_touch [Override]", space: "skeleton" },
+        "1_12_0": { x: 135.1, y: 198.8, width: 305.3, height: 305.3, shape: 0, source: "point1_12_touch [Override]", space: "skeleton" },
+        "1_13_0": { x: 422.9, y: 51.9, width: 305.3, height: 305.3, shape: 0, source: "point1_13_touch [Override]", space: "skeleton" },
+        "1_14_0": { x: -206.2, y: -6.4, width: 305.3, height: 305.3, shape: 0, source: "point1_14_touch [Override]", space: "skeleton" },
+        "1_15_0": { x: 97.5, y: -298.6, width: 305.3, height: 305.3, shape: 0, source: "point1_15_touch [Override]", space: "skeleton" },
+        "1_16_0": { x: -783.2, y: 239.3, width: 893.4, height: 942.6, shape: 0, source: "point1_16_touch [Override]", space: "skeleton" },
+        "1_17_0": { x: 974.4, y: -269, width: 1050.5, height: 1325.2, shape: 0, source: "point1_17_touch [Override]", space: "skeleton" },
+        "1_18_0": { x: -1018.1, y: -1319.1, width: 1282.4, height: 1442.4, shape: 1, source: "InteractionZone", space: "skeleton" },
+        "2_1_0": { x: 646.3, y: 1063.6, width: 313.4, height: 313.5, shape: 0, source: "point2_1_drag [Override]", space: "skeleton" },
+        "2_2_0": { x: 506.5, y: 263.4, width: 338.1, height: 338.3, shape: 0, source: "point2_2_touch2 [Override]", space: "skeleton" },
+        "2_3_0": { x: 25.7, y: -150.3, width: 341.5, height: 341.5, shape: 0, source: "point2_3_touch [Override]", space: "skeleton" },
+        "2_4_0": { x: -422.6, y: -194.3, width: 342.9, height: 342.9, shape: 0, source: "point2_4_touch [Override]", space: "skeleton" },
+        "2_5_0": { x: 765.7, y: 540.8, width: 237.9, height: 287.9, shape: 0, source: "point2_5_touch [Override]", space: "skeleton" },
+        "2_6_0": { x: 390.6, y: 728.1, width: 208.9, height: 280.3, shape: 0, source: "point2_6_touch [Override]", space: "skeleton" },
+        "2_7_0": { x: 485.5, y: 571.3, width: 305.3, height: 305.3, shape: 0, source: "point2_7_touch [Override]", space: "skeleton" },
+        "2_8_0": { x: 653.7, y: 55.4, width: 305.6, height: 305.6, shape: 0, source: "point2_8_touch [Override]", space: "skeleton" },
+        "2_9_0": { x: -58, y: 342.5, width: 305.6, height: 305.6, shape: 0, source: "point2_9_touch [Override]", space: "skeleton" },
+        "2_10_0": { x: 845.6, y: 453.1, width: 305.6, height: 305.6, shape: 0, source: "point2_10_touch [Override]", space: "skeleton" },
+        "2_11_0": { x: 129.6, y: 713.5, width: 305.6, height: 305.6, shape: 0, source: "point2_11_touch [Override]", space: "skeleton" },
+        "2_12_0": { x: 127.5, y: 195.4, width: 305.3, height: 305.3, shape: 0, source: "point2_12_touch [Override]", space: "skeleton" },
+        "2_13_0": { x: 416.8, y: 47.2, width: 305.3, height: 305.3, shape: 0, source: "point2_13_touch [Override]", space: "skeleton" },
+        "2_14_0": { x: -212.5, y: -12.2, width: 305.3, height: 305.3, shape: 0, source: "point2_14_touch [Override]", space: "skeleton" },
+        "2_15_0": { x: 92.6, y: -302, width: 305.3, height: 305.3, shape: 0, source: "point2_15_touch [Override]", space: "skeleton" },
+        "2_16_0": { x: -414.1, y: -751.7, width: 305.3, height: 305.3, shape: 0, source: "point2_16_touch [Override]", space: "skeleton" },
+        "2_17_0": { x: -590, y: -432.3, width: 305.3, height: 305.3, shape: 0, source: "point2_17_touch [Override]", space: "skeleton" },
+        "2_18_0": { x: -881.9, y: -1529.3, width: 305.3, height: 305.3, shape: 0, source: "point2_18_touch [Override]", space: "skeleton" },
+        "2_19_0": { x: -907.2, y: -1059.3, width: 305.3, height: 305.3, shape: 0, source: "point2_19_touch [Override]", space: "skeleton" },
+        "2_20_0": { x: -783.2, y: 239.3, width: 893.4, height: 942.6, shape: 0, source: "point2_20_touch [Override]", space: "skeleton" },
+        "2_21_0": { x: 971.8, y: -278.8, width: 1050.5, height: 1325.2, shape: 0, source: "point2_21_touch [Override]", space: "skeleton" },
+        "2_22_0": { x: 304.2, y: 257.6, width: 491.5, height: 664.4, shape: 1, source: "InteractionZone", space: "skeleton" },
+        "3_1_0": { x: 647.1, y: 1064.8, width: 313.4, height: 313.5, shape: 0, source: "point3_1_drag [Override]", space: "skeleton" },
+        "3_2_0": { x: 503.9, y: 258.6, width: 338.1, height: 338.3, shape: 0, source: "point3_2_touch2 [Override]", space: "skeleton" },
+        "3_3_0": { x: 172.9, y: 39.4, width: 341.5, height: 341.5, shape: 0, source: "point3_3_touch [Override]", space: "skeleton" },
+        "3_4_0": { x: -57.1, y: 89.4, width: 341.5, height: 341.5, shape: 0, source: "point3_4_touch2 [Override]", space: "skeleton" },
+        "3_5_0": { x: -416.2, y: -204.3, width: 342.9, height: 342.9, shape: 0, source: "point3_5_touch [Override]", space: "skeleton" },
+        "3_6_0": { x: -1772, y: -2485.9, width: 291.3, height: 291.3, shape: 0, source: "point3_6_touch_hidden [Override]", space: "skeleton" },
+        "3_7_0": { x: -1877.4, y: -2126.5, width: 291.3, height: 291.3, shape: 0, source: "point3_7_touch_hidden [Override]", space: "skeleton" },
+        "3_8_0": { x: 738.5, y: 529.9, width: 305.6, height: 305.6, shape: 0, source: "point3_8_touch [Override]", space: "skeleton" },
+        "3_9_0": { x: 395.4, y: 729, width: 208.9, height: 280.3, shape: 0, source: "point3_9_touch [Override]", space: "skeleton" },
+        "3_10_0": { x: 489.6, y: 569.4, width: 305.3, height: 305.3, shape: 0, source: "point3_10_touch [Override]", space: "skeleton" },
+        "3_11_0": { x: 656.5, y: 54.6, width: 305.6, height: 305.6, shape: 0, source: "point3_11_touch [Override]", space: "skeleton" },
+        "3_12_0": { x: -55.1, y: 341.7, width: 305.6, height: 305.6, shape: 0, source: "point3_12_touch [Override]", space: "skeleton" },
+        "3_13_0": { x: 851, y: 450.5, width: 305.6, height: 305.6, shape: 0, source: "point3_13_touch [Override]", space: "skeleton" },
+        "3_14_0": { x: 140.6, y: 710.6, width: 305.6, height: 305.6, shape: 0, source: "point3_14_touch [Override]", space: "skeleton" },
+        "3_15_0": { x: 134.9, y: 190.8, width: 305.3, height: 305.3, shape: 0, source: "point3_15_touch [Override]", space: "skeleton" },
+        "3_16_0": { x: 424.8, y: 45.1, width: 305.3, height: 305.3, shape: 0, source: "point3_16_touch [Override]", space: "skeleton" },
+        "3_17_0": { x: -204.7, y: -14.3, width: 305.3, height: 305.3, shape: 0, source: "point3_17_touch [Override]", space: "skeleton" },
+        "3_18_0": { x: 99.2, y: -303.7, width: 305.3, height: 305.3, shape: 0, source: "point3_18_touch [Override]", space: "skeleton" },
+        "3_19_0": { x: -408.4, y: -756, width: 305.3, height: 305.3, shape: 0, source: "point3_19_touch [Override]", space: "skeleton" },
+        "3_20_0": { x: -595.8, y: -435.8, width: 305.3, height: 305.3, shape: 0, source: "point3_20_touch [Override]", space: "skeleton" },
+        "3_21_0": { x: -877.7, y: -1533.6, width: 305.3, height: 305.3, shape: 0, source: "point3_21_touch [Override]", space: "skeleton" },
+        "3_22_0": { x: -905.4, y: -1063.3, width: 305.3, height: 305.3, shape: 0, source: "point3_22_touch [Override]", space: "skeleton" },
+        "3_23_0": { x: -783.2, y: 239.3, width: 893.4, height: 942.6, shape: 0, source: "point3_23_touch [Override]", space: "skeleton" },
+        "3_24_0": { x: 917.8, y: 19.4, width: 854.4, height: 1273.6, shape: 0, source: "point3_24_touch [Override]", space: "skeleton" },
       },
       illust_dating2: {
         "1_19_0": { x: -62.7, y: -112.9, width: 450, height: 400, shape: 1, source: "InteractionZone" },
@@ -946,6 +1008,7 @@
     let activeLongPress = null;
     let activeGyroDrag = null;
     let activeGyroAction = null;
+    let activeGyroPointKey = null;
     let gyroBaseline = null;
     let deviceOrientationEnabled = false;
     let selectedToolId = null;
@@ -953,6 +1016,12 @@
     let cardGameState = null;
     let cardGameTimers = [];
     let hotzoneProjectionPending = false;
+    let activeInteractionVoiceKey = null;
+    let activeInteractionMotionNames = new Set();
+    let datingHotzonesPromise = null;
+    let datingHotzones = {};
+    let datingActionsPromise = null;
+    let datingActions = {};
 
     class DatingAudioController {
       constructor() {
@@ -963,7 +1032,7 @@
         this.currentId = null;
         this.currentCharacter = null;
         this.prepareGeneration = 0;
-        this.playGeneration = 0;
+        this.playGenerations = { voice: 0, sfx: 0 };
         this.bufferPromises = new Map();
         this.sources = new Set();
         this.unavailable = new Set();
@@ -1016,7 +1085,7 @@
         this.currentCharacter = character;
 
         const voiceNames = Object.keys(character.samples || {});
-        const sfxNames = Object.keys(character.sfx?.samples || {});
+        const sfxNames = character.sfx?.disabled ? [] : Object.keys(character.sfx?.samples || {});
         if (!voiceNames.length && !sfxNames.length) return;
         try {
           const probeChannel = voiceNames.length ? "voice" : "sfx";
@@ -1075,12 +1144,18 @@
         return this.bufferPromises.get(url);
       }
 
-      stop() {
-        this.playGeneration += 1;
-        this.sources.forEach(source => {
+      stop(channel = null) {
+        if (channel) {
+          this.playGenerations[channel] = (this.playGenerations[channel] || 0) + 1;
+        } else {
+          this.playGenerations.voice += 1;
+          this.playGenerations.sfx += 1;
+        }
+        [...this.sources].forEach(source => {
+          if (channel && source._datingAudioChannel !== channel) return;
           try { source.stop(); } catch (e) { /* already stopped */ }
+          this.sources.delete(source);
         });
-        this.sources.clear();
         if (this.debug) document.documentElement.dataset.datingAudioSources = "0";
       }
 
@@ -1095,17 +1170,32 @@
         return choices[choices.length - 1] || null;
       }
 
+      chooseEventName(collection, eventNameOrNames) {
+        if (Array.isArray(eventNameOrNames)) {
+          const names = eventNameOrNames.filter(name => collection?.events?.[name]);
+          if (!names.length) return null;
+          return names[Math.floor(Math.random() * names.length)];
+        }
+        return collection?.events?.[eventNameOrNames] ? eventNameOrNames : null;
+      }
+
       playAnimation(datingId, animationName) {
         const wallStartedAt = performance.now();
-        this.stop();
-        const generation = this.playGeneration;
         if (this.debug) {
           document.documentElement.dataset.datingAudioPhase = `requested:${animationName}`;
         }
-        void this.scheduleAnimation(datingId, animationName, wallStartedAt, generation);
+        void this.scheduleAnimation(datingId, animationName, wallStartedAt);
       }
 
-      async scheduleAnimation(datingId, animationName, wallStartedAt, generation) {
+      playInteractionVoice(datingId, pointKey, phase = "voice") {
+        const wallStartedAt = performance.now();
+        if (this.debug) {
+          document.documentElement.dataset.datingAudioPhase = `point:${pointKey}:${phase}`;
+        }
+        void this.scheduleInteractionVoice(datingId, pointKey, phase, wallStartedAt);
+      }
+
+      async scheduleAnimation(datingId, animationName, wallStartedAt) {
         if (this.unavailable.has(datingId)) return;
         let character = this.currentId === datingId ? this.currentCharacter : null;
         if (!character) {
@@ -1114,7 +1204,6 @@
         }
         if (
           !character ||
-          generation !== this.playGeneration ||
           datingId !== this.currentId
         ) return;
 
@@ -1122,23 +1211,47 @@
           {
             channel: "voice",
             collection: character,
-            eventName: character.actions?.[animationName],
+            eventName: this.chooseEventName(character, character.actions?.[animationName]),
           },
           {
             channel: "sfx",
             collection: character.sfx,
-            eventName: character.sfx?.actions?.[animationName],
+            eventName: character.sfx?.disabled
+              ? null
+              : this.chooseEventName(character.sfx, character.sfx?.actions?.[animationName]),
           },
         ].map(item => ({
           ...item,
           event: item.eventName && item.collection?.events?.[item.eventName],
         })).filter(item => item.event?.triggers?.length);
+        await this.scheduleEvents(character, scheduledEvents, wallStartedAt, `event`);
+      }
+
+      async scheduleInteractionVoice(datingId, pointKey, phase, wallStartedAt) {
+        if (this.unavailable.has(datingId)) return;
+        let character = this.currentId === datingId ? this.currentCharacter : null;
+        if (!character) {
+          const manifest = await this.loadManifest();
+          character = manifest.characters?.[datingId];
+        }
+        if (!character || datingId !== this.currentId) return;
+        const ref = character.interactionVoices?.[pointKey]?.[phase];
+        const eventName = this.chooseEventName(character, ref);
+        const scheduledEvents = [{
+          channel: "voice",
+          collection: character,
+          eventName,
+          event: eventName && character.events?.[eventName],
+        }].filter(item => item.event?.triggers?.length);
+        await this.scheduleEvents(character, scheduledEvents, wallStartedAt, `point:${pointKey}:${phase}`);
+      }
+
+      async scheduleEvents(character, scheduledEvents, wallStartedAt, debugLabel) {
         if (!scheduledEvents.length) return;
         if (this.debug) {
           document.documentElement.dataset.datingAudioPhase =
-            `event:${scheduledEvents.map(item => `${item.channel}:${item.eventName}`).join(",")}`;
+            `${debugLabel}:${scheduledEvents.map(item => `${item.channel}:${item.eventName}`).join(",")}`;
         }
-
         const context = this.ensureContext();
         if (!context) return;
         if (this.debug) {
@@ -1150,13 +1263,14 @@
         if (this.debug) {
           document.documentElement.dataset.datingAudioContext = context.state;
           document.documentElement.dataset.datingAudioPhase =
-            `scheduling:${scheduledEvents.map(item => `${item.channel}:${item.eventName}`).join(",")}`;
+            `scheduling:${debugLabel}:${scheduledEvents.map(item => `${item.channel}:${item.eventName}`).join(",")}`;
         }
-        if (generation !== this.playGeneration) return;
 
         const elapsed = Math.max(0, (performance.now() - wallStartedAt) / 1000);
         const contextStartedAt = context.currentTime - elapsed;
         scheduledEvents.forEach(item => {
+          this.stop(item.channel);
+          const generation = this.playGenerations[item.channel];
           item.event.triggers.forEach(trigger => {
             const choice = this.weightedChoice(trigger.choices || []);
             if (choice) {
@@ -1187,7 +1301,7 @@
         } catch (e) {
           return;
         }
-        if (generation !== this.playGeneration || character !== this.currentCharacter) return;
+        if (generation !== this.playGenerations[channel] || character !== this.currentCharacter) return;
 
         const context = this.context;
         const target = contextStartedAt + trigger.at;
@@ -1197,6 +1311,7 @@
 
         const source = context.createBufferSource();
         source.buffer = buffer;
+        source._datingAudioChannel = channel;
         source.connect(channel === "sfx" ? this.sfxGain : this.voiceGain);
         source.onended = () => {
           this.sources.delete(source);
@@ -1241,6 +1356,40 @@
       toast.style.display = "none";
     }
 
+    function loadDatingHotzones() {
+      if (!datingHotzonesPromise) {
+        datingHotzonesPromise = fetch("./data/dating_hotzones.json")
+          .then(response => response.ok ? response.json() : {})
+          .catch(() => ({}))
+          .then(data => {
+            datingHotzones = data && typeof data === "object" ? data : {};
+            return datingHotzones;
+          });
+      }
+      return datingHotzonesPromise;
+    }
+
+    function loadDatingActions() {
+      if (!datingActionsPromise) {
+        datingActionsPromise = fetch("./data/dating_actions.json")
+          .then(response => response.ok ? response.json() : {})
+          .catch(() => ({}))
+          .then(data => {
+            datingActions = data && typeof data === "object" ? data : {};
+            return datingActions;
+          });
+      }
+      return datingActionsPromise;
+    }
+
+    function prefabActionsFor(datingId) {
+      return datingActions[datingId] || PREFAB_POINT_ACTIONS[datingId] || null;
+    }
+
+    function prefabHotzone(datingId, key) {
+      return datingHotzones[datingId]?.[key] || PREFAB_HOTZONES[datingId]?.[key] || null;
+    }
+
     function makeViewport(entry) {
       const base = PREFAB_VIEWPORTS[entry.id] || DEFAULT_VIEWPORT;
       if (base.x !== undefined) return base;
@@ -1264,6 +1413,15 @@
       btn.classList.add("active");
       currentEntry = entry;
       void datingAudio.prepare(entry.id);
+      void loadDatingActions().then(() => {
+        if (currentEntry?.id === entry.id && stageModel) {
+          renderStageControls();
+          scheduleHotzoneRender();
+        }
+      });
+      void loadDatingHotzones().then(() => {
+        if (currentEntry?.id === entry.id && stageModel) scheduleHotzoneRender();
+      });
       clearError();
       clearTimeout(assetRetryTimer);
       assetRetryTimer = null;
@@ -1466,7 +1624,7 @@
         b.className = "item body-anim";
         b.textContent = prefabActionLabel(action, idx);
         b.title = `prefab:${key}`;
-        b.onclick = () => action.cardGame === "deal" ? playCardDeal() : playPrefabAction(action, b);
+        b.onclick = () => action.cardGame === "deal" ? playCardDeal() : playPrefabAction(action, b, key);
         animList.appendChild(b);
       });
 
@@ -1632,18 +1790,25 @@
     function playPoint(name, btn) {
       if (!player) return;
       try {
+        const pointKey = prefabPointKeyFromName(name);
         restoringIdle = false;
         advanceTargetStage = null;
         advanceLastMotion = null;
+        activeInteractionVoiceKey = pointKey;
+        activeInteractionMotionNames = new Set();
         clearTimeout(advanceTimer);
         advanceTimer = null;
         player.animationState.data.defaultMix = 0.2;
         const action = prefabPointAction(name);
         const sequence = action ? prefabActionSequence(action) : [];
+        if (pointKey && currentEntry) {
+          datingAudio.playInteractionVoice(currentEntry.id, pointKey, "voice");
+        }
         if (sequence.length) {
           const targetStage = resolveActionNextStage(action);
           advanceTargetStage = targetStage;
           advanceLastMotion = sequence[sequence.length - 1] || null;
+          activeInteractionMotionNames = new Set(action?.motions || []);
           player.setAnimation(sequence[0], false);
           sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
           if (advanceTargetStage) {
@@ -1662,13 +1827,15 @@
       } catch (e) { showError("播放互动失败：" + e.message); }
     }
 
-    function playPrefabAction(action, btn) {
+    function playPrefabAction(action, btn, pointKey = null) {
       if (!player || !action) return;
       try {
         const targetStage = resolveActionNextStage(action);
         restoringIdle = false;
         advanceTargetStage = targetStage;
         advanceLastMotion = null;
+        activeInteractionVoiceKey = pointKey;
+        activeInteractionMotionNames = new Set(action.motions || []);
         clearTimeout(advanceTimer);
         advanceTimer = null;
         player.animationState.data.defaultMix = 0.2;
@@ -1676,6 +1843,9 @@
         if (!sequence.length) {
           showError("这个 prefab 互动没有可播放的 Spine 动画。");
           return;
+        }
+        if (pointKey && currentEntry) {
+          datingAudio.playInteractionVoice(currentEntry.id, pointKey, "voice");
         }
         advanceLastMotion = sequence[sequence.length - 1];
         player.setAnimation(sequence[0], false);
@@ -1710,6 +1880,8 @@
         restoringIdle = true;
         advanceTargetStage = null;
         advanceLastMotion = null;
+        activeInteractionVoiceKey = null;
+        activeInteractionMotionNames = new Set();
         clearTimeout(advanceTimer);
         advanceTimer = null;
         player.animationState.data.defaultMix = 0.25;
@@ -1755,7 +1927,7 @@
     function getStageTools(stage) {
       const fromSkins = currentEntry ? Object.keys(STAGE_TOOL_SKINS[currentEntry.id]?.[currentStage] || {}).map(Number) : [];
       const fromPoints = (stage?.points || []).map(pointToolId);
-      const fromPrefab = currentEntry ? Object.keys(PREFAB_POINT_ACTIONS[currentEntry.id] || {})
+      const fromPrefab = currentEntry ? Object.keys(prefabActionsFor(currentEntry.id) || {})
         .map(key => key.split("_").map(Number))
         .filter(([stageNo]) => stageNo === currentStage)
         .map(([, , toolId]) => toolId) : [];
@@ -1767,16 +1939,21 @@
       return m ? Number(m[1]) : 0;
     }
 
-    function prefabPointAction(name) {
-      if (!currentEntry) return null;
+    function prefabPointKeyFromName(name) {
       const m = name.match(/^point(\d+)_(\d+)/);
       if (!m) return null;
-      const key = `${Number(m[1])}_${Number(m[2])}_${pointToolId(name)}`;
-      return PREFAB_POINT_ACTIONS[currentEntry.id]?.[key] || null;
+      return `${Number(m[1])}_${Number(m[2])}_${pointToolId(name)}`;
+    }
+
+    function prefabPointAction(name) {
+      if (!currentEntry) return null;
+      const key = prefabPointKeyFromName(name);
+      if (!key) return null;
+      return prefabActionsFor(currentEntry.id)?.[key] || null;
     }
 
     function currentPrefabActions() {
-      const actions = currentEntry ? PREFAB_POINT_ACTIONS[currentEntry.id] : null;
+      const actions = currentEntry ? prefabActionsFor(currentEntry.id) : null;
       if (!actions) return [];
       return Object.entries(actions)
         .map(([key, action]) => {
@@ -1960,12 +2137,13 @@
     function renderHotzones(prefabActions) {
       hotzoneLayer.innerHTML = "";
       activeGyroAction = null;
+      activeGyroPointKey = null;
       gyroBaseline = null;
       if (!currentEntry) return;
       if (renderCardGameHotzones()) return;
       if (!prefabActions.length) return;
       prefabActions.forEach((item, idx) => {
-        const zone = PREFAB_HOTZONES[currentEntry.id]?.[item.key];
+        const zone = prefabHotzone(currentEntry.id, item.key);
         const box = zone && hotzoneToScreenBox(zone);
         if (!box) return;
         const b = makeHotzoneButton(
@@ -1975,14 +2153,15 @@
           item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
         );
         if (item.action.longPress) {
-          b.addEventListener("pointerdown", event => beginLongPress(item.action, b, event));
+          b.addEventListener("pointerdown", event => beginLongPress(item.action, b, event, item.key));
           b.addEventListener("pointerup", event => cancelLongPress(true, event));
           b.addEventListener("pointercancel", event => cancelLongPress(true, event));
           b.addEventListener("click", event => event.preventDefault());
         } else if (item.action.gyro?.actionType === 1) {
           b.dataset.label = "左右倾斜";
           activeGyroAction = item.action;
-          b.addEventListener("pointerdown", event => beginGyroDrag(item.action, b, event));
+          activeGyroPointKey = item.key;
+          b.addEventListener("pointerdown", event => beginGyroDrag(item.action, b, event, item.key));
           b.addEventListener("pointermove", event => moveGyroDrag(event));
           b.addEventListener("pointerup", event => cancelGyroDrag(event));
           b.addEventListener("pointercancel", event => cancelGyroDrag(event));
@@ -1990,7 +2169,7 @@
         } else if (item.action.cardGame === "deal") {
           b.onclick = () => playCardDeal();
         } else {
-          b.onclick = () => playPrefabAction(item.action, null);
+          b.onclick = () => playPrefabAction(item.action, null, item.key);
         }
         hotzoneLayer.appendChild(b);
       });
@@ -2009,7 +2188,7 @@
       return b;
     }
 
-    function beginGyroDrag(action, element, event) {
+    function beginGyroDrag(action, element, event, pointKey = null) {
       if (!player || activeGyroDrag) return;
       event.preventDefault();
       event.stopPropagation();
@@ -2020,6 +2199,7 @@
       activeGyroDrag = {
         action,
         element,
+        pointKey,
         pointerId: event.pointerId,
         startX: event.clientX,
         threshold: Math.max(72, stage.clientWidth * action.gyro.moveThreshold / 100),
@@ -2038,7 +2218,7 @@
           drag.element.releasePointerCapture(drag.pointerId);
         }
       } catch (e) { /* element may already be detached */ }
-      playGyroAction(drag.action, deltaX < 0 ? 0 : 1);
+      playGyroAction(drag.action, deltaX < 0 ? 0 : 1, drag.pointKey);
     }
 
     function cancelGyroDrag(event) {
@@ -2054,10 +2234,10 @@
       } catch (e) { /* element may already be detached */ }
     }
 
-    function playGyroAction(action, destinationIndex) {
+    function playGyroAction(action, destinationIndex, pointKey = null) {
       if (!action) return;
       action.destinationIndex = destinationIndex;
-      playPrefabAction(action, null);
+      playPrefabAction(action, null, pointKey);
     }
 
     async function enableDeviceOrientation() {
@@ -2087,12 +2267,14 @@
       const delta = value - gyroBaseline;
       if (Math.abs(delta) < activeGyroAction.gyro.moveThreshold) return;
       const action = activeGyroAction;
+      const pointKey = activeGyroPointKey;
       gyroBaseline = value;
       activeGyroAction = null;
-      playGyroAction(action, delta < 0 ? 0 : 1);
+      activeGyroPointKey = null;
+      playGyroAction(action, delta < 0 ? 0 : 1, pointKey);
     }
 
-    function beginLongPress(action, element, event) {
+    function beginLongPress(action, element, event, pointKey = null) {
       if (!player || activeLongPress) return;
       event.preventDefault();
       event.stopPropagation();
@@ -2112,7 +2294,10 @@
         player.play();
       }
       element.classList.add("holding");
-      const press = { action, element, pointerId: event.pointerId, timer: null };
+      if (pointKey && currentEntry) {
+        datingAudio.playInteractionVoice(currentEntry.id, pointKey, "voice");
+      }
+      const press = { action, element, pointKey, pointerId: event.pointerId, timer: null };
       press.timer = setTimeout(() => completeLongPress(press), action.longPress.threshold * 1000);
       activeLongPress = press;
     }
@@ -2122,6 +2307,8 @@
       activeLongPress = null;
       press.element.classList.remove("holding");
       const action = press.action;
+      activeInteractionVoiceKey = press.pointKey;
+      activeInteractionMotionNames = new Set(action.motions || []);
       const success = animationExists(action.longPress.success)
         ? action.longPress.success
         : (action.motions || []).find(animationExists);
@@ -2170,7 +2357,7 @@
           nextStage: null,
           longPress: null,
         };
-        playPrefabAction(shortAction, null);
+        playPrefabAction(shortAction, null, press.pointKey);
         return;
       }
       const fail = press.action.longPress.fail;
@@ -2206,7 +2393,7 @@
       const layerRect = hotzoneLayer.getBoundingClientRect();
       if (!canvasRect.width || !canvasRect.height || !layerRect.width || !layerRect.height) return null;
 
-      const scale = HOTZONE_WORLD_SCALES[currentEntry.id] || 1;
+      const scale = zone.space === "skeleton" ? 1 : (HOTZONE_WORLD_SCALES[currentEntry.id] || 1);
       const worldLeft = zone.x * scale;
       const worldRight = (zone.x + zone.width) * scale;
       const worldBottom = zone.y * scale;
@@ -2316,6 +2503,12 @@
           if (datingAudio.debug) {
             document.documentElement.dataset.datingAnimation = track.animation.name;
           }
+          if (
+            activeInteractionVoiceKey &&
+            activeInteractionMotionNames.has(track.animation.name)
+          ) {
+            datingAudio.playInteractionVoice(currentEntry.id, activeInteractionVoiceKey, "motion");
+          }
           datingAudio.playAnimation(currentEntry.id, track.animation.name);
         },
         complete: (track) => {
@@ -2349,7 +2542,7 @@
         list.appendChild(b);
       });
       document.getElementById("footer").innerHTML =
-        `${DATING.length} 个心契资源 · ${useCdn ? "CDN" : "本地 upstream"}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
+        `${DATING.length} 个有缘之客资源 · ${useCdn ? "CDN" : "本地 upstream"}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
       const requested = new URLSearchParams(location.search).get("dating");
       const requestedId = requested
         ? (requested.startsWith("illust_dating") ? requested : `illust_dating${requested}`)

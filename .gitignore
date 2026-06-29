@@ -4,6 +4,7 @@ assets/
 sync.log
 .DS_Store
 .claude/
+local_device_cache/
 bg_demo/
 demo.html
 skill_demo/
