@@ -321,6 +321,39 @@ getter(如 `GetSpineInteractionPointTables`)在 onEnter 取 `args[0]`(=this) 即
 
 ---
 
+### ✅ 资源(Spine 立绘)自抽管线 — 可脱离外部 GitHub 仓(2026-06-29 评估+PoC 通过)
+
+**背景**：dating.html 的约会角色 Spine 素材原本从 `myssal/Brown-Dust-2-Asset`(GitHub via jsdelivr)
+拉,会滞后(缺 char060804、缺 dating19)。结论：**源头就是游戏,可完全自抽,且永远最新**。
+
+**关键事实(全部实测)**：
+- 约会 Spine 全在一个 bundle：`common-char-datingillust_assets_all`(385MB)。设备缓存路径
+  `files/UnityCache/Shared/<bundleName>/<hash>/__data`,bundleName 见 `com.unity.addressables/file.json`
+  里 readableName。
+- **bundle 是标准 UnityFS,无加密**(加密只在 `Data/` 设计库)。UnityPy 直解。版本号被抹成 0.0.0,
+  需 `UnityPy.config.FALLBACK_UNITY_VERSION="2021.3.40f1"`。
+- 每角色资产：TextAsset `illust_datingN.skel`(Spine 二进制,**版本 4.1.11**,兼容 vendored
+  spine-player 4.1.56)、TextAsset `illust_datingN.atlas`、多个 Texture2D 贴图页(名字 = atlas 里
+  `.png` 行去掉后缀)。
+- **PoC 已验证**：抽出的 dating1 在 spine-player 里像素级完美渲染；抽出的 skel/atlas 与 myssal repo
+  **逐字节一致**,贴图像素级等价(RGB 平均差<2/255)。即自抽产物 = 社区 repo 质量。
+- bundle 里有 **19 个**约会角色(dating1-19),比 dating.html 的 18 还多 dating19。
+
+**工具**：`tools/extract_dating_spine.py <bundle> [out_dir]` — 解 bundle,按 atlas 页名匹配贴图,
+每角色输出到 `<out>/illust_datingN/`(默认 `upstream/spine/illust/illust_dating`,即 dating.html
+`useCdn=false` 的本地回退路径)。已用它把全部 19 个抽到 `upstream/`。
+依赖 `pip install UnityPy`(PIL 随附)。
+
+**其它获取通道**：catalog 的远程模板
+`{BDNetwork.CdnInfo.Info}/Android/{Resolution}/{Version}/<bundle>.bundle` → 解析出 `{Info}` 实际
+域名(frida 读运行时属性/抓包)后可直接从官方 CDN 下任意 bundle,不依赖设备。
+
+**同管线可抽一切**：所有角色 Spine/立绘/cutscene 都在各自 bundle(`file.json` 按 readableName 找),
+同法 UnityPy 解。`tools/` 里已有 `extract_dating_hotzones.py`/`extract_dating_actions.py`/
+`build_dating_character.py` 复用同一 prefab bundle 出热区/动作。
+
+---
+
 ### 运行态提取尝试 + 结论（2026-06-25，frida-gadget 全流程；当时卡死，2026-06-29 已解决见上）
 
 目标仍是读出 `SpineInteractionPointTable`。静态解密卡在自定义 SQLCipher（见上），转运行态 frida。
