@@ -360,6 +360,7 @@
     let assetBaseIndex = 0;
     let assetRetryTimer = null;
     let datingLoadGeneration = 0;
+    let interactionState = {};
 
     function normalizeAssetBase(base) {
       return base.endsWith("/") ? base : base + "/";
@@ -651,7 +652,39 @@
         "1_20_0": { kind: "touch", mix: ["mix1_20_1", "mix1_20_2", "mix1_20_3", "mix1_20_4", "mix1_20_5", "mix1_20_6", "mix1_20_7", "mix1_20_8", "mix1_20_9"], motions: ["motion1_20"], nextStage: "next", clickMax: 10 },
       },
       illust_dating4: {
-        "1_28_0": { kind: "touch", mix: [], motions: ["motion1_28"], nextStage: "next" },
+        "1_26_0": {
+          kind: "touch",
+          label: "掀开双腿间裙子",
+          mix: ["mix1_26_1"],
+          setFlag: "teresseSkirtOpened",
+        },
+        "1_27_0": {
+          kind: "touch",
+          label: "点击药膏上药",
+          mix: ["mix1_27_1"],
+          requires: ["teresseSkirtOpened"],
+          blockedMessage: "先拉开双腿间的裙子，再点药膏。",
+          setFlag: "teresseOintmentApplied",
+        },
+        "1_28_0": {
+          kind: "touch",
+          label: "贴 OK 绷",
+          mix: [],
+          motions: ["motion1_28"],
+          requires: ["teresseOintmentApplied"],
+          blockedMessage: "按游戏顺序：先拉开裙子，再点药膏，最后贴 OK 绷。",
+          nextStage: "next",
+        },
+        "2_1_0": { kind: "touch", label: "脸", mix: ["mix2_1_1"] },
+        "2_2_0": { kind: "touch", label: "胸部互动", mix: ["mix2_2_1", "mix2_2_2"] },
+        "2_5_0": { kind: "drag", label: "左大腿", mix: ["mix2_5_1", "mix2_5_2"] },
+        "2_6_0": { kind: "drag", label: "右大腿", mix: ["mix2_6_1", "mix2_6_2"] },
+        "2_8_0": { kind: "drag", label: "左脚/袜子", mix: ["mix2_8_1", "mix2_8_2"] },
+        "2_9_0": { kind: "drag", label: "右脚/袜子", mix: ["mix2_9_1", "mix2_9_2"] },
+        "2_15_0": { kind: "touch", label: "脚底搔痒", mix: ["mix2_15_1", "mix2_15_2", "mix2_15_3", "mix2_15_4", "mix2_15_5"] },
+        "2_28_0": { kind: "touch", label: "色笔人体彩绘", mix: ["mix2_28_1"] },
+        "2_29_0": { kind: "touch", label: "葛洛堤塞子", mix: ["mix2_29_1"] },
+        "2_30_0": { kind: "touch", label: "衣物上药", mix: ["mix2_30_1"] },
       },
       illust_dating5: {
         "1_18_0": { kind: "touch", mix: ["mix1_18_1"], motions: ["motion1_18"], nextStage: "next" },
@@ -1385,6 +1418,9 @@
     }
 
     function prefabActionsFor(datingId) {
+      if (datingId === "illust_dating4") {
+        return { ...(datingActions[datingId] || {}), ...(PREFAB_POINT_ACTIONS[datingId] || {}) };
+      }
       return datingActions[datingId] || PREFAB_POINT_ACTIONS[datingId] || null;
     }
 
@@ -1429,6 +1465,7 @@
       assetRetryTimer = null;
       disposePlayerSafely();
       currentStage = 1;
+      interactionState = {};
       currentModel = null;
       stageModel = null;
       selectedToolId = null;
@@ -1754,6 +1791,9 @@
       resetCardGame(false);
       cancelLongPress(false);
       cancelGyroDrag();
+      if (currentEntry?.id === "illust_dating4" && stageNo === 1) {
+        interactionState = {};
+      }
       currentStage = stageNo;
       clearTimeout(advanceTimer);
       advanceTimer = null;
@@ -1832,6 +1872,8 @@
     function playPrefabAction(action, btn, pointKey = null) {
       if (!player || !action) return;
       try {
+        if (!canPlayAction(action)) return;
+        clearError();
         const targetStage = resolveActionNextStage(action);
         restoringIdle = false;
         advanceTargetStage = targetStage;
@@ -1853,6 +1895,7 @@
         player.setAnimation(sequence[0], false);
         sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
         player.play();
+        applyActionState(action);
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
         if (btn) btn.classList.add("active");
         if (advanceTargetStage) {
@@ -1871,6 +1914,19 @@
         ? (action.motions || []).slice(destinationIndex, destinationIndex + 1)
         : (action.motions || []);
       return [...(action.mix || []), ...motions].filter(animationExists);
+    }
+
+    function canPlayAction(action) {
+      const missing = (action.requires || []).filter(flag => !interactionState[flag]);
+      if (!missing.length) return true;
+      showError(action.blockedMessage || "还没有满足这个互动的前置步骤。");
+      return false;
+    }
+
+    function applyActionState(action) {
+      if (!action.setFlag) return;
+      interactionState = { ...interactionState, [action.setFlag]: true };
+      scheduleHotzoneRender();
     }
 
     function playIdle() {
