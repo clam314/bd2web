@@ -1979,7 +1979,8 @@
     }
 
     function prepareActionPlayback(action, pointKey) {
-      if (!action.progressiveMix || !action.clickMax) return action;
+      const isGatedAction = action.clickMax && (action.progressiveMix || action.nextStage || action.setFlag);
+      if (!isGatedAction) return action;
       const progressKey = action.progressKey || `${currentEntry?.id || "entry"}:${pointKey || action.label || "action"}:progress`;
       const previous = interactionState[progressKey] || 0;
       const next = Math.min(previous + 1, action.clickMax);
