@@ -1126,6 +1126,7 @@
     let advanceLastMotion = null;
     let advanceTimer = null;
     let activeLongPress = null;
+    let activePrefabDrag = null;
     let activeGyroDrag = null;
     let activeGyroAction = null;
     let activeGyroPointKey = null;
@@ -1566,6 +1567,7 @@
       advanceTimer = null;
       resetCardGame(false);
       cancelLongPress(false);
+      cancelPrefabDrag();
       cancelGyroDrag();
       stage.innerHTML = "";
       hotzoneLayer.innerHTML = "";
@@ -1883,6 +1885,7 @@
       if (!stageModel || !stageModel.stages.has(stageNo)) return;
       resetCardGame(false);
       cancelLongPress(false);
+      cancelPrefabDrag();
       cancelGyroDrag();
       if (STATEFUL_INTERACTION_IDS.has(currentEntry?.id) && stageNo === 1) {
         interactionState = {};
@@ -2337,6 +2340,7 @@
     }
 
     function renderHotzones(prefabActions) {
+      cancelPrefabDrag();
       hotzoneLayer.innerHTML = "";
       activeGyroAction = null;
       activeGyroPointKey = null;
@@ -2358,6 +2362,12 @@
           b.addEventListener("pointerdown", event => beginLongPress(item.action, b, event, item.key));
           b.addEventListener("pointerup", event => cancelLongPress(true, event));
           b.addEventListener("pointercancel", event => cancelLongPress(true, event));
+          b.addEventListener("click", event => event.preventDefault());
+        } else if (item.action.kind === "drag") {
+          b.addEventListener("pointerdown", event => beginPrefabDrag(item.action, b, event, item.key));
+          b.addEventListener("pointermove", event => movePrefabDrag(event));
+          b.addEventListener("pointerup", event => cancelPrefabDrag(event));
+          b.addEventListener("pointercancel", event => cancelPrefabDrag(event));
           b.addEventListener("click", event => event.preventDefault());
         } else if (item.action.gyro?.actionType === 1) {
           b.dataset.label = "左右倾斜";
@@ -2388,6 +2398,56 @@
       b.style.width = box.width + "%";
       b.style.height = box.height + "%";
       return b;
+    }
+
+    function beginPrefabDrag(action, element, event, pointKey = null) {
+      if (!player || activePrefabDrag) return;
+      event.preventDefault();
+      event.stopPropagation();
+      try {
+        element.setPointerCapture(event.pointerId);
+      } catch (e) { /* pointer capture is optional */ }
+      element.classList.add("holding");
+      const rect = element.getBoundingClientRect();
+      activePrefabDrag = {
+        action,
+        element,
+        pointKey,
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        threshold: Math.max(32, Math.min(96, Math.max(rect.width, rect.height) * 0.22)),
+      };
+    }
+
+    function movePrefabDrag(event) {
+      const drag = activePrefabDrag;
+      if (!drag || event.pointerId !== drag.pointerId) return;
+      event.preventDefault();
+      const dx = event.clientX - drag.startX;
+      const dy = event.clientY - drag.startY;
+      if (Math.hypot(dx, dy) < drag.threshold) return;
+      activePrefabDrag = null;
+      drag.element.classList.remove("holding");
+      try {
+        if (drag.element.hasPointerCapture(drag.pointerId)) {
+          drag.element.releasePointerCapture(drag.pointerId);
+        }
+      } catch (e) { /* element may already be detached */ }
+      playPrefabAction(drag.action, null, drag.pointKey);
+    }
+
+    function cancelPrefabDrag(event) {
+      const drag = activePrefabDrag;
+      if (!drag) return;
+      if (event && event.pointerId !== drag.pointerId) return;
+      activePrefabDrag = null;
+      drag.element.classList.remove("holding");
+      try {
+        if (drag.element.hasPointerCapture(drag.pointerId)) {
+          drag.element.releasePointerCapture(drag.pointerId);
+        }
+      } catch (e) { /* element may already be detached */ }
     }
 
     function beginGyroDrag(action, element, event, pointKey = null) {

@@ -2680,3 +2680,31 @@ missingFiles=0
 - 2026-06-30 追加修正 4：用户确认笔的最终目标不是脸部，而是左大腿根部；`2_24_0` / `2_26_0` 手动热区移到左大腿根部。药膏改为 `visibleWhen:["teressePantyPulled"]`，未完成“內褲向右拉”前不再显示药膏热区。
 
 注意：这是一个“有证据的局部覆盖”，不是通用猜坐标。后续如果要批量修其它类似“点击画面道具本体”的点，需要优先找游戏里道具图标/托盘物件与互动 point 的绑定关系；不能把所有 `*_follow` 都当成道具本体。
+
+## 2026-06-30 通用 drag 热区从点击改为拖动触发
+
+用户反馈：`illust_dating2` / 白日梦兔女郎·墨菲亚里，明明是拖动点的位置，现在网页只是点击就触发。
+
+排查结论：
+
+- 数据层是对的。`data/dating_actions.json` 中墨菲亚多个点已是 `kind:"drag"`，例如：
+  - 阶段1：`1_7_0`、`1_12_0`、`1_19_0`
+  - 阶段2：`2_6_0`、`2_11_0`、`2_22_0`
+  - 阶段3：`3_3_0`、`3_6_0`、`3_11_0`
+- `data/dating_hotzones.json` 的 source 也能看到 `point*_drag*`。
+- 问题在 `dating.html` 的通用热区层：除 longPress / gyro 特殊分支外，普通 action 都走 `onclick -> playPrefabAction()`，导致 `drag` 被简化成点击。
+
+修复：
+
+- `renderHotzones()` 新增普通 `action.kind === "drag"` 分支：
+  - `pointerdown` 记录起点并 setPointerCapture；
+  - `pointermove` 距离超过阈值后触发 `playPrefabAction()`；
+  - `pointerup` / `pointercancel` 未达阈值则取消，不播放；
+  - `click` 被 preventDefault，避免拖动后再触发一次点击。
+- 新增 `activePrefabDrag` 状态和 `beginPrefabDrag()` / `movePrefabDrag()` / `cancelPrefabDrag()`。
+- 切换角色、切换阶段、重绘热区时会取消未完成的 drag。
+
+边界：
+
+- 当前只判断拖动距离，不判断方向、路径或持续时间；但已解决“drag 只点一下就触发”的核心问题。
+- longPress drag 和 gyro drag 仍走各自原有分支，不受本次普通 drag 修改影响。
