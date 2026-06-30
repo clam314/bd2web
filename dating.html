@@ -339,17 +339,18 @@
   <div id="error-toast"></div>
 
   <script>
-    const UPSTREAM_COMMIT = "c22400c07bfd";
+    // 自托管素材仓 clam314/bd2web-assets(从游戏自抽,含 myssal 没有的 dating19)。
+    // 钉 commit 保证 jsdelivr 缓存稳定;更新素材后改这个 SHA 即可。
+    const ASSET_COMMIT = "685b482329d2fd0e4912d950af628863bd0275f2";
     const params = new URLSearchParams(location.search);
     const useCdn = location.hostname.endsWith("github.io")
       || params.has("cdn");
     const CDN_ASSET_BASES = [
-      `https://fastly.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
-      `https://jsdelivr.b-cdn.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
-      `https://gcore.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
-      `https://testingcf.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
-      `https://cdn.jsdelivr.net/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`,
-      `https://raw.githubusercontent.com/myssal/Brown-Dust-2-Asset/${UPSTREAM_COMMIT}/`,
+      `https://cdn.jsdelivr.net/gh/clam314/bd2web-assets@${ASSET_COMMIT}/`,
+      `https://fastly.jsdelivr.net/gh/clam314/bd2web-assets@${ASSET_COMMIT}/`,
+      `https://gcore.jsdelivr.net/gh/clam314/bd2web-assets@${ASSET_COMMIT}/`,
+      `https://testingcf.jsdelivr.net/gh/clam314/bd2web-assets@${ASSET_COMMIT}/`,
+      `https://raw.githubusercontent.com/clam314/bd2web-assets/${ASSET_COMMIT}/`,
     ];
     const customAssetBases = params.get("asset_base")
       ?.split(",")
