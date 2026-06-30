@@ -690,9 +690,18 @@
         "2_8_0": { kind: "drag", label: "左脚/袜子", mix: ["mix2_8_1", "mix2_8_2"] },
         "2_9_0": { kind: "drag", label: "右脚/袜子", mix: ["mix2_9_1", "mix2_9_2"] },
         "2_15_0": { kind: "touch", label: "脚底搔痒", mix: ["mix2_15_1", "mix2_15_2", "mix2_15_3", "mix2_15_4", "mix2_15_5"] },
-        "2_28_0": { kind: "touch", label: "色笔人体彩绘", mix: ["mix2_28_1"] },
-        "2_29_0": { kind: "touch", label: "葛洛堤塞子", mix: ["mix2_29_1"] },
-        "2_30_0": { kind: "touch", label: "衣物上药", mix: ["mix2_30_1"] },
+        "2_17_0": { kind: "touch", label: "选择葛洛堤塞子", mix: ["mix2_17_1"], selectMode: "teressePlug", stayMode: true },
+        "2_18_0": { kind: "touch", label: "咬咬·位置1", mix: ["mix2_18_1"], requiresMode: "teressePlug" },
+        "2_20_0": { kind: "touch", label: "咬咬·位置2", mix: ["mix2_20_1"], requiresMode: "teressePlug" },
+        "2_21_0": { kind: "touch", label: "咬咬·位置3", mix: ["mix2_21_1"], requiresMode: "teressePlug" },
+        "2_23_0": { kind: "touch", label: "选择黑笔", mix: ["mix2_23_1"], selectMode: "teresseBlackPen", stayMode: true },
+        "2_24_0": { kind: "touch", label: "黑笔人体彩绘", mix: ["mix2_24_1"], requiresMode: "teresseBlackPen" },
+        "2_25_0": { kind: "touch", label: "选择红笔", mix: ["mix2_25_1"], selectMode: "teresseRedPen", stayMode: true },
+        "2_26_0": { kind: "touch", label: "红笔人体彩绘", mix: ["mix2_26_1"], requiresMode: "teresseRedPen" },
+        "2_27_0": { kind: "touch", label: "內褲向右拉", mix: ["mix2_27_1"], setFlag: "teressePantyPulled" },
+        "2_28_0": { kind: "touch", label: "药膏上药", mix: ["mix2_28_1"], requires: ["teressePantyPulled"], visibleWhen: ["teressePantyPulled"], blockedMessage: "先把內褲向右拉，再点药膏上药。" },
+        "2_29_0": { kind: "touch", label: "画面外裙摆状态", mix: ["mix2_29_1"], hidden: true },
+        "2_30_0": { kind: "touch", label: "画面外裙摆状态", mix: ["mix2_30_1"], hidden: true },
       },
       illust_dating5: {
         "1_13_0": {
@@ -1053,6 +1062,24 @@
         "7_13_14": { x: -616.3, y: -712.2, width: 1250, height: 1250, shape: 1, source: "interactionBoxZone7_13" },
       },
     };
+    const HOTZONE_OVERRIDES = {
+      illust_dating4: {
+        // The prefab's point2_28/29 follow bones sit on the reaction/effect area,
+        // while the game interaction starts from the visible tools on the tray.
+        // These boxes are measured in the same skeleton-space coordinate system
+        // from the stage-2 idle view.
+        "2_17_0": { x: 55, y: -820, width: 380, height: 390, shape: 0, source: "tray Glutti plug [Manual]", space: "skeleton" },
+        "2_18_0": { x: -500, y: 60, width: 300, height: 300, shape: 0, source: "plug target 1 [Manual]", space: "skeleton" },
+        "2_20_0": { x: -500, y: -700, width: 330, height: 330, shape: 0, source: "plug target 2 [Manual]", space: "skeleton" },
+        "2_21_0": { x: 60, y: -610, width: 330, height: 330, shape: 0, source: "plug target 3 [Manual]", space: "skeleton" },
+        "2_23_0": { x: 160, y: -990, width: 210, height: 250, shape: 0, source: "tray black pen [Manual]", space: "skeleton" },
+        "2_24_0": { x: -420, y: -540, width: 480, height: 360, shape: 0, source: "black pen left thigh root target [Manual]", space: "skeleton" },
+        "2_25_0": { x: -60, y: -1010, width: 260, height: 260, shape: 0, source: "tray red pen [Manual]", space: "skeleton" },
+        "2_26_0": { x: -420, y: -540, width: 480, height: 360, shape: 0, source: "red pen left thigh root target [Manual]", space: "skeleton" },
+        "2_27_0": { x: -250, y: -600, width: 420, height: 280, shape: 0, source: "panty pull right [Manual]", space: "skeleton" },
+        "2_28_0": { x: 510, y: -810, width: 380, height: 330, shape: 0, source: "tray ointment [Manual]", space: "skeleton" },
+      },
+    };
     const DATING18_CARD_GAME = {
       handWindow: [2700, 7070],
       hands: [
@@ -1108,6 +1135,7 @@
     let viewMode = localStorage.getItem("datingViewMode") || "fit";
     let cardGameState = null;
     let cardGameTimers = [];
+    let teresseToolMode = null;
     let hotzoneProjectionPending = false;
     let activeInteractionVoiceKey = null;
     let activeInteractionMotionNames = new Set();
@@ -1483,7 +1511,10 @@
     }
 
     function prefabHotzone(datingId, key) {
-      return datingHotzones[datingId]?.[key] || PREFAB_HOTZONES[datingId]?.[key] || null;
+      return HOTZONE_OVERRIDES[datingId]?.[key]
+        || datingHotzones[datingId]?.[key]
+        || PREFAB_HOTZONES[datingId]?.[key]
+        || null;
     }
 
     function makeViewport(entry) {
@@ -1527,6 +1558,7 @@
       currentModel = null;
       stageModel = null;
       selectedToolId = 0;
+      teresseToolMode = null;
       restoringIdle = false;
       advanceTargetStage = null;
       advanceLastMotion = null;
@@ -1560,7 +1592,8 @@
         premultipliedAlpha: false,
         viewport: VIEWPORT_OVERRIDES[entry.id] || makeViewport(entry),
         frame: (p) => {
-          if (!hotzoneProjectionPending || !p.viewport?.width || !p.viewport?.height) return;
+          if (!hotzoneProjectionPending) return;
+          if (!p.viewport?.width || !p.viewport?.height) return;
           const rect = p.canvas?.getBoundingClientRect();
           if (!rect?.width || !rect?.height) return;
           hotzoneProjectionPending = false;
@@ -1856,6 +1889,7 @@
       }
       currentStage = stageNo;
       selectedToolId = defaultStageToolId(stageNo, getStageTools(stageModel.stages.get(stageNo)));
+      teresseToolMode = null;
       clearTimeout(advanceTimer);
       advanceTimer = null;
       renderStageControls();
@@ -1953,11 +1987,19 @@
         if (pointKey && currentEntry) {
           datingAudio.playInteractionVoice(currentEntry.id, pointKey, "voice");
         }
+        if (playbackAction.selectMode) {
+          teresseToolMode = playbackAction.selectMode;
+          renderHotzones(currentPrefabActions());
+        }
         advanceLastMotion = sequence[sequence.length - 1];
         player.setAnimation(sequence[0], false);
         sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
         player.play();
         applyActionState(playbackAction);
+        if (playbackAction.requiresMode && !playbackAction.stayMode) {
+          teresseToolMode = null;
+          renderHotzones(currentPrefabActions());
+        }
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
         if (btn) btn.classList.add("active");
         if (advanceTargetStage) {
@@ -1997,15 +2039,24 @@
 
     function canPlayAction(action) {
       const missing = (action.requires || []).filter(flag => !interactionState[flag]);
-      if (!missing.length) return true;
-      showError(action.blockedMessage || "还没有满足这个互动的前置步骤。");
-      return false;
+      if (missing.length) {
+        showError(action.blockedMessage || "还没有满足这个互动的前置步骤。");
+        return false;
+      }
+      if (action.requiresMode && teresseToolMode !== action.requiresMode) {
+        showError(action.blockedMessage || "先选择对应道具，再点目标位置。");
+        return false;
+      }
+      return true;
     }
 
     function applyActionState(action) {
-      if (!action.setFlag) return;
+      if (!action.setFlag) {
+        renderHotzones(currentPrefabActions());
+        return;
+      }
       interactionState = { ...interactionState, [action.setFlag]: true };
-      scheduleHotzoneRender();
+      renderHotzones(currentPrefabActions());
     }
 
     function playIdle() {
@@ -2106,7 +2157,15 @@
         .filter(item => item.stageNo === currentStage)
         .filter(item => selectedToolId === null || item.toolId === selectedToolId)
         .filter(item => !item.action.hidden)
+        .filter(item => isPrefabActionVisible(item.action))
         .sort((a, b) => a.pointId - b.pointId);
+    }
+
+    function isPrefabActionVisible(action) {
+      if (currentEntry?.id !== "illust_dating4" || currentStage !== 2) return true;
+      if (action.visibleWhen?.some(flag => !interactionState[flag])) return false;
+      if (action.requiresMode) return teresseToolMode === action.requiresMode;
+      return !teresseToolMode || action.selectMode || action.alwaysVisible;
     }
 
     function isDating18CardStage() {
@@ -2647,6 +2706,8 @@
           if (!track.animation || track.trackIndex !== 0 || !currentEntry) return;
           if (datingAudio.debug) {
             document.documentElement.dataset.datingAnimation = track.animation.name;
+            document.documentElement.dataset.datingAnimationHistory =
+              `${document.documentElement.dataset.datingAnimationHistory || ""}|${track.animation.name}`.slice(-500);
           }
           if (
             activeInteractionVoiceKey &&
