@@ -1,0 +1,100 @@
+{
+  "note": "有缘之客 菜单#(illust_datingN) → charId 权威映射。来源:游戏内 DatingFriends 列表(illust_inven_char缩略图)+ 用户游戏内目视确认尊爵新装。19个charId与游戏19个interaction_char语音bank一一对应。",
+  "map": {
+    "illust_dating1": {
+      "charId": "char003303",
+      "name": "内布利斯",
+      "costume": "新进员工"
+    },
+    "illust_dating2": {
+      "charId": "char003402",
+      "name": "墨菲亚",
+      "costume": "白日梦兔女郎"
+    },
+    "illust_dating3": {
+      "charId": "char003203",
+      "name": "罗安",
+      "costume": "名人兔女郎"
+    },
+    "illust_dating4": {
+      "charId": "char001106",
+      "name": "泰瑞丝",
+      "costume": "保健"
+    },
+    "illust_dating5": {
+      "charId": "char060802",
+      "name": "爱丽洁",
+      "costume": "代号O"
+    },
+    "illust_dating6": {
+      "charId": "char067603",
+      "name": "威廉明娜",
+      "costume": "水上女王"
+    },
+    "illust_dating7": {
+      "charId": "char000296",
+      "name": "悠丝缇亚",
+      "costume": "仲夏夜之梦·尊爵"
+    },
+    "illust_dating8": {
+      "charId": "char001006",
+      "name": "席比雅",
+      "costume": "比基尼特工"
+    },
+    "illust_dating9": {
+      "charId": "char001197",
+      "name": "泰瑞丝",
+      "costume": "奶牛比基尼·尊爵"
+    },
+    "illust_dating10": {
+      "charId": "char066403",
+      "name": "安洁莉卡",
+      "costume": "霓虹救星"
+    },
+    "illust_dating11": {
+      "charId": "char000706",
+      "name": "伊柯利普斯",
+      "costume": "恶梦兔女郎"
+    },
+    "illust_dating12": {
+      "charId": "char061492",
+      "name": "杰尼斯",
+      "costume": "神秘兔女郎·尊爵"
+    },
+    "illust_dating13": {
+      "charId": "char004102",
+      "name": "提尔",
+      "costume": "兔女郎"
+    },
+    "illust_dating14": {
+      "charId": "char003892",
+      "name": "黎维塔",
+      "costume": "享乐主义·尊爵"
+    },
+    "illust_dating15": {
+      "charId": "char067004",
+      "name": "班塔纳",
+      "costume": "温泉修行者"
+    },
+    "illust_dating16": {
+      "charId": "char003604",
+      "name": "奥利维耶",
+      "costume": "传奇退役"
+    },
+    "illust_dating17": {
+      "charId": "char004202",
+      "name": "帕莱特",
+      "costume": "奇迹紫罗兰"
+    },
+    "illust_dating18": {
+      "charId": "char000396",
+      "name": "莎拉",
+      "costume": "致胜王牌·尊爵"
+    },
+    "illust_dating19": {
+      "charId": "char067104",
+      "name": "格兰希特",
+      "costume": "战地医疗兵"
+    }
+  }
+}
