@@ -464,7 +464,33 @@ Nebris(char003303 / `illust_dating1`) 接入页面：
 `SoundVoiceName`/`SoundMotionVoiceName` 映射到 point-based `interactionVoices`。不要再把情绪 voice
 绑定到 `actions[animationName]`；那条路线已被用户实测证明会错位。
 
-### dating 编号 ↔ charId 映射调查（2026-06-29，关键认知:其实是两套系统）
+### ✅ dating 编号↔charId 已彻底定死 + 语音错配已修（2026-06-30）
+
+**权威映射 `data/dating_charid_map.json`(菜单#1-19 → charId)**。方法:frida `gc.choose(DatingFriendsScrollItem)`
+读游戏内有缘之客列表项的 `_imageCostume` 纹理名 = `illust_inven_char<charId>_N`(**直接带 charId**)+
+`_textName`(中文名),拿到 14 心契的权威 charId;5 个尊爵新装(#7/9/12/14/18)由用户游戏内目视确认。
+**铁证:19 个菜单 charId == 游戏内 19 个 `interaction_char` 语音 bank,一一对应不多不少。**
+
+完整映射:#1 char003303 / #2 003402 / #3 003203 / #4 001106 / #5 060802 / #6 067603 / **#7 000296** /
+#8 001006 / **#9 001197** / #10 066403 / #11 000706 / **#12 061492** / #13 004102 / **#14 003892** /
+#15 067004 / #16 003604 / #17 004202 / **#18 000396** / #19 067104。(★=尊爵=现有角色新皮肤,同基础码,
+如 #9 奶牛泰瑞丝 001197 与 #4 保健泰瑞丝 001106 同 0011)。
+
+**关键坑:`dating_audio.json` 原来错配** —— spine 菜单顺序 ≠ 心契列表(costumeTableId)顺序,旧数据按心契
+顺序硬配 charId,导致 **#7-14 全部张冠李戴**(查看器播错人的声音)。已修:8 个心契语音是系统性平移,按正确
+charId 重贴菜单号(539 文件 rename);4 个尊爵(000296/001197/061492/003892)需新扒。
+
+**语音模型**:采样都是情绪命名 `Char<id>_Int_<情绪>_<take>`(不是 mix)。心契型有精确"点→语音"
+(`SpineInteractionPointTable`,`interactionVoices`);动作/尊爵型走"动画→情绪事件→按权重随机播"
+(`actions`+`events`,无精确 per 点映射)。**19 个角色全部有语音 bank,全可接。**
+
+提取:`tools/extract_dating_audio.py --bundle <interaction_char的Unity bundle> --fsb <内嵌FSB5>
+--infer-event-paths-from-samples --dating-id illust_datingN --char-id charXXXXXX --decode`
+(vgmstream-cli 在 /usr/local/bin)。
+
+---
+
+### dating 编号 ↔ charId 映射调查（2026-06-29，关键认知:其实是两套系统；2026-06-30 已彻底定死见上）
 
 dating.html 的 `illust_dating1..19` 把游戏里**两套不同系统**混在一个编号序列里,这决定了能否对到 charId:
 
