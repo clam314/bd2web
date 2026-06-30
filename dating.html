@@ -1104,7 +1104,7 @@
     let activeGyroPointKey = null;
     let gyroBaseline = null;
     let deviceOrientationEnabled = false;
-    let selectedToolId = null;
+    let selectedToolId = 0;
     let viewMode = localStorage.getItem("datingViewMode") || "fit";
     let cardGameState = null;
     let cardGameTimers = [];
@@ -1526,7 +1526,7 @@
       interactionState = {};
       currentModel = null;
       stageModel = null;
-      selectedToolId = null;
+      selectedToolId = 0;
       restoringIdle = false;
       advanceTargetStage = null;
       advanceLastMotion = null;
@@ -1656,7 +1656,9 @@
       if (!stageModel) return;
       const stage = stageModel.stages.get(currentStage);
       const tools = getStageTools(stage);
-      if (selectedToolId !== null && !tools.includes(selectedToolId)) selectedToolId = null;
+      if (selectedToolId !== null && !tools.includes(selectedToolId)) {
+        selectedToolId = defaultStageToolId(currentStage, tools);
+      }
       animList.innerHTML = "";
 
       const stageLabel = document.createElement("div");
@@ -1853,8 +1855,7 @@
         interactionState = {};
       }
       currentStage = stageNo;
-      const defaultToolId = defaultStageToolId(stageNo);
-      if (defaultToolId !== null) selectedToolId = defaultToolId;
+      selectedToolId = defaultStageToolId(stageNo, getStageTools(stageModel.stages.get(stageNo)));
       clearTimeout(advanceTimer);
       advanceTimer = null;
       renderStageControls();
@@ -2055,9 +2056,10 @@
       return idx >= 0 ? stageModel.stageIds[idx + 1] : null;
     }
 
-    function defaultStageToolId(stageNo) {
-      if (currentEntry?.id === "illust_dating5" && stageNo === 2) return 0;
-      return null;
+    function defaultStageToolId(stageNo, tools = null) {
+      const stageTools = tools || getStageTools(stageModel?.stages?.get(stageNo));
+      if (stageTools.includes(0)) return 0;
+      return stageTools[0] ?? 0;
     }
 
     function uniq(values) {
