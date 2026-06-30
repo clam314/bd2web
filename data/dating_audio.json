@@ -44042,7 +44042,7 @@
     },
     "illust_dating7": {
       "charId": "char000296",
-      "sourceVersion": "20260616170924",
+      "sourceVersion": "20260624",
       "language": "KR",
       "audioBase": "./audio/dating/illust_dating7/voice/",
       "bank": {
@@ -44538,7 +44538,6 @@
         "Eat1": {
           "guid": "8bed54d145dda34fadad68acaad718d2",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Eat1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44567,7 +44566,6 @@
         "Fun1": {
           "guid": "5fac390c60e38f41b6e27ee7423d4c7c",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Fun1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44596,7 +44594,6 @@
         "Fun2": {
           "guid": "e267015baf4bfd4abf6d9deee682af83",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Fun2_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44625,7 +44622,6 @@
         "Kiss1": {
           "guid": "b713354ced86ae4b9c41c850341214bb",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Kiss1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44654,7 +44650,6 @@
         "Neutral1": {
           "guid": "1ef438abaa5183448eda2c993ff1e5fb",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Neutral1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44683,7 +44678,6 @@
         "Pain1": {
           "guid": "8e82cfa735b75a4abafb2bc733e649f5",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Pain1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44712,7 +44706,6 @@
         "Shy1": {
           "guid": "74624a0c18b5194eb35a5f48f81c09e0",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Shy1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44741,7 +44734,6 @@
         "Shy2": {
           "guid": "1ce3c6e8c208ee41854271f000e055c3",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Shy2_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44768,9 +44760,258 @@
           ]
         },
         "Smile1": {
-          "guid": "d3e592c86def8046a38a8239e3a98829",
+          "guid": "29a991de879504499636d4b38662d899",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Smile1_KR",
-          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile2": {
+          "guid": "b62aeda333b1ae49ac79a3aac33af4ab",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Smile2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special1": {
+          "guid": "23507fe8e4edd34782a59e9df8c6371b",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Special1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.53,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 0.53,
+              "window": 1.47,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special2": {
+          "guid": "081c3f2ce786b440ba7cd1f75c1e20b5",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Special2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Eat1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.0,
+              "window": 2.5,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 4.5,
+              "window": 2.5,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Kiss1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Kiss1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Kiss1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Kiss1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special3": {
+          "guid": "0fcb4f8a44a61945a583947b19969b57",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Special3_KR",
+          "triggers": [
+            {
+              "at": 0.55,
+              "window": 1.65,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Eat1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.2,
+              "window": 2.3,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 4.5,
+              "window": 2.5,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special4": {
+          "guid": "d3e592c86def8046a38a8239e3a98829",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Special4_KR",
           "triggers": [
             {
               "at": 0.2,
@@ -44814,14 +45055,77 @@
             }
           ]
         },
-        "Smile2": {
-          "guid": "b62aeda333b1ae49ac79a3aac33af4ab",
-          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Smile2_KR",
-          "pathInferredFromSamples": true,
+        "Special5": {
+          "guid": "0fa0a63c7477a54d817f40dbd20b02c1",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Special5_KR",
           "triggers": [
             {
               "at": 0.0,
-              "window": 2.0,
+              "window": 1.2,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.2,
+              "window": 1.8,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Kiss1_3",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char000296_Int_Kiss1_4",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special6": {
+          "guid": "34f053312d57954d8cbf31cd7778fb16",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Special6_KR",
+          "triggers": [
+            {
+              "at": 0.8,
+              "window": 4.1,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 4.9,
+              "window": 2.1,
               "choices": [
                 {
                   "sample": "Char000296_Int_Smile2_1",
@@ -44843,10 +45147,14 @@
             }
           ]
         },
+        "Special7": {
+          "guid": "46f3e55c6c1a61418d350ffc2c1a94ad",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Special7_KR",
+          "triggers": []
+        },
         "Surprise1": {
           "guid": "ccb4786c12f6aa4caaad06d4c6de051e",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Surprise1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44875,7 +45183,6 @@
         "Surprise2": {
           "guid": "bdf47a5c8cbb9245927a6bbc880be4b8",
           "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Surprise2_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -44906,7 +45213,7 @@
     },
     "illust_dating9": {
       "charId": "char001197",
-      "sourceVersion": "20260616170924",
+      "sourceVersion": "20260624",
       "language": "KR",
       "audioBase": "./audio/dating/illust_dating9/voice/",
       "bank": {
@@ -45412,7 +45719,6 @@
         "Cough1": {
           "guid": "e4fd51622ac4b14cb99e59e0ee11319c",
           "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Cough1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -45441,7 +45747,6 @@
         "Neutral1": {
           "guid": "e8433016fb28ce4faff2dd8bde0f45a1",
           "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Neutral1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -45468,9 +45773,642 @@
           ]
         },
         "Pain1": {
-          "guid": "da700c97613284439ce25fbd2b0e5d01",
+          "guid": "3c2bcf3c2c7a844e935183bd9a460fa0",
           "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Pain1_KR",
-          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain2": {
+          "guid": "dcb0c3687df4fd4ba6f3fb0d3d5fb794",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Pain2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy1": {
+          "guid": "cc23edfe5a7b1a498da180716794ba35",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy2": {
+          "guid": "d89ed37b95c91440966af9d7046f168b",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy3": {
+          "guid": "1ada943fb0cfe84e86d0da4c3a3db3de",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy3_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy3_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh1": {
+          "guid": "165351fda436134baf6ddd2325f98dda",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Sigh1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 4.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Sigh1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile1": {
+          "guid": "e8d1665fba410c419aaed74aae569d5c",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Smile1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile2": {
+          "guid": "112e83d3b3aefc428f06120753bb5ad1",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Smile2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise1": {
+          "guid": "9cbeb23fb4bb154bb7af26487550a537",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Surprise1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise2": {
+          "guid": "6baedbe8dd8dff408fa5dd1284b46df7",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Surprise2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_12_1": {
+          "guid": "3e6df18cce65004d821bfb2392fc3e6a",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_12_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_24_1": {
+          "guid": "bdf14b4e07967c41a76bdbd3cefa296b",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_24_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 6.4,
+              "window": 3.6,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_25_1": {
+          "guid": "712f804c89649a459784a520a2eb02b1",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_25_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 2.4,
+              "window": 2.6,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Cough1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Cough1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Cough1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Cough1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_30_1": {
+          "guid": "20ddac3ec512874eae8d501e834a6619",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_30_1_KR",
+          "triggers": [
+            {
+              "at": 1.3,
+              "window": 2.7,
+              "choices": [
+                {
+                  "sample": "Char001197_Negative_1",
+                  "weight": 100.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_36_1": {
+          "guid": "41709162b56c1548afb78df3ae934339",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_36_1_KR",
+          "triggers": [
+            {
+              "at": 1.3,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 4.2,
+              "window": 1.8,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 100.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_37_1": {
+          "guid": "9c2ad3ea9c5305419b0244759ba6cf22",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_37_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.495812,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 1.000354,
+              "window": 0.591792,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 1.999875,
+              "window": 0.698521,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_3",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_4",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 3.99975,
+              "window": 0.698521,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_3",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_4",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 6.0,
+              "window": 0.698521,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_3",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_4",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 7.800125,
+              "window": 0.866667,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise2_2",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 9.7,
+              "window": 0.541063,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 10.800208,
+              "window": 4.136625,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Sigh1_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_4",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_38_1": {
+          "guid": "7ad26303f3b6ed4d97960a8da5ba6853",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_38_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.495812,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 1.99975,
+              "window": 0.591792,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 3.999521,
+              "window": 0.866667,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 5.5,
+              "window": 1.145583,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_7_1": {
+          "guid": "df132895c0e75446b089efc587e9c134",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix1_7_1_KR",
+          "triggers": [
+            {
+              "at": 0.8,
+              "window": 2.2,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Smile1_2",
+                  "weight": 100.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_10_1": {
+          "guid": "da700c97613284439ce25fbd2b0e5d01",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_10_1_KR",
           "triggers": [
             {
               "at": 0.0,
@@ -45518,43 +46456,125 @@
             }
           ]
         },
-        "Pain2": {
-          "guid": "dcb0c3687df4fd4ba6f3fb0d3d5fb794",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Pain2_KR",
-          "pathInferredFromSamples": true,
+        "mix2_14_1": {
+          "guid": "288111886c07a946967fc28e953f3530",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_14_1_KR",
           "triggers": [
             {
-              "at": 0.0,
-              "window": 2.0,
+              "at": 2.5,
+              "window": 2.5,
               "choices": [
                 {
-                  "sample": "Char001197_Int_Pain2_1",
+                  "sample": "Char001197_Int_Shy3_1",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Pain2_2",
+                  "sample": "Char001197_Int_Shy3_2",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Pain2_3",
+                  "sample": "Char001197_Int_Shy3_3",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Pain2_4",
+                  "sample": "Char001197_Int_Shy3_4",
                   "weight": 25.0
                 }
               ]
             }
           ]
         },
-        "Shy1": {
-          "guid": "cc23edfe5a7b1a498da180716794ba35",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy1_KR",
-          "pathInferredFromSamples": true,
+        "mix2_15_1": {
+          "guid": "bc1a2b311931d14cbe3cdf5b060558e9",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_15_1_KR",
           "triggers": [
             {
               "at": 0.0,
+              "window": 2.9,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 2.9,
+              "window": 3.1,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_3",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_16_25": {
+          "guid": "3723879bace40c4997bb709ce6ca4267",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_16_25_KR",
+          "triggers": [
+            {
+              "at": 1.3,
               "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 3.3,
+              "window": 2.7,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy3_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_22_1": {
+          "guid": "7bbfef6cc40e434abd9ad906ce207281",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_22_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.911687,
               "choices": [
                 {
                   "sample": "Char001197_Int_Shy1_1",
@@ -45573,17 +46593,10 @@
                   "weight": 25.0
                 }
               ]
-            }
-          ]
-        },
-        "Shy2": {
-          "guid": "d89ed37b95c91440966af9d7046f168b",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
+            },
             {
-              "at": 0.0,
-              "window": 2.0,
+              "at": 2.0,
+              "window": 1.531667,
               "choices": [
                 {
                   "sample": "Char001197_Int_Shy2_1",
@@ -45605,10 +46618,113 @@
             }
           ]
         },
-        "Shy3": {
+        "mix2_23_1": {
+          "guid": "12d44499def2104a94d027a89d550da0",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_23_1_KR",
+          "triggers": [
+            {
+              "at": 0.7,
+              "window": 1.145583,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_24_1": {
+          "guid": "404375df0102524196a5b0f0f998d2c0",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_24_1_KR",
+          "triggers": [
+            {
+              "at": 0.7,
+              "window": 1.145583,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 33.333332
+                }
+              ]
+            },
+            {
+              "at": 3.0,
+              "window": 1.531667,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_4",
+                  "weight": 100.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_25_1": {
+          "guid": "6ac4241947461545a35ee4d250005392",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_25_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.911687,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.0,
+              "window": 1.145583,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_29_1": {
           "guid": "3fe062967b5bfa4490437e03c09757e3",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy3_KR",
-          "pathInferredFromSamples": true,
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_29_1_KR",
           "triggers": [
             {
               "at": 0.0,
@@ -45692,10 +46808,9 @@
             }
           ]
         },
-        "Sigh1": {
+        "mix2_30_1": {
           "guid": "5a4b9d4c606d5847a1c5df084917a043",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Sigh1_KR",
-          "pathInferredFromSamples": true,
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_30_1_KR",
           "triggers": [
             {
               "at": 0.0,
@@ -45723,68 +46838,155 @@
             }
           ]
         },
-        "Smile1": {
-          "guid": "e8d1665fba410c419aaed74aae569d5c",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Smile1_KR",
-          "pathInferredFromSamples": true,
+        "mix2_31_1": {
+          "guid": "2658ea698f988445bd84dd25c20871c1",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_31_1_KR",
           "triggers": [
             {
               "at": 0.0,
-              "window": 2.0,
+              "window": 0.541063,
               "choices": [
                 {
-                  "sample": "Char001197_Int_Smile1_1",
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 3.500062,
+              "window": 0.911687,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_1",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Smile1_2",
+                  "sample": "Char001197_Int_Shy1_2",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Smile1_3",
+                  "sample": "Char001197_Int_Shy1_3",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Smile1_4",
+                  "sample": "Char001197_Int_Shy1_4",
                   "weight": 25.0
                 }
               ]
             }
           ]
         },
-        "Smile2": {
-          "guid": "112e83d3b3aefc428f06120753bb5ad1",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Smile2_KR",
-          "pathInferredFromSamples": true,
+        "mix2_32_1": {
+          "guid": "39ba833b17f93340a66e54f09f47fd38",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Mix2_32_1_KR",
           "triggers": [
             {
-              "at": 0.0,
-              "window": 2.0,
+              "at": 0.4,
+              "window": 0.766667,
               "choices": [
                 {
-                  "sample": "Char001197_Int_Smile2_1",
+                  "sample": "Char001197_Int_Surprise1_1",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Smile2_2",
+                  "sample": "Char001197_Int_Surprise1_2",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Smile2_3",
+                  "sample": "Char001197_Int_Surprise1_3",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char001197_Int_Smile2_4",
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.99975,
+              "window": 0.911687,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.999625,
+              "window": 1.531667,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 5.499833,
+              "window": 0.591792,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 6.3,
+              "window": 4.136625,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Sigh1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_4",
                   "weight": 25.0
                 }
               ]
             }
           ]
         },
-        "Surprise1": {
+        "motion1_37": {
           "guid": "d943dd57fad24a489b66bf9ba83c212f",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Surprise1_KR",
-          "pathInferredFromSamples": true,
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Motion1_37_KR",
           "triggers": [
             {
               "at": 0.0,
@@ -45845,84 +47047,35 @@
               ]
             }
           ]
-        },
-        "Surprise2": {
-          "guid": "7ad26303f3b6ed4d97960a8da5ba6853",
-          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Surprise2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 0.495812,
-              "choices": [
-                {
-                  "sample": "Char001197_Int_Neutral1_3",
-                  "weight": 100.0
-                }
-              ]
-            },
-            {
-              "at": 1.99975,
-              "window": 0.591792,
-              "choices": [
-                {
-                  "sample": "Char001197_Int_Surprise1_4",
-                  "weight": 50.0
-                },
-                {
-                  "sample": "Char001197_Int_Surprise1_1",
-                  "weight": 50.0
-                }
-              ]
-            },
-            {
-              "at": 3.999521,
-              "window": 0.866667,
-              "choices": [
-                {
-                  "sample": "Char001197_Int_Surprise2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char001197_Int_Surprise2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char001197_Int_Surprise2_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char001197_Int_Surprise2_4",
-                  "weight": 25.0
-                }
-              ]
-            },
-            {
-              "at": 5.5,
-              "window": 1.145583,
-              "choices": [
-                {
-                  "sample": "Char001197_Int_Shy2_1",
-                  "weight": 33.333332
-                },
-                {
-                  "sample": "Char001197_Int_Shy2_2",
-                  "weight": 33.333332
-                },
-                {
-                  "sample": "Char001197_Int_Shy2_3",
-                  "weight": 33.333332
-                }
-              ]
-            }
-          ]
         }
       },
-      "actions": {}
+      "actions": {
+        "mix1_12_1": "mix1_12_1",
+        "mix1_24_1": "mix1_24_1",
+        "mix1_25_1": "mix1_25_1",
+        "mix1_30_1": "mix1_30_1",
+        "mix1_36_1": "mix1_36_1",
+        "mix1_37_1": "mix1_37_1",
+        "mix1_38_1": "mix1_38_1",
+        "mix1_7_1": "mix1_7_1",
+        "mix2_10_1": "mix2_10_1",
+        "mix2_14_1": "mix2_14_1",
+        "mix2_15_1": "mix2_15_1",
+        "mix2_16_25": "mix2_16_25",
+        "mix2_22_1": "mix2_22_1",
+        "mix2_23_1": "mix2_23_1",
+        "mix2_24_1": "mix2_24_1",
+        "mix2_25_1": "mix2_25_1",
+        "mix2_29_1": "mix2_29_1",
+        "mix2_30_1": "mix2_30_1",
+        "mix2_31_1": "mix2_31_1",
+        "mix2_32_1": "mix2_32_1",
+        "motion1_37": "motion1_37"
+      }
     },
     "illust_dating12": {
       "charId": "char061492",
-      "sourceVersion": "20260616170924",
+      "sourceVersion": "20260624",
       "language": "KR",
       "audioBase": "./audio/dating/illust_dating12/voice/",
       "bank": {
@@ -46336,66 +47489,40 @@
       },
       "events": {
         "Eat1": {
-          "guid": "e0d34494b786bd45833675680a9b10f0",
+          "guid": "dbe19030f63bbd4f9420261f900ad9ce",
           "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Eat1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
-              "window": 0.890396,
+              "window": 4.0,
               "choices": [
-                {
-                  "sample": "Char061492_Int_Embarrass1_2",
-                  "weight": 50.0
-                },
-                {
-                  "sample": "Char061492_Int_Embarrass1_3",
-                  "weight": 50.0
-                }
-              ]
-            },
-            {
-              "at": 1.0,
-              "window": 2.6,
-              "choices": [
-                {
-                  "sample": "Char061492_Int_Eat1_4",
-                  "weight": 33.333332
-                },
                 {
                   "sample": "Char061492_Int_Eat1_1",
-                  "weight": 33.333332
+                  "weight": 25.0
                 },
                 {
                   "sample": "Char061492_Int_Eat1_2",
-                  "weight": 33.333332
-                }
-              ]
-            },
-            {
-              "at": 3.6,
-              "window": 1.414688,
-              "choices": [
-                {
-                  "sample": "Char061492_Int_Neutral1_4",
-                  "weight": 50.0
+                  "weight": 25.0
                 },
                 {
-                  "sample": "Char061492_Int_Neutral1_2",
-                  "weight": 50.0
+                  "sample": "Char061492_Int_Eat1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Eat1_4",
+                  "weight": 25.0
                 }
               ]
             }
           ]
         },
         "Embarrass1": {
-          "guid": "f232a12268f818449e24a9c62071512d",
+          "guid": "45146913f8db644ba5bd049810a5cce2",
           "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Embarrass1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
-              "at": 0.4,
-              "window": 1.100333,
+              "at": 0.0,
+              "window": 2.0,
               "choices": [
                 {
                   "sample": "Char061492_Int_Embarrass1_1",
@@ -46414,35 +47541,12 @@
                   "weight": 25.0
                 }
               ]
-            },
-            {
-              "at": 1.500333,
-              "window": 2.0,
-              "choices": [
-                {
-                  "sample": "Char061492_Int_Shy1_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char061492_Int_Shy1_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char061492_Int_Shy1_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char061492_Int_Shy1_4",
-                  "weight": 25.0
-                }
-              ]
             }
           ]
         },
         "Neutral1": {
           "guid": "d180b691345fde41b6eea35907cf1e1c",
           "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Neutral1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
               "at": 0.0,
@@ -46469,34 +47573,288 @@
           ]
         },
         "Pain1": {
-          "guid": "6461fc83e7a8584c8b8e68197b62ef1f",
+          "guid": "39f923558e829a46aadeb96cb2ab2be6",
           "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Pain1_KR",
-          "pathInferredFromSamples": true,
           "triggers": [
             {
-              "at": 0.7,
-              "window": 1.278437,
+              "at": 0.0,
+              "window": 2.0,
               "choices": [
                 {
                   "sample": "Char061492_Int_Pain1_1",
-                  "weight": 33.333332
+                  "weight": 25.0
                 },
                 {
                   "sample": "Char061492_Int_Pain1_2",
-                  "weight": 33.333332
+                  "weight": 25.0
                 },
                 {
                   "sample": "Char061492_Int_Pain1_3",
-                  "weight": 33.333332
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_4",
+                  "weight": 25.0
                 }
               ]
             }
           ]
         },
         "Pain2": {
-          "guid": "cbfa425117f56a41806f56c1896e378e",
+          "guid": "64fcc2be81dccb4fae43289c4122afb7",
           "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Pain2_KR",
-          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 4.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain3": {
+          "guid": "9516e5abddec6a4c8b13172fa5de3d2a",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Pain3_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain3_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy1": {
+          "guid": "679e9f455d290945a88e3ba382b5a8c4",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Shy1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy2": {
+          "guid": "1c1d841b8280b44380f17fdc98ef2fa5",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Shy2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special1": {
+          "guid": "0afd32fa9e669e4a889dab6776f5ddd9",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Special1_KR",
+          "triggers": [
+            {
+              "at": 1.3,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special2": {
+          "guid": "dc5cf1391a8b054381731b1c435dae6a",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Special2_KR",
+          "triggers": [
+            {
+              "at": 3.2,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special3": {
+          "guid": "dbe8785cd2d3354b82f65988e2c970f1",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Special3_KR",
+          "triggers": [
+            {
+              "at": 2.1,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise1": {
+          "guid": "29e2eb7aedad7f4cb6202471e6e0a992",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Surprise1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise2": {
+          "guid": "2f3bd5b4c4342f46aa28c4d3a83d050b",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Surprise2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_30_1": {
+          "guid": "cbfa425117f56a41806f56c1896e378e",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_30_1_KR",
           "triggers": [
             {
               "at": 0.6,
@@ -46522,10 +47880,29 @@
             }
           ]
         },
-        "Pain3": {
+        "mix3_31_1": {
+          "guid": "d543455e2b0ab64fbe4ed676eb9f07a9",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_31_1_KR",
+          "triggers": [
+            {
+              "at": 0.9,
+              "window": 2.858812,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Eat1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Eat1_1",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_32_1": {
           "guid": "c8c0a8dc58ff0347b46caab67a83cf11",
-          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Pain3_KR",
-          "pathInferredFromSamples": true,
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_32_1_KR",
           "triggers": [
             {
               "at": 1.5,
@@ -46703,13 +48080,84 @@
             }
           ]
         },
-        "Shy1": {
-          "guid": "dc5cf1391a8b054381731b1c435dae6a",
-          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Shy1_KR",
-          "pathInferredFromSamples": true,
+        "mix3_33_1": {
+          "guid": "57ce1a39ce265240adfeb1d36b42a4ad",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_33_1_KR",
           "triggers": [
             {
-              "at": 3.2,
+              "at": 0.0,
+              "window": 1.3,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.2,
+              "window": 1.25,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_35_1": {
+          "guid": "f232a12268f818449e24a9c62071512d",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_35_1_KR",
+          "triggers": [
+            {
+              "at": 0.4,
+              "window": 1.100333,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.500333,
               "window": 2.0,
               "choices": [
                 {
@@ -46732,39 +48180,515 @@
             }
           ]
         },
-        "Shy2": {
-          "guid": "1c1d841b8280b44380f17fdc98ef2fa5",
-          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Shy2_KR",
-          "pathInferredFromSamples": true,
+        "mix3_38_1": {
+          "guid": "a9c691a0688dc7429f5e0d8a630ce81b",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_38_1_KR",
           "triggers": [
             {
-              "at": 0.0,
+              "at": 0.4,
+              "window": 1.2,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.6,
+              "window": 1.100333,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 3.1,
               "window": 2.0,
               "choices": [
                 {
-                  "sample": "Char061492_Int_Shy2_1",
+                  "sample": "Char061492_Int_Shy1_1",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char061492_Int_Shy2_2",
+                  "sample": "Char061492_Int_Shy1_2",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char061492_Int_Shy2_3",
+                  "sample": "Char061492_Int_Shy1_3",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char061492_Int_Shy2_4",
+                  "sample": "Char061492_Int_Shy1_4",
                   "weight": 25.0
                 }
               ]
             }
           ]
         },
-        "Surprise1": {
+        "mix3_39_1": {
+          "guid": "323d2325a36fc44aaffc23cadd9d3e56",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_39_1_KR",
+          "triggers": [
+            {
+              "at": 0.4,
+              "window": 1.004271,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_4",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 1.5,
+              "window": 3.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 5.1,
+              "window": 3.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 8.7,
+              "window": 3.054792,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 11.754792,
+              "window": 1.737833,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy2_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_3",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_4",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_40_1": {
+          "guid": "e0d34494b786bd45833675680a9b10f0",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_40_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.890396,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 1.0,
+              "window": 2.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Eat1_4",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Eat1_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Eat1_2",
+                  "weight": 33.333332
+                }
+              ]
+            },
+            {
+              "at": 3.6,
+              "window": 1.414688,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Neutral1_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Neutral1_2",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_41_1": {
+          "guid": "af48af78480d0644891573608a1cb25f",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_41_1_KR",
+          "triggers": [
+            {
+              "at": 0.4,
+              "window": 0.890396,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 1.5,
+              "window": 1.579917,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain3_1",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain3_2",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_43_1": {
+          "guid": "6461fc83e7a8584c8b8e68197b62ef1f",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_43_1_KR",
+          "triggers": [
+            {
+              "at": 0.7,
+              "window": 1.278437,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain1_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_3",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_44_1": {
+          "guid": "39e50675b8f599409846c36f5cf9f917",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_44_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.858812,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Eat1_1",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Eat1_2",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 3.5,
+              "window": 3.277708,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Eat1_3",
+                  "weight": 100.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_46_1": {
+          "guid": "29d4efa7b8a7af48953a6b4b8e0482d2",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_46_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.890396,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 1.2,
+              "window": 1.7,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_3",
+                  "weight": 33.333332
+                }
+              ]
+            },
+            {
+              "at": 2.9,
+              "window": 3.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix3_47_1": {
+          "guid": "335aacb6e230d94fa0cd31b8307ccf5d",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Mix3_47_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.100333,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.2,
+              "window": 1.278437,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.5,
+              "window": 3.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 6.2,
+              "window": 3.337875,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 9.576187,
+              "window": 1.462125,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy2_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_3",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 11.1,
+              "window": 1.25,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Surprise1_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_4",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_3",
+                  "weight": 33.333332
+                }
+              ]
+            },
+            {
+              "at": 12.4,
+              "window": 1.329792,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain3_3",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 13.8,
+              "window": 1.736146,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "motion1_32": {
           "guid": "ff0d90334709cc45a5a8bb7e02fb4817",
-          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Surprise1_KR",
-          "pathInferredFromSamples": true,
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Motion1_32_KR",
           "triggers": [
             {
               "at": 0.0,
@@ -46811,42 +48735,28 @@
               ]
             }
           ]
-        },
-        "Surprise2": {
-          "guid": "2f3bd5b4c4342f46aa28c4d3a83d050b",
-          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Surprise2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 2.0,
-              "choices": [
-                {
-                  "sample": "Char061492_Int_Surprise2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char061492_Int_Surprise2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char061492_Int_Surprise2_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char061492_Int_Surprise2_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
         }
       },
-      "actions": {}
+      "actions": {
+        "mix3_30_1": "mix3_30_1",
+        "mix3_31_1": "mix3_31_1",
+        "mix3_32_1": "mix3_32_1",
+        "mix3_33_1": "mix3_33_1",
+        "mix3_35_1": "mix3_35_1",
+        "mix3_38_1": "mix3_38_1",
+        "mix3_39_1": "mix3_39_1",
+        "mix3_40_1": "mix3_40_1",
+        "mix3_41_1": "mix3_41_1",
+        "mix3_43_1": "mix3_43_1",
+        "mix3_44_1": "mix3_44_1",
+        "mix3_46_1": "mix3_46_1",
+        "mix3_47_1": "mix3_47_1",
+        "motion1_32": "motion1_32"
+      }
     },
     "illust_dating14": {
       "charId": "char003892",
-      "sourceVersion": "20260616170924",
+      "sourceVersion": "20260624",
       "language": "KR",
       "audioBase": "./audio/dating/illust_dating14/voice/",
       "bank": {
@@ -47500,9 +49410,544 @@
       },
       "events": {
         "Angry1": {
-          "guid": "c09c98be0c95a34bb03d05a95ebe91be",
+          "guid": "a84cd02c657ec34e86572195ff3b228e",
           "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Angry1_KR",
-          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.847625,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Angry1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Angry2": {
+          "guid": "beaa26be4a48e94c94ff4c14a1545c7d",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Angry2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.880708,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Angry2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Eat1": {
+          "guid": "98df4723d6ce5a4c9f14877814c12549",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Eat1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.833333,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Eat1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Eat1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Eat1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Eat1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Neutral1": {
+          "guid": "221852d54ff82d4088b11895958c6191",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Neutral1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.711229,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Neutral2": {
+          "guid": "4b049e98b591db45bd1981ee0140068e",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Neutral2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.705375,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Neutral2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain1": {
+          "guid": "e5c678da51c5a741989feaa74fa9e02d",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Pain1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.206187,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain2": {
+          "guid": "e9a5612087de1743a29c6620678c0ade",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Pain2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.228271,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh1": {
+          "guid": "728973d66143874d8bba027e7f7b566c",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 4.33325,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Sigh1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh2": {
+          "guid": "a9542df224eec74bb41cb05c23bab76d",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.114187,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Sigh2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh3": {
+          "guid": "b64cd15a56665e4695b8ff2751af56f8",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh3_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 3.642354,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Sigh3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile1": {
+          "guid": "c324730ce40a324380fa17fbf39e8686",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Smile1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.969313,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile2": {
+          "guid": "c971fc8eb953b942b318d78aa6e2a676",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Smile2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.3525,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special1": {
+          "guid": "3821371def944441b7f359ffb1ba44e1",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Special1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Neutral2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Neutral1_4",
+                  "weight": 100.0
+                }
+              ]
+            }
+          ]
+        },
+        "Special2": {
+          "guid": "1989087d308fcd4aba1c04a1584bb434",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Special2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise1": {
+          "guid": "69f36f785d32af4f8fe75e6b16744ff7",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.582,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise2": {
+          "guid": "7eeb4ec35a7130469198dd28b261c410",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise2_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.515688,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise3": {
+          "guid": "3e55ae77459bea499a27717c8fb760d6",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise3_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.791354,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise3_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise4": {
+          "guid": "e0d74af6d801f94eb3d5f339f79da0dd",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise4_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.006583,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise4_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix1_21_1": {
+          "guid": "c09c98be0c95a34bb03d05a95ebe91be",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix1_21_1_KR",
           "triggers": [
             {
               "at": 0.0,
@@ -47550,126 +49995,9 @@
             }
           ]
         },
-        "Angry2": {
-          "guid": "beaa26be4a48e94c94ff4c14a1545c7d",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Angry2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 1.880708,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Angry2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Angry2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Angry2_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Angry2_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Eat1": {
-          "guid": "98df4723d6ce5a4c9f14877814c12549",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Eat1_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 2.833333,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Eat1_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Eat1_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Eat1_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Eat1_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Neutral1": {
-          "guid": "221852d54ff82d4088b11895958c6191",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Neutral1_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 1.711229,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Neutral1_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Neutral1_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Neutral1_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Neutral1_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Neutral2": {
-          "guid": "4b049e98b591db45bd1981ee0140068e",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Neutral2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 1.705375,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Neutral2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Neutral2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Neutral2_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Neutral2_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Pain1": {
+        "mix2_11_1": {
           "guid": "fdf09399b0b11b4f8b4275e2c67eea33",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Pain1_KR",
-          "pathInferredFromSamples": true,
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_11_1_KR",
           "triggers": [
             {
               "at": 0.8,
@@ -47717,71 +50045,12 @@
             }
           ]
         },
-        "Pain2": {
-          "guid": "e9a5612087de1743a29c6620678c0ade",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Pain2_KR",
-          "pathInferredFromSamples": true,
+        "mix2_19_1": {
+          "guid": "6ae3f9298b37cf449d11db376c965c21",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_19_1_KR",
           "triggers": [
             {
-              "at": 0.0,
-              "window": 2.228271,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Pain2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Pain2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Pain2_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Pain2_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Sigh1": {
-          "guid": "728973d66143874d8bba027e7f7b566c",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh1_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 4.33325,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Sigh1_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Sigh1_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Sigh1_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Sigh1_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Sigh2": {
-          "guid": "a9542df224eec74bb41cb05c23bab76d",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
+              "at": 0.7,
               "window": 2.114187,
               "choices": [
                 {
@@ -47804,10 +50073,259 @@
             }
           ]
         },
-        "Sigh3": {
+        "mix2_20_1": {
+          "guid": "c465760e64f9744eac8bd966f364962f",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_20_1_KR",
+          "triggers": [
+            {
+              "at": 1.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_25_1": {
+          "guid": "ba723c3e9e69404cb8d3139118e10634",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_25_1_KR",
+          "triggers": [
+            {
+              "at": 1.1,
+              "window": 1.9,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_26_1": {
+          "guid": "ee91d1619a058a46af44cb6e6c31a46b",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_26_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.7,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 0.7,
+              "window": 2.3,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_34_1": {
+          "guid": "6b7e1d262ae18f439b43ab6f05789737",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_34_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.582,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 6.4,
+              "window": 0.9,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 7.3,
+              "window": 1.7,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_35_1": {
+          "guid": "426e7d72d987764686287463dfeda9e8",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_35_1_KR",
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.206187,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 6.3,
+              "window": 1.0,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Sigh3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 7.3,
+              "window": 1.7,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "mix2_38_1": {
           "guid": "fae2712867925947b820a20ad49e1c13",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh3_KR",
-          "pathInferredFromSamples": true,
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Mix2_38_1_KR",
           "triggers": [
             {
               "at": 4.3,
@@ -47877,196 +50395,60 @@
             }
           ]
         },
-        "Smile1": {
-          "guid": "c324730ce40a324380fa17fbf39e8686",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Smile1_KR",
-          "pathInferredFromSamples": true,
+        "motion1_22": {
+          "guid": "1bf51e1ab2e38045aa7ca53592a49b64",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Motion1_22_KR",
           "triggers": [
             {
               "at": 0.0,
-              "window": 1.969313,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Smile1_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Smile1_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Smile1_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Smile1_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Smile2": {
-          "guid": "c971fc8eb953b942b318d78aa6e2a676",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Smile2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 2.3525,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Smile2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Smile2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Smile2_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Smile2_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Surprise1": {
-          "guid": "ee91d1619a058a46af44cb6e6c31a46b",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise1_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 0.7,
+              "window": 0.5,
               "choices": [
                 {
                   "sample": "Char003892_Int_Surprise1_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Surprise1_2",
-                  "weight": 25.0
+                  "weight": 33.333332
                 },
                 {
                   "sample": "Char003892_Int_Surprise1_3",
-                  "weight": 25.0
+                  "weight": 33.333332
                 },
                 {
                   "sample": "Char003892_Int_Surprise1_4",
-                  "weight": 25.0
+                  "weight": 33.333332
                 }
               ]
             },
             {
-              "at": 0.7,
-              "window": 2.3,
+              "at": 0.5,
+              "window": 0.7,
               "choices": [
-                {
-                  "sample": "Char003892_Int_Pain2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Pain2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Pain2_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Pain2_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Surprise2": {
-          "guid": "c465760e64f9744eac8bd966f364962f",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise2_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 1.0,
-              "window": 2.0,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Surprise2_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Surprise2_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Surprise2_3",
-                  "weight": 25.0
-                },
                 {
                   "sample": "Char003892_Int_Surprise2_4",
-                  "weight": 25.0
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_1",
+                  "weight": 50.0
                 }
               ]
-            }
-          ]
-        },
-        "Surprise3": {
-          "guid": "3e55ae77459bea499a27717c8fb760d6",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise3_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
+            },
             {
-              "at": 0.0,
-              "window": 2.791354,
+              "at": 1.2,
+              "window": 2.8,
               "choices": [
                 {
-                  "sample": "Char003892_Int_Surprise3_1",
+                  "sample": "Char003892_Int_Sigh2_1",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char003892_Int_Surprise3_2",
+                  "sample": "Char003892_Int_Sigh2_2",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char003892_Int_Surprise3_3",
+                  "sample": "Char003892_Int_Sigh2_3",
                   "weight": 25.0
                 },
                 {
-                  "sample": "Char003892_Int_Surprise3_4",
-                  "weight": 25.0
-                }
-              ]
-            }
-          ]
-        },
-        "Surprise4": {
-          "guid": "e0d74af6d801f94eb3d5f339f79da0dd",
-          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise4_KR",
-          "pathInferredFromSamples": true,
-          "triggers": [
-            {
-              "at": 0.0,
-              "window": 2.006583,
-              "choices": [
-                {
-                  "sample": "Char003892_Int_Surprise4_1",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Surprise4_2",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Surprise4_3",
-                  "weight": 25.0
-                },
-                {
-                  "sample": "Char003892_Int_Surprise4_4",
+                  "sample": "Char003892_Int_Sigh2_4",
                   "weight": 25.0
                 }
               ]
@@ -48074,7 +50456,18 @@
           ]
         }
       },
-      "actions": {}
+      "actions": {
+        "mix1_21_1": "mix1_21_1",
+        "mix2_11_1": "mix2_11_1",
+        "mix2_19_1": "mix2_19_1",
+        "mix2_20_1": "mix2_20_1",
+        "mix2_25_1": "mix2_25_1",
+        "mix2_26_1": "mix2_26_1",
+        "mix2_34_1": "mix2_34_1",
+        "mix2_35_1": "mix2_35_1",
+        "mix2_38_1": "mix2_38_1",
+        "motion1_22": "motion1_22"
+      }
     }
   },
   "jpAudit": {

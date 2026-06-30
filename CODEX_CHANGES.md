@@ -2708,3 +2708,119 @@ missingFiles=0
 
 - 当前只判断拖动距离，不判断方向、路径或持续时间；但已解决“drag 只点一下就触发”的核心问题。
 - longPress drag 和 gyro drag 仍走各自原有分支，不受本次普通 drag 修改影响。
+
+## 2026-06-30 尊爵服装语音映射复现排查
+
+目标：复现此前 `illust_dating18` / 莎拉跑通的 FMOD `SoundMaster GUID -> event path`
+流程，继续补 4 个尊爵服装的动作型互动语音映射。
+
+### 当前 4 个目标
+
+来自 `data/dating_charid_map.json`：
+
+- `illust_dating7`：`char000296`，悠丝缇亚 / 仲夏夜之梦·尊爵。
+- `illust_dating9`：`char001197`，泰瑞丝 / 奶牛比基尼·尊爵。
+- `illust_dating12`：`char061492`，杰尼斯 / 神秘兔女郎·尊爵。
+- `illust_dating14`：`char003892`，黎维塔 / 享乐主义·尊爵。
+
+### 已确认事实
+
+- `data/dating_audio.json` 里这 4 个角色已经有 FEV/FSB 解析出的 sample/event 数据，但
+  `actions` 仍为空或不完整。也就是说 OGG 与 bank 不是问题，缺的是“Spine 动画名 -> FMOD event GUID/path”
+  这一层。
+- 本地已拉到当前 `SoundMaster`：
+  `local_device_cache/bd2_current_20260624/soundmaster_probe/Master.strings`。
+- `Master.strings` 是 `RIFF/FEV`：
+
+  ```text
+  FMT
+  LIST/PROJ
+    BNKI
+    多个空 LIST
+    STDT
+  ```
+
+- `STDT` 不是普通完整路径列表，而是 FMOD 压缩字符串/索引结构。直接搜
+  `Char001197_Int_mix1_12_1_KR` 搜不到，但能看到分片：
+  `Interaction/Char001197_Int_`、`Mix`、`1_`、`12_1_`、`JP`、`KR`。
+- 对目标角色的 `STDT` 分片扫描结果：
+  - `char001197`：存在 `Mix1_12_1`、`Mix1_24_1`、`Mix2_10_1`、`Mix3_0_1`、
+    `motion1_37` 等动作型片段。
+  - `char061492`：存在 `Mix3_30_1`、`Mix4_0_1`、`motion1_32` 等动作型片段。
+  - `char003892`：存在 `Mix1_21_1`、`Mix2_11_1`、`Mix3_8_1`、`motion1_22` 等动作型片段。
+  - `char000296`：当前扫描只看到 `Special1..Special7` 等情绪/特殊池片段，暂未看到明确
+    `mix...` 动作片段；它可能仍需要表映射或另一路特殊规则。
+
+### 已排除的错误捷径
+
+- 不能再使用 `local_device_cache/.../voice_event_paths/Char*.tsv` 里当前的空 TSV 作为“没有路径”的证据。
+  这些 TSV 是旧 standalone dump 失败后的空结果。
+- 旧的 ARM64 standalone 工具 `dump_fmod_strings_CharXXXXXX` 仍然失败：
+
+  ```text
+  FMOD create failed: 28
+  ```
+
+  失败发生在 `FMOD_Studio_System_Create`，还没加载 `Master.strings`。
+- 2026-06-30 复现失败的真正原因已查清：不是设备、不是资源、也不是 `libdumpfmod.so` 本身不可用，
+  而是 Java wrapper 写错了 native 参数。
+  - `libdumpfmod.so` 的 `Java_bd2_DumpFmod_run` 只把 JNI 第三个参数传给内部 `run()`。
+  - 反汇编确认内部 `run()` 开头会调用 `FMOD_Android_JNI_Init(JavaVM*, context)`。
+  - 之前 wrapper 声明 `run(String filter)` 并传入 `"Char000396"` / `"event:/"`，导致 native 把
+    Java 字符串当 Android `Context` 用，`FMOD.init OK` 后立刻 `EXIT:139`。
+  - 修正为 `run(Object context)`，传 `ActivityThread.systemMain().getSystemContext()` 后，
+    dump 正常输出：`FMOD JNI init: 0`、`FMOD version accepted: 0x00020312`、
+    `string count: 57393 result=0`。
+- 不能按 FEV `EVNT` 顺序或 SoundMaster 路径分片顺序猜映射。用莎拉现有成功数据校准后确认：
+  - FEV `EVNT` 顺序按 GUID 字节序排列。
+  - Master GUID 数组按 GUID 前 4 字节小端数值排列。
+  - 两者都不是 `Interaction/Char000396_Int_...` 路径的字典序。
+  - 因此“按顺序把 mix 名塞给 FEV event”会产生错误语音，禁止作为正式方案。
+
+### 当前正确突破口
+
+仍然应该拿到正式的 `GUID<TAB>event path` 表，再交给 `tools/extract_dating_audio.py`：
+
+1. 首选还是 `app_process + dumpfmod.jar + libdumpfmod.so`，不需要 Frida：
+
+   ```bash
+   CLASSPATH=/data/local/tmp/bd2sound/dumpfmod.jar:<游戏base.apk> \
+   LD_LIBRARY_PATH=/data/local/tmp/bd2sound \
+   app_process /data/local/tmp bd2.DumpFmod
+   ```
+
+   Java wrapper 必须传 Android `Context` 给 native `run(context)`。
+2. Frida 仍可作为备选，但本轮 `frida -U -p <pid>` 返回
+   `unable to connect to remote frida-server: closed`，不要在这条路上反复空耗。
+3. 若设备端完全不可用，再静态逆 `STDT` 的节点结构；目前只确认了 GUID 数组排序规则，还没有确认
+   path leaf 到 GUID index 的链接字段，不能用作生成正式映射。
+
+### 本轮产物与结果
+
+- 已导出全量 SoundMaster 事件路径：
+  `local_device_cache/bd2_current_20260624/all-fmod-event-paths.tsv`（临时文件，不进 git）。
+- 已拆出目标角色路径：
+  `local_device_cache/bd2_current_20260624/voice_event_paths/Char000296.tsv`
+  / `Char001197.tsv` / `Char061492.tsv` / `Char003892.tsv` / `Char000396.tsv`。
+- `tools/extract_dating_audio.py` 修复动作识别兼容：SoundMaster 中部分角色使用
+  `Mix...` / `Motion...` 首字母大写，前端 Spine 动画名则是小写 `mix...` / `motion...`。
+  工具现在只规范动作前缀大小写，不改情绪事件名。
+- 重建 `data/dating_audio.json` 后结果：
+
+  | dating | char | KR events | action mappings | samples | missing OGG |
+  |---|---|---:|---:|---:|---:|
+  | `illust_dating7` | `char000296` | 19 | 0 | 48 | 0 |
+  | `illust_dating9` | `char001197` | 33 | 21 | 49 | 0 |
+  | `illust_dating12` | `char061492` | 27 | 14 | 40 | 0 |
+  | `illust_dating14` | `char003892` | 28 | 10 | 64 | 0 |
+
+`illust_dating7 / char000296` 的 SoundMaster interaction voice 只有情绪/特殊池（如 `Special*`），
+没有 `Mix...` / `Motion...` 动作型 voice event；它不能按莎拉的动作名自动接入，后续需要另找
+表映射或确认是否只应使用情绪/特殊池。
+
+额外核对 `data/dating_actions.json`：
+
+- `illust_dating9`：21 个 audio action 全部能在 action 数据中找到同名 `mix/motion`。
+- `illust_dating14`：10 个 audio action 全部能在 action 数据中找到同名 `mix/motion`。
+- `illust_dating12`：14 个 audio action 中 13 个能在 action 数据中找到；`motion1_32` 当前
+  没有直接触发点，先保留在 audio manifest 中但不会被现有热区自动触发。

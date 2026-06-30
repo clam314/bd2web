@@ -430,6 +430,16 @@ def short_event_name_from_sample(sample_name: str, char_id: str) -> str | None:
     return m.group(1) if m else tail
 
 
+def normalize_action_name(name: str) -> str:
+    """把 FMOD 事件短名规范成 Spine 动画名。
+
+    莎拉的 SoundMaster 使用 ``mix6_30_1`` 这种小写形式；部分尊爵服装则使用
+    ``Mix2_30_1`` / ``Motion1_37``。Spine 动画名统一是小写前缀，所以这里只
+    规范动作事件前缀，不改变情绪事件名。
+    """
+    return re.sub(r"^(Mix|Motion)", lambda m: m.group(1).lower(), name)
+
+
 def round_seconds(ticks: int) -> float:
     return round(ticks / TIMELINE_TICKS_PER_SECOND, 6)
 
@@ -518,6 +528,7 @@ def build_character_data(
 
         if name is None:
             continue
+        name = normalize_action_name(name)
         triggers.sort(key=lambda item: item["at"])
         events[name] = {
             "guid": event_guid,
