@@ -44039,6 +44039,4042 @@
       "sfx": {
         "disabled": true
       }
+    },
+    "illust_dating7": {
+      "charId": "char000296",
+      "sourceVersion": "20260616170924",
+      "language": "KR",
+      "audioBase": "./audio/dating/illust_dating7/voice/",
+      "bank": {
+        "guid": "8652dd0876f9ae4681ec1c40835dd595",
+        "bundleSha256": "91bba6c56a216b6ce8c7c36d969684dfe53ca6b388e1993c7496ea0dfe726a35",
+        "bankSha256": "42d678589bf03a19611baa34a4cc0e152ce4be7c10f2eb7fe0cbdbd51fc6bf61",
+        "fsbSha256": "7f9d8dfc6db7088cb707a66cce8d3aa060f496d83d550285190c3cd29611da43",
+        "codec": "FMOD FADPCM"
+      },
+      "samples": {
+        "Char000296_Int_Eat1_1": {
+          "name": "Char000296_Int_Eat1_1",
+          "stream": 13,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 59136,
+          "duration": 1.232,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Eat1_1.ogg"
+        },
+        "Char000296_Int_Eat1_2": {
+          "name": "Char000296_Int_Eat1_2",
+          "stream": 35,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 122624,
+          "duration": 2.554666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Eat1_2.ogg"
+        },
+        "Char000296_Int_Eat1_3": {
+          "name": "Char000296_Int_Eat1_3",
+          "stream": 44,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 134912,
+          "duration": 2.8106666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Eat1_3.ogg"
+        },
+        "Char000296_Int_Eat1_4": {
+          "name": "Char000296_Int_Eat1_4",
+          "stream": 18,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 194048,
+          "duration": 4.042666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Eat1_4.ogg"
+        },
+        "Char000296_Int_Fun1_1": {
+          "name": "Char000296_Int_Fun1_1",
+          "stream": 16,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 93440,
+          "duration": 1.9466666666666668,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun1_1.ogg"
+        },
+        "Char000296_Int_Fun1_2": {
+          "name": "Char000296_Int_Fun1_2",
+          "stream": 26,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 64000,
+          "duration": 1.3333333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun1_2.ogg"
+        },
+        "Char000296_Int_Fun1_3": {
+          "name": "Char000296_Int_Fun1_3",
+          "stream": 17,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 93696,
+          "duration": 1.952,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun1_3.ogg"
+        },
+        "Char000296_Int_Fun1_4": {
+          "name": "Char000296_Int_Fun1_4",
+          "stream": 46,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 66048,
+          "duration": 1.376,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun1_4.ogg"
+        },
+        "Char000296_Int_Fun2_1": {
+          "name": "Char000296_Int_Fun2_1",
+          "stream": 12,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 64512,
+          "duration": 1.344,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun2_1.ogg"
+        },
+        "Char000296_Int_Fun2_2": {
+          "name": "Char000296_Int_Fun2_2",
+          "stream": 2,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 58880,
+          "duration": 1.2266666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun2_2.ogg"
+        },
+        "Char000296_Int_Fun2_3": {
+          "name": "Char000296_Int_Fun2_3",
+          "stream": 19,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 56320,
+          "duration": 1.1733333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun2_3.ogg"
+        },
+        "Char000296_Int_Fun2_4": {
+          "name": "Char000296_Int_Fun2_4",
+          "stream": 6,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 70400,
+          "duration": 1.4666666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Fun2_4.ogg"
+        },
+        "Char000296_Int_Kiss1_1": {
+          "name": "Char000296_Int_Kiss1_1",
+          "stream": 37,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 53504,
+          "duration": 1.1146666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Kiss1_1.ogg"
+        },
+        "Char000296_Int_Kiss1_2": {
+          "name": "Char000296_Int_Kiss1_2",
+          "stream": 32,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 39936,
+          "duration": 0.832,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Kiss1_2.ogg"
+        },
+        "Char000296_Int_Kiss1_3": {
+          "name": "Char000296_Int_Kiss1_3",
+          "stream": 3,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 20480,
+          "duration": 0.4266666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Kiss1_3.ogg"
+        },
+        "Char000296_Int_Kiss1_4": {
+          "name": "Char000296_Int_Kiss1_4",
+          "stream": 39,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 15872,
+          "duration": 0.33066666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Kiss1_4.ogg"
+        },
+        "Char000296_Int_Neutral1_1": {
+          "name": "Char000296_Int_Neutral1_1",
+          "stream": 7,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 47872,
+          "duration": 0.9973333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Neutral1_1.ogg"
+        },
+        "Char000296_Int_Neutral1_2": {
+          "name": "Char000296_Int_Neutral1_2",
+          "stream": 27,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 51712,
+          "duration": 1.0773333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Neutral1_2.ogg"
+        },
+        "Char000296_Int_Neutral1_3": {
+          "name": "Char000296_Int_Neutral1_3",
+          "stream": 30,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 42496,
+          "duration": 0.8853333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Neutral1_3.ogg"
+        },
+        "Char000296_Int_Neutral1_4": {
+          "name": "Char000296_Int_Neutral1_4",
+          "stream": 20,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 56576,
+          "duration": 1.1786666666666668,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Neutral1_4.ogg"
+        },
+        "Char000296_Int_Pain1_1": {
+          "name": "Char000296_Int_Pain1_1",
+          "stream": 10,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 14336,
+          "duration": 0.2986666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Pain1_1.ogg"
+        },
+        "Char000296_Int_Pain1_2": {
+          "name": "Char000296_Int_Pain1_2",
+          "stream": 11,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 28416,
+          "duration": 0.592,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Pain1_2.ogg"
+        },
+        "Char000296_Int_Pain1_3": {
+          "name": "Char000296_Int_Pain1_3",
+          "stream": 41,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 47104,
+          "duration": 0.9813333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Pain1_3.ogg"
+        },
+        "Char000296_Int_Pain1_4": {
+          "name": "Char000296_Int_Pain1_4",
+          "stream": 43,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 57088,
+          "duration": 1.1893333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Pain1_4.ogg"
+        },
+        "Char000296_Int_Shy1_1": {
+          "name": "Char000296_Int_Shy1_1",
+          "stream": 47,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 52224,
+          "duration": 1.088,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy1_1.ogg"
+        },
+        "Char000296_Int_Shy1_2": {
+          "name": "Char000296_Int_Shy1_2",
+          "stream": 48,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 56064,
+          "duration": 1.168,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy1_2.ogg"
+        },
+        "Char000296_Int_Shy1_3": {
+          "name": "Char000296_Int_Shy1_3",
+          "stream": 36,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 77056,
+          "duration": 1.6053333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy1_3.ogg"
+        },
+        "Char000296_Int_Shy1_4": {
+          "name": "Char000296_Int_Shy1_4",
+          "stream": 4,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 55552,
+          "duration": 1.1573333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy1_4.ogg"
+        },
+        "Char000296_Int_Shy2_1": {
+          "name": "Char000296_Int_Shy2_1",
+          "stream": 5,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 39168,
+          "duration": 0.816,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy2_1.ogg"
+        },
+        "Char000296_Int_Shy2_2": {
+          "name": "Char000296_Int_Shy2_2",
+          "stream": 24,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 40704,
+          "duration": 0.848,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy2_2.ogg"
+        },
+        "Char000296_Int_Shy2_3": {
+          "name": "Char000296_Int_Shy2_3",
+          "stream": 28,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 52992,
+          "duration": 1.104,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy2_3.ogg"
+        },
+        "Char000296_Int_Shy2_4": {
+          "name": "Char000296_Int_Shy2_4",
+          "stream": 8,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 36864,
+          "duration": 0.768,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Shy2_4.ogg"
+        },
+        "Char000296_Int_Smile1_1": {
+          "name": "Char000296_Int_Smile1_1",
+          "stream": 15,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 52736,
+          "duration": 1.0986666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile1_1.ogg"
+        },
+        "Char000296_Int_Smile1_2": {
+          "name": "Char000296_Int_Smile1_2",
+          "stream": 45,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 60672,
+          "duration": 1.264,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile1_2.ogg"
+        },
+        "Char000296_Int_Smile1_3": {
+          "name": "Char000296_Int_Smile1_3",
+          "stream": 21,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 21760,
+          "duration": 0.4533333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile1_3.ogg"
+        },
+        "Char000296_Int_Smile1_4": {
+          "name": "Char000296_Int_Smile1_4",
+          "stream": 25,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 70400,
+          "duration": 1.4666666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile1_4.ogg"
+        },
+        "Char000296_Int_Smile2_1": {
+          "name": "Char000296_Int_Smile2_1",
+          "stream": 40,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 91648,
+          "duration": 1.9093333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile2_1.ogg"
+        },
+        "Char000296_Int_Smile2_2": {
+          "name": "Char000296_Int_Smile2_2",
+          "stream": 1,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 60672,
+          "duration": 1.264,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile2_2.ogg"
+        },
+        "Char000296_Int_Smile2_3": {
+          "name": "Char000296_Int_Smile2_3",
+          "stream": 23,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 51712,
+          "duration": 1.0773333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile2_3.ogg"
+        },
+        "Char000296_Int_Smile2_4": {
+          "name": "Char000296_Int_Smile2_4",
+          "stream": 42,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 51456,
+          "duration": 1.072,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Smile2_4.ogg"
+        },
+        "Char000296_Int_Surprise1_1": {
+          "name": "Char000296_Int_Surprise1_1",
+          "stream": 22,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 22784,
+          "duration": 0.4746666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise1_1.ogg"
+        },
+        "Char000296_Int_Surprise1_2": {
+          "name": "Char000296_Int_Surprise1_2",
+          "stream": 29,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 28160,
+          "duration": 0.5866666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise1_2.ogg"
+        },
+        "Char000296_Int_Surprise1_3": {
+          "name": "Char000296_Int_Surprise1_3",
+          "stream": 9,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 16640,
+          "duration": 0.3466666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise1_3.ogg"
+        },
+        "Char000296_Int_Surprise1_4": {
+          "name": "Char000296_Int_Surprise1_4",
+          "stream": 33,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 27648,
+          "duration": 0.576,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise1_4.ogg"
+        },
+        "Char000296_Int_Surprise2_1": {
+          "name": "Char000296_Int_Surprise2_1",
+          "stream": 14,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 36864,
+          "duration": 0.768,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise2_1.ogg"
+        },
+        "Char000296_Int_Surprise2_2": {
+          "name": "Char000296_Int_Surprise2_2",
+          "stream": 31,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 22272,
+          "duration": 0.464,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise2_2.ogg"
+        },
+        "Char000296_Int_Surprise2_3": {
+          "name": "Char000296_Int_Surprise2_3",
+          "stream": 38,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 38144,
+          "duration": 0.7946666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise2_3.ogg"
+        },
+        "Char000296_Int_Surprise2_4": {
+          "name": "Char000296_Int_Surprise2_4",
+          "stream": 34,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 33280,
+          "duration": 0.6933333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char000296_Int_Surprise2_4.ogg"
+        }
+      },
+      "events": {
+        "Eat1": {
+          "guid": "8bed54d145dda34fadad68acaad718d2",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Eat1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 5.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Eat1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Eat1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Fun1": {
+          "guid": "5fac390c60e38f41b6e27ee7423d4c7c",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Fun1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Fun1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Fun1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Fun1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Fun1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Fun2": {
+          "guid": "e267015baf4bfd4abf6d9deee682af83",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Fun2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Fun2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Fun2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Fun2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Fun2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Kiss1": {
+          "guid": "b713354ced86ae4b9c41c850341214bb",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Kiss1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Kiss1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Kiss1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Kiss1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Kiss1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Neutral1": {
+          "guid": "1ef438abaa5183448eda2c993ff1e5fb",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Neutral1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain1": {
+          "guid": "8e82cfa735b75a4abafb2bc733e649f5",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Pain1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy1": {
+          "guid": "74624a0c18b5194eb35a5f48f81c09e0",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Shy1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy2": {
+          "guid": "1ce3c6e8c208ee41854271f000e055c3",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Shy2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile1": {
+          "guid": "d3e592c86def8046a38a8239e3a98829",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Smile1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.2,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Pain1_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char000296_Int_Pain1_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char000296_Int_Pain1_3",
+                  "weight": 33.333332
+                }
+              ]
+            },
+            {
+              "at": 2.2,
+              "window": 2.8,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile2": {
+          "guid": "b62aeda333b1ae49ac79a3aac33af4ab",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Smile2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise1": {
+          "guid": "ccb4786c12f6aa4caaad06d4c6de051e",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Surprise1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise2": {
+          "guid": "bdf47a5c8cbb9245927a6bbc880be4b8",
+          "path": "event:/Voices/Common/Char000296/Interaction/Char000296_Int_Surprise2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char000296_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char000296_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "actions": {}
+    },
+    "illust_dating9": {
+      "charId": "char001197",
+      "sourceVersion": "20260616170924",
+      "language": "KR",
+      "audioBase": "./audio/dating/illust_dating9/voice/",
+      "bank": {
+        "guid": "b5015a5706554f479a26626de47bd3b1",
+        "bundleSha256": "9d1d3457ff491087fdb13f8ef97aecf134635e9c3d1ba313e6654eaab85dccd5",
+        "bankSha256": "dd9ba0d3c3bd5d7562d1ff9f37adfcbd0745ace4d4b1fcd153e24264af07828a",
+        "fsbSha256": "2491efbd2639a86ebb5b9eff83487cb0212302243ba56763cd3fccdcbe5aed27",
+        "codec": "FMOD FADPCM"
+      },
+      "samples": {
+        "Char001197_Int_Cough1_1": {
+          "name": "Char001197_Int_Cough1_1",
+          "stream": 17,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 37120,
+          "duration": 0.7733333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Cough1_1.ogg"
+        },
+        "Char001197_Int_Cough1_2": {
+          "name": "Char001197_Int_Cough1_2",
+          "stream": 1,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 48128,
+          "duration": 1.0026666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Cough1_2.ogg"
+        },
+        "Char001197_Int_Cough1_3": {
+          "name": "Char001197_Int_Cough1_3",
+          "stream": 43,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 86528,
+          "duration": 1.8026666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Cough1_3.ogg"
+        },
+        "Char001197_Int_Cough1_4": {
+          "name": "Char001197_Int_Cough1_4",
+          "stream": 4,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 33792,
+          "duration": 0.704,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Cough1_4.ogg"
+        },
+        "Char001197_Int_Neutral1_1": {
+          "name": "Char001197_Int_Neutral1_1",
+          "stream": 2,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 29696,
+          "duration": 0.6186666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Neutral1_1.ogg"
+        },
+        "Char001197_Int_Neutral1_2": {
+          "name": "Char001197_Int_Neutral1_2",
+          "stream": 33,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 23808,
+          "duration": 0.496,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Neutral1_2.ogg"
+        },
+        "Char001197_Int_Neutral1_3": {
+          "name": "Char001197_Int_Neutral1_3",
+          "stream": 27,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 23808,
+          "duration": 0.496,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Neutral1_3.ogg"
+        },
+        "Char001197_Int_Neutral1_4": {
+          "name": "Char001197_Int_Neutral1_4",
+          "stream": 31,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 17408,
+          "duration": 0.3626666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Neutral1_4.ogg"
+        },
+        "Char001197_Int_Pain1_1": {
+          "name": "Char001197_Int_Pain1_1",
+          "stream": 40,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 11008,
+          "duration": 0.22933333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain1_1.ogg"
+        },
+        "Char001197_Int_Pain1_2": {
+          "name": "Char001197_Int_Pain1_2",
+          "stream": 13,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 38400,
+          "duration": 0.8,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain1_2.ogg"
+        },
+        "Char001197_Int_Pain1_3": {
+          "name": "Char001197_Int_Pain1_3",
+          "stream": 42,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 13824,
+          "duration": 0.288,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain1_3.ogg"
+        },
+        "Char001197_Int_Pain1_4": {
+          "name": "Char001197_Int_Pain1_4",
+          "stream": 23,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 33536,
+          "duration": 0.6986666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain1_4.ogg"
+        },
+        "Char001197_Int_Pain2_1": {
+          "name": "Char001197_Int_Pain2_1",
+          "stream": 19,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 63744,
+          "duration": 1.328,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain2_1.ogg"
+        },
+        "Char001197_Int_Pain2_2": {
+          "name": "Char001197_Int_Pain2_2",
+          "stream": 20,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 62464,
+          "duration": 1.3013333333333332,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain2_2.ogg"
+        },
+        "Char001197_Int_Pain2_3": {
+          "name": "Char001197_Int_Pain2_3",
+          "stream": 12,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 85248,
+          "duration": 1.776,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain2_3.ogg"
+        },
+        "Char001197_Int_Pain2_4": {
+          "name": "Char001197_Int_Pain2_4",
+          "stream": 28,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 27904,
+          "duration": 0.5813333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Pain2_4.ogg"
+        },
+        "Char001197_Int_Shy1_1": {
+          "name": "Char001197_Int_Shy1_1",
+          "stream": 47,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 43520,
+          "duration": 0.9066666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy1_1.ogg"
+        },
+        "Char001197_Int_Shy1_2": {
+          "name": "Char001197_Int_Shy1_2",
+          "stream": 24,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 43776,
+          "duration": 0.912,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy1_2.ogg"
+        },
+        "Char001197_Int_Shy1_3": {
+          "name": "Char001197_Int_Shy1_3",
+          "stream": 45,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 30720,
+          "duration": 0.64,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy1_3.ogg"
+        },
+        "Char001197_Int_Shy1_4": {
+          "name": "Char001197_Int_Shy1_4",
+          "stream": 48,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 40704,
+          "duration": 0.848,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy1_4.ogg"
+        },
+        "Char001197_Int_Shy2_1": {
+          "name": "Char001197_Int_Shy2_1",
+          "stream": 25,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 52480,
+          "duration": 1.0933333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy2_1.ogg"
+        },
+        "Char001197_Int_Shy2_2": {
+          "name": "Char001197_Int_Shy2_2",
+          "stream": 8,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 55040,
+          "duration": 1.1466666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy2_2.ogg"
+        },
+        "Char001197_Int_Shy2_3": {
+          "name": "Char001197_Int_Shy2_3",
+          "stream": 34,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 33024,
+          "duration": 0.688,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy2_3.ogg"
+        },
+        "Char001197_Int_Shy2_4": {
+          "name": "Char001197_Int_Shy2_4",
+          "stream": 5,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 73728,
+          "duration": 1.536,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy2_4.ogg"
+        },
+        "Char001197_Int_Shy3_1": {
+          "name": "Char001197_Int_Shy3_1",
+          "stream": 41,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 65536,
+          "duration": 1.3653333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy3_1.ogg"
+        },
+        "Char001197_Int_Shy3_2": {
+          "name": "Char001197_Int_Shy3_2",
+          "stream": 22,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 54016,
+          "duration": 1.1253333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy3_2.ogg"
+        },
+        "Char001197_Int_Shy3_3": {
+          "name": "Char001197_Int_Shy3_3",
+          "stream": 44,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 82432,
+          "duration": 1.7173333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy3_3.ogg"
+        },
+        "Char001197_Int_Shy3_4": {
+          "name": "Char001197_Int_Shy3_4",
+          "stream": 46,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 67328,
+          "duration": 1.4026666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Shy3_4.ogg"
+        },
+        "Char001197_Int_Sigh1_1": {
+          "name": "Char001197_Int_Sigh1_1",
+          "stream": 16,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 198656,
+          "duration": 4.1386666666666665,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Sigh1_1.ogg"
+        },
+        "Char001197_Int_Sigh1_2": {
+          "name": "Char001197_Int_Sigh1_2",
+          "stream": 21,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 143104,
+          "duration": 2.981333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Sigh1_2.ogg"
+        },
+        "Char001197_Int_Sigh1_3": {
+          "name": "Char001197_Int_Sigh1_3",
+          "stream": 36,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 86784,
+          "duration": 1.808,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Sigh1_3.ogg"
+        },
+        "Char001197_Int_Sigh1_4": {
+          "name": "Char001197_Int_Sigh1_4",
+          "stream": 9,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 128000,
+          "duration": 2.6666666666666665,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Sigh1_4.ogg"
+        },
+        "Char001197_Int_Smile1_1": {
+          "name": "Char001197_Int_Smile1_1",
+          "stream": 29,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 28160,
+          "duration": 0.5866666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile1_1.ogg"
+        },
+        "Char001197_Int_Smile1_2": {
+          "name": "Char001197_Int_Smile1_2",
+          "stream": 39,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 24576,
+          "duration": 0.512,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile1_2.ogg"
+        },
+        "Char001197_Int_Smile1_3": {
+          "name": "Char001197_Int_Smile1_3",
+          "stream": 14,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 30208,
+          "duration": 0.6293333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile1_3.ogg"
+        },
+        "Char001197_Int_Smile1_4": {
+          "name": "Char001197_Int_Smile1_4",
+          "stream": 37,
+          "sampleRate": 44484,
+          "channels": 1,
+          "samples": 19200,
+          "duration": 0.4316158618829242,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile1_4.ogg"
+        },
+        "Char001197_Int_Smile2_1": {
+          "name": "Char001197_Int_Smile2_1",
+          "stream": 18,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 48128,
+          "duration": 1.0026666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile2_1.ogg"
+        },
+        "Char001197_Int_Smile2_2": {
+          "name": "Char001197_Int_Smile2_2",
+          "stream": 15,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 28416,
+          "duration": 0.592,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile2_2.ogg"
+        },
+        "Char001197_Int_Smile2_3": {
+          "name": "Char001197_Int_Smile2_3",
+          "stream": 49,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 26624,
+          "duration": 0.5546666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile2_3.ogg"
+        },
+        "Char001197_Int_Smile2_4": {
+          "name": "Char001197_Int_Smile2_4",
+          "stream": 30,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 69120,
+          "duration": 1.44,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Smile2_4.ogg"
+        },
+        "Char001197_Int_Surprise1_1": {
+          "name": "Char001197_Int_Surprise1_1",
+          "stream": 38,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 26112,
+          "duration": 0.544,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise1_1.ogg"
+        },
+        "Char001197_Int_Surprise1_2": {
+          "name": "Char001197_Int_Surprise1_2",
+          "stream": 11,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 20736,
+          "duration": 0.432,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise1_2.ogg"
+        },
+        "Char001197_Int_Surprise1_3": {
+          "name": "Char001197_Int_Surprise1_3",
+          "stream": 6,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 36864,
+          "duration": 0.768,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise1_3.ogg"
+        },
+        "Char001197_Int_Surprise1_4": {
+          "name": "Char001197_Int_Surprise1_4",
+          "stream": 35,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 28416,
+          "duration": 0.592,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise1_4.ogg"
+        },
+        "Char001197_Int_Surprise2_1": {
+          "name": "Char001197_Int_Surprise2_1",
+          "stream": 26,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 29952,
+          "duration": 0.624,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise2_1.ogg"
+        },
+        "Char001197_Int_Surprise2_2": {
+          "name": "Char001197_Int_Surprise2_2",
+          "stream": 10,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 41728,
+          "duration": 0.8693333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise2_2.ogg"
+        },
+        "Char001197_Int_Surprise2_3": {
+          "name": "Char001197_Int_Surprise2_3",
+          "stream": 7,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 35840,
+          "duration": 0.7466666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise2_3.ogg"
+        },
+        "Char001197_Int_Surprise2_4": {
+          "name": "Char001197_Int_Surprise2_4",
+          "stream": 3,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 39168,
+          "duration": 0.816,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Int_Surprise2_4.ogg"
+        },
+        "Char001197_Negative_1": {
+          "name": "Char001197_Negative_1",
+          "stream": 32,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 40704,
+          "duration": 0.848,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char001197_Negative_1.ogg"
+        }
+      },
+      "events": {
+        "Cough1": {
+          "guid": "e4fd51622ac4b14cb99e59e0ee11319c",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Cough1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Cough1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Cough1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Cough1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Cough1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Neutral1": {
+          "guid": "e8433016fb28ce4faff2dd8bde0f45a1",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Neutral1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain1": {
+          "guid": "da700c97613284439ce25fbd2b0e5d01",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Pain1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.5,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.5,
+              "window": 3.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Sigh1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain2": {
+          "guid": "dcb0c3687df4fd4ba6f3fb0d3d5fb794",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Pain2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy1": {
+          "guid": "cc23edfe5a7b1a498da180716794ba35",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy2": {
+          "guid": "d89ed37b95c91440966af9d7046f168b",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy3": {
+          "guid": "3fe062967b5bfa4490437e03c09757e3",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Shy3_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.766667,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 3.0,
+              "window": 1.531667,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 5.0,
+              "window": 1.2,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy3_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Shy3_4",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 6.2,
+              "window": 4.136625,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Sigh1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh1": {
+          "guid": "5a4b9d4c606d5847a1c5df084917a043",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Sigh1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.614396,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_1",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 1.2,
+              "window": 2.661792,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Sigh1_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_3",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile1": {
+          "guid": "e8d1665fba410c419aaed74aae569d5c",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Smile1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile2": {
+          "guid": "112e83d3b3aefc428f06120753bb5ad1",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Smile2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise1": {
+          "guid": "d943dd57fad24a489b66bf9ba83c212f",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Surprise1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.2,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 1.2,
+              "window": 2.8,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 4.0,
+              "window": 3.0,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Sigh1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Sigh1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise2": {
+          "guid": "7ad26303f3b6ed4d97960a8da5ba6853",
+          "path": "event:/Voices/Common/Char001197/Interaction/Char001197_Int_Surprise2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.495812,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Neutral1_3",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 1.99975,
+              "window": 0.591792,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise1_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise1_1",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 3.999521,
+              "window": 0.866667,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char001197_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 5.5,
+              "window": 1.145583,
+              "choices": [
+                {
+                  "sample": "Char001197_Int_Shy2_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char001197_Int_Shy2_3",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "actions": {}
+    },
+    "illust_dating12": {
+      "charId": "char061492",
+      "sourceVersion": "20260616170924",
+      "language": "KR",
+      "audioBase": "./audio/dating/illust_dating12/voice/",
+      "bank": {
+        "guid": "8830ed6352c5b24cb0b159a9af7f0e26",
+        "bundleSha256": "9885fd8629baaa7cc14faf16b4d223e14bbe5ef97e2c441f8c45d5c40ebdf01c",
+        "bankSha256": "4968d988c203a8fc5f06bbc684e09ad95399bddb4667f2217d142df7425cc281",
+        "fsbSha256": "065a8490f16d2f4c54d2080e4283d2a911c0294ccd0f2a689a643beec06cf2a7",
+        "codec": "FMOD FADPCM"
+      },
+      "samples": {
+        "Char061492_Int_Eat1_1": {
+          "name": "Char061492_Int_Eat1_1",
+          "stream": 26,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 101632,
+          "duration": 2.1173333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Eat1_1.ogg"
+        },
+        "Char061492_Int_Eat1_2": {
+          "name": "Char061492_Int_Eat1_2",
+          "stream": 20,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 137472,
+          "duration": 2.864,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Eat1_2.ogg"
+        },
+        "Char061492_Int_Eat1_3": {
+          "name": "Char061492_Int_Eat1_3",
+          "stream": 9,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 157440,
+          "duration": 3.28,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Eat1_3.ogg"
+        },
+        "Char061492_Int_Eat1_4": {
+          "name": "Char061492_Int_Eat1_4",
+          "stream": 7,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 119040,
+          "duration": 2.48,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Eat1_4.ogg"
+        },
+        "Char061492_Int_Embarrass1_1": {
+          "name": "Char061492_Int_Embarrass1_1",
+          "stream": 40,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 52992,
+          "duration": 1.104,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Embarrass1_1.ogg"
+        },
+        "Char061492_Int_Embarrass1_2": {
+          "name": "Char061492_Int_Embarrass1_2",
+          "stream": 12,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 33536,
+          "duration": 0.6986666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Embarrass1_2.ogg"
+        },
+        "Char061492_Int_Embarrass1_3": {
+          "name": "Char061492_Int_Embarrass1_3",
+          "stream": 39,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 42752,
+          "duration": 0.8906666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Embarrass1_3.ogg"
+        },
+        "Char061492_Int_Embarrass1_4": {
+          "name": "Char061492_Int_Embarrass1_4",
+          "stream": 8,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 48384,
+          "duration": 1.008,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Embarrass1_4.ogg"
+        },
+        "Char061492_Int_Neutral1_1": {
+          "name": "Char061492_Int_Neutral1_1",
+          "stream": 29,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 64256,
+          "duration": 1.3386666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Neutral1_1.ogg"
+        },
+        "Char061492_Int_Neutral1_2": {
+          "name": "Char061492_Int_Neutral1_2",
+          "stream": 18,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 54784,
+          "duration": 1.1413333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Neutral1_2.ogg"
+        },
+        "Char061492_Int_Neutral1_3": {
+          "name": "Char061492_Int_Neutral1_3",
+          "stream": 28,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 66560,
+          "duration": 1.3866666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Neutral1_3.ogg"
+        },
+        "Char061492_Int_Neutral1_4": {
+          "name": "Char061492_Int_Neutral1_4",
+          "stream": 31,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 68096,
+          "duration": 1.4186666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Neutral1_4.ogg"
+        },
+        "Char061492_Int_Pain1_1": {
+          "name": "Char061492_Int_Pain1_1",
+          "stream": 14,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 50688,
+          "duration": 1.056,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain1_1.ogg"
+        },
+        "Char061492_Int_Pain1_2": {
+          "name": "Char061492_Int_Pain1_2",
+          "stream": 34,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 61440,
+          "duration": 1.28,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain1_2.ogg"
+        },
+        "Char061492_Int_Pain1_3": {
+          "name": "Char061492_Int_Pain1_3",
+          "stream": 3,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 55552,
+          "duration": 1.1573333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain1_3.ogg"
+        },
+        "Char061492_Int_Pain1_4": {
+          "name": "Char061492_Int_Pain1_4",
+          "stream": 19,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 53248,
+          "duration": 1.1093333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain1_4.ogg"
+        },
+        "Char061492_Int_Pain2_1": {
+          "name": "Char061492_Int_Pain2_1",
+          "stream": 4,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 163840,
+          "duration": 3.4133333333333336,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain2_1.ogg"
+        },
+        "Char061492_Int_Pain2_2": {
+          "name": "Char061492_Int_Pain2_2",
+          "stream": 27,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 172800,
+          "duration": 3.6,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain2_2.ogg"
+        },
+        "Char061492_Int_Pain2_3": {
+          "name": "Char061492_Int_Pain2_3",
+          "stream": 35,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 121088,
+          "duration": 2.522666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain2_3.ogg"
+        },
+        "Char061492_Int_Pain2_4": {
+          "name": "Char061492_Int_Pain2_4",
+          "stream": 30,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 160256,
+          "duration": 3.3386666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain2_4.ogg"
+        },
+        "Char061492_Int_Pain3_1": {
+          "name": "Char061492_Int_Pain3_1",
+          "stream": 11,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 76032,
+          "duration": 1.584,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain3_1.ogg"
+        },
+        "Char061492_Int_Pain3_2": {
+          "name": "Char061492_Int_Pain3_2",
+          "stream": 13,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 73216,
+          "duration": 1.5253333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain3_2.ogg"
+        },
+        "Char061492_Int_Pain3_3": {
+          "name": "Char061492_Int_Pain3_3",
+          "stream": 16,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 64000,
+          "duration": 1.3333333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain3_3.ogg"
+        },
+        "Char061492_Int_Pain3_4": {
+          "name": "Char061492_Int_Pain3_4",
+          "stream": 1,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 59904,
+          "duration": 1.248,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Pain3_4.ogg"
+        },
+        "Char061492_Int_Shy1_1": {
+          "name": "Char061492_Int_Shy1_1",
+          "stream": 32,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 83456,
+          "duration": 1.7386666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy1_1.ogg"
+        },
+        "Char061492_Int_Shy1_2": {
+          "name": "Char061492_Int_Shy1_2",
+          "stream": 33,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 75264,
+          "duration": 1.568,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy1_2.ogg"
+        },
+        "Char061492_Int_Shy1_3": {
+          "name": "Char061492_Int_Shy1_3",
+          "stream": 36,
+          "sampleRate": 43078,
+          "channels": 1,
+          "samples": 86272,
+          "duration": 2.0026927898231115,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy1_3.ogg"
+        },
+        "Char061492_Int_Shy1_4": {
+          "name": "Char061492_Int_Shy1_4",
+          "stream": 24,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 78336,
+          "duration": 1.632,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy1_4.ogg"
+        },
+        "Char061492_Int_Shy2_1": {
+          "name": "Char061492_Int_Shy2_1",
+          "stream": 21,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 70400,
+          "duration": 1.4666666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy2_1.ogg"
+        },
+        "Char061492_Int_Shy2_2": {
+          "name": "Char061492_Int_Shy2_2",
+          "stream": 22,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 83456,
+          "duration": 1.7386666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy2_2.ogg"
+        },
+        "Char061492_Int_Shy2_3": {
+          "name": "Char061492_Int_Shy2_3",
+          "stream": 6,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 81664,
+          "duration": 1.7013333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy2_3.ogg"
+        },
+        "Char061492_Int_Shy2_4": {
+          "name": "Char061492_Int_Shy2_4",
+          "stream": 38,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 72192,
+          "duration": 1.504,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Shy2_4.ogg"
+        },
+        "Char061492_Int_Surprise1_1": {
+          "name": "Char061492_Int_Surprise1_1",
+          "stream": 2,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 45568,
+          "duration": 0.9493333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise1_1.ogg"
+        },
+        "Char061492_Int_Surprise1_2": {
+          "name": "Char061492_Int_Surprise1_2",
+          "stream": 37,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 52480,
+          "duration": 1.0933333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise1_2.ogg"
+        },
+        "Char061492_Int_Surprise1_3": {
+          "name": "Char061492_Int_Surprise1_3",
+          "stream": 23,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 60160,
+          "duration": 1.2533333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise1_3.ogg"
+        },
+        "Char061492_Int_Surprise1_4": {
+          "name": "Char061492_Int_Surprise1_4",
+          "stream": 17,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 47616,
+          "duration": 0.992,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise1_4.ogg"
+        },
+        "Char061492_Int_Surprise2_1": {
+          "name": "Char061492_Int_Surprise2_1",
+          "stream": 15,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 54016,
+          "duration": 1.1253333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise2_1.ogg"
+        },
+        "Char061492_Int_Surprise2_2": {
+          "name": "Char061492_Int_Surprise2_2",
+          "stream": 10,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 61440,
+          "duration": 1.28,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise2_2.ogg"
+        },
+        "Char061492_Int_Surprise2_3": {
+          "name": "Char061492_Int_Surprise2_3",
+          "stream": 5,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 60672,
+          "duration": 1.264,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise2_3.ogg"
+        },
+        "Char061492_Int_Surprise2_4": {
+          "name": "Char061492_Int_Surprise2_4",
+          "stream": 25,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 43264,
+          "duration": 0.9013333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char061492_Int_Surprise2_4.ogg"
+        }
+      },
+      "events": {
+        "Eat1": {
+          "guid": "e0d34494b786bd45833675680a9b10f0",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Eat1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.890396,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 1.0,
+              "window": 2.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Eat1_4",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Eat1_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Eat1_2",
+                  "weight": 33.333332
+                }
+              ]
+            },
+            {
+              "at": 3.6,
+              "window": 1.414688,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Neutral1_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Neutral1_2",
+                  "weight": 50.0
+                }
+              ]
+            }
+          ]
+        },
+        "Embarrass1": {
+          "guid": "f232a12268f818449e24a9c62071512d",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Embarrass1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.4,
+              "window": 1.100333,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.500333,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Neutral1": {
+          "guid": "d180b691345fde41b6eea35907cf1e1c",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Neutral1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain1": {
+          "guid": "6461fc83e7a8584c8b8e68197b62ef1f",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Pain1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.7,
+              "window": 1.278437,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain1_1",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_2",
+                  "weight": 33.333332
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_3",
+                  "weight": 33.333332
+                }
+              ]
+            }
+          ]
+        },
+        "Pain2": {
+          "guid": "cbfa425117f56a41806f56c1896e378e",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Pain2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.6,
+              "window": 3.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain3": {
+          "guid": "c8c0a8dc58ff0347b46caab67a83cf11",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Pain3_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 1.5,
+              "window": 1.205,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Embarrass1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Embarrass1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.8,
+              "window": 1.278437,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 4.1975,
+              "window": 1.25,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 5.5,
+              "window": 3.7,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 9.4,
+              "window": 3.6,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 13.0,
+              "window": 1.329792,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain3_3",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 14.5,
+              "window": 1.275313,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain3_4",
+                  "weight": 50.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise2_2",
+                  "weight": 50.0
+                }
+              ]
+            },
+            {
+              "at": 16.4,
+              "window": 1.736146,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 18.4,
+              "window": 1.562812,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 20.5,
+              "window": 1.051562,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain1_1",
+                  "weight": 100.0
+                }
+              ]
+            },
+            {
+              "at": 22.0,
+              "window": 1.414688,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Neutral1_4",
+                  "weight": 100.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy1": {
+          "guid": "dc5cf1391a8b054381731b1c435dae6a",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Shy1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 3.2,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Shy2": {
+          "guid": "1c1d841b8280b44380f17fdc98ef2fa5",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Shy2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Shy2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Shy2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise1": {
+          "guid": "ff0d90334709cc45a5a8bb7e02fb4817",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Surprise1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 2.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise2": {
+          "guid": "2f3bd5b4c4342f46aa28c4d3a83d050b",
+          "path": "event:/Voices/Common/Char061492/Interaction/Char061492_Int_Surprise2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char061492_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char061492_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "actions": {}
+    },
+    "illust_dating14": {
+      "charId": "char003892",
+      "sourceVersion": "20260616170924",
+      "language": "KR",
+      "audioBase": "./audio/dating/illust_dating14/voice/",
+      "bank": {
+        "guid": "f8d28e79f3036d4c81c33f4c7646bb9e",
+        "bundleSha256": "ba8e1053c2c934afe0221963f96fe1a3a0a0bb1fa25cee4a02131ed2be61d3e4",
+        "bankSha256": "f21c3228a1d72633d26edc2d797c4aacd8e1bf5f756faf3b25cb2d94a9e74fba",
+        "fsbSha256": "8ab8ed0fe38741509738aa18092f89055954b67fbbd2aa010ea9fe534b034e15",
+        "codec": "FMOD FADPCM"
+      },
+      "samples": {
+        "Char003892_Int_Angry1_1": {
+          "name": "Char003892_Int_Angry1_1",
+          "stream": 41,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 79360,
+          "duration": 1.6533333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry1_1.ogg"
+        },
+        "Char003892_Int_Angry1_2": {
+          "name": "Char003892_Int_Angry1_2",
+          "stream": 36,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 73984,
+          "duration": 1.5413333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry1_2.ogg"
+        },
+        "Char003892_Int_Angry1_3": {
+          "name": "Char003892_Int_Angry1_3",
+          "stream": 11,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 88832,
+          "duration": 1.8506666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry1_3.ogg"
+        },
+        "Char003892_Int_Angry1_4": {
+          "name": "Char003892_Int_Angry1_4",
+          "stream": 42,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 67072,
+          "duration": 1.3973333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry1_4.ogg"
+        },
+        "Char003892_Int_Angry2_1": {
+          "name": "Char003892_Int_Angry2_1",
+          "stream": 16,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 90368,
+          "duration": 1.8826666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry2_1.ogg"
+        },
+        "Char003892_Int_Angry2_2": {
+          "name": "Char003892_Int_Angry2_2",
+          "stream": 51,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 49152,
+          "duration": 1.024,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry2_2.ogg"
+        },
+        "Char003892_Int_Angry2_3": {
+          "name": "Char003892_Int_Angry2_3",
+          "stream": 61,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 47872,
+          "duration": 0.9973333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry2_3.ogg"
+        },
+        "Char003892_Int_Angry2_4": {
+          "name": "Char003892_Int_Angry2_4",
+          "stream": 20,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 39680,
+          "duration": 0.8266666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Angry2_4.ogg"
+        },
+        "Char003892_Int_Eat1_1": {
+          "name": "Char003892_Int_Eat1_1",
+          "stream": 13,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 127232,
+          "duration": 2.6506666666666665,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Eat1_1.ogg"
+        },
+        "Char003892_Int_Eat1_2": {
+          "name": "Char003892_Int_Eat1_2",
+          "stream": 17,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 136192,
+          "duration": 2.8373333333333335,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Eat1_2.ogg"
+        },
+        "Char003892_Int_Eat1_3": {
+          "name": "Char003892_Int_Eat1_3",
+          "stream": 5,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 115200,
+          "duration": 2.4,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Eat1_3.ogg"
+        },
+        "Char003892_Int_Eat1_4": {
+          "name": "Char003892_Int_Eat1_4",
+          "stream": 40,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 86784,
+          "duration": 1.808,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Eat1_4.ogg"
+        },
+        "Char003892_Int_Neutral1_1": {
+          "name": "Char003892_Int_Neutral1_1",
+          "stream": 7,
+          "sampleRate": 41671,
+          "channels": 1,
+          "samples": 43520,
+          "duration": 1.044371385375921,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral1_1.ogg"
+        },
+        "Char003892_Int_Neutral1_2": {
+          "name": "Char003892_Int_Neutral1_2",
+          "stream": 22,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 48384,
+          "duration": 1.008,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral1_2.ogg"
+        },
+        "Char003892_Int_Neutral1_3": {
+          "name": "Char003892_Int_Neutral1_3",
+          "stream": 15,
+          "sampleRate": 40968,
+          "channels": 1,
+          "samples": 48896,
+          "duration": 1.1935168912321812,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral1_3.ogg"
+        },
+        "Char003892_Int_Neutral1_4": {
+          "name": "Char003892_Int_Neutral1_4",
+          "stream": 27,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 82176,
+          "duration": 1.712,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral1_4.ogg"
+        },
+        "Char003892_Int_Neutral2_1": {
+          "name": "Char003892_Int_Neutral2_1",
+          "stream": 43,
+          "sampleRate": 36046,
+          "channels": 1,
+          "samples": 30208,
+          "duration": 0.8380402818620651,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral2_1.ogg"
+        },
+        "Char003892_Int_Neutral2_2": {
+          "name": "Char003892_Int_Neutral2_2",
+          "stream": 62,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 51712,
+          "duration": 1.0773333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral2_2.ogg"
+        },
+        "Char003892_Int_Neutral2_3": {
+          "name": "Char003892_Int_Neutral2_3",
+          "stream": 31,
+          "sampleRate": 43078,
+          "channels": 1,
+          "samples": 73472,
+          "duration": 1.7055573610659733,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral2_3.ogg"
+        },
+        "Char003892_Int_Neutral2_4": {
+          "name": "Char003892_Int_Neutral2_4",
+          "stream": 63,
+          "sampleRate": 38156,
+          "channels": 1,
+          "samples": 43264,
+          "duration": 1.1338714749973793,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Neutral2_4.ogg"
+        },
+        "Char003892_Int_Pain1_1": {
+          "name": "Char003892_Int_Pain1_1",
+          "stream": 9,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 54016,
+          "duration": 1.1253333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain1_1.ogg"
+        },
+        "Char003892_Int_Pain1_2": {
+          "name": "Char003892_Int_Pain1_2",
+          "stream": 8,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 54272,
+          "duration": 1.1306666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain1_2.ogg"
+        },
+        "Char003892_Int_Pain1_3": {
+          "name": "Char003892_Int_Pain1_3",
+          "stream": 30,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 43520,
+          "duration": 0.9066666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain1_3.ogg"
+        },
+        "Char003892_Int_Pain1_4": {
+          "name": "Char003892_Int_Pain1_4",
+          "stream": 4,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 58112,
+          "duration": 1.2106666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain1_4.ogg"
+        },
+        "Char003892_Int_Pain2_1": {
+          "name": "Char003892_Int_Pain2_1",
+          "stream": 44,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 103936,
+          "duration": 2.1653333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain2_1.ogg"
+        },
+        "Char003892_Int_Pain2_2": {
+          "name": "Char003892_Int_Pain2_2",
+          "stream": 59,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 64768,
+          "duration": 1.3493333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain2_2.ogg"
+        },
+        "Char003892_Int_Pain2_3": {
+          "name": "Char003892_Int_Pain2_3",
+          "stream": 29,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 83456,
+          "duration": 1.7386666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain2_3.ogg"
+        },
+        "Char003892_Int_Pain2_4": {
+          "name": "Char003892_Int_Pain2_4",
+          "stream": 33,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 107008,
+          "duration": 2.2293333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Pain2_4.ogg"
+        },
+        "Char003892_Int_Sigh1_1": {
+          "name": "Char003892_Int_Sigh1_1",
+          "stream": 60,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 146944,
+          "duration": 3.0613333333333332,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh1_1.ogg"
+        },
+        "Char003892_Int_Sigh1_2": {
+          "name": "Char003892_Int_Sigh1_2",
+          "stream": 6,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 157184,
+          "duration": 3.2746666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh1_2.ogg"
+        },
+        "Char003892_Int_Sigh1_3": {
+          "name": "Char003892_Int_Sigh1_3",
+          "stream": 1,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 139520,
+          "duration": 2.9066666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh1_3.ogg"
+        },
+        "Char003892_Int_Sigh1_4": {
+          "name": "Char003892_Int_Sigh1_4",
+          "stream": 32,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 208128,
+          "duration": 4.336,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh1_4.ogg"
+        },
+        "Char003892_Int_Sigh2_1": {
+          "name": "Char003892_Int_Sigh2_1",
+          "stream": 23,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 101632,
+          "duration": 2.1173333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh2_1.ogg"
+        },
+        "Char003892_Int_Sigh2_2": {
+          "name": "Char003892_Int_Sigh2_2",
+          "stream": 18,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 91392,
+          "duration": 1.904,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh2_2.ogg"
+        },
+        "Char003892_Int_Sigh2_3": {
+          "name": "Char003892_Int_Sigh2_3",
+          "stream": 21,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 77056,
+          "duration": 1.6053333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh2_3.ogg"
+        },
+        "Char003892_Int_Sigh2_4": {
+          "name": "Char003892_Int_Sigh2_4",
+          "stream": 35,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 75776,
+          "duration": 1.5786666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh2_4.ogg"
+        },
+        "Char003892_Int_Sigh3_1": {
+          "name": "Char003892_Int_Sigh3_1",
+          "stream": 53,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 161024,
+          "duration": 3.3546666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh3_1.ogg"
+        },
+        "Char003892_Int_Sigh3_2": {
+          "name": "Char003892_Int_Sigh3_2",
+          "stream": 10,
+          "sampleRate": 43781,
+          "channels": 1,
+          "samples": 159488,
+          "duration": 3.642858774354172,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh3_2.ogg"
+        },
+        "Char003892_Int_Sigh3_3": {
+          "name": "Char003892_Int_Sigh3_3",
+          "stream": 2,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 109824,
+          "duration": 2.288,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh3_3.ogg"
+        },
+        "Char003892_Int_Sigh3_4": {
+          "name": "Char003892_Int_Sigh3_4",
+          "stream": 47,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 131072,
+          "duration": 2.7306666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Sigh3_4.ogg"
+        },
+        "Char003892_Int_Smile1_1": {
+          "name": "Char003892_Int_Smile1_1",
+          "stream": 64,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 49408,
+          "duration": 1.0293333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile1_1.ogg"
+        },
+        "Char003892_Int_Smile1_2": {
+          "name": "Char003892_Int_Smile1_2",
+          "stream": 46,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 94720,
+          "duration": 1.9733333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile1_2.ogg"
+        },
+        "Char003892_Int_Smile1_3": {
+          "name": "Char003892_Int_Smile1_3",
+          "stream": 37,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 90112,
+          "duration": 1.8773333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile1_3.ogg"
+        },
+        "Char003892_Int_Smile1_4": {
+          "name": "Char003892_Int_Smile1_4",
+          "stream": 54,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 57600,
+          "duration": 1.2,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile1_4.ogg"
+        },
+        "Char003892_Int_Smile2_1": {
+          "name": "Char003892_Int_Smile2_1",
+          "stream": 26,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 113152,
+          "duration": 2.3573333333333335,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile2_1.ogg"
+        },
+        "Char003892_Int_Smile2_2": {
+          "name": "Char003892_Int_Smile2_2",
+          "stream": 28,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 75264,
+          "duration": 1.568,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile2_2.ogg"
+        },
+        "Char003892_Int_Smile2_3": {
+          "name": "Char003892_Int_Smile2_3",
+          "stream": 49,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 93184,
+          "duration": 1.9413333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile2_3.ogg"
+        },
+        "Char003892_Int_Smile2_4": {
+          "name": "Char003892_Int_Smile2_4",
+          "stream": 58,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 105728,
+          "duration": 2.2026666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Smile2_4.ogg"
+        },
+        "Char003892_Int_Surprise1_1": {
+          "name": "Char003892_Int_Surprise1_1",
+          "stream": 3,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 50176,
+          "duration": 1.0453333333333332,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise1_1.ogg"
+        },
+        "Char003892_Int_Surprise1_2": {
+          "name": "Char003892_Int_Surprise1_2",
+          "stream": 34,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 76032,
+          "duration": 1.584,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise1_2.ogg"
+        },
+        "Char003892_Int_Surprise1_3": {
+          "name": "Char003892_Int_Surprise1_3",
+          "stream": 48,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 59392,
+          "duration": 1.2373333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise1_3.ogg"
+        },
+        "Char003892_Int_Surprise1_4": {
+          "name": "Char003892_Int_Surprise1_4",
+          "stream": 57,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 53760,
+          "duration": 1.12,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise1_4.ogg"
+        },
+        "Char003892_Int_Surprise2_1": {
+          "name": "Char003892_Int_Surprise2_1",
+          "stream": 52,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 47104,
+          "duration": 0.9813333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise2_1.ogg"
+        },
+        "Char003892_Int_Surprise2_2": {
+          "name": "Char003892_Int_Surprise2_2",
+          "stream": 50,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 72960,
+          "duration": 1.52,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise2_2.ogg"
+        },
+        "Char003892_Int_Surprise2_3": {
+          "name": "Char003892_Int_Surprise2_3",
+          "stream": 19,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 69376,
+          "duration": 1.4453333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise2_3.ogg"
+        },
+        "Char003892_Int_Surprise2_4": {
+          "name": "Char003892_Int_Surprise2_4",
+          "stream": 38,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 36608,
+          "duration": 0.7626666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise2_4.ogg"
+        },
+        "Char003892_Int_Surprise3_1": {
+          "name": "Char003892_Int_Surprise3_1",
+          "stream": 14,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 93952,
+          "duration": 1.9573333333333334,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise3_1.ogg"
+        },
+        "Char003892_Int_Surprise3_2": {
+          "name": "Char003892_Int_Surprise3_2",
+          "stream": 56,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 134144,
+          "duration": 2.7946666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise3_2.ogg"
+        },
+        "Char003892_Int_Surprise3_3": {
+          "name": "Char003892_Int_Surprise3_3",
+          "stream": 45,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 130304,
+          "duration": 2.7146666666666666,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise3_3.ogg"
+        },
+        "Char003892_Int_Surprise3_4": {
+          "name": "Char003892_Int_Surprise3_4",
+          "stream": 24,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 104448,
+          "duration": 2.176,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise3_4.ogg"
+        },
+        "Char003892_Int_Surprise4_1": {
+          "name": "Char003892_Int_Surprise4_1",
+          "stream": 25,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 78848,
+          "duration": 1.6426666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise4_1.ogg"
+        },
+        "Char003892_Int_Surprise4_2": {
+          "name": "Char003892_Int_Surprise4_2",
+          "stream": 55,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 90880,
+          "duration": 1.8933333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise4_2.ogg"
+        },
+        "Char003892_Int_Surprise4_3": {
+          "name": "Char003892_Int_Surprise4_3",
+          "stream": 39,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 80128,
+          "duration": 1.6693333333333333,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise4_3.ogg"
+        },
+        "Char003892_Int_Surprise4_4": {
+          "name": "Char003892_Int_Surprise4_4",
+          "stream": 12,
+          "sampleRate": 48000,
+          "channels": 1,
+          "samples": 96512,
+          "duration": 2.010666666666667,
+          "encoding": "FMOD FADPCM 4-bit ADPCM",
+          "file": "Char003892_Int_Surprise4_4.ogg"
+        }
+      },
+      "events": {
+        "Angry1": {
+          "guid": "c09c98be0c95a34bb03d05a95ebe91be",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Angry1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.7,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 0.7,
+              "window": 1.8,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Angry1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Angry2": {
+          "guid": "beaa26be4a48e94c94ff4c14a1545c7d",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Angry2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.880708,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Angry2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Eat1": {
+          "guid": "98df4723d6ce5a4c9f14877814c12549",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Eat1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.833333,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Eat1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Eat1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Eat1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Eat1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Neutral1": {
+          "guid": "221852d54ff82d4088b11895958c6191",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Neutral1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.711229,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Neutral1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Neutral2": {
+          "guid": "4b049e98b591db45bd1981ee0140068e",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Neutral2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.705375,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Neutral2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Neutral2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain1": {
+          "guid": "fdf09399b0b11b4f8b4275e2c67eea33",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Pain1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.8,
+              "window": 0.6,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 1.4,
+              "window": 1.847625,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Angry1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Angry1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Pain2": {
+          "guid": "e9a5612087de1743a29c6620678c0ade",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Pain2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.228271,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh1": {
+          "guid": "728973d66143874d8bba027e7f7b566c",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 4.33325,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Sigh1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh2": {
+          "guid": "a9542df224eec74bb41cb05c23bab76d",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.114187,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Sigh2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Sigh3": {
+          "guid": "fae2712867925947b820a20ad49e1c13",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Sigh3_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 4.3,
+              "window": 2.006583,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise4_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 6.306583,
+              "window": 2.093417,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise4_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 9.2,
+              "window": 3.3,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Sigh3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Sigh3_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile1": {
+          "guid": "c324730ce40a324380fa17fbf39e8686",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Smile1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 1.969313,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Smile1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile1_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Smile2": {
+          "guid": "c971fc8eb953b942b318d78aa6e2a676",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Smile2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.3525,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Smile2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Smile2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise1": {
+          "guid": "ee91d1619a058a46af44cb6e6c31a46b",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise1_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 0.7,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise1_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise1_4",
+                  "weight": 25.0
+                }
+              ]
+            },
+            {
+              "at": 0.7,
+              "window": 2.3,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Pain2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Pain2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise2": {
+          "guid": "c465760e64f9744eac8bd966f364962f",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise2_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 1.0,
+              "window": 2.0,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise2_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise2_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise3": {
+          "guid": "3e55ae77459bea499a27717c8fb760d6",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise3_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.791354,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise3_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise3_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise3_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise3_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        },
+        "Surprise4": {
+          "guid": "e0d74af6d801f94eb3d5f339f79da0dd",
+          "path": "event:/Voices/Common/Char003892/Interaction/Char003892_Int_Surprise4_KR",
+          "pathInferredFromSamples": true,
+          "triggers": [
+            {
+              "at": 0.0,
+              "window": 2.006583,
+              "choices": [
+                {
+                  "sample": "Char003892_Int_Surprise4_1",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_2",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_3",
+                  "weight": 25.0
+                },
+                {
+                  "sample": "Char003892_Int_Surprise4_4",
+                  "weight": 25.0
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "actions": {}
     }
   },
   "jpAudit": {
