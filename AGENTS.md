@@ -352,6 +352,18 @@ getter(如 `GetSpineInteractionPointTables`)在 onEnter 取 `args[0]`(=this) 即
 同法 UnityPy 解。`tools/` 里已有 `extract_dating_hotzones.py`/`extract_dating_actions.py`/
 `build_dating_character.py` 复用同一 prefab bundle 出热区/动作。
 
+**自托管部署(2026-06-30,脱离 myssal CDN)**：dating.html 在 GitHub Pages(github.io)上原本走
+`myssal/Brown-Dust-2-Asset` CDN,但自抽的 dating19 myssal 没有 → 404。已改为自托管:
+- 素材仓 **`clam314/bd2web-assets`**(公开,jsdelivr 加速),含全部 19 个约会角色 Spine
+  (`spine/illust/illust_dating/<id>/`,即 `extract_dating_spine.py` 的输出结构)。
+- dating.html 的 `CDN_ASSET_BASES` 指向 `clam314/bd2web-assets@${ASSET_COMMIT}`
+  (jsdelivr cdn/fastly/gcore/testingcf 多镜像 + raw.githubusercontent 兜底),`ASSET_COMMIT`
+  钉 commit SHA 保证缓存稳定。本地 `useCdn=false` 仍回退 `./upstream/`。
+- **更新素材流程**:重抽(`extract_dating_spine.py <bundle> <临时目录>`)→ push 到 bd2web-assets →
+  把新 commit SHA 写进 dating.html 的 `ASSET_COMMIT`。新约会角色(dating20…)同理。
+- 注:`index.html`(主角色册)仍走 myssal,sync.yml 只 pin index.html 的 `UPSTREAM_COMMIT`,
+  与 dating.html 互不影响。
+
 ---
 
 ### 运行态提取尝试 + 结论（2026-06-25，frida-gadget 全流程；当时卡死，2026-06-29 已解决见上）
