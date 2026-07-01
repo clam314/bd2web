@@ -2365,14 +2365,17 @@
       if (!currentEntry) return;
       if (renderCardGameHotzones()) return;
       if (!prefabActions.length) return;
-      prefabActions.forEach((item, idx) => {
+      const rendered = prefabActions.map((item, idx) => {
         const zone = prefabHotzone(currentEntry.id, item.key);
         const box = zone && hotzoneToScreenBox(zone);
-        if (!box) return;
+        if (!box) return null;
+        return { item, zone, box, labelIndex: idx, area: box.width * box.height };
+      }).filter(Boolean).sort(compareHotzoneStack);
+      rendered.forEach(({ item, zone, box, labelIndex }) => {
         const b = makeHotzoneButton(
           box,
-          hotzoneLabel(item.action, idx),
-          `${item.action.label || prefabActionLabel(item.action, idx)} · ${item.key} · ${zone.source}`,
+          hotzoneLabel(item.action, labelIndex),
+          `${item.action.label || prefabActionLabel(item.action, labelIndex)} · ${item.key} · ${zone.source}`,
           item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
         );
         if (item.action.longPress) {
@@ -2402,6 +2405,15 @@
         }
         hotzoneLayer.appendChild(b);
       });
+    }
+
+    function compareHotzoneStack(a, b) {
+      const areaDiff = b.area - a.area;
+      if (Math.abs(areaDiff) > 1) return areaDiff;
+      const kindRank = action => action.kind === "drag" ? 0 : action.kind === "gyro" ? 1 : 2;
+      return kindRank(a.item.action) - kindRank(b.item.action)
+        || a.item.pointId - b.item.pointId
+        || a.item.key.localeCompare(b.item.key);
     }
 
     function makeHotzoneButton(box, label, title, className) {
