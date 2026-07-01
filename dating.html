@@ -2798,6 +2798,7 @@
           if (!track.animation || track.trackIndex !== 0 || restoringIdle) return;
           const completed = track.animation.name;
           if (handleCardAnimationComplete(completed)) return;
+          if (advanceLastMotion && completed !== advanceLastMotion) return;
           if (advanceTargetStage && completed === advanceLastMotion) {
             const target = advanceTargetStage;
             advanceTargetStage = null;
@@ -2806,6 +2807,9 @@
             advanceTimer = null;
             enterStage(target);
             return;
+          }
+          if (completed === advanceLastMotion) {
+            advanceLastMotion = null;
           }
           if (!advanceTargetStage) playIdle();
         },
