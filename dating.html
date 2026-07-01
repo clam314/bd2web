@@ -1358,7 +1358,24 @@
         }
         if (!character || datingId !== this.currentId) return;
         const ref = character.interactionVoices?.[pointKey]?.[phase];
-        const eventName = this.chooseEventName(character, ref);
+        let eventName = this.chooseEventName(character, ref);
+        if (!eventName && pointKey) {
+          // tool 兜底:心契母表(dating_interaction_tables)只按 (stage, id) 索引语音,与所选道具(tool)无关;
+          // 已验证同一 (stage,id) 的不同 tool 变体在 interactionVoices 里语音完全一致(0 冲突),
+          // 且每条 iv 语音都对应母表有语音的点(0 反例)。因此精确键查不到时,回退到同 (stage,id) 的任一变体是安全且忠实原表的。
+          // 修复:①选道具后点击产生 tool21/22 等变体键、iv 只有 tool0(如 dating16/8/10/17);
+          //       ②dating19 的 iv 整体键成 tool19/20、点击是 tool0,精确键零交集。
+          const m = pointKey.match(/^(\d+)_(\d+)_/);
+          if (m) {
+            const prefix = `${m[1]}_${m[2]}_`;
+            const voices = character.interactionVoices || {};
+            for (const altKey of Object.keys(voices)) {
+              if (altKey === pointKey || !altKey.startsWith(prefix)) continue;
+              const alt = this.chooseEventName(character, voices[altKey]?.[phase]);
+              if (alt) { eventName = alt; break; }
+            }
+          }
+        }
         const scheduledEvents = [{
           channel: "voice",
           collection: character,
