@@ -8145,6 +8145,2253 @@
       "space": "skeleton"
     }
   },
+  "illust_dating15": {
+    "1_0_0": {
+      "x": 183.1,
+      "y": -1057.8,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point1_gyro [Override]",
+      "space": "skeleton"
+    },
+    "1_1_0": {
+      "x": 468.5,
+      "y": -155.8,
+      "width": 856.2,
+      "height": 783.0,
+      "shape": 0,
+      "source": "point1_1_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_2_0": {
+      "x": -125.7,
+      "y": -186.5,
+      "width": 669.6,
+      "height": 559.8,
+      "shape": 0,
+      "source": "point1_2_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_3_0": {
+      "x": 469.0,
+      "y": -541.6,
+      "width": 817.8,
+      "height": 616.5,
+      "shape": 0,
+      "source": "point1_3_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_4_0": {
+      "x": 164.5,
+      "y": -452.9,
+      "width": 546.4,
+      "height": 546.4,
+      "shape": 0,
+      "source": "point1_4_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_5_0": {
+      "x": -310.8,
+      "y": -0.1,
+      "width": 384.8,
+      "height": 366.5,
+      "shape": 0,
+      "source": "point1_5_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_6_0": {
+      "x": -300.9,
+      "y": -335.5,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point1_6_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_7_0": {
+      "x": -595.3,
+      "y": -255.4,
+      "width": 471.4,
+      "height": 416.5,
+      "shape": 0,
+      "source": "point1_7_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_8_0": {
+      "x": -560.1,
+      "y": -604.3,
+      "width": 471.4,
+      "height": 416.5,
+      "shape": 0,
+      "source": "point1_8_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_9_0": {
+      "x": 11.6,
+      "y": -1.0,
+      "width": 100.0,
+      "height": 100.0,
+      "shape": 0,
+      "source": "point1_9_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_10_0": {
+      "x": -938.4,
+      "y": -601.0,
+      "width": 2000.0,
+      "height": 1300.0,
+      "shape": 0,
+      "source": "point1_10_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_0_0": {
+      "x": 183.1,
+      "y": -1057.8,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point2_gyro [Override]",
+      "space": "skeleton"
+    },
+    "2_1_0": {
+      "x": 691.7,
+      "y": 30.8,
+      "width": 409.8,
+      "height": 409.8,
+      "shape": 0,
+      "source": "point2_1_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_2_0": {
+      "x": 258.0,
+      "y": -375.6,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point2_2_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_3_0": {
+      "x": 118.1,
+      "y": 80.2,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point2_3_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_4_0": {
+      "x": -159.2,
+      "y": 471.0,
+      "width": 546.4,
+      "height": 546.4,
+      "shape": 0,
+      "source": "point2_4_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_5_0": {
+      "x": 563.8,
+      "y": -486.9,
+      "width": 384.8,
+      "height": 366.5,
+      "shape": 0,
+      "source": "point2_5_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_6_0": {
+      "x": -651.1,
+      "y": -302.0,
+      "width": 583.0,
+      "height": 509.8,
+      "shape": 0,
+      "source": "point2_6_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_7_0": {
+      "x": -516.8,
+      "y": -579.3,
+      "width": 384.8,
+      "height": 366.5,
+      "shape": 0,
+      "source": "point2_7_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_8_0": {
+      "x": -322.5,
+      "y": -348.0,
+      "width": 384.8,
+      "height": 366.5,
+      "shape": 0,
+      "source": "point2_8_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_9_0": {
+      "x": 43.6,
+      "y": -416.7,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point2_9_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_10_0": {
+      "x": -638.6,
+      "y": -280.4,
+      "width": 558.0,
+      "height": 466.5,
+      "shape": 0,
+      "source": "point2_10_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_11_0": {
+      "x": -335.0,
+      "y": -369.6,
+      "width": 409.8,
+      "height": 409.8,
+      "shape": 0,
+      "source": "point2_11_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_12_0": {
+      "x": 508.3,
+      "y": 53.1,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point2_12_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_13_0": {
+      "x": 160.5,
+      "y": -192.2,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point2_13_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_14_0": {
+      "x": 832.5,
+      "y": -299.0,
+      "width": 384.8,
+      "height": 366.5,
+      "shape": 0,
+      "source": "point2_14_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_15_0": {
+      "x": 349.7,
+      "y": -658.2,
+      "width": 409.8,
+      "height": 409.8,
+      "shape": 0,
+      "source": "point2_15_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_16_0": {
+      "x": -772.7,
+      "y": -684.7,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point2_16_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_17_0": {
+      "x": 977.5,
+      "y": -40.4,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point2_17_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_18_0": {
+      "x": 548.9,
+      "y": -79.6,
+      "width": 204.9,
+      "height": 204.9,
+      "shape": 0,
+      "source": "point2_18_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_19_0": {
+      "x": 11.6,
+      "y": -1.0,
+      "width": 100.0,
+      "height": 100.0,
+      "shape": 0,
+      "source": "point2_19_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_20_0": {
+      "x": -938.4,
+      "y": -601.0,
+      "width": 2000.0,
+      "height": 1300.0,
+      "shape": 0,
+      "source": "point2_20_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_0_0": {
+      "x": 183.1,
+      "y": -1057.8,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point3_gyro [Override]",
+      "space": "skeleton"
+    },
+    "3_1_0": {
+      "x": 759.0,
+      "y": 7.2,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_1_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_2_0": {
+      "x": 59.0,
+      "y": -372.5,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_2_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_3_0": {
+      "x": 355.2,
+      "y": -452.8,
+      "width": 421.4,
+      "height": 329.9,
+      "shape": 0,
+      "source": "point3_3_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_4_0": {
+      "x": 125.2,
+      "y": -24.3,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_4_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_5_0": {
+      "x": 696.8,
+      "y": 317.6,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_5_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_6_0": {
+      "x": 660.8,
+      "y": -402.0,
+      "width": 334.8,
+      "height": 279.9,
+      "shape": 0,
+      "source": "point3_6_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_7_0": {
+      "x": -289.1,
+      "y": 12.4,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_7_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_8_0": {
+      "x": -266.7,
+      "y": -301.3,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_8_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_9_0": {
+      "x": -595.3,
+      "y": -255.4,
+      "width": 471.4,
+      "height": 416.5,
+      "shape": 0,
+      "source": "point3_9_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_10_0": {
+      "x": -479.7,
+      "y": -573.2,
+      "width": 471.4,
+      "height": 416.5,
+      "shape": 0,
+      "source": "point3_10_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_11_0": {
+      "x": 269.9,
+      "y": -303.8,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_11_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_12_0": {
+      "x": 376.2,
+      "y": -253.0,
+      "width": 546.4,
+      "height": 546.4,
+      "shape": 0,
+      "source": "point3_12_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_13_0": {
+      "x": 22.7,
+      "y": -126.8,
+      "width": 546.4,
+      "height": 546.4,
+      "shape": 0,
+      "source": "point3_13_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_14_0": {
+      "x": 555.0,
+      "y": -535.3,
+      "width": 546.4,
+      "height": 546.4,
+      "shape": 0,
+      "source": "point3_14_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_15_0": {
+      "x": 307.9,
+      "y": -321.3,
+      "width": 683.0,
+      "height": 683.0,
+      "shape": 0,
+      "source": "point3_15_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_16_0": {
+      "x": -523.0,
+      "y": -598.2,
+      "width": 558.0,
+      "height": 466.5,
+      "shape": 0,
+      "source": "point3_16_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_17_0": {
+      "x": -766.6,
+      "y": -529.1,
+      "width": 546.4,
+      "height": 546.4,
+      "shape": 0,
+      "source": "point3_17_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_18_0": {
+      "x": -403.2,
+      "y": -438.1,
+      "width": 546.4,
+      "height": 546.4,
+      "shape": 0,
+      "source": "point3_18_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_19_0": {
+      "x": -158.3,
+      "y": -113.6,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_19_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_20_0": {
+      "x": 307.9,
+      "y": -321.3,
+      "width": 683.0,
+      "height": 683.0,
+      "shape": 0,
+      "source": "point3_20_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_21_0": {
+      "x": -471.5,
+      "y": -506.4,
+      "width": 683.0,
+      "height": 683.0,
+      "shape": 0,
+      "source": "point3_21_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_22_0": {
+      "x": -737.3,
+      "y": -424.1,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_22_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_23_0": {
+      "x": -471.5,
+      "y": -506.4,
+      "width": 683.0,
+      "height": 683.0,
+      "shape": 0,
+      "source": "point3_23_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_24_0": {
+      "x": -593.6,
+      "y": -125.7,
+      "width": 683.0,
+      "height": 683.0,
+      "shape": 0,
+      "source": "point3_24_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_25_0": {
+      "x": 521.3,
+      "y": -115.6,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_25_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_26_0": {
+      "x": -1396.2,
+      "y": -604.8,
+      "width": 683.0,
+      "height": 683.0,
+      "shape": 0,
+      "source": "point3_26_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_27_0": {
+      "x": 896.6,
+      "y": -266.6,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_27_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_28_0": {
+      "x": 429.8,
+      "y": -595.9,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_28_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_29_0": {
+      "x": 532.8,
+      "y": 215.5,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_29_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_30_0": {
+      "x": 884.9,
+      "y": 510.4,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_30_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_31_0": {
+      "x": -767.7,
+      "y": -694.3,
+      "width": 341.5,
+      "height": 341.5,
+      "shape": 0,
+      "source": "point3_31_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_32_0": {
+      "x": -492.0,
+      "y": 200.4,
+      "width": 942.8,
+      "height": 833.0,
+      "shape": 0,
+      "source": "point3_32_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_33_0": {
+      "x": 320.7,
+      "y": -1495.7,
+      "width": 1092.8,
+      "height": 1092.8,
+      "shape": 0,
+      "source": "point3_33_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_34_0": {
+      "x": 1020.5,
+      "y": 3.6,
+      "width": 273.2,
+      "height": 273.2,
+      "shape": 0,
+      "source": "point3_34_touch [Override]",
+      "space": "skeleton"
+    },
+    "3_35_0": {
+      "x": -938.4,
+      "y": -601.0,
+      "width": 2000.0,
+      "height": 1300.0,
+      "shape": 0,
+      "source": "point3_35_touch [Override]",
+      "space": "skeleton"
+    }
+  },
+  "illust_dating16": {
+    "1_0_0": {
+      "x": -0.5,
+      "y": -0.5,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point1_0_gyro [Override]",
+      "space": "skeleton"
+    },
+    "1_0_21": {
+      "x": -0.5,
+      "y": -0.5,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point1_0_gyro_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_0_22": {
+      "x": -0.5,
+      "y": -0.5,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point1_0_gyro_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_1_0": {
+      "x": -159.8,
+      "y": 156.9,
+      "width": 400.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_1_drag [Override]",
+      "space": "skeleton"
+    },
+    "1_1_21": {
+      "x": -159.8,
+      "y": 156.9,
+      "width": 400.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_1_drag_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_1_22": {
+      "x": -159.8,
+      "y": 156.9,
+      "width": 400.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_1_drag_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_2_0": {
+      "x": -161.7,
+      "y": -311.5,
+      "width": 411.9,
+      "height": 431.3,
+      "shape": 0,
+      "source": "point1_2_drag [Override]",
+      "space": "skeleton"
+    },
+    "1_2_21": {
+      "x": -161.7,
+      "y": -311.5,
+      "width": 411.9,
+      "height": 431.3,
+      "shape": 0,
+      "source": "point1_2_drag_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_2_22": {
+      "x": -161.7,
+      "y": -311.5,
+      "width": 411.9,
+      "height": 431.3,
+      "shape": 0,
+      "source": "point1_2_drag_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_3_0": {
+      "x": 215.4,
+      "y": -509.7,
+      "width": 356.9,
+      "height": 406.0,
+      "shape": 0,
+      "source": "point1_3_drag [Override]",
+      "space": "skeleton"
+    },
+    "1_3_21": {
+      "x": 215.4,
+      "y": -509.7,
+      "width": 356.9,
+      "height": 406.0,
+      "shape": 0,
+      "source": "point1_3_drag_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_3_22": {
+      "x": 215.4,
+      "y": -509.7,
+      "width": 356.9,
+      "height": 406.0,
+      "shape": 0,
+      "source": "point1_3_drag_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_4_0": {
+      "x": -554.4,
+      "y": -503.5,
+      "width": 408.0,
+      "height": 408.0,
+      "shape": 0,
+      "source": "point1_4_drag [Override]",
+      "space": "skeleton"
+    },
+    "1_4_21": {
+      "x": -554.4,
+      "y": -503.5,
+      "width": 408.0,
+      "height": 408.0,
+      "shape": 0,
+      "source": "point1_4_drag_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_4_22": {
+      "x": -554.4,
+      "y": -503.5,
+      "width": 408.0,
+      "height": 408.0,
+      "shape": 0,
+      "source": "point1_4_drag_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_5_0": {
+      "x": -466.6,
+      "y": -1084.2,
+      "width": 1000.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point1_5_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_5_21": {
+      "x": -466.6,
+      "y": -1084.2,
+      "width": 1000.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point1_5_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_5_22": {
+      "x": -466.6,
+      "y": -1084.2,
+      "width": 1000.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point1_5_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_6_0": {
+      "x": -1182.5,
+      "y": -1264.1,
+      "width": 650.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_6_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_6_21": {
+      "x": -1182.5,
+      "y": -1264.1,
+      "width": 650.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_6_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_6_22": {
+      "x": -1182.5,
+      "y": -1264.1,
+      "width": 650.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_6_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_7_0": {
+      "x": 585.4,
+      "y": -1223.0,
+      "width": 550.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_7_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_7_21": {
+      "x": 585.4,
+      "y": -1223.0,
+      "width": 550.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_7_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_7_22": {
+      "x": 585.4,
+      "y": -1223.0,
+      "width": 550.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_7_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_8_0": {
+      "x": -103.1,
+      "y": -550.0,
+      "width": 300.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_8_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_8_21": {
+      "x": -103.1,
+      "y": -550.0,
+      "width": 300.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_8_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_8_22": {
+      "x": -103.1,
+      "y": -550.0,
+      "width": 300.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_8_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_9_0": {
+      "x": -375.8,
+      "y": -777.9,
+      "width": 350.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point1_9_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_9_21": {
+      "x": -375.8,
+      "y": -777.9,
+      "width": 350.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point1_9_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_9_22": {
+      "x": -375.8,
+      "y": -777.9,
+      "width": 350.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point1_9_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_10_0": {
+      "x": 125.0,
+      "y": -766.8,
+      "width": 320.0,
+      "height": 320.0,
+      "shape": 0,
+      "source": "point1_10_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_10_21": {
+      "x": 125.0,
+      "y": -766.8,
+      "width": 320.0,
+      "height": 320.0,
+      "shape": 0,
+      "source": "point1_10_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_10_22": {
+      "x": 125.0,
+      "y": -766.8,
+      "width": 320.0,
+      "height": 320.0,
+      "shape": 0,
+      "source": "point1_10_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_11_0": {
+      "x": -16217.7,
+      "y": -980.3,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_11_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_11_21": {
+      "x": -16217.7,
+      "y": -980.3,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_11_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_11_22": {
+      "x": -16217.7,
+      "y": -980.3,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_11_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_12_0": {
+      "x": -16217.7,
+      "y": -1154.3,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_12_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_12_21": {
+      "x": -16217.7,
+      "y": -1154.3,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_12_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_12_22": {
+      "x": -16217.7,
+      "y": -1154.3,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_12_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_13_0": {
+      "x": -431.0,
+      "y": -52.5,
+      "width": 300.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_13_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_13_21": {
+      "x": -431.0,
+      "y": -52.5,
+      "width": 300.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_13_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_13_22": {
+      "x": -431.0,
+      "y": -52.5,
+      "width": 300.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_13_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_14_0": {
+      "x": 186.5,
+      "y": -64.2,
+      "width": 300.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_14_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_14_21": {
+      "x": 186.5,
+      "y": -64.2,
+      "width": 300.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_14_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_14_22": {
+      "x": 186.5,
+      "y": -64.2,
+      "width": 300.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_14_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "1_15_0": {
+      "x": -17012.5,
+      "y": -2124.7,
+      "width": 2000.0,
+      "height": 2000.0,
+      "shape": 0,
+      "source": "point1_15_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_15_21": {
+      "x": -17012.5,
+      "y": -2124.7,
+      "width": 2000.0,
+      "height": 2000.0,
+      "shape": 0,
+      "source": "point1_16_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "1_15_22": {
+      "x": -17012.5,
+      "y": -2124.7,
+      "width": 2000.0,
+      "height": 2000.0,
+      "shape": 0,
+      "source": "point1_17_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_0_0": {
+      "x": -5283.2,
+      "y": 306.1,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point2_0_gyro [Override]",
+      "space": "skeleton"
+    },
+    "2_1_0": {
+      "x": -181.5,
+      "y": 532.4,
+      "width": 350.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_1_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_2_0": {
+      "x": -67.9,
+      "y": 197.3,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_2_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_3_0": {
+      "x": -271.7,
+      "y": 201.5,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_3_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_4_0": {
+      "x": -99.5,
+      "y": -71.7,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_4_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_5_0": {
+      "x": -294.5,
+      "y": -432.4,
+      "width": 400.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_5_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_6_0": {
+      "x": 55.6,
+      "y": -347.9,
+      "width": 600.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_6_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_7_0": {
+      "x": -765.8,
+      "y": -167.9,
+      "width": 500.0,
+      "height": 450.0,
+      "shape": 0,
+      "source": "point2_7_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_8_0": {
+      "x": 149.6,
+      "y": 480.9,
+      "width": 400.0,
+      "height": 320.0,
+      "shape": 0,
+      "source": "point2_8_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_9_0": {
+      "x": -321.7,
+      "y": -185.8,
+      "width": 366.5,
+      "height": 384.8,
+      "shape": 0,
+      "source": "point2_9_drag [Override]",
+      "space": "skeleton"
+    },
+    "2_10_0": {
+      "x": 165.2,
+      "y": -880.4,
+      "width": 300.0,
+      "height": 600.0,
+      "shape": 0,
+      "source": "point2_10_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_11_0": {
+      "x": -716.9,
+      "y": -415.7,
+      "width": 400.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_11_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_12_0": {
+      "x": -206.6,
+      "y": 511.0,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_12_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_13_0": {
+      "x": -174.6,
+      "y": -144.0,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_13_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_14_0": {
+      "x": -294.7,
+      "y": -452.8,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_14_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_15_0": {
+      "x": 149.5,
+      "y": 293.0,
+      "width": 400.0,
+      "height": 700.0,
+      "shape": 0,
+      "source": "point2_15_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_16_0": {
+      "x": -256.6,
+      "y": 509.2,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_16_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_17_0": {
+      "x": -308.2,
+      "y": 117.5,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_17_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_18_0": {
+      "x": -594.6,
+      "y": -555.1,
+      "width": 1000.0,
+      "height": 600.0,
+      "shape": 0,
+      "source": "point2_18_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_19_21": {
+      "x": -256.5,
+      "y": 506.2,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_19_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_19_22": {
+      "x": -256.5,
+      "y": 505.6,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_19_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_20_21": {
+      "x": -308.0,
+      "y": 139.7,
+      "width": 500.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_20_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_20_22": {
+      "x": -308.0,
+      "y": 136.7,
+      "width": 500.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_20_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_21_21": {
+      "x": -344.4,
+      "y": -434.0,
+      "width": 500.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_21_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_21_22": {
+      "x": -344.4,
+      "y": -435.4,
+      "width": 500.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_21_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_22_21": {
+      "x": 174.6,
+      "y": 439.8,
+      "width": 350.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_22_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_22_22": {
+      "x": 174.6,
+      "y": 438.8,
+      "width": 350.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_22_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_23_21": {
+      "x": -358.9,
+      "y": -178.7,
+      "width": 400.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_23_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_23_22": {
+      "x": -358.9,
+      "y": -183.2,
+      "width": 400.0,
+      "height": 350.0,
+      "shape": 0,
+      "source": "point2_23_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_24_21": {
+      "x": 143.4,
+      "y": -352.3,
+      "width": 600.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_24_drag_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_24_22": {
+      "x": 143.4,
+      "y": -352.3,
+      "width": 600.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_24_drag_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_25_21": {
+      "x": -1053.9,
+      "y": -233.5,
+      "width": 697.6,
+      "height": 573.6,
+      "shape": 0,
+      "source": "point2_25_drag_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_25_22": {
+      "x": -1053.9,
+      "y": -233.5,
+      "width": 697.6,
+      "height": 573.6,
+      "shape": 0,
+      "source": "point2_25_drag_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_26_21": {
+      "x": -256.6,
+      "y": 510.2,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_26_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_26_22": {
+      "x": -256.5,
+      "y": 509.6,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_26_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_27_21": {
+      "x": -408.3,
+      "y": 170.2,
+      "width": 700.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_27_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_27_22": {
+      "x": -408.3,
+      "y": 168.9,
+      "width": 700.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_27_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_28_21": {
+      "x": -308.8,
+      "y": -151.3,
+      "width": 300.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_28_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_28_22": {
+      "x": -308.9,
+      "y": -149.6,
+      "width": 300.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_28_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_29_21": {
+      "x": 99.4,
+      "y": 442.0,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_29_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_29_22": {
+      "x": 99.4,
+      "y": 441.4,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_29_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_30_21": {
+      "x": -344.6,
+      "y": -453.9,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_30_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_30_22": {
+      "x": -344.7,
+      "y": -454.5,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_30_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_31_21": {
+      "x": -124.6,
+      "y": -94.8,
+      "width": 300.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_31_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_31_22": {
+      "x": -124.6,
+      "y": -95.6,
+      "width": 300.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_31_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_32_21": {
+      "x": -256.5,
+      "y": 508.6,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_32_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_32_22": {
+      "x": -256.6,
+      "y": 508.0,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_32_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_33_21": {
+      "x": -308.2,
+      "y": 116.6,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_33_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_33_22": {
+      "x": -308.2,
+      "y": 115.7,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_33_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_34_21": {
+      "x": -344.6,
+      "y": -455.9,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_34_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_34_22": {
+      "x": -344.6,
+      "y": -456.6,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_34_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_35_21": {
+      "x": -408.9,
+      "y": -202.7,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_35_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_35_22": {
+      "x": -408.9,
+      "y": -202.1,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point2_35_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_36_21": {
+      "x": 89.9,
+      "y": -1185.8,
+      "width": 450.0,
+      "height": 1200.0,
+      "shape": 0,
+      "source": "point2_36_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_36_22": {
+      "x": 89.8,
+      "y": -1183.8,
+      "width": 450.0,
+      "height": 1200.0,
+      "shape": 0,
+      "source": "point2_36_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_37_0": {
+      "x": -117.9,
+      "y": 388.8,
+      "width": 300.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_37_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_38_0": {
+      "x": -8297.0,
+      "y": 1183.6,
+      "width": 300.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_38_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_39_0": {
+      "x": 152.2,
+      "y": -22.0,
+      "width": 200.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_39_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_40_0": {
+      "x": -1289.2,
+      "y": 278.3,
+      "width": 1000.0,
+      "height": 1000.0,
+      "shape": 0,
+      "source": "point2_40_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_40_21": {
+      "x": -1289.2,
+      "y": 278.3,
+      "width": 1000.0,
+      "height": 1000.0,
+      "shape": 0,
+      "source": "point2_40_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_40_22": {
+      "x": -1289.2,
+      "y": 278.3,
+      "width": 1000.0,
+      "height": 1000.0,
+      "shape": 0,
+      "source": "point2_40_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_41_0": {
+      "x": 418.4,
+      "y": 90.1,
+      "width": 1000.0,
+      "height": 1400.0,
+      "shape": 0,
+      "source": "point2_41_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_41_21": {
+      "x": 418.4,
+      "y": 90.1,
+      "width": 1000.0,
+      "height": 1400.0,
+      "shape": 0,
+      "source": "point2_41_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_41_22": {
+      "x": 418.4,
+      "y": 90.1,
+      "width": 1000.0,
+      "height": 1400.0,
+      "shape": 0,
+      "source": "point2_41_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_42_21": {
+      "x": 164.8,
+      "y": -888.9,
+      "width": 300.0,
+      "height": 600.0,
+      "shape": 0,
+      "source": "point2_42_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_42_22": {
+      "x": 164.8,
+      "y": -895.3,
+      "width": 300.0,
+      "height": 600.0,
+      "shape": 0,
+      "source": "point2_42_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_43_21": {
+      "x": 77.5,
+      "y": -88.6,
+      "width": 350.0,
+      "height": 420.0,
+      "shape": 0,
+      "source": "point2_43_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_43_22": {
+      "x": 77.4,
+      "y": -94.2,
+      "width": 350.0,
+      "height": 420.0,
+      "shape": 0,
+      "source": "point2_43_touch_tool22 [Override]",
+      "space": "skeleton"
+    },
+    "2_44_0": {
+      "x": -8649.8,
+      "y": 786.2,
+      "width": 1000.0,
+      "height": 1000.0,
+      "shape": 0,
+      "source": "point2_44_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_44_21": {
+      "x": -8649.8,
+      "y": 786.2,
+      "width": 1000.0,
+      "height": 1000.0,
+      "shape": 0,
+      "source": "point2_44_touch_tool21 [Override]",
+      "space": "skeleton"
+    },
+    "2_44_22": {
+      "x": -8649.8,
+      "y": 786.2,
+      "width": 1000.0,
+      "height": 1000.0,
+      "shape": 0,
+      "source": "point2_44_touch_tool22 [Override]",
+      "space": "skeleton"
+    }
+  },
+  "illust_dating17": {
+    "1_0_0": {
+      "x": -70.5,
+      "y": -0.5,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point1_0_gyro [Override]",
+      "space": "skeleton"
+    },
+    "1_0_23": {
+      "x": -70.5,
+      "y": -0.5,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point1_0_gyro_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_1_0": {
+      "x": -141.2,
+      "y": 111.6,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point1_1_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_2_0": {
+      "x": -71.6,
+      "y": -4.0,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point1_2_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_3_0": {
+      "x": 38.3,
+      "y": 189.6,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point1_3_drag [Override]",
+      "space": "skeleton"
+    },
+    "1_4_0": {
+      "x": -292.2,
+      "y": -472.1,
+      "width": 500.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_4_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_5_0": {
+      "x": -11913.3,
+      "y": -352.3,
+      "width": 500.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_5_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_6_0": {
+      "x": -267.9,
+      "y": -766.8,
+      "width": 513.1,
+      "height": 277.3,
+      "shape": 0,
+      "source": "point1_6_drag [Override]",
+      "space": "skeleton"
+    },
+    "1_7_0": {
+      "x": -119.9,
+      "y": -943.8,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point1_7_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_8_0": {
+      "x": -11807.4,
+      "y": 15.2,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point1_8_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_9_23": {
+      "x": -120.4,
+      "y": 174.3,
+      "width": 170.0,
+      "height": 170.0,
+      "shape": 0,
+      "source": "point1_9_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_10_23": {
+      "x": -167.6,
+      "y": 46.6,
+      "width": 170.0,
+      "height": 170.0,
+      "shape": 0,
+      "source": "point1_10_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_11_23": {
+      "x": -47.5,
+      "y": -2.1,
+      "width": 170.0,
+      "height": 170.0,
+      "shape": 0,
+      "source": "point1_11_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_12_23": {
+      "x": -292.3,
+      "y": -421.5,
+      "width": 500.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_12_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_13_23": {
+      "x": -358.9,
+      "y": -939.8,
+      "width": 250.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point1_13_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_14_23": {
+      "x": -121.9,
+      "y": -848.8,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point1_14_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_15_23": {
+      "x": 141.4,
+      "y": -948.7,
+      "width": 250.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point1_15_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_16_0": {
+      "x": -877.3,
+      "y": -671.3,
+      "width": 500.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point1_16_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_17_0": {
+      "x": -12113.2,
+      "y": -99.7,
+      "width": 900.0,
+      "height": 900.0,
+      "shape": 0,
+      "source": "point1_17_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_18_0": {
+      "x": -12113.2,
+      "y": -99.7,
+      "width": 900.0,
+      "height": 900.0,
+      "shape": 0,
+      "source": "point1_18_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_19_0": {
+      "x": -12113.2,
+      "y": -99.7,
+      "width": 900.0,
+      "height": 900.0,
+      "shape": 0,
+      "source": "point1_19_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_20_0": {
+      "x": -12113.2,
+      "y": -99.7,
+      "width": 900.0,
+      "height": 900.0,
+      "shape": 0,
+      "source": "point1_20_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_21_0": {
+      "x": -768.7,
+      "y": -1128.2,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_21_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_22_0": {
+      "x": 378.0,
+      "y": -1128.2,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_22_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_23_0": {
+      "x": -305.7,
+      "y": 395.7,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point1_23_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_24_0": {
+      "x": -1819.9,
+      "y": -118.5,
+      "width": 1300.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_24_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_24_23": {
+      "x": -1819.9,
+      "y": -118.5,
+      "width": 1300.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point1_24_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_25_0": {
+      "x": 423.4,
+      "y": -684.1,
+      "width": 1800.0,
+      "height": 1700.0,
+      "shape": 0,
+      "source": "point1_25_touch [Override]",
+      "space": "skeleton"
+    },
+    "1_25_23": {
+      "x": 423.4,
+      "y": -684.1,
+      "width": 1800.0,
+      "height": 1700.0,
+      "shape": 0,
+      "source": "point1_25_touch_tool23 [Override]",
+      "space": "skeleton"
+    },
+    "1_26_0": {
+      "x": -11878.3,
+      "y": 353.0,
+      "width": 400.0,
+      "height": 400.0,
+      "shape": 0,
+      "source": "point1_26_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_0_0": {
+      "x": -70.5,
+      "y": -0.5,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point2_0_gyro [Override]",
+      "space": "skeleton"
+    },
+    "2_0_24": {
+      "x": -70.5,
+      "y": -0.5,
+      "width": 1.0,
+      "height": 1.0,
+      "shape": 0,
+      "source": "point2_0_gyro_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_1_0": {
+      "x": -73.2,
+      "y": -32.7,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point2_1_drag [Override]",
+      "space": "skeleton"
+    },
+    "2_2_0": {
+      "x": -376.1,
+      "y": -202.6,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_2_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_3_0": {
+      "x": -11786.2,
+      "y": 626.3,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_3_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_4_0": {
+      "x": -209.3,
+      "y": -452.6,
+      "width": 502.2,
+      "height": 303.7,
+      "shape": 0,
+      "source": "point2_4_drag [Override]",
+      "space": "skeleton"
+    },
+    "2_5_0": {
+      "x": 433.8,
+      "y": -845.4,
+      "width": 500.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point2_5_touch_1hidden_A [Override]",
+      "space": "skeleton"
+    },
+    "2_6_0": {
+      "x": -11825.0,
+      "y": 774.1,
+      "width": 300.0,
+      "height": 300.0,
+      "shape": 0,
+      "source": "point2_6_touch_1hidden [Override]",
+      "space": "skeleton"
+    },
+    "2_7_0": {
+      "x": -11775.0,
+      "y": 824.1,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point2_7_touch_1hidden [Override]",
+      "space": "skeleton"
+    },
+    "2_8_0": {
+      "x": -11775.0,
+      "y": 824.1,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point2_8_touch_1hidden [Override]",
+      "space": "skeleton"
+    },
+    "2_9_0": {
+      "x": -11775.0,
+      "y": 824.1,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point2_9_touch_1hidden [Override]",
+      "space": "skeleton"
+    },
+    "2_10_0": {
+      "x": -11775.0,
+      "y": 824.1,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point2_10_touch_1hidden [Override]",
+      "space": "skeleton"
+    },
+    "2_11_0": {
+      "x": 99.2,
+      "y": -902.8,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_11_drag [Override]",
+      "space": "skeleton"
+    },
+    "2_12_0": {
+      "x": -119.9,
+      "y": -943.8,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_12_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_13_24": {
+      "x": -235.8,
+      "y": -514.1,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_13_touch_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_14_24": {
+      "x": 58.7,
+      "y": -572.8,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_14_touch_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_15_24": {
+      "x": -84.7,
+      "y": -385.1,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_15_touch_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_16_24": {
+      "x": -96.6,
+      "y": -29.0,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_16_touch_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_17_24": {
+      "x": -119.9,
+      "y": -943.8,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_17_touch_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_18_0": {
+      "x": -468.9,
+      "y": 185.7,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_18_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_19_0": {
+      "x": -11982.4,
+      "y": 347.9,
+      "width": 650.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point2_19_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_20_0": {
+      "x": -11779.7,
+      "y": 1148.7,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_20_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_21_0": {
+      "x": -11775.0,
+      "y": 1345.1,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_21_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_22_0": {
+      "x": -305.7,
+      "y": 395.7,
+      "width": 250.0,
+      "height": 250.0,
+      "shape": 0,
+      "source": "point2_22_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_23_0": {
+      "x": 38.3,
+      "y": 189.6,
+      "width": 200.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point2_23_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_24_0": {
+      "x": -1912.4,
+      "y": -536.4,
+      "width": 1200.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point2_24_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_24_24": {
+      "x": -1912.4,
+      "y": -536.4,
+      "width": 1200.0,
+      "height": 1500.0,
+      "shape": 0,
+      "source": "point2_24_touch_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_25_0": {
+      "x": 573.4,
+      "y": -434.1,
+      "width": 1500.0,
+      "height": 1200.0,
+      "shape": 0,
+      "source": "point2_25_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_25_24": {
+      "x": 573.4,
+      "y": -434.1,
+      "width": 1500.0,
+      "height": 1200.0,
+      "shape": 0,
+      "source": "point2_25_touch_tool24 [Override]",
+      "space": "skeleton"
+    },
+    "2_26_0": {
+      "x": -168.6,
+      "y": -649.1,
+      "width": 350.0,
+      "height": 200.0,
+      "shape": 0,
+      "source": "point2_26_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_27_0": {
+      "x": -830.3,
+      "y": -920.2,
+      "width": 500.0,
+      "height": 500.0,
+      "shape": 0,
+      "source": "point2_27_touch [Override]",
+      "space": "skeleton"
+    },
+    "2_28_0": {
+      "x": -14135.4,
+      "y": -841.0,
+      "width": 5000.0,
+      "height": 5000.0,
+      "shape": 0,
+      "source": "point2_28_touch [Override]",
+      "space": "skeleton"
+    }
+  },
   "illust_dating19": {
     "1_0_0": {
       "x": -0.5,

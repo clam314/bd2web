@@ -3078,3 +3078,41 @@ Char000396(dating18) Interaction paths=112
 - sample 名可以是公共音效或其它角色名，这是 FMOD sample 复用；防串判断只看 event path 是否包含
   `data/dating_charid_map.json` 中该 dating 的 `charId`。
 - `illust_dating14` 是动作型/尊爵皮肤，本轮只有 SFX；没有 `interactionVoices` 属正常。
+
+## 2026-07-01 继续：dating15/16/17 热区动作与 SFX 外部化
+
+### 前提核对
+
+本轮继续坚持 `datingN -> charId -> FMOD event path` 三段校验：
+
+```text
+dating15 = illust_dating15 = char067004 = 温泉修行者·班塔纳
+dating16 = illust_dating16 = char003604 = 传奇退役·奥利维耶
+dating17 = illust_dating17 = char004202 = 奇迹紫罗兰·帕莱特
+```
+
+三者都在当前 `Visual_Novel_SFX` 中有可播放 SFX 事件；生成后 `wrongPath=0`。
+
+### 热区与动作
+
+从 `common-char-datingillust_assets_all.bundle` 抽取并合并到外部 JSON：
+
+| dating | hotzones | actions | stages | key mismatch |
+|---|---:|---:|---|---:|
+| `illust_dating15` | 68 | 68 | 1/2/3 | 0 |
+| `illust_dating16` | 119 | 119 | 1/2 | 0 |
+| `illust_dating17` | 62 | 62 | 1/2 | 0 |
+
+`dating18` 暂不外部化：新抽 prefab 计数与当前莎拉手写特殊逻辑不完全一致，继续保留前端手写逻辑，避免破坏已验证的莎拉复现。
+
+### SFX 生成结果
+
+使用当前 `Visual_Novel_SFX`：
+
+| dating | charId | alias | SFX events | samples/files | remaining missing | wrongPath | bad OGG |
+|---|---|---|---:|---:|---|---:|---:|
+| `illust_dating15` | `char067004` | `mix1_10_1=motion1_10`; `mix2_20_1=motion2_20` | 71 | 114 | `mix1_0_1`, `mix2_0_1`, `mix3_0_1` | 0 | 0 |
+| `illust_dating16` | `char003604` | `mix1_15_1=motion1_15`; `mix1_16_1=motion1_16`; `mix1_17_1=motion1_17` | 78 | 119 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+| `illust_dating17` | `char004202` | `mix1_26_1=motion1_26` | 73 | 105 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+
+`mix*_0_1` 仍按阶段入口/默认动作缺口处理，不做硬 alias。

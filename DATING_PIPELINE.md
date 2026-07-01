@@ -131,13 +131,13 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | 文件 | 作用 | 覆盖 |
 |---|---|---|
 | `data/dating_charid_map.json` | 菜单#↔charId 权威映射 | 19/19 ✅ |
-| `data/dating_audio.json` | 音频清单(voice+sfx event/sample/action) | voice 19/19;sfx 1-14/18/19(6/11/12/13/14/19 部分缺口) |
-| `data/dating_actions.json` | 每点动作(mix动画/gyro/touch) | 15(缺15/16/17/18) |
-| `data/dating_hotzones.json` | 热区 skeleton-space 坐标 | 15(缺15/16/17/18) |
+| `data/dating_audio.json` | 音频清单(voice+sfx event/sample/action) | voice 19/19;sfx 1-19(18 手写动作;6/11/12/13/14/15/16/17/19 部分缺口) |
+| `data/dating_actions.json` | 每点动作(mix动画/gyro/touch) | 18(缺18;18 仍用前端手写特殊逻辑) |
+| `data/dating_hotzones.json` | 热区 skeleton-space 坐标 | 18(缺18;18 仍用前端手写特殊逻辑) |
 | `data/dating_interaction_tables.json` | 心契点→情绪语音母表 | 14 心契 |
 | `data/dating_interaction_meta.json` | 每角色 bank/BGM/环境音元数据 | 14 |
 | `upstream/ + clam314/bd2web-assets` | Spine 立绘 | 19/19 ✅ |
-| `audio/dating/illust_datingN/{voice,sfx}/` | OGG 本体 | voice 19/19;sfx 1-14/18/19(6/11/12/13/14/19 部分缺口) |
+| `audio/dating/illust_datingN/{voice,sfx}/` | OGG 本体 | voice 19/19;sfx 1-19(6/11/12/13/14/15/16/17/19 部分缺口) |
 
 ---
 
@@ -161,14 +161,14 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | 12 | 杰尼斯★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺4) | — |
 | 13 | 提尔 | ✅ | ✅ | ✅ | ✅ | 🟡(缺3) | — |
 | 14 | 黎维塔★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺2) | — |
-| 15 | 班塔纳 | ✅ | ⬜ | ✅ | ✅(母表有) | ⬜ | — |
-| 16 | 奥利维耶 | ✅ | ⬜ | ✅ | ✅(母表有) | ⬜ | **⬜ 可做** |
-| 17 | 帕莱特 | ✅ | ⬜ | ✅ | ✅(母表有) | ⬜ | — |
+| 15 | 班塔纳 | ✅ | ✅ | ✅ | ✅(母表有) | 🟡(缺3) | — |
+| 16 | 奥利维耶 | ✅ | ✅ | ✅ | ✅(母表有) | 🟡(缺2) | **⬜ 可做** |
+| 17 | 帕莱特 | ✅ | ✅ | ✅ | ✅(母表有) | 🟡(缺2) | — |
 | 18 | 莎拉★ | ✅ | ⬜ | ✅ | —(非心契) | ✅ | ✅ |
 | 19 | 格兰希特 | ✅ | ✅ | ✅ | ✅(母表有) | 🟡(缺2) | — |
 
-注:15/16/17/18 的热区+动作还没接(`dating_actions/hotzones.json` 缺);心契母表(14)已含 15/16/17/19 对应
-charId 的点→语音数据,只是前端还没落地。
+注:18 莎拉仍保留前端手写特殊热区/动作逻辑,未写入 `dating_actions/hotzones.json`;15/16/17/19 的心契母表点→语音数据已有,其中
+19 已前端落地,15/16/17 仍待落地。
 
 ### 2026-07-01 音频防串审计与本批 SFX
 
@@ -215,6 +215,9 @@ charId 的点→语音数据,只是前端还没落地。
 |---|---|---:|---:|---|---:|---:|
 | `illust_dating13` | `char004102` | 79 | 87 | `mix1_0_1`, `mix2_0_1`, `mix3_0_1` | 0 | 0 |
 | `illust_dating14` | `char003892` | 69 | 70 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+| `illust_dating15` | `char067004` | 71 | 114 | `mix1_0_1`, `mix2_0_1`, `mix3_0_1` | 0 | 0 |
+| `illust_dating16` | `char003604` | 78 | 119 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+| `illust_dating17` | `char004202` | 73 | 105 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
 | `illust_dating19` | `char067104` | 56 | 87 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
 
 当前 `Visual_Novel_SFX` 证据:
@@ -231,6 +234,9 @@ bankGuid=bcbf2950f645bb4bbd33ad593e44c248
 ```text
 Char004102(dating13)=79
 Char003892(dating14)=69
+Char067004(dating15)=71
+Char003604(dating16)=78
+Char004202(dating17)=73
 Char067104(dating19)=56
 Char000396(dating18)=112
 ```
@@ -248,14 +254,13 @@ Char000396(dating18)=112
 
 ## 7. 待办(按性价比排序)
 
-1. **补剩余 SFX 缺口**:dating6/11/12/13/14/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
+1. **补剩余 SFX 缺口**:dating6/11/12/13/14/15/16/17/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
    不要用 `*_end` 硬 alias。
 2. **运行态确认 `mix*_0_1`**:多名角色剩下的都是阶段入口/默认动作类 `mixN_0_1`;当前 FMOD event path
    没有对应可播放事件。不要把它们硬 alias 到其它动作。
-3. **补 15/16/17/18 的热区+动作**:跑 `extract_dating_hotzones/actions.py`,前端加 DATING 条目 + 阶段动作。
+3. **谨慎处理 dating18 外部化**:莎拉有前端手写特殊逻辑,新抽 prefab 与手写计数不完全一致,不要直接覆盖。
 4. **#16 奥利维耶做莎拉式 mix 动作语音**(30 事件,现成)。
-5. **落地 15/16/17/19 的心契点→语音**:母表已有,`apply_dating_interaction_voice_actions.py` 接进去。
-6. 15-17(客串标签)身份/数据特殊,确认是否与心契同角色复用。
+5. **落地 15/16/17 的心契点→语音**:母表已有,`apply_dating_interaction_voice_actions.py` 接进去。
 
 ---
 
@@ -281,3 +286,4 @@ Char000396(dating18)=112
 ## 修订说明
 
 - 2026-07-01：将 `Visual_Novel_SFX` 对 `dating13/14/19` 的确认结果合并进第 6 节状态与音频审计表；尾部只保留本修订说明，详细流水记录见 `CODEX_CHANGES.md`。
+- 2026-07-01：补入 `dating15/16/17` 的外部热区/动作 JSON 与 `Visual_Novel_SFX` 结果；`dating18` 继续保留手写特殊逻辑。
