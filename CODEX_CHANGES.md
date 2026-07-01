@@ -2824,3 +2824,212 @@ missingFiles=0
 - `illust_dating14`：10 个 audio action 全部能在 action 数据中找到同名 `mix/motion`。
 - `illust_dating12`：14 个 audio action 中 13 个能在 action 数据中找到；`motion1_32` 当前
   没有直接触发点，先保留在 audio manifest 中但不会被现有热区自动触发。
+
+## 2026-07-01 更正：dating7 / char000296 的动作音频不在角色 voice bank，而在全局 Visual Interaction SFX
+
+前面“`char000296` 没有动作型片段”的结论只对 `interaction_char000296.bytes`
+这个角色 interaction voice bank 成立，不能外推到全部音频资源。重新核对后确认：
+
+- `interaction_char000296.bytes` 只含 `Char000296_Int_*` 情绪/特殊池事件，适合做 voice pool，
+  但不包含 `mix1_*` / `mix2_*` 动作事件。
+- `common-sound_assets_sound/visual_interaction_sfx.bytes` 才包含动作 SFX 事件：
+  `event:/Cinematic/Visual_Novel/Char000296/Interaction/idle1/mix1_*`、
+  `idle2/mix2_*`、以及 `motion1_32`。
+- 用 `local_device_cache/bd2_current_20260624/all-fmod-event-paths.tsv` 的
+  `GUID<TAB>event path` 反查 `visual_interaction_sfx` 的 FEV 图，命中
+  `Char000296` 互动事件 75 个。这个结论来自 bank 内 event GUID，不是按名字猜。
+
+本次生成：
+
+```text
+datingId        illust_dating7
+charId          char000296
+SFX bank        common-sound_assets_sound/visual_interaction_sfx.bytes
+bank GUID       81f82b5b3c2b4045a860d128fd9f7cf5
+bank SHA256     84c5bf041488e26c32f2c7c679c718685839ecce8aab018918428d69af7efb97
+FSB SHA256      6a1c2c49a529f95a0ec396437959df31cafc7d934b61a4d86b9bdf202d314fda
+events          75
+triggers        411
+samples         117
+action mappings 76
+```
+
+产物：
+
+- `data/dating_audio.json`
+  - `characters.illust_dating7.sfx.events`：75 个 FMOD event 的真实 timeline。
+  - `characters.illust_dating7.sfx.actions`：76 个 Spine 动画名映射。
+  - `mix1_32_1` 在 SoundMaster/FEV 中没有同名事件，但同点存在 `motion1_32`，因此显式
+    alias 为 `mix1_32_1 -> motion1_32`。
+- `audio/dating/illust_dating7/sfx/`
+  - 117 个 OGG，`ffprobe` 全部可读。
+
+验证：
+
+```text
+data/dating_actions.json 需要的 illust_dating7 动画名：76 个
+data/dating_audio.json 中 sfx action mappings：76 个
+缺失映射：0
+JSON 校验：OK
+```
+
+这条路线和情绪型 `SpineInteractionPointTable` 不是一回事：dating7 当前应按动作型 SFX
+管线接入点击/拖动动作音频；角色 voice bank 中的 `Char000296_Int_*` 仍可保留，但不能拿它
+直接推导动作点映射。
+
+## 2026-07-01 音频防串审计门禁 + 首批 Visual Interaction SFX 扩展
+
+### 防串规则固化
+
+这轮开始新增硬门禁，避免再次出现“菜单编号 / gid / charId / event path”混用导致语音乱配：
+
+1. 页面角色主键固定为 `illust_datingN -> charId`，只从 `data/dating_charid_map.json` 读取。
+2. FMOD event path 必须含同一个 `CharXXXXXX`，否则不能写入 `data/dating_audio.json`。
+3. `SpineInteractionPointTable.gid` 只能通过表内 charId 反查，不能当 `datingN`。
+4. SFX 事件不能只看 SoundMaster path 是否存在，还必须检查 FMOD timeline 是否至少引用一个有效 FSB stream。
+   空 wave GUID 不算可播放音频。
+
+新增工具：
+
+- `tools/audit_dating_audio_integrity.py`
+  - 输入：
+    - `data/dating_charid_map.json`
+    - `data/dating_actions.json`
+    - `data/dating_audio.json`
+    - `data/dating_interaction_tables.json`
+    - `data/dating_interaction_meta.json`
+    - `local_device_cache/bd2_current_20260624/all-fmod-event-paths.tsv`
+    - `local_device_cache/bd2_current_20260624/visual_interaction_sfx/visual_interaction_sfx.bank`
+  - 输出：
+    - `local_device_cache/dating_audio_integrity_audit.json`
+    - `local_device_cache/dating_audio_integrity_audit.md`
+
+本轮审计摘要：
+
+```text
+charactersInMap       19
+manifestPathIssues    0
+pointTableCharacters  14
+gidNotDatingNumber    8
+safeVisualSfx         5
+needsAliasOrReview    7
+needsOtherBank        3
+missingActionTable    4
+```
+
+`gidNotDatingNumber=8` 是关键提醒：后续任何批处理都不能把 gid 直接当页面编号。
+
+### `extract_dating_sfx.py` 容错修正
+
+生成 `illust_dating2` 时发现：
+
+```text
+event:/Cinematic/Visual_Novel/Char003402/Interaction/idle1/mix1_18_1
+```
+
+其中一个 timeline choice 指向全 0 wave GUID。该 event 仍有其它有效 sample，因此正确处理是：
+
+- 跳过空 wave GUID。
+- 保留同一 event 中的有效 sample。
+- 如果整条 event 没有任何有效 trigger，再不写入 manifest。
+
+`tools/extract_dating_sfx.py` 已按这个规则处理。
+
+另外，当前本机 `ffmpeg` 没有 `libvorbis` encoder，工具会 fallback 到原生 `vorbis`。命令输出里会先看到
+`Unknown encoder 'libvorbis'`，但最终是否成功以 `ffprobe` 检查 OGG 为准。
+
+### 本批接入结果
+
+在 `visual_interaction_sfx.bytes` 中先接入高确定性、动作需求全覆盖的四个角色：
+
+| dating | charId | SFX events | samples | required action missing | path char mismatch | bad OGG |
+|---|---|---:|---:|---:|---:|---:|
+| `illust_dating2` | `char003402` | 81 | 57 | 0 | 0 | 0 |
+| `illust_dating3` | `char003203` | 70 | 63 | 0 | 0 | 0 |
+| `illust_dating4` | `char001106` | 82 | 65 | 0 | 0 | 0 |
+| `illust_dating9` | `char001197` | 128 | 140 | 0 | 0 | 0 |
+
+产物：
+
+- `data/dating_audio.json`
+  - 新增/更新 `characters.illust_dating2.sfx`
+  - 新增/更新 `characters.illust_dating3.sfx`
+  - 新增/更新 `characters.illust_dating4.sfx`
+  - 新增/更新 `characters.illust_dating9.sfx`
+- 新增 OGG：
+  - `audio/dating/illust_dating2/sfx/`：57 个
+  - `audio/dating/illust_dating3/sfx/`：63 个
+  - `audio/dating/illust_dating4/sfx/`：65 个
+  - `audio/dating/illust_dating9/sfx/`：140 个
+
+验证命令结论：
+
+```text
+illust_dating2 char003402 needed 79  sfxActions 81  missing 0  events 81   files 57   badOgg 0 wrongPath 0
+illust_dating3 char003203 needed 67  sfxActions 70  missing 0  events 70   files 63   badOgg 0 wrongPath 0
+illust_dating4 char001106 needed 77  sfxActions 82  missing 0  events 82   files 65   badOgg 0 wrongPath 0
+illust_dating9 char001197 needed 123 sfxActions 128 missing 0  events 128  files 140  badOgg 0 wrongPath 0
+```
+
+### 下一步
+
+1. `illust_dating5/6/8/10/11/12` 进入 alias/review 阶段，不能盲补。
+2. `illust_dating13/14/19` 需要按 GUID 定位另一个 SFX bank；SoundMaster 有 path，但不在
+   `visual_interaction_sfx`。
+3. `illust_dating15/16/17/18` 当前缺 `data/dating_actions.json` 动作表，先补动作/热区再谈完整 SFX。
+
+## 2026-07-01 继续：alias/review 组 SFX 接入
+
+### alias 原则
+
+本轮只接受两类 alias：
+
+1. 同点 `mixN_x_1 -> motionN_x`，且目标 `motionN_x` 在同角色 FMOD event path 中存在并有有效 sample。
+2. 同点 sibling fallback，例如同一个 point 的 `mix3_2_2 -> mix3_2_1`，且目标 event 有有效 sample。
+
+明确禁止：
+
+- 把 `mix*_1_1` 这类初始/循环动作 alias 到 `mix*_1_end`。这会把“结束音”提前播放，语义风险高。
+- 多候选动作强选一个，例如同一个 `mix2_0_1` 同时关联 `motion2_1` / `motion2_2`。
+
+### 完整补齐组
+
+| dating | charId | alias | SFX events | samples | required missing | bad OGG |
+|---|---|---|---:|---:|---:|---:|
+| `illust_dating5` | `char060802` | `mix1_18_1=motion1_18` | 73 | 65 | 0 | 0 |
+| `illust_dating8` | `char001006` | `mix1_35_1=motion1_35`; `mix2_1_1=motion2_1` | 69 | 75 | 0 | 0 |
+| `illust_dating10` | `char066403` | `mix1_15_2=mix1_15_1`; `mix1_26_1=motion1_26`; `mix2_2_1=motion2_2` | 113 | 87 | 0 | 0 |
+
+### 部分覆盖组
+
+| dating | charId | alias | SFX events | samples | remaining missing | bad OGG |
+|---|---|---|---:|---:|---|---:|
+| `illust_dating6` | `char067603` | `mix2_3_1=motion2_3`; `mix3_3_1=motion3_3`; `mix5_2_1=motion5_2` | 59 | 83 | `mix2_1_1`, `mix3_1_1`, `mix4_1_1`, `mix5_1_1` | 0 |
+| `illust_dating11` | `char000706` | `mix1_9_1=motion1_9`; `mix3_0_1=motion3_0`; `mix4_0_1=montion4_0` | 67 | 69 | `mix1_0_1`, `mix2_0_1` | 0 |
+| `illust_dating12` | `char061492` | `mix2_1_1=motion2_1`; `mix3_2_2=mix3_2_1` | 128 | 145 | `mix1_0_1`, `mix1_35_1`, `mix2_0_1`, `mix3_0_1` | 0 |
+
+`montion4_0` 是 FMOD event path 里的拼写，保留原样；manifest action alias 会从页面动作名
+`mix4_0_1` 指向这个真实 event 名。
+
+### 总体验证
+
+截至本节，已有 SFX 的角色：
+
+```text
+illust_dating1   char003303 need= 86 actions= 88 missing= 0 events= 88 files= 66 bad=0 wrongPath=0
+illust_dating2   char003402 need= 79 actions= 81 missing= 0 events= 81 files= 57 bad=0 wrongPath=0
+illust_dating3   char003203 need= 67 actions= 70 missing= 0 events= 70 files= 63 bad=0 wrongPath=0
+illust_dating4   char001106 need= 77 actions= 82 missing= 0 events= 82 files= 65 bad=0 wrongPath=0
+illust_dating5   char060802 need= 72 actions= 74 missing= 0 events= 73 files= 65 bad=0 wrongPath=0
+illust_dating6   char067603 need= 61 actions= 62 missing= 4 events= 59 files= 83 bad=0 wrongPath=0
+illust_dating7   char000296 need= 75 actions= 76 missing= 0 events= 75 files=117 bad=0 wrongPath=0
+illust_dating8   char001006 need= 64 actions= 71 missing= 0 events= 69 files= 75 bad=0 wrongPath=0
+illust_dating9   char001197 need=123 actions=128 missing= 0 events=128 files=140 bad=0 wrongPath=0
+illust_dating10  char066403 need=112 actions=116 missing= 0 events=113 files= 87 bad=0 wrongPath=0
+illust_dating11  char000706 need= 63 actions= 70 missing= 2 events= 67 files= 69 bad=0 wrongPath=0
+illust_dating12  char061492 need=129 actions=130 missing= 4 events=128 files=145 bad=0 wrongPath=0
+illust_dating18  char000396 need=  0 actions=117 missing= 0 events=112 files=127 bad=0 wrongPath=0
+```
+
+`wrongPath=0` 表示没有发现 SFX event path 引用到其它角色的 `CharXXXXXX`。sample 名中仍可能出现公共音效或其它角色名，
+这是 FMOD sample 复用，不作为串角色判断；串角色只看 event path 和 manifest charId。

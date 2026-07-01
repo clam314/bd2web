@@ -129,6 +129,8 @@ def main():
             for choice in choices_raw:
                 wav_guid = graph["waits"].get(choice["wait"])
                 stream_index = graph["waves"].get(wav_guid)
+                if stream_index is None:
+                    continue
                 sample = metadata.get(stream_index)
                 if not sample:
                     raise ValueError(f"FSB 缺少 stream index {stream_index}")

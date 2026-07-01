@@ -44,6 +44,7 @@ import subprocess
 import sys
 import tempfile
 from dataclasses import dataclass
+from functools import lru_cache
 from pathlib import Path
 
 
@@ -346,6 +347,20 @@ def safe_filename(name: str) -> str:
     return cleaned
 
 
+@lru_cache(maxsize=None)
+def ffmpeg_supports_encoder(ffmpeg: str, encoder: str) -> bool:
+    result = subprocess.run(
+        [ffmpeg, "-hide_banner", "-encoders"],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        check=False,
+    )
+    return result.returncode == 0 and re.search(
+        rf"^\s*A[^\n]*\s{re.escape(encoder)}\s", result.stdout, re.MULTILINE
+    )
+
+
 def decode_ogg(
     vgmstream: Path,
     ffmpeg: Path,
@@ -380,12 +395,12 @@ def decode_ogg(
             "-ar",
             "48000",
         ]
-        try:
+        if ffmpeg_supports_encoder(str(ffmpeg), "libvorbis"):
             subprocess.run(
                 [*base_cmd, "-c:a", "libvorbis", "-q:a", "4", str(output)],
                 check=True,
             )
-        except subprocess.CalledProcessError:
+        else:
             # Some Homebrew/macOS FFmpeg builds expose the native Vorbis encoder
             # but not libvorbis. Native vorbis is good enough for browser OGG
             # delivery, so fall back instead of forcing a custom FFmpeg build.
