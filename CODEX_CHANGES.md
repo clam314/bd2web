@@ -3033,3 +3033,48 @@ illust_dating18  char000396 need=  0 actions=117 missing= 0 events=112 files=127
 
 `wrongPath=0` 表示没有发现 SFX event path 引用到其它角色的 `CharXXXXXX`。sample 名中仍可能出现公共音效或其它角色名，
 这是 FMOD sample 复用，不作为串角色判断；串角色只看 event path 和 manifest charId。
+
+## 2026-07-01 继续：当前 Visual_Novel_SFX 补齐 dating13/14/19
+
+### 结论
+
+`illust_dating13/14/19` 的动作 SFX 不在早期 `visual_interaction_sfx`，而在当前包的
+`Visual_Novel_SFX`。这次不要再按 `visual_interaction_sfx` 的缺口下结论。
+
+设备当前 `file.json` 对应:
+
+```text
+common-sound_assets_sound/visual_novel_sfx.bytes
+bundleName=ae2d0048197fd9af691d991454050be2
+hash=67087266740ce88580ec3bf3f84b8ff6
+size=46329527
+```
+
+本地拉取并解析后得到:
+
+```text
+bankGuid=bcbf2950f645bb4bbd33ad593e44c248
+events=716
+Char004102(dating13) Interaction paths=79
+Char003892(dating14) Interaction paths=69
+Char067104(dating19) Interaction paths=56
+Char000396(dating18) Interaction paths=112
+```
+
+### 本轮生成
+
+| dating | charId | alias | SFX events | samples/files | remaining missing | wrongPath | bad OGG |
+|---|---|---|---:|---:|---|---:|---:|
+| `illust_dating13` | `char004102` | `mix1_10_1=motion1_10`; `mix2_9_1=motion2_9` | 79 | 87 | `mix1_0_1`, `mix2_0_1`, `mix3_0_1` | 0 | 0 |
+| `illust_dating14` | `char003892` | `mix1_22_1=motion1_22`; `mix1_23_1=motion1_23` | 69 | 70 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+| `illust_dating19` | `char067104` | `mix1_18_1=motion1_18` | 56 | 87 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+
+`mix*_0_1` 没有在当前 FMOD event path 中找到对应可播放事件；它们看起来是阶段入口/默认动作类名称。
+没有运行态证据前不要 alias 到普通点位，也不要 alias 到 `*_end`。
+
+### 注意事项
+
+- `extract_dating_sfx.py` 会直接写 `data/dating_audio.json`，不要并行跑多个角色；并行写会出现后完成者覆盖先完成者的 JSON 修改。
+- sample 名可以是公共音效或其它角色名，这是 FMOD sample 复用；防串判断只看 event path 是否包含
+  `data/dating_charid_map.json` 中该 dating 的 `charId`。
+- `illust_dating14` 是动作型/尊爵皮肤，本轮只有 SFX；没有 `interactionVoices` 属正常。

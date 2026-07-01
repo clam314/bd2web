@@ -64,7 +64,7 @@
 |---|---|---|
 | `common-char-datingillust_assets_all.bundle`(385MB) | 全 19 角色 Spine(`illust_datingN.skel/.atlas/贴图`) | `file.json` readableName |
 | `interaction_charXXXXXX.bytes` | 每角色**情绪 voice** bank(`Char_Int_<情绪>`) | 19 个,`common-interactionvoice` |
-| `visual_interaction_sfx.bytes` + 其它 | **动作 SFX** bank | `common-sound_assets_sound` 等 |
+| `visual_interaction_sfx.bytes` / `visual_novel_sfx.bytes` + 其它 | **动作 SFX** bank | `common-sound_assets_sound` 等 |
 | **`all-fmod-event-paths.tsv`**(56766 事件) | ⭐**全量 GUID→事件路径,音频映射的总钥匙** | `local_device_cache/bd2_current_20260624/` |
 | `SpineInteractionPointTable`(母表) | 心契**点→情绪语音**映射(仅14心契) | frida 抓,见下 |
 | `catalog_alpha.json` / `file.json` | 寻址目录 / bundle 清单 | `files/com.unity.addressables/` |
@@ -131,13 +131,13 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | 文件 | 作用 | 覆盖 |
 |---|---|---|
 | `data/dating_charid_map.json` | 菜单#↔charId 权威映射 | 19/19 ✅ |
-| `data/dating_audio.json` | 音频清单(voice+sfx event/sample/action) | voice 19/19;sfx 1-12/18(6/11/12 部分缺口) |
+| `data/dating_audio.json` | 音频清单(voice+sfx event/sample/action) | voice 19/19;sfx 1-14/18/19(6/11/12/13/14/19 部分缺口) |
 | `data/dating_actions.json` | 每点动作(mix动画/gyro/touch) | 15(缺15/16/17/18) |
 | `data/dating_hotzones.json` | 热区 skeleton-space 坐标 | 15(缺15/16/17/18) |
 | `data/dating_interaction_tables.json` | 心契点→情绪语音母表 | 14 心契 |
 | `data/dating_interaction_meta.json` | 每角色 bank/BGM/环境音元数据 | 14 |
 | `upstream/ + clam314/bd2web-assets` | Spine 立绘 | 19/19 ✅ |
-| `audio/dating/illust_datingN/{voice,sfx}/` | OGG 本体 | voice 19/19;sfx 1-12/18(6/11/12 部分缺口) |
+| `audio/dating/illust_datingN/{voice,sfx}/` | OGG 本体 | voice 19/19;sfx 1-14/18/19(6/11/12/13/14/19 部分缺口) |
 
 ---
 
@@ -159,13 +159,13 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | 10 | 安洁莉卡 | ✅ | ✅ | ✅ | ✅ | ✅ | — |
 | 11 | 伊柯利普斯 | ✅ | ✅ | ✅ | ✅ | 🟡(缺2) | — |
 | 12 | 杰尼斯★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺4) | — |
-| 13 | 提尔 | ✅ | ✅ | ✅ | ✅ | ⬜ | — |
-| 14 | 黎维塔★ | ✅ | ✅ | ✅ | ⬜(非心契) | ⬜ | — |
+| 13 | 提尔 | ✅ | ✅ | ✅ | ✅ | 🟡(缺3) | — |
+| 14 | 黎维塔★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺2) | — |
 | 15 | 班塔纳 | ✅ | ⬜ | ✅ | ✅(母表有) | ⬜ | — |
 | 16 | 奥利维耶 | ✅ | ⬜ | ✅ | ✅(母表有) | ⬜ | **⬜ 可做** |
 | 17 | 帕莱特 | ✅ | ⬜ | ✅ | ✅(母表有) | ⬜ | — |
 | 18 | 莎拉★ | ✅ | ⬜ | ✅ | —(非心契) | ✅ | ✅ |
-| 19 | 格兰希特 | ✅ | ✅ | ✅ | ✅(母表有) | ⬜ | — |
+| 19 | 格兰希特 | ✅ | ✅ | ✅ | ✅(母表有) | 🟡(缺2) | — |
 
 注:15/16/17/18 的热区+动作还没接(`dating_actions/hotzones.json` 缺);心契母表(14)已含 15/16/17/19 对应
 charId 的点→语音数据,只是前端还没落地。
@@ -187,7 +187,9 @@ charId 的点→语音数据,只是前端还没落地。
 - `local_device_cache/dating_audio_integrity_audit.json`
 - `local_device_cache/dating_audio_integrity_audit.md`
 
-本轮已接入的高确定性 `visual_interaction_sfx` 角色:
+已接入的高确定性动作 SFX 角色:
+
+`visual_interaction_sfx` 组:
 
 | dating | charId | SFX events | samples | required action missing | path char mismatch | OGG bad |
 |---|---|---:|---:|---:|---:|---:|
@@ -207,10 +209,38 @@ charId 的点→语音数据,只是前端还没落地。
 | `illust_dating11` | `char000706` | 67 | 69 | `mix1_0_1`, `mix2_0_1` | 0 |
 | `illust_dating12` | `char061492` | 128 | 145 | `mix1_0_1`, `mix1_35_1`, `mix2_0_1`, `mix3_0_1` | 0 |
 
+`Visual_Novel_SFX` 组:
+
+| dating | charId | SFX events | samples | remaining missing | path char mismatch | OGG bad |
+|---|---|---:|---:|---|---:|---:|
+| `illust_dating13` | `char004102` | 79 | 87 | `mix1_0_1`, `mix2_0_1`, `mix3_0_1` | 0 | 0 |
+| `illust_dating14` | `char003892` | 69 | 70 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+| `illust_dating19` | `char067104` | 56 | 87 | `mix1_0_1`, `mix2_0_1` | 0 | 0 |
+
+当前 `Visual_Novel_SFX` 证据:
+
+```text
+common-sound_assets_sound/visual_novel_sfx.bytes
+bundleName=ae2d0048197fd9af691d991454050be2
+hash=67087266740ce88580ec3bf3f84b8ff6
+bankGuid=bcbf2950f645bb4bbd33ad593e44c248
+```
+
+其中可确认的 Interaction SFX path 数:
+
+```text
+Char004102(dating13)=79
+Char003892(dating14)=69
+Char067104(dating19)=56
+Char000396(dating18)=112
+```
+
 已知工具细节:
 
 - `extract_dating_sfx.py` 会跳过 FMOD timeline 中的空 wave GUID。比如 dating2 的若干事件同时有有效
   sample 和空引用,空引用不应导致整条事件失败。
+- `extract_dating_sfx.py` 会直接写 `data/dating_audio.json`,不要并行跑多个角色;并行写会让后完成者覆盖
+  先完成者的 JSON 修改。
 - 当前 macOS/Homebrew `ffmpeg` 没有 `libvorbis` encoder,工具会 fallback 到原生 `vorbis`;命令输出会先
   打 `Unknown encoder 'libvorbis'`,但最终 OGG 仍需以 `ffprobe` 验证为准。
 
@@ -218,10 +248,10 @@ charId 的点→语音数据,只是前端还没落地。
 
 ## 7. 待办(按性价比排序)
 
-1. **补剩余 SFX 缺口**:dating6/11/12 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
+1. **补剩余 SFX 缺口**:dating6/11/12/13/14/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
    不要用 `*_end` 硬 alias。
-2. **定位其它 SFX bank**:dating13/14/19 的 SoundMaster 有 SFX path,但不在
-   `visual_interaction_sfx`;需要按 GUID 反查具体 bank。
+2. **运行态确认 `mix*_0_1`**:多名角色剩下的都是阶段入口/默认动作类 `mixN_0_1`;当前 FMOD event path
+   没有对应可播放事件。不要把它们硬 alias 到其它动作。
 3. **补 15/16/17/18 的热区+动作**:跑 `extract_dating_hotzones/actions.py`,前端加 DATING 条目 + 阶段动作。
 4. **#16 奥利维耶做莎拉式 mix 动作语音**(30 事件,现成)。
 5. **落地 15/16/17/19 的心契点→语音**:母表已有,`apply_dating_interaction_voice_actions.py` 接进去。
@@ -245,3 +275,9 @@ charId 的点→语音数据,只是前端还没落地。
 | `tools/il2cpp-re/*` | 逆向 | il2cpp dump / 表抓取 agent |
 
 详见 `AGENTS.md`(逆向/frida/自托管细节)和 `CODEX_CHANGES.md`(音频线索日志)。
+
+---
+
+## 修订说明
+
+- 2026-07-01：将 `Visual_Novel_SFX` 对 `dating13/14/19` 的确认结果合并进第 6 节状态与音频审计表；尾部只保留本修订说明，详细流水记录见 `CODEX_CHANGES.md`。
