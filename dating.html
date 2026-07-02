@@ -2548,8 +2548,11 @@
         }
         if (first) {
           player.animationState.data.defaultMix = 0.08;
-          player.animationState.setAnimation(1, first, false);
+          // 真机 drag 处理器(0x780C1C0)是 SetSpineAnimationExternal(mix[i], track=1, loop=true)：
+          // 拖住期间 mix_1 循环(多为 0.1-0.17s 的颤抖小循环)，不是停末帧。
+          player.animationState.setAnimation(1, first, true);
           player.play();
+          if (currentEntry) datingAudio.playAnimation(currentEntry.id, first);
         }
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
       } catch (e) { showError("播放拖拽起始失败：" + e.message); }
@@ -2600,6 +2603,8 @@
         releases.slice(1).forEach(anim => player.animationState.addAnimation(1, anim, false, 0));
         player.animationState.addEmptyAnimation(1, 0.12, 0);
         player.play();
+        // 拖拽动画在 track 1 上播，start 监听只覆盖 track 0，SFX 需手动触发。
+        if (currentEntry) datingAudio.playAnimation(currentEntry.id, releases[0]);
       } catch (e) { showError("播放拖拽释放失败：" + e.message); }
     }
 

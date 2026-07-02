@@ -211,11 +211,18 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
 `SpineInteractionActionController` 的 begin-drag 处理器(0x780832C/0x780BFB0)走协程 0x7805cf4(含震动)播起始，
 `OnDrag` 内 `set_position`(follow 骨骼跟手指)，drag 事件处理器(0x780C1C0)`get_Item` 取**单个** mix 下标 +
 单次 `SetSpineAnimationExternal(name,track,loop,onComplete)`。即游戏拖拽是**两阶段手势**：
-按住/拖 = `mix_1`(停在末帧)，松手 = `mix_2`(回弹) → 不是串播。
+按住/拖 = `mix_1`，松手 = `mix_2`(回弹) → 不是串播。
+**【2026-07-02 补充】** drag 处理器实参已确认 `track=1, loop=true`：按住期间 `mix_1` **循环播放**
+(全 dating2 的 `mix*_1` 除 1_19 外都只有 0.1-0.17s，是颤抖小循环，不是定格姿势)。
+最初"停末帧"的实现让第三阶段按住时全身静止(末帧姿势又和 idle 几乎一样)，观感=画面冻住，
+即 `froz_mix3_11_2.png`/`froz_idle3.png` 记录的问题；改 loop 后已消除。
 
 **修法**(`dating.html`)：拖拽改成真正的两阶段状态机(动画走 track 1 覆盖层，idle 留在 track 0)——
-- `beginPrefabDrag` 记录手势；`movePrefabDrag` 越过小阈值(10-28px)时 `playDragBegin` 在 track 1 播 `mix[0]`
-  (新增 `dragHolding` 标志，complete 监听里 `if(dragHolding)return` 抑制自动回待机)，**保持** pointer capture；
+- `beginPrefabDrag` 记录手势；`movePrefabDrag` 越过小阈值(10-28px)时 `playDragBegin` 在 track 1 **循环**播 `mix[0]`
+  (对照真机 loop=true；新增 `dragHolding` 标志，complete 监听里 `if(dragHolding)return` 抑制自动回待机)，
+  **保持** pointer capture；
+- 拖拽动画在 track 1 上播不经过 track 0 的 start 监听，SFX 由 `playDragBegin`/`playDragRelease` 手动触发
+  `datingAudio.playAnimation`；
 - 继续拖动、距离达 `successThreshold`(≥48px 且 engage 后 ≥120ms，且该点有 motion 或 nextStage)时
   `playDragSuccess` **立即**在 track 0 播 motions 并推进阶段——对照真机语义：拖动中命中即成功，松手本身不触发成功；
 - `endPrefabDrag`(pointerup) → 若已 engage 且未 success，`playDragRelease` 在 track 1 播 `mix[1..]` 后 empty 淡出(回弹)；
