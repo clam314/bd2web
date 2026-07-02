@@ -287,11 +287,15 @@ Char000396(dating18)=112
 
 - 两阶段状态机(拖住/松手回弹/拖动中达阈值成功,见 `CODEX_CHANGES.md` §5.5);
 - 拖住期间 `startDragFollow` 把点位骨骼钉到手指:包装 `skeleton.updateWorldTransform`,
-  在每帧动画 apply 之后覆盖骨骼局部坐标(屏幕→skeleton 世界坐标换算复用热区投影的 zoom/backingScale);
+  先跑一次世界变换拿到当前父级矩阵,覆盖骨骼局部坐标(屏幕→skeleton 世界坐标换算复用热区投影的
+  zoom/backingScale),再完整重跑 `updateWorldTransform` 让 IK/约束同帧吃到新 target;
   松手/成功/取消 `stopDragFollow` 精确复位。骨骼找不到时静默跳过(莎拉手写热区无 `source`,不受影响);
+- 注意:点位骨骼自身通常没有贴图 slot,而是 IK target。dating2 stage3 的 `point3_3_drag`→IK `mix3_1_3`
+  控 `88`,`point3_11_drag_follow`→IK `mix3_1_10A` 控 `113`;只更新 target bone 自己会让可见丝袜/腿部骨骼
+  不同帧重算,表现为拖拽3/11 局部拉扯动画不明显或丢失。
 - track1 上的动画不经过 start 监听(监听只挂 track0),mix 的 SFX 在 `playDragBegin`/`playDragRelease` 手动触发;
 - 浏览器实测 dating2 全三阶段:3_11 跟手变形+按住表情正确、1_7/1_12 单次播放不重复、
-  松手骨骼精确复位(局部/世界坐标回到初值)、1_19 拖到位播 motion 进阶段。
+  3_3 局部拖拽效果恢复、松手骨骼精确复位(局部/世界坐标回到初值)、1_19 拖到位播 motion 进阶段。
 - 已知与真机的小差异:越过启动阈值瞬间骨骼小跳一下(真机为直接钉到手指,行为类似);只做位移未做旋转跟随。
 
 ---

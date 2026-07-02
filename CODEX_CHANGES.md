@@ -207,8 +207,8 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
 - drag mix 走 track 1，idle/motion 留在 track 0。
 - begin-drag 路径是 `SetSpineAnimationExternal(name, track=1, loop=false, onComplete)`，单次播放后停在末帧。
 - `loop=true` 属于拖到 `_destinations` 后播放 `_playMotionNames[i]` 的另一条路径，不是普通拖住语义。
-- 前端已实现点位骨骼跟手：用现有热区 `source` 找同名 SkeletonUtilityBone，在每帧 apply 后覆盖骨骼坐标；松手/成功/取消时复位。
-- dating2 墨菲亚三阶段 11 已经用浏览器实测通过。
+- 前端已实现点位骨骼跟手：用现有热区 `source` 找同名 SkeletonUtilityBone，拖住期间把点位骨骼钉到手指；松手/成功/取消时复位。
+- 2026-07-02 追加修正：点位骨骼是 IK target，覆盖 target 后必须再跑一次完整 `updateWorldTransform`，否则被 IK 控制的丝袜/腿部骨骼不会同帧重算。dating2 墨菲亚三阶段 3/11 已经用浏览器实测有效。
 
 ### 🟡 本轮初步落地：touch 多段/随机
 

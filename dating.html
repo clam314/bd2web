@@ -2579,7 +2579,7 @@
 
     // 真机 OnDrag 里 set_position 移动点位 GO，点位骨骼(SkeletonUtilityBone mode=Override,
     // boneName=GO 名去掉" [Override]")跟随 GO → 拖拽区域网格跟手变形。web 端等价实现：
-    // 拖住期间在每帧动画 apply 之后把点位骨骼钉到手指对应的 skeleton 世界坐标。
+    // 先跑一遍世界变换拿到当前父级矩阵，再移动点位骨骼并重跑约束，让 IK target 同帧生效。
     function attachDragFollowHook(p) {
       const orig = p.skeleton.updateWorldTransform.bind(p.skeleton);
       p.skeleton.updateWorldTransform = () => {
@@ -2590,7 +2590,7 @@
         const local = bone.parent ? bone.parent.worldToLocal(target) : target;
         bone.x = local.x;
         bone.y = local.y;
-        bone.updateWorldTransform();
+        orig();
       };
     }
 
