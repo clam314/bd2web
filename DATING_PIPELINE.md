@@ -266,15 +266,47 @@ Char000396(dating18)=112
 
 ---
 
+### 2026-07-02 拖拽语义与跟手复现(已完成,全角色生效)
+
+真机语义,il2cpp 静态确证(so=`apk_20260624/libil2cpp.so`,RVA 对应 `cpp2il_dump/dump.cs`,
+反汇编用 `tools/il2cpp-re/annot2.py`):
+
+- **mix 播放入口 `0x7804FA4`**:`SetSpineAnimationExternal(name, track=1, loop=false, onComplete)`。
+  拖住(`mix_1`)和回弹(`mix_2`)都是**单次播、停末帧,不循环**;按住期间保持拉扯姿势直到松手(真机行为已确认)。
+  drag 的 `mix_1` 普遍只有 0.1-0.17s 且 400+ 条全身 timeline(track1 会整体压住 track0 idle)。
+  ⚠️ 勿再犯:OnDragEvent 处理器 `0x780C1C0`(调用点 `0x780C408`)那条 track=1 **loop=true** 是
+  "拖到 `_destinations` 目的地后循环播 `_playMotionNames[i]`"的路径(全库仅 29 点,dating2 没有,前端未实现),
+  不是按住语义;误用会让脸部动画每 0.1-0.17s 重复一次。
+- **跟手 = 拖拽的"生命感"来源**:真机 `OnDrag` 用 `set_position` 移动点位 GO。
+  **每个互动点在 skel 里有一根同名骨骼**(SkeletonUtilityBone:drag/touch=mode1 Override 即骨骼跟 GO,
+  touch_follow=mode0 Follow 即 GO 跟骨骼);`boneName` = 热区 `source` 字段去掉 `" [Override]"`,
+  全量 1301 点中 1300 成立(唯一例外 dating5 `2_19_1`,touch_follow,不影响拖拽)。
+  因此前端**不需要重抽数据**即可由现有 `dating_hotzones.json` 定位骨骼。
+
+前端实现(`dating.html`,自动对全部角色的 drag 点生效):
+
+- 两阶段状态机(拖住/松手回弹/拖动中达阈值成功,见 `CODEX_CHANGES.md` §5.5);
+- 拖住期间 `startDragFollow` 把点位骨骼钉到手指:包装 `skeleton.updateWorldTransform`,
+  在每帧动画 apply 之后覆盖骨骼局部坐标(屏幕→skeleton 世界坐标换算复用热区投影的 zoom/backingScale);
+  松手/成功/取消 `stopDragFollow` 精确复位。骨骼找不到时静默跳过(莎拉手写热区无 `source`,不受影响);
+- track1 上的动画不经过 start 监听(监听只挂 track0),mix 的 SFX 在 `playDragBegin`/`playDragRelease` 手动触发;
+- 浏览器实测 dating2 全三阶段:3_11 跟手变形+按住表情正确、1_7/1_12 单次播放不重复、
+  松手骨骼精确复位(局部/世界坐标回到初值)、1_19 拖到位播 motion 进阶段。
+- 已知与真机的小差异:越过启动阈值瞬间骨骼小跳一下(真机为直接钉到手指,行为类似);只做位移未做旋转跟随。
+
+---
+
 ## 7. 待办(按性价比排序)
 
 0. **【2026-07-02】mix 播放语义**:前端旧代码把 `mix:[...]` 当一次触发全量串播;游戏真实语义分三种:
    drag=两阶段(`_1`=拖住,`_2`=松手回弹)、touch=逐次点击递进(clickMax/1秒连点窗口/停止播 `*_end`)、
    部分 touch=随机单段(IsPlayRandomMixAnim)。资源与 (group,id,tool) 匹配本身没错。
-   - ✅ **拖拽已修**(纯前端,dating2 三阶段全部拖拽点浏览器实测通过,详见 `CODEX_CHANGES.md` §5.5)。
+   - ✅ **拖拽已修完**(两阶段+不循环+SFX+跟手,见上方"拖拽语义与跟手复现"一节)。
    - ⬜ **touch 多段/随机待修**:需先给 `extract_dating_actions.py` 补抽
      `IsPlayRandomMixAnim`/`ContinuousClickResetTime`/`PlayMixAnimNameWhenActionStop`(+拖拽目的地 `_destinations`)
      并重生成 JSON,再改前端播放器。所有字段都在本地 bundle 里,**不需要进游戏/连设备**。
+   - ⬜ **`_destinations` 拖到目的地**(29 点,dating2 无):目的地命中后 track1 loop=true 循环播
+     `_playMotionNames[i]`(带 onComplete);需先补抽 `_destinations` 坐标再实现。
 1. **补剩余 SFX 缺口**:dating6/11/12/13/14/15/16/17/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
    不要用 `*_end` 硬 alias。
 2. **运行态确认 `mix*_0_1`**:多名角色剩下的都是阶段入口/默认动作类 `mixN_0_1`;当前 FMOD event path

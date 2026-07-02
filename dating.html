@@ -1128,6 +1128,7 @@
     let activeLongPress = null;
     let activePrefabDrag = null;
     let dragHolding = false;
+    let dragFollow = null;
     let activeGyroDrag = null;
     let activeGyroAction = null;
     let activeGyroPointKey = null;
@@ -1630,6 +1631,7 @@
             p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
           } catch (e) { /* keep straight alpha */ }
           buildStageModel(p);
+          attachDragFollowHook(p);
           const requestedStage = Number(new URLSearchParams(location.search).get("stage"));
           if (Number.isInteger(requestedStage) && stageModel.stages.has(requestedStage)) {
             currentStage = requestedStage;
@@ -2089,6 +2091,7 @@
         resetCardGame(true);
         restoringIdle = true;
         dragHolding = false;
+        stopDragFollow();
         advanceTargetStage = null;
         advanceLastMotion = null;
         activeInteractionVoiceKey = null;
@@ -2472,8 +2475,10 @@
         drag.engaged = true;
         drag.engagedAt = performance.now();
         playDragBegin(drag.action, drag.pointKey);
+        startDragFollow(drag.pointKey);
         return;
       }
+      moveDragFollow(dx, dy);
       if (!drag.resolved && shouldResolvePrefabDrag(drag, distance)) {
         drag.resolved = true;
         playDragSuccess(drag.action, drag.pointKey);
@@ -2487,6 +2492,7 @@
       const { action, pointKey, engaged, resolved } = drag;
       releasePrefabDragPointer(drag);
       activePrefabDrag = null;
+      stopDragFollow();
       if (engaged && !resolved) playDragRelease(action, pointKey);
     }
 
@@ -2494,12 +2500,14 @@
       const drag = activePrefabDrag;
       if (!drag) {
         if (dragHolding) { dragHolding = false; clearDragOverlay(); }
+        stopDragFollow();
         return;
       }
       if (event && event.pointerId !== drag.pointerId) return;
       const engaged = drag.engaged;
       releasePrefabDragPointer(drag);
       activePrefabDrag = null;
+      stopDragFollow();
       if (engaged && dragHolding) { dragHolding = false; clearDragOverlay(); }
     }
 
@@ -2510,6 +2518,64 @@
           drag.element.releasePointerCapture(drag.pointerId);
         }
       } catch (e) { /* element may already be detached */ }
+    }
+
+    // 真机 OnDrag 里 set_position 移动点位 GO，点位骨骼(SkeletonUtilityBone mode=Override,
+    // boneName=GO 名去掉" [Override]")跟随 GO → 拖拽区域网格跟手变形。web 端等价实现：
+    // 拖住期间在每帧动画 apply 之后把点位骨骼钉到手指对应的 skeleton 世界坐标。
+    function attachDragFollowHook(p) {
+      const orig = p.skeleton.updateWorldTransform.bind(p.skeleton);
+      p.skeleton.updateWorldTransform = () => {
+        orig();
+        if (!dragFollow || dragFollow.skeleton !== p.skeleton) return;
+        const bone = dragFollow.bone;
+        const target = { x: dragFollow.targetWorldX, y: dragFollow.targetWorldY };
+        const local = bone.parent ? bone.parent.worldToLocal(target) : target;
+        bone.x = local.x;
+        bone.y = local.y;
+        bone.updateWorldTransform();
+      };
+    }
+
+    function startDragFollow(pointKey) {
+      if (!player?.skeleton || !currentEntry || !pointKey) return;
+      const zone = prefabHotzone(currentEntry.id, pointKey);
+      const boneName = zone?.source?.replace(" [Override]", "");
+      const bone = boneName ? player.skeleton.findBone(boneName) : null;
+      const canvas = player.canvas;
+      const viewport = player.viewport;
+      if (!bone || !canvas || !viewport?.width || !viewport?.height) return;
+      const rect = canvas.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const zoom = canvas.height / canvas.width > viewport.height / viewport.width
+        ? viewport.width / canvas.width
+        : viewport.height / canvas.height;
+      dragFollow = {
+        skeleton: player.skeleton,
+        bone,
+        baseX: bone.x,
+        baseY: bone.y,
+        targetWorldX: bone.worldX,
+        targetWorldY: bone.worldY,
+        baseWorldX: bone.worldX,
+        baseWorldY: bone.worldY,
+        pxToWorldX: canvas.width / rect.width * zoom,
+        pxToWorldY: canvas.height / rect.height * zoom,
+      };
+    }
+
+    function moveDragFollow(dxPx, dyPx) {
+      if (!dragFollow) return;
+      dragFollow.targetWorldX = dragFollow.baseWorldX + dxPx * dragFollow.pxToWorldX;
+      dragFollow.targetWorldY = dragFollow.baseWorldY - dyPx * dragFollow.pxToWorldY;
+    }
+
+    function stopDragFollow() {
+      if (!dragFollow) return;
+      const { bone, baseX, baseY } = dragFollow;
+      bone.x = baseX;
+      bone.y = baseY;
+      dragFollow = null;
     }
 
     function shouldResolvePrefabDrag(drag, distance) {
@@ -2548,9 +2614,9 @@
         }
         if (first) {
           player.animationState.data.defaultMix = 0.08;
-          // 真机 drag 处理器(0x780C1C0)是 SetSpineAnimationExternal(mix[i], track=1, loop=true)：
-          // 拖住期间 mix_1 循环(多为 0.1-0.17s 的颤抖小循环)，不是停末帧。
-          player.animationState.setAnimation(1, first, true);
+          // 真机 mix 播放入口(0x7804FA4)是 SetSpineAnimationExternal(name, track=1, loop=false, onComplete)：
+          // 不循环。loop=true 只出现在拖到 _destinations 目的地后播 _playMotionNames 的路径(0x780C408)。
+          player.animationState.setAnimation(1, first, false);
           player.play();
           if (currentEntry) datingAudio.playAnimation(currentEntry.id, first);
         }
@@ -2562,6 +2628,7 @@
       if (!player || !action) return;
       try {
         dragHolding = false;
+        stopDragFollow();
         const motions = (action.motions || []).filter(animationExists);
         const targetStage = resolveActionNextStage(action);
         advanceTargetStage = targetStage;
