@@ -268,6 +268,13 @@ Char000396(dating18)=112
 
 ## 7. 待办(按性价比排序)
 
+0. **【2026-07-02】mix 播放语义**:前端旧代码把 `mix:[...]` 当一次触发全量串播;游戏真实语义分三种:
+   drag=两阶段(`_1`=拖住,`_2`=松手回弹)、touch=逐次点击递进(clickMax/1秒连点窗口/停止播 `*_end`)、
+   部分 touch=随机单段(IsPlayRandomMixAnim)。资源与 (group,id,tool) 匹配本身没错。
+   - ✅ **拖拽已修**(纯前端,dating2 三阶段全部拖拽点浏览器实测通过,详见 `CODEX_CHANGES.md` §5.5)。
+   - ⬜ **touch 多段/随机待修**:需先给 `extract_dating_actions.py` 补抽
+     `IsPlayRandomMixAnim`/`ContinuousClickResetTime`/`PlayMixAnimNameWhenActionStop`(+拖拽目的地 `_destinations`)
+     并重生成 JSON,再改前端播放器。所有字段都在本地 bundle 里,**不需要进游戏/连设备**。
 1. **补剩余 SFX 缺口**:dating6/11/12/13/14/15/16/17/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
    不要用 `*_end` 硬 alias。
 2. **运行态确认 `mix*_0_1`**:多名角色剩下的都是阶段入口/默认动作类 `mixN_0_1`;当前 FMOD event path

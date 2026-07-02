@@ -1127,6 +1127,7 @@
     let advanceTimer = null;
     let activeLongPress = null;
     let activePrefabDrag = null;
+    let dragHolding = false;
     let activeGyroDrag = null;
     let activeGyroAction = null;
     let activeGyroPointKey = null;
@@ -1645,6 +1646,7 @@
         },
       };
       player = new spine.SpinePlayer("stage", config);
+      if (datingAudio.debug) window.__player = player;
     }
 
     function buildStageModel(p) {
@@ -2086,6 +2088,7 @@
       try {
         resetCardGame(true);
         restoringIdle = true;
+        dragHolding = false;
         advanceTargetStage = null;
         advanceLastMotion = null;
         activeInteractionVoiceKey = null;
@@ -2386,7 +2389,7 @@
         } else if (item.action.kind === "drag") {
           b.addEventListener("pointerdown", event => beginPrefabDrag(item.action, b, event, item.key));
           b.addEventListener("pointermove", event => movePrefabDrag(event));
-          b.addEventListener("pointerup", event => cancelPrefabDrag(event));
+          b.addEventListener("pointerup", event => endPrefabDrag(event));
           b.addEventListener("pointercancel", event => cancelPrefabDrag(event));
           b.addEventListener("click", event => event.preventDefault());
         } else if (item.action.gyro?.actionType === 1) {
@@ -2438,45 +2441,166 @@
       } catch (e) { /* pointer capture is optional */ }
       element.classList.add("holding");
       const rect = element.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const threshold = Math.max(10, Math.min(28, size * 0.08));
       activePrefabDrag = {
         action,
         element,
         pointKey,
+        engaged: false,
+        resolved: false,
+        engagedAt: 0,
         pointerId: event.pointerId,
         startX: event.clientX,
         startY: event.clientY,
-        threshold: Math.max(32, Math.min(96, Math.max(rect.width, rect.height) * 0.22)),
+        threshold,
+        successThreshold: Math.max(threshold * 2.4, Math.min(150, Math.max(48, size * 0.36))),
       };
     }
 
+    // 对照真机 SpineInteractionPoint: OnBeginDrag 在 track 1 播 mix_1;
+    // 拖动过程中命中后立刻在 track 0 播 motion 并推进阶段,松手本身不触发成功。
     function movePrefabDrag(event) {
       const drag = activePrefabDrag;
       if (!drag || event.pointerId !== drag.pointerId) return;
       event.preventDefault();
       const dx = event.clientX - drag.startX;
       const dy = event.clientY - drag.startY;
-      if (Math.hypot(dx, dy) < drag.threshold) return;
+      const distance = Math.hypot(dx, dy);
+      if (!drag.engaged) {
+        if (distance < drag.threshold) return;
+        drag.engaged = true;
+        drag.engagedAt = performance.now();
+        playDragBegin(drag.action, drag.pointKey);
+        return;
+      }
+      if (!drag.resolved && shouldResolvePrefabDrag(drag, distance)) {
+        drag.resolved = true;
+        playDragSuccess(drag.action, drag.pointKey);
+      }
+    }
+
+    function endPrefabDrag(event) {
+      const drag = activePrefabDrag;
+      if (!drag) return;
+      if (event && event.pointerId !== drag.pointerId) return;
+      const { action, pointKey, engaged, resolved } = drag;
+      releasePrefabDragPointer(drag);
       activePrefabDrag = null;
-      drag.element.classList.remove("holding");
-      try {
-        if (drag.element.hasPointerCapture(drag.pointerId)) {
-          drag.element.releasePointerCapture(drag.pointerId);
-        }
-      } catch (e) { /* element may already be detached */ }
-      playPrefabAction(drag.action, null, drag.pointKey);
+      if (engaged && !resolved) playDragRelease(action, pointKey);
     }
 
     function cancelPrefabDrag(event) {
       const drag = activePrefabDrag;
-      if (!drag) return;
+      if (!drag) {
+        if (dragHolding) { dragHolding = false; clearDragOverlay(); }
+        return;
+      }
       if (event && event.pointerId !== drag.pointerId) return;
+      const engaged = drag.engaged;
+      releasePrefabDragPointer(drag);
       activePrefabDrag = null;
+      if (engaged && dragHolding) { dragHolding = false; clearDragOverlay(); }
+    }
+
+    function releasePrefabDragPointer(drag) {
       drag.element.classList.remove("holding");
       try {
         if (drag.element.hasPointerCapture(drag.pointerId)) {
           drag.element.releasePointerCapture(drag.pointerId);
         }
       } catch (e) { /* element may already be detached */ }
+    }
+
+    function shouldResolvePrefabDrag(drag, distance) {
+      const action = drag.action;
+      if (!action) return false;
+      const hasSuccessMotion = (action.motions || []).some(animationExists);
+      const hasStageAdvance = !!resolveActionNextStage(action);
+      if (!hasSuccessMotion && !hasStageAdvance) return false;
+      return distance >= drag.successThreshold && performance.now() - drag.engagedAt >= 120;
+    }
+
+    function clearDragOverlay(mix = 0.12) {
+      if (!player) return;
+      try {
+        player.animationState.setEmptyAnimation(1, mix);
+        player.play();
+      } catch (e) { /* best-effort cleanup */ }
+    }
+
+    function playDragBegin(action, pointKey = null) {
+      if (!player || !action) return;
+      try {
+        if (!canPlayAction(action)) return;
+        clearError();
+        const first = (action.mix || []).filter(animationExists)[0] || null;
+        restoringIdle = false;
+        advanceTargetStage = null;
+        advanceLastMotion = null;
+        activeInteractionVoiceKey = pointKey;
+        activeInteractionMotionNames = new Set(action.motions || []);
+        clearTimeout(advanceTimer);
+        advanceTimer = null;
+        dragHolding = true;
+        if (pointKey && currentEntry) {
+          datingAudio.playInteractionVoice(currentEntry.id, pointKey, "voice");
+        }
+        if (first) {
+          player.animationState.data.defaultMix = 0.08;
+          player.animationState.setAnimation(1, first, false);
+          player.play();
+        }
+        animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+      } catch (e) { showError("播放拖拽起始失败：" + e.message); }
+    }
+
+    function playDragSuccess(action, pointKey = null) {
+      if (!player || !action) return;
+      try {
+        dragHolding = false;
+        const motions = (action.motions || []).filter(animationExists);
+        const targetStage = resolveActionNextStage(action);
+        advanceTargetStage = targetStage;
+        advanceLastMotion = motions.length ? motions[motions.length - 1] : null;
+        clearDragOverlay(0.08);
+        player.animationState.data.defaultMix = 0.12;
+        if (motions.length) {
+          player.setAnimation(motions[0], false);
+          motions.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
+          player.play();
+          const duration = motions.reduce((sum, anim) => sum + animationDuration(anim), 0);
+          if (targetStage) {
+            const delay = Math.min(9000, Math.max(1200, duration * 1000 + 300));
+            advanceTimer = setTimeout(() => {
+              if (advanceTargetStage === targetStage) enterStage(targetStage);
+            }, delay);
+          }
+        } else if (targetStage) {
+          advanceTimer = setTimeout(() => {
+            if (advanceTargetStage === targetStage) enterStage(targetStage);
+          }, 600);
+        } else {
+          playIdle();
+        }
+      } catch (e) { showError("播放拖拽成功失败：" + e.message); }
+    }
+
+    function playDragRelease(action, pointKey = null) {
+      if (!player || !action) return;
+      try {
+        dragHolding = false;
+        const releases = (action.mix || []).slice(1).filter(animationExists);
+        if (!releases.length) {
+          clearDragOverlay();
+          return;
+        }
+        player.animationState.data.defaultMix = 0.08;
+        player.animationState.setAnimation(1, releases[0], false);
+        releases.slice(1).forEach(anim => player.animationState.addAnimation(1, anim, false, 0));
+        player.animationState.addEmptyAnimation(1, 0.12, 0);
+        player.play();
+      } catch (e) { showError("播放拖拽释放失败：" + e.message); }
     }
 
     function beginGyroDrag(action, element, event, pointKey = null) {
@@ -2808,6 +2932,8 @@
         },
         complete: (track) => {
           if (!track.animation || track.trackIndex !== 0 || restoringIdle) return;
+          // 拖住阶段:mix_1 播完停在末帧,等松手,不要自动回待机。
+          if (dragHolding) return;
           const completed = track.animation.name;
           if (handleCardAnimationComplete(completed)) return;
           if (advanceLastMotion && completed !== advanceLastMotion) return;
