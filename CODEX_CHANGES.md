@@ -194,68 +194,30 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
 
 ---
 
-## 5.5 【2026-07-02】热区动画"播错/时长不对"= 播放语义，不是资源(拖拽已修)
+## 5.5 【2026-07-02】热区动画"播错/时长不对"= 播放语义，不是资源
 
-用户反馈：拖拽热区播放的动画不对、播放时长也不对，怀疑资源错或匹配机制错。
-本次静态分析（prefab 全量字段统计 × il2cpp dump 类定义 × skel 二进制动画名比对）结论：
+用户反馈拖拽热区播放动画不对、播放时长也不对，最初怀疑资源错或匹配错；静态分析和浏览器复测后结论是：
+资源与 `(group,id,tool)` 匹配基本正确，真正的问题是前端把 `mix: [...]` 当成一次触发的顺序串播。
 
-### ✅ 拖拽已修复(2026-07-02，纯前端，不需要设备/游戏数据)
+### ✅ 拖拽已修复
 
-**根因**：`dating.html` 旧的拖拽把 `mix:[_1,_2]` 在越过阈值瞬间 `setAnimation(_1)+addAnimation(_2, delay0)`
-一次串播。vendored spine `addAnimationWith` 里 `delay<=0 → delay = 上一段时长 - mixDuration`，
-而 `defaultMix=0.2` → `_2` 的 0.2s 交叉淡入在 `_1` 结束前 0.2s 就开始，短的 `_1`(实测约 0.22s)几乎被
-整段吃掉。浏览器实测：一次拖拽 `mix1_7_1` 在 t=2ms 起、`mix1_7_2` 在 t=22ms 就接管 → 只看得到回弹段。
+最新事实以 `DATING_PIPELINE.md` 的「2026-07-02 拖拽语义与跟手复现」为准：
 
-**il2cpp 证据(全静态，libil2cpp.so + cpp2il dump.cs，见 tools/il2cpp-re/annot2.py)**：
-`SpineInteractionPoint`(TypeDefIndex 5244) 实现 IBeginDragHandler/IDragHandler/IEndDragHandler；
-`SpineInteractionActionController` 的 begin-drag 处理器(0x780832C/0x780BFB0)走协程 0x7805cf4(含震动)播起始，
-`OnDrag` 内 `set_position`(follow 骨骼跟手指)，drag 事件处理器(0x780C1C0)`get_Item` 取**单个** mix 下标 +
-单次 `SetSpineAnimationExternal(name,track,loop,onComplete)`。即游戏拖拽是**两阶段手势**：
-按住/拖 = `mix_1`，松手 = `mix_2`(回弹) → 不是串播。
-**【2026-07-02 补充】** drag 处理器实参已确认 `track=1, loop=true`：按住期间 `mix_1` **循环播放**
-(全 dating2 的 `mix*_1` 除 1_19 外都只有 0.1-0.17s，是颤抖小循环，不是定格姿势)。
-最初"停末帧"的实现让第三阶段按住时全身静止(末帧姿势又和 idle 几乎一样)，观感=画面冻住，
-即 `froz_mix3_11_2.png`/`froz_idle3.png` 记录的问题；改 loop 后已消除。
+- drag 是两阶段手势：`mix_1`=拖住/拉扯，`mix_2`=松手回弹。
+- drag mix 走 track 1，idle/motion 留在 track 0。
+- begin-drag 路径是 `SetSpineAnimationExternal(name, track=1, loop=false, onComplete)`，单次播放后停在末帧。
+- `loop=true` 属于拖到 `_destinations` 后播放 `_playMotionNames[i]` 的另一条路径，不是普通拖住语义。
+- 前端已实现点位骨骼跟手：用现有热区 `source` 找同名 SkeletonUtilityBone，在每帧 apply 后覆盖骨骼坐标；松手/成功/取消时复位。
+- dating2 墨菲亚三阶段 11 已经用浏览器实测通过。
 
-**修法**(`dating.html`)：拖拽改成真正的两阶段状态机(动画走 track 1 覆盖层，idle 留在 track 0)——
-- `beginPrefabDrag` 记录手势；`movePrefabDrag` 越过小阈值(10-28px)时 `playDragBegin` 在 track 1 **循环**播 `mix[0]`
-  (对照真机 loop=true；新增 `dragHolding` 标志，complete 监听里 `if(dragHolding)return` 抑制自动回待机)，
-  **保持** pointer capture；
-- 拖拽动画在 track 1 上播不经过 track 0 的 start 监听，SFX 由 `playDragBegin`/`playDragRelease` 手动触发
-  `datingAudio.playAnimation`；
-- 继续拖动、距离达 `successThreshold`(≥48px 且 engage 后 ≥120ms，且该点有 motion 或 nextStage)时
-  `playDragSuccess` **立即**在 track 0 播 motions 并推进阶段——对照真机语义：拖动中命中即成功，松手本身不触发成功；
-- `endPrefabDrag`(pointerup) → 若已 engage 且未 success，`playDragRelease` 在 track 1 播 `mix[1..]` 后 empty 淡出(回弹)；
-- `cancelPrefabDrag`(pointercancel/re-render) 纯清理，若还停在拖住姿势则清 track 1 覆盖层避免卡住。
+### 🟡 本轮初步落地：touch 多段/随机
 
-**浏览器实测(dating2 墨菲亚三阶段全部拖拽点)全部通过**：
-`1_7_0/1_12_0/2_6_0/2_11_0/3_3_0/3_11_0` 标准两段(按住 `_1`→松手 `_2` 回弹→idle，时长随按住时长)、
-`1_19_0`(拖到成功距离→`motion1_19`→进阶段2)、`2_22_0`(空 mix，拖到成功距离→`motion2_22`→进阶段3)、
-`3_6_0`(单 mix，按住 `_1`→松手 idle，无多余段)。回归：普通 touch 单段不变；未越阈值的点按不误触发；
-pointercancel 不卡姿势。**没有改热区坐标、没有改 key 方案、没有改抽取数据。**
-
-**已知观感残留(见 §5.5.2)**：`mix_1` 普遍只有 0.1-0.17s 且全身键，停末帧会把 track 0 idle 整个压住，
-按住期间角色完全静止；三阶段末帧姿势与 idle 差异小(闭眼)，观感像"拖了没反应/冻住"。
-
-### §5.5.2 ⬜ 拖住期间"冻住"观感(2026-07-02 复现定位，待修)
-
-用户报 dating2 三阶段拖拽"冻住"。playwright 复现(`3_11_0` 真实指针拖拽+轨道采样)确认**不是**状态机死锁：
-按住 `mix3_11_1`(track1)、松手 `mix3_11_2`、之后干净回 `idle3` 循环，播放器不暂停。
-真正原因：dating2 全部拖拽点 `mix_1` 时长 0.1-0.17s(唯 `1_19` 1.33s)且带 400+ 条全身 timeline，
-非循环停末帧后 track 1 把 track 0 idle(呼吸等)整个压住 → 按住期间角色雕像化。
-二阶段 `2_11` 末帧姿势差异大(侧躺)看着像刻意保持；三阶段末帧≈idle(只闭眼) → 观感"没反应/冻住"
-(仓库根目录 `froz_mix3_11_2.png` 与 `froz_idle3.png` 逐像素相同即此证据)。
-修向：0.1-0.17s 全身动画更像按住期间的循环小动作，应 loop 播 `mix_1` 而非停末帧；
-`SetSpineAnimationExternal(name,track,loop,onComplete)` 在 begin-drag 路径的 loop 实参待从 il2cpp/设备确认。
-另：真机 `OnDrag` 有 `set_position` 跟手位移，web 版未实现，也是观感差距的一部分。
-连带发现：`start` 监听只处理 track 0，拖拽动画挪到 track 1 后 `mix_1/_2` 的逐动画 SFX 不再触发(回归)。
-
-### ⬜ 仍未修：touch 多段/随机(同一串播 bug 的另一面，需先补抽字段)
-
-- touch + `ClickMaxCount=N`(约 260 点)：应"逐次点击递进"，前端仍一次串播全部(最坏 dating9 `2_16_10` 一击 24 段)。
-- touch + `IsPlayRandomMixAnim=1`(约 18 点)：应随机单段。
-- 这两类要先给 `extract_dating_actions.py` 补抽 `IsPlayRandomMixAnim`/`ContinuousClickResetTime`/
-  `PlayMixAnimNameWhenActionStop` 字段并重生成 JSON，再改前端播放器。属独立后续项(见 §6)。
+- `extract_dating_actions.py` 已补抽 `IsPlayRandomMixAnim`、`ContinuousClickResetTime`、`PlayMixAnimNameWhenActionStop`，
+  输出为 `randomMix`、`clickReset`、`stopMix`。
+- `dating.html` 已改为 touch 单次点击只播一段 mix；`clickMax` 在重置窗口内递进，停止连点后播 `stopMix`；
+  `randomMix` 随机挑一段播放。
+- 数据审计确认：除新增字段外，`data/dating_actions.json` 原有动作数据完全一致；新增字段覆盖 283 个 action。
+- 待做：浏览器逐角色抽样复核手感后，再把 `DATING_PIPELINE.md` 里的 touch 项标成完成。
 
 ---
 

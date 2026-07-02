@@ -1129,6 +1129,8 @@
     let activePrefabDrag = null;
     let dragHolding = false;
     let dragFollow = null;
+    let touchStopTimer = null;
+    let touchStopToken = 0;
     let activeGyroDrag = null;
     let activeGyroAction = null;
     let activeGyroPointKey = null;
@@ -1588,6 +1590,7 @@
       cancelLongPress(false);
       cancelPrefabDrag();
       cancelGyroDrag();
+      cancelTouchStop();
       stage.innerHTML = "";
       hotzoneLayer.innerHTML = "";
       animList.innerHTML = '<div class="sub-label">互动模式</div><button class="item disabled">加载中...</button>';
@@ -1993,6 +1996,7 @@
       try {
         if (!canPlayAction(action)) return;
         clearError();
+        cancelTouchStop();
         const playbackAction = prepareActionPlayback(action, pointKey);
         const targetStage = resolveActionNextStage(playbackAction);
         restoringIdle = false;
@@ -2033,6 +2037,7 @@
             if (advanceTargetStage === targetStage) enterStage(targetStage);
           }, delay);
         }
+        scheduleTouchStop(playbackAction, pointKey);
       } catch (e) { showError("播放 prefab 互动失败：" + e.message); }
     }
 
@@ -2045,20 +2050,71 @@
     }
 
     function prepareActionPlayback(action, pointKey) {
-      const isGatedAction = action.clickMax && (action.progressiveMix || action.nextStage || action.setFlag);
-      if (!isGatedAction) return action;
+      if (action.kind !== "touch") return action;
+      if (action.randomMix && !action.clickMax) {
+        const mix = randomMixChoice(action.mix || []);
+        return mix ? { ...action, mix: [mix] } : action;
+      }
+      if (!action.clickMax) return action;
       const progressKey = action.progressKey || `${currentEntry?.id || "entry"}:${pointKey || action.label || "action"}:progress`;
-      const previous = interactionState[progressKey] || 0;
-      const next = Math.min(previous + 1, action.clickMax);
-      const mixIndex = Math.min(next - 1, Math.max(0, (action.mix || []).length - 1));
-      interactionState = { ...interactionState, [progressKey]: next };
+      const now = performance.now();
+      const resetMs = Math.max(100, (Number(action.clickReset) || 1) * 1000);
+      const previousState = interactionState[progressKey];
+      const previousCount = previousState && typeof previousState === "object" && now - previousState.at <= resetMs
+        ? previousState.count || 0
+        : 0;
+      const next = Math.min(previousCount + 1, action.clickMax);
+      const complete = next >= action.clickMax;
+      const mix = action.randomMix
+        ? randomMixChoice(action.mix || [])
+        : (action.mix || [])[Math.min(next - 1, Math.max(0, (action.mix || []).length - 1))];
+      interactionState = { ...interactionState, [progressKey]: { count: next, at: now } };
       return {
         ...action,
-        mix: action.mix?.length ? [action.mix[mixIndex]] : action.mix,
-        motions: next >= action.clickMax ? action.motions : [],
-        nextStage: next >= action.clickMax ? action.nextStage : null,
-        setFlag: next >= action.clickMax ? action.setFlag : null,
+        mix: mix ? [mix] : [],
+        motions: complete ? action.motions : [],
+        nextStage: complete ? action.nextStage : null,
+        setFlag: complete ? action.setFlag : null,
+        _touchProgressKey: progressKey,
+        _touchCompleted: complete,
+        _touchResetMs: resetMs,
       };
+    }
+
+    function randomMixChoice(mixes) {
+      const available = (mixes || []).filter(animationExists);
+      return available.length ? available[Math.floor(Math.random() * available.length)] : null;
+    }
+
+    function scheduleTouchStop(action, pointKey = null) {
+      const stopMix = action?.stopMix;
+      if (!stopMix || action._touchCompleted || !animationExists(stopMix)) return;
+      const token = ++touchStopToken;
+      const resetMs = action._touchResetMs || Math.max(100, (Number(action.clickReset) || 1) * 1000);
+      touchStopTimer = setTimeout(() => {
+        if (token !== touchStopToken || !player) return;
+        touchStopTimer = null;
+        if (action._touchProgressKey) {
+          interactionState = { ...interactionState };
+          delete interactionState[action._touchProgressKey];
+        }
+        try {
+          restoringIdle = false;
+          advanceTargetStage = null;
+          advanceLastMotion = stopMix;
+          activeInteractionVoiceKey = pointKey;
+          activeInteractionMotionNames = new Set();
+          player.animationState.data.defaultMix = 0.12;
+          player.setAnimation(stopMix, false);
+          player.play();
+        } catch (e) { showError("播放触摸收尾失败：" + e.message); }
+      }, resetMs);
+    }
+
+    function cancelTouchStop() {
+      touchStopToken++;
+      clearTimeout(touchStopTimer);
+      touchStopTimer = null;
     }
 
     function canPlayAction(action) {
@@ -2089,6 +2145,7 @@
       if (!idle) return;
       try {
         resetCardGame(true);
+        cancelTouchStop();
         restoringIdle = true;
         dragHolding = false;
         stopDragFollow();
@@ -3021,6 +3078,7 @@
           if (completed === advanceLastMotion) {
             advanceLastMotion = null;
           }
+          if (touchStopTimer) return;
           if (!advanceTargetStage) playIdle();
         },
       });

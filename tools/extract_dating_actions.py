@@ -145,6 +145,14 @@ def main():
         click_max = int(data.get("ClickMaxCount") or 0)
         if click_max:
             action["clickMax"] = click_max
+            reset = float(data.get("ContinuousClickResetTime") or 0)
+            if reset:
+                action["clickReset"] = reset
+        if data.get("IsPlayRandomMixAnim"):
+            action["randomMix"] = True
+        stop_mix = data.get("PlayMixAnimNameWhenActionStop") or ""
+        if stop_mix:
+            action["stopMix"] = stop_mix
         if "hidden" in name.lower():
             action["hidden"] = True
 

@@ -305,6 +305,9 @@ Char000396(dating18)=112
    - ⬜ **touch 多段/随机待修**:需先给 `extract_dating_actions.py` 补抽
      `IsPlayRandomMixAnim`/`ContinuousClickResetTime`/`PlayMixAnimNameWhenActionStop`(+拖拽目的地 `_destinations`)
      并重生成 JSON,再改前端播放器。所有字段都在本地 bundle 里,**不需要进游戏/连设备**。
+     2026-07-02 已开始落地:提取器已输出 `randomMix`/`clickReset`/`stopMix`,前端 touch 已改为
+     单次点击只播一段 mix;`clickMax` 在重置窗口内递进,停止连点后播 `stopMix`;`randomMix` 随机选一段。
+     仍需浏览器逐角色抽样复核手感后再标完成。
    - ⬜ **`_destinations` 拖到目的地**(29 点,dating2 无):目的地命中后 track1 loop=true 循环播
      `_playMotionNames[i]`(带 onComplete);需先补抽 `_destinations` 坐标再实现。
 1. **补剩余 SFX 缺口**:dating6/11/12/13/14/15/16/17/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
