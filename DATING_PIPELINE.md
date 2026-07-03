@@ -151,23 +151,23 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 |---|---|---|---|---|---|---|---|
 | 1 | 内布利斯 | ✅ | ✅ | ✅ | ✅ | ✅ | — |
 | 2 | 墨菲亚 | ✅ | ✅ | ✅ | ✅ | ✅ | — |
-| 3 | 罗安 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺1) | ✅ | — |
+| 3 | 罗安 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
 | 4 | 泰瑞丝 | ✅ | ✅ | ✅ | ✅ | ✅ | — |
-| 5 | 爱丽洁 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺3) | ✅ | — |
-| 6 | 威廉明娜 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺7) | 🟡(缺4) | — |
+| 5 | 爱丽洁 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
+| 6 | 威廉明娜 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺4) | — |
 | 7 | 悠丝缇亚★ | ✅ | ✅ | ✅ | ⬜(非心契) | ✅ | — |
-| 8 | 席比雅 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺7) | ✅ | — |
+| 8 | 席比雅 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
 | 9 | 奶牛泰瑞丝★ | ✅ | ✅ | ✅ | ⬜(非心契) | ✅ | — |
-| 10 | 安洁莉卡 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺1) | ✅ | — |
-| 11 | 伊柯利普斯 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺2) | 🟡(缺2) | — |
+| 10 | 安洁莉卡 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
+| 11 | 伊柯利普斯 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺2) | — |
 | 12 | 杰尼斯★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺4) | — |
-| 13 | 提尔 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺9) | 🟡(缺3) | — |
+| 13 | 提尔 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺3) | — |
 | 14 | 黎维塔★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺2) | — |
-| 15 | 班塔纳 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺12) | 🟡(缺3) | — |
+| 15 | 班塔纳 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺3) | — |
 | 16 | 奥利维耶 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺2) | ✅(2026-07-03) |
-| 17 | 帕莱特 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺20) | 🟡(缺2) | — |
+| 17 | 帕莱特 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺2) | — |
 | 18 | 莎拉★ | ✅ | ⬜ | ✅ | —(非心契) | ✅ | ✅ |
-| 19 | 格兰希特 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺10) | 🟡(缺2) | — |
+| 19 | 格兰希特 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺2) | — |
 
 注:18 莎拉仍保留前端手写特殊热区/动作逻辑,未写入 `dating_actions/hotzones.json`。
 
@@ -348,25 +348,35 @@ Char000396(dating18)=112
 5. ✅ **心契点→语音 键不一致 bug 已修**(见第 6 节):`dating.html` `scheduleInteractionVoice` 加 (stage,id) 兜底,
    14 角色可修复集残留全 0,浏览器实测通过。**未改数据**。
 
-6. **【设备侧】补第三类 mix/special 互动语音**(残留 78 条缺失 voice 引用/72 个点;A 类可能不需设备,B 类需连 S25):
-   - 母表引用了 `Char*_Int_Special*` / `Char*_Int_Mix*` 互动语音(Voices 命名空间,tsv 有 `..._KR` 事件路径),
-     但当年 `extract_dating_audio.py` 没抽出来(OGG 未解码、json 未登记 event)。
-   - 残留现状(2026-07-03 复算,#16 已本地清零):**缺 voice 引用 94→78 条**,按角色(引用条数口径):
-     3=1,5=3,6=7,8=7,10=1,11=2,13=15,15=12,17=20,19=10;另有 **6 个点缺 motion 语音**(4=1,8=2,13=2,19=1,
-     旧统计漏算)。**先照 #16 的教训用总表 tsv 重解本地已有 bank 再下"要连设备"的结论**。
-   - ⚠️ 2026-07-03 新线索:**17 号(char004202 帕莱特)母表引用的缺失语音全是 `Char004102_Int_Mix*`
-     (= dating13 提尔的 charId)**,跨角色引用——这大概率就是 17 号 audit `no-stdt-region` 异常的真因,
-     补抽时先确认是游戏数据本来如此还是母表抓取串号。
-   - **A 类·在角色自己 bank(重跑补抽即可)**:据 `interaction_voice_audit.tsv` 片段确认——
-     3/5/6(special)、10(mix)、11/13(special)、15(special+mix)的目标样例就在各自
-     `interaction_charXXXXXX.bytes`。步骤:adb pull 该角色 interaction voice bundle → `extract_dating_audio.py`
-     带完整 `voice_event_paths/CharXXXXXX.tsv`(注意 `Char003203.tsv` 当前为空,得重导)→ 补 events/OGG。
-   - **B 类·宿主 bank 待查(先反查再抽)**:8/19 的 mix/special 在自己 bank 的 audit 片段里=✗;
-     17 号 audit 是 `no-stdt-region`/0 片段(异常)。需上设备用 tsv 里对应 event GUID 反查真正宿主 bank,
-     不要猜。这 3 个(8/17/19)在定位前不要硬接。(16 原也在此列,实测其 audit ✗ 是误判——
-     mix 事件本就不带自己的 sample 片段,只引用情绪 sample;8/17/19 建议先同法本地重验。)
-   - 本地只有 dating1(char003303)的原始 bank,其余都要从设备拉;这是本任务的前置门槛。
-   - 完成后前端无需再改:兜底逻辑会自动让新登记的 (stage,id) 语音生效。
+6. ✅ **补第三类 mix/special 互动语音 —— 已全部完成(2026-07-03),全库残留归零**:
+   - **实施**:①`apply_dating_interaction_voice_actions.py` 的 `short_voice_name` 补了与 extract
+     `normalize_action_name` 一致的大小写规范;②两个工具 + `audit_dating_audio_integrity.py` 增加
+     `--char-alias`/`KNOWN_PATH_ALIASES`(仅 char004202→char004102);③11 个角色(3/4/5/6/8/10/11/13/15/17/19)
+     按 TODO 4 的两条命令重跑(extract 带 `--expect-events/--expect-samples` 断言,apply 带
+     `--hotzones-json`;17 号加 `--char-alias char004102`)。
+   - **核验**:11 角色事件独立重建逐字段一致;samples/sfx/bank 元数据零变化;非目标角色零变化;
+     (stage,id) 级旧语音零回退(键方案因 hotzones 版本演进有变,前端 (stage,id) 兜底吃掉差异);
+     全库第三类残留 voice 引用 78→**0**、缺 motion 点 6→**0**;audit `manifestPathIssues=0`;
+     浏览器实测:19 号旧点回归 ✅ + 翻转点 `2_16_0`(此前"正确静音")现按 timeline 出声
+     `Embarrass1@0s→Embarrass3@1.5s` ✅;17 号别名事件 `mix1_17_1` 9 个触发点逐秒吻合 ✅;
+     11 号 `Special1` 三段(`Smile1@0→Satisfy1@2.66→Touch1@4.0`)✅;无报错。
+   - 下面保留 2026-07-03 彻查时的诊断记录(旧 A/B 分类作废的依据):
+   - **逐 bank 实测结论(用 extract 的 parse_fev + 总表 tsv 交叉,11 个角色全验)**:
+     78 条缺失引用对应的 `Special*`/`Mix*`/`Motion*`/`OilSpread*` KR 事件,**100% 在各角色自己的本地
+     bank 里且 timeline 可播,且只引用已解码的情绪 sample(需新解 OGG = 0)**。与 #16 完全同构。
+   - **作废的旧结论**:①"本地只有 dating1 的 bank"是错的——`local_device_cache/dating_build/charXXXXXX/`
+     里 14 个母表角色 bank+fsb 齐全(缺 bank 的只有 000296/001197/003892/061492 四个无母表尊爵);
+     ②"8/17/19 不在自己 bank(audit ✗)"是错的——audit 查的是自有 sample 片段,而这类事件本就只引用
+     情绪 sample;③17 号之谜已解:**char004202 自己的 bank 里就有一批 `Char004102_Int_*` 命名的事件**
+     (游戏数据本身如此,疑为从提尔项目复制),母表引用与 bank 命名一致,samples 在 17 自己的 fsb 里。
+   - **当年没抽出来的根因(基础问题,三层)**:①per-char tsv 空/不全 → 用 `--infer-event-paths-from-samples`
+     反推,Mix/Special 事件(引用情绪 sample)被误标成情绪名、与真情绪事件互撞(#16 同款,全库性);
+     ②大小写不匹配:`extract` 的 `normalize_action_name` 把事件名规范成小写 `mix*/motion*`,但
+     `apply_dating_interaction_voice_actions.py` 拿 raw log 的原名(大写 `Mix3_25_1`)对 events 键匹配,
+     必然落空(影响 8/10/13/15/17/19);③17 的 `Char004102_Int_` 前缀在两个工具的
+     `short_event_name`/`short_voice_name`(按 char_id 剥前缀)下都返回 None 被丢弃。
+   - **修法**:给两个工具补大小写规范一致 + 17 号前缀别名,然后逐角色重跑 #16 那两条命令(见 TODO 4);
+     无新 OGG、前端零改动((stage,id) 兜底自动生效)。改 apply 匹配逻辑时注意别动 point key 方案。
 
 ---
 
@@ -391,6 +401,7 @@ Char000396(dating18)=112
 
 ## 修订说明
 
+- 2026-07-03(二)：TODO 6 完结——第三类 mix/special 互动语音全库归零(11 角色重跑,无新 OGG,前端零改动)。根因是三层基础问题(空 tsv 推断/extract-apply 大小写不匹配/17 号 Char004102 前缀),工具修正:apply 补大小写规范、extract/apply/audit 增 `--char-alias`(char004202→char004102)。状态矩阵"点→语音"列 14 心契全 ✅。
 - 2026-07-03：#16 奥利维耶 mix 动作语音 + 点→语音全部完成(TODO 4 完结)。纠正三处旧结论:①"16 的 mix 不在自己 bank"系 audit 误判(mix 事件只引用情绪 sample,无自有片段);②dating16 旧 events 因 `--infer-event-paths-from-samples` 存在 GUID 错标,已用总表 tsv 重跑修正;③旧"94 残留"分摊表 13=9/16=22 有误(实为 13=15/16=16),第三类残留(缺 voice 引用条数)94→78,另发现 6 个缺 motion 点为旧统计漏算、17 号母表跨角色引用 Char004102 的新线索(见第 6/7 节)。仅改 `data/dating_audio.json`,前端零改动。
 - 2026-07-01：将 `Visual_Novel_SFX` 对 `dating13/14/19` 的确认结果合并进第 6 节状态与音频审计表；尾部只保留本修订说明，详细流水记录见 `CODEX_CHANGES.md`。
 - 2026-07-01：补入 `dating15/16/17` 的外部热区/动作 JSON 与 `Visual_Novel_SFX` 结果；`dating18` 继续保留手写特殊逻辑。

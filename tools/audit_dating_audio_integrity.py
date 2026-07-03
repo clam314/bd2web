@@ -55,6 +55,15 @@ def extract_char_id(path: str) -> str | None:
     return canonical_char_id(match.group(0)) if match else None
 
 
+# 已实证的跨 charId 命名别名(游戏数据本身如此,不是串号):
+# char004202(帕莱特/dating17)自己的 interaction bank 里,mix 动作语音事件全部
+# 命名为 Char004102_Int_*(疑似从提尔项目复制),samples 在 char004202 自己的
+# fsb 内(bank/fsb sha256 与 manifest 记录一致)。2026-07-03 逐事件验证。
+KNOWN_PATH_ALIASES: dict[str, set[str]] = {
+    "char004202": {"char004102"},
+}
+
+
 def load_json(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
@@ -155,7 +164,11 @@ def manifest_path_issues(dating_id: str, char_id: str, character: dict) -> list[
                 continue
             path = value.get("path", "")
             path_char = extract_char_id(path)
-            if path and path_char != char_id:
+            if (
+                path
+                and path_char != char_id
+                and path_char not in KNOWN_PATH_ALIASES.get(char_id, set())
+            ):
                 issues.append(f"{label}.{name} path char={path_char} != {char_id}")
     sfx_actions = character.get("sfx", {}).get("actions", {})
     sfx_events = character.get("sfx", {}).get("events", {})

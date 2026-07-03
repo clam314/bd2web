@@ -421,13 +421,23 @@ def decode_ogg(
             )
 
 
-def short_event_name(event_path: str, char_id: str, language: str) -> str | None:
-    prefix = f"{char_id.capitalize()}_Int_"
+def short_event_name(
+    event_path: str,
+    char_id: str,
+    language: str,
+    char_aliases: tuple[str, ...] = (),
+) -> str | None:
+    # char_aliases：个别角色的 bank 内事件用了别的 charId 前缀
+    # （char004202 帕莱特的 mix 事件命名为 Char004102_Int_*，samples 在她自己的 fsb 里）。
     suffix = f"_{language}"
     basename = event_path.rsplit("/", 1)[-1]
-    if not basename.startswith(prefix) or not basename.endswith(suffix):
+    if not basename.endswith(suffix):
         return None
-    return basename[len(prefix) : -len(suffix)]
+    for accepted in (char_id, *char_aliases):
+        prefix = f"{accepted.capitalize()}_Int_"
+        if basename.startswith(prefix):
+            return basename[len(prefix) : -len(suffix)]
+    return None
 
 
 def short_event_name_from_sample(sample_name: str, char_id: str) -> str | None:
@@ -473,6 +483,7 @@ def build_character_data(
     infer_event_paths_from_samples: bool = False,
     expect_events: int | None = None,
     expect_samples: int | None = None,
+    char_aliases: tuple[str, ...] = (),
 ) -> dict:
     samples = {}
     events = {}
@@ -484,7 +495,7 @@ def build_character_data(
     for event_guid, timeline_guid in graph["events"].items():
         event_path = paths.get(event_guid)
         if event_path and event_path.endswith(f"_{language}"):
-            name = short_event_name(event_path, char_id, language)
+            name = short_event_name(event_path, char_id, language, char_aliases)
             if name is None:
                 continue
         elif infer_event_paths_from_samples:
@@ -615,6 +626,13 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("--dating-id", required=True, help="例如 illust_dating18")
     parser.add_argument("--char-id", required=True, help="例如 char000396")
+    parser.add_argument(
+        "--char-alias",
+        action="append",
+        default=[],
+        help="额外接受的事件路径 charId 前缀(可多次)。"
+        "目前仅 char004202 需要 --char-alias char004102。",
+    )
     parser.add_argument("--source-version", required=True)
     parser.add_argument(
         "--language",
@@ -690,6 +708,7 @@ def main():
         infer_event_paths_from_samples=args.infer_event_paths_from_samples,
         expect_events=args.expect_events,
         expect_samples=args.expect_samples,
+        char_aliases=tuple(args.char_alias),
     )
 
     output = args.output_data.resolve()

@@ -22,15 +22,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 
 
-def short_voice_name(path: str, char_id: str) -> str | None:
-    prefix = f"{char_id.capitalize()}_Int_"
+def short_voice_name(
+    path: str, char_id: str, char_aliases: tuple[str, ...] = ()
+) -> str | None:
+    # 与 extract_dating_audio.normalize_action_name 保持一致：母表里的动作语音
+    # 引用是大写前缀(Mix3_25_1/Motion1_35)，而 manifest events 键是规范化的小写
+    # (mix3_25_1/motion1_35)，不规范化会永远匹配不上。
+    # char_aliases 同 extract 的 --char-alias(char004202 引用 Char004102_Int_*)。
     name = path.rsplit("/", 1)[-1]
-    if not name.startswith(prefix):
-        return None
-    return name[len(prefix) :]
+    for accepted in (char_id, *char_aliases):
+        prefix = f"{accepted.capitalize()}_Int_"
+        if name.startswith(prefix):
+            short = name[len(prefix) :]
+            return re.sub(r"^(Mix|Motion)", lambda m: m.group(1).lower(), short)
+    return None
 
 
-def parse_raw_log(path: Path, gid: int, char_id: str):
+def parse_raw_log(path: Path, gid: int, char_id: str, char_aliases: tuple[str, ...] = ()):
     rx = re.compile(
         r"^gid=(\d+) ig=(\d+) g=(-?\d+) id=(\d+) "
         r"VOICE=\[(.*?)\] MOTION=\[(.*?)\]$"
@@ -47,14 +55,14 @@ def parse_raw_log(path: Path, gid: int, char_id: str):
             short
             for item in voice_raw.split("|")
             if item
-            for short in [short_voice_name(item, char_id)]
+            for short in [short_voice_name(item, char_id, char_aliases)]
             if short
         ]
         motion = [
             short
             for item in motion_raw.split("|")
             if item
-            for short in [short_voice_name(item, char_id)]
+            for short in [short_voice_name(item, char_id, char_aliases)]
             if short
         ]
         rows[(int(group_id), int(point_id))] = {"voice": voice, "motion": motion}
@@ -65,6 +73,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--dating-id", required=True, help="例如 illust_dating1")
     parser.add_argument("--char-id", required=True, help="例如 char003303")
+    parser.add_argument(
+        "--char-alias",
+        action="append",
+        default=[],
+        help="额外接受的语音路径 charId 前缀(同 extract_dating_audio 的 --char-alias)。",
+    )
     parser.add_argument("--gid", type=int, required=True)
     parser.add_argument(
         "--legacy-animation-actions",
@@ -92,7 +106,7 @@ def main():
     character = doc["characters"][args.dating_id]
     events = set(character.get("events", {}))
     sfx_actions = set(character.get("sfx", {}).get("actions", {}))
-    rows = parse_raw_log(args.raw_log, args.gid, args.char_id)
+    rows = parse_raw_log(args.raw_log, args.gid, args.char_id, tuple(args.char_alias))
     hotzone_keys = []
     if args.hotzones_json and args.hotzones_json.exists():
         hotzones = json.loads(args.hotzones_json.read_text(encoding="utf-8"))
