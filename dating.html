@@ -1132,6 +1132,7 @@
     let advanceTimer = null;
     let activeLongPress = null;
     let activePrefabDrag = null;
+    let activePrefabDragListeners = null;
     let dragHolding = false;
     let dragFollow = null;
     let touchStopTimer = null;
@@ -2541,6 +2542,7 @@
         threshold,
         successThreshold: Math.max(threshold * 2.4, Math.min(150, Math.max(48, size * 0.36))),
       };
+      attachPrefabDragWindowListeners();
     }
 
     // 对照真机 SpineInteractionPoint: OnBeginDrag 在 track 1 播 mix_1;
@@ -2574,6 +2576,7 @@
       const { action, pointKey, engaged, resolved } = drag;
       releasePrefabDragPointer(drag);
       activePrefabDrag = null;
+      detachPrefabDragWindowListeners();
       stopDragFollow();
       if (engaged && !resolved) playDragRelease(action, pointKey);
     }
@@ -2581,6 +2584,7 @@
     function cancelPrefabDrag(event) {
       const drag = activePrefabDrag;
       if (!drag) {
+        detachPrefabDragWindowListeners();
         if (dragHolding) { dragHolding = false; clearDragOverlay(); }
         stopDragFollow();
         return;
@@ -2589,8 +2593,32 @@
       const engaged = drag.engaged;
       releasePrefabDragPointer(drag);
       activePrefabDrag = null;
+      detachPrefabDragWindowListeners();
       stopDragFollow();
       if (engaged && dragHolding) { dragHolding = false; clearDragOverlay(); }
+    }
+
+    function attachPrefabDragWindowListeners() {
+      detachPrefabDragWindowListeners();
+      const onMove = event => movePrefabDrag(event);
+      const onEnd = event => endPrefabDrag(event);
+      const onCancel = event => cancelPrefabDrag(event);
+      const onBlur = () => cancelPrefabDrag();
+      window.addEventListener("pointermove", onMove, true);
+      window.addEventListener("pointerup", onEnd, true);
+      window.addEventListener("pointercancel", onCancel, true);
+      window.addEventListener("blur", onBlur);
+      activePrefabDragListeners = { onMove, onEnd, onCancel, onBlur };
+    }
+
+    function detachPrefabDragWindowListeners() {
+      const listeners = activePrefabDragListeners;
+      if (!listeners) return;
+      window.removeEventListener("pointermove", listeners.onMove, true);
+      window.removeEventListener("pointerup", listeners.onEnd, true);
+      window.removeEventListener("pointercancel", listeners.onCancel, true);
+      window.removeEventListener("blur", listeners.onBlur);
+      activePrefabDragListeners = null;
     }
 
     function releasePrefabDragPointer(drag) {
