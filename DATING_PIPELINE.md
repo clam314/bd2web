@@ -316,12 +316,13 @@ Char000396(dating18)=112
    drag=两阶段(`_1`=拖住,`_2`=松手回弹)、touch=逐次点击递进(clickMax/1秒连点窗口/停止播 `*_end`)、
    部分 touch=随机单段(IsPlayRandomMixAnim)。资源与 (group,id,tool) 匹配本身没错。
    - ✅ **拖拽已修完**(两阶段+不循环+SFX+跟手,见上方"拖拽语义与跟手复现"一节)。
-   - ⬜ **touch 多段/随机待修**:需先给 `extract_dating_actions.py` 补抽
-     `IsPlayRandomMixAnim`/`ContinuousClickResetTime`/`PlayMixAnimNameWhenActionStop`(+拖拽目的地 `_destinations`)
-     并重生成 JSON,再改前端播放器。所有字段都在本地 bundle 里,**不需要进游戏/连设备**。
-     2026-07-02 已开始落地:提取器已输出 `randomMix`/`clickReset`/`stopMix`,前端 touch 已改为
-     单次点击只播一段 mix;`clickMax` 在重置窗口内递进,停止连点后播 `stopMix`;`randomMix` 随机选一段。
-     仍需浏览器逐角色抽样复核手感后再标完成。
+   - ✅ **touch 多段/随机已落地并抽样复核(2026-07-03)**:`extract_dating_actions.py` 已补抽
+     `IsPlayRandomMixAnim`/`ContinuousClickResetTime`/`PlayMixAnimNameWhenActionStop`,输出
+     `randomMix`/`clickReset`/`stopMix`;前端 touch 已改为单次点击只播一段 mix,`clickMax`
+     在重置窗口内递进,非 gauge 到上限后拦截额外点击,停手按 `clickReset` 重置,`randomMix`
+     随机选单段。浏览器自动化抽样覆盖:非 gauge 有/无 `stopMix`、完成后额外点击、reset 后重来、
+     gauge 不被拦截、randomMix 单段选择、多段无 clickMax 保持原逻辑。完成后的 `stopMix` 证据不足,
+     前端仍保守跳过。
    - ⬜ **`_destinations` 拖到目的地**(29 点,dating2 无):目的地命中后 track1 loop=true 循环播
      `_playMotionNames[i]`(带 onComplete);需先补抽 `_destinations` 坐标再实现。
 1. **补剩余 SFX 缺口**:dating6/11/12/13/14/15/16/17/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
@@ -402,6 +403,7 @@ Char000396(dating18)=112
 ## 修订说明
 
 - 2026-07-03(二)：TODO 6 完结——第三类 mix/special 互动语音全库归零(11 角色重跑,无新 OGG,前端零改动)。根因是三层基础问题(空 tsv 推断/extract-apply 大小写不匹配/17 号 Char004102 前缀),工具修正:apply 补大小写规范、extract/apply/audit 增 `--char-alias`(char004202→char004102)。状态矩阵"点→语音"列 14 心契全 ✅。
+- 2026-07-03：touch 多段/随机抽样复核完成。样本包括 `illust_dating13 3_19_0`(非 gauge+stopMix,未完成停手播 `mix3_19_end`,完成后额外点击无新增动画)、`illust_dating10 1_18_13`(非 gauge 无 stopMix,三连后拦截第 4 下,reset 后从 `mix1_18_1` 重来)、`illust_dating4 1_1_0`(randomMix 单段随机)、`illust_dating15 1_1_0`(gauge 连点未被拦截)、`illust_dating1 1_16_0`(多段无 clickMax 保持原逻辑)。语法检查与 audio audit 通过,控制台仅 favicon 404。
 - 2026-07-03：#16 奥利维耶 mix 动作语音 + 点→语音全部完成(TODO 4 完结)。纠正三处旧结论:①"16 的 mix 不在自己 bank"系 audit 误判(mix 事件只引用情绪 sample,无自有片段);②dating16 旧 events 因 `--infer-event-paths-from-samples` 存在 GUID 错标,已用总表 tsv 重跑修正;③旧"94 残留"分摊表 13=9/16=22 有误(实为 13=15/16=16),第三类残留(缺 voice 引用条数)94→78,另发现 6 个缺 motion 点为旧统计漏算、17 号母表跨角色引用 Char004102 的新线索(见第 6/7 节)。仅改 `data/dating_audio.json`,前端零改动。
 - 2026-07-01：将 `Visual_Novel_SFX` 对 `dating13/14/19` 的确认结果合并进第 6 节状态与音频审计表；尾部只保留本修订说明，详细流水记录见 `CODEX_CHANGES.md`。
 - 2026-07-01：补入 `dating15/16/17` 的外部热区/动作 JSON 与 `Visual_Novel_SFX` 结果；`dating18` 继续保留手写特殊逻辑。

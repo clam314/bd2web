@@ -210,14 +210,17 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
 - 前端已实现点位骨骼跟手：用现有热区 `source` 找同名 SkeletonUtilityBone，拖住期间把点位骨骼钉到手指；松手/成功/取消时复位。
 - 2026-07-02 追加修正：点位骨骼是 IK target，覆盖 target 后必须再跑一次完整 `updateWorldTransform`，否则被 IK 控制的丝袜/腿部骨骼不会同帧重算。dating2 墨菲亚三阶段 3/11 已经用浏览器实测有效。
 
-### 🟡 本轮初步落地：touch 多段/随机
+### ✅ touch 多段/随机已抽样复核
 
 - `extract_dating_actions.py` 已补抽 `IsPlayRandomMixAnim`、`ContinuousClickResetTime`、`PlayMixAnimNameWhenActionStop`，
   输出为 `randomMix`、`clickReset`、`stopMix`。
 - `dating.html` 已改为 touch 单次点击只播一段 mix；`clickMax` 在重置窗口内递进，停止连点后播 `stopMix`；
   `randomMix` 随机挑一段播放。
 - 数据审计确认：除新增字段外，`data/dating_actions.json` 原有动作数据完全一致；新增字段覆盖 283 个 action。
-- 待做：浏览器逐角色抽样复核手感后，再把 `DATING_PIPELINE.md` 里的 touch 项标成完成。
+- 2026-07-03 浏览器自动化抽样通过：非 gauge 未完成连点 `3_19_0` 递进到 `mix3_19_2` 后停手触发
+  `mix3_19_end`；非 gauge 完成后额外点击不再追加动画；无 `stopMix` 的 `1_18_13` 在重置后从
+  `mix1_18_1` 重新开始；`randomMix` 每次只挑单段；gauge 连点未被非 gauge 上限拦截。
+- 保守点：完成后的 `stopMix` 语义证据不足，前端仍跳过；`_destinations` 目的地拖拽是另一条路径，未实现。
 
 ---
 
