@@ -2020,8 +2020,9 @@
       try {
         if (!canPlayAction(action)) return;
         clearError();
-        cancelTouchStop();
         const playbackAction = prepareActionPlayback(action, pointKey);
+        if (!playbackAction) return;
+        cancelTouchStop();
         const targetStage = resolveActionNextStage(playbackAction);
         restoringIdle = false;
         advanceTargetStage = targetStage;
@@ -2090,6 +2091,10 @@
       const previousCount = previousState && typeof previousState === "object" && now - previousState.at <= resetMs
         ? previousState.count || 0
         : 0;
+      if (!action.gauge && previousCount >= action.clickMax) {
+        showStatus("连点已达到上限", 700);
+        return null;
+      }
       const next = Math.min(previousCount + 1, action.clickMax);
       const complete = next >= action.clickMax;
       const mix = action.randomMix
@@ -2118,17 +2123,20 @@
 
     function scheduleTouchStop(action, pointKey = null) {
       const stopMix = action?.stopMix;
-      if (!stopMix || action._touchCompleted || !animationExists(stopMix)) return;
+      const hasProgress = Boolean(action?._touchProgressKey && !action.gauge);
+      const canPlayStop = Boolean(stopMix && animationExists(stopMix) && !action._touchCompleted);
+      if (!canPlayStop && !hasProgress) return;
       const token = ++touchStopToken;
       const resetMs = action._touchResetMs || Math.max(100, (Number(action.clickReset) || 1) * 1000);
       touchStopTimer = setTimeout(() => {
         if (token !== touchStopToken || !player) return;
         touchStopTimer = null;
-        if (action._touchProgressKey) {
+        if (hasProgress) {
           interactionState = { ...interactionState };
           delete interactionState[action._touchProgressKey];
         }
-        showStatus("连点已重置", 900);
+        if (hasProgress) showStatus("连点已重置", 900);
+        if (!canPlayStop) return;
         try {
           restoringIdle = false;
           advanceTargetStage = null;
