@@ -121,7 +121,9 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | **③ mix 动作语音** | 动画绑定的专属语音(莎拉赌场那种) | `event:/Voices/.../Char_Int_mix` | 动画名→专属语音事件 | **仅 #16、#18** |
 
 - **① 的"点→语音"精确映射只有 14 心契有**(`data/dating_interaction_tables.json`);尊爵/动作型只有情绪池。
-- **③ 全库只有两个角色**:#18 莎拉(48)、#16 奥利维耶(30)。#16 是白捡的第二个动作语音角色。
+- **③ 全库只有两个角色**:#18 莎拉(48)、#16 奥利维耶(30,已完成 2026-07-03)。
+  ③ 层的 mix/motion 事件**不带新录音**:FMOD timeline 按时间点触发已有情绪 sample(带 at/window/权重),
+  所以只要角色自己的 interaction bank 在手,重解 bank 即可,不需要设备。#16 的"30 事件"= 15 KR + 15 JP。
 - 提取方法:bank 内 event GUID 用 `all-fmod-event-paths.tsv` 反查(**不按名字猜**)。
 
 ---
@@ -162,7 +164,7 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | 13 | 提尔 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺9) | 🟡(缺3) | — |
 | 14 | 黎维塔★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺2) | — |
 | 15 | 班塔纳 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺12) | 🟡(缺3) | — |
-| 16 | 奥利维耶 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺22) | 🟡(缺2) | **⬜ 可做** |
+| 16 | 奥利维耶 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺2) | ✅(2026-07-03) |
 | 17 | 帕莱特 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺20) | 🟡(缺2) | — |
 | 18 | 莎拉★ | ✅ | ⬜ | ✅ | —(非心契) | ✅ | ✅ |
 | 19 | 格兰希特 | ✅ | ✅ | ✅ | 🟡(情绪✅/mix缺10) | 🟡(缺2) | — |
@@ -181,7 +183,15 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 - **修后核验**:可修复集(母表要的事件确实在 voice bank 里)**14 角色残留全 0**;19 号真实点击 `1_1_0→Neutral1`、
   `2_1_0→Shy1` 等全部出声;对照点 `2_16_0`(mix 语音未提取)正确静音。浏览器无语法/运行错。
 - **残留 94 个属第三类**(非本 bug):母表要的是 `Char*_Int_Mix*`/`Special*` 等 **mix/special 动作语音**(音频三层的
-  第③层),压根不在情绪 voice bank,需另做提取(见 TODO)。各号第三类残留:3=1,5=3,6=7,8=7,10=1,11=2,13=9,15=12,16=22,17=20,19=10。
+  第③层),压根不在情绪 voice bank,需另做提取(见 TODO)。
+  ⚠️ 2026-07-03 复核:94 的口径 = **缺失 voice 引用条数**(重复计入);当时的分摊表 13=9/16=22 是错的,
+  实为 13=15/16=16(和恰好都是 31,总数才碰巧对上)。修正后各号:3=1,5=3,6=7,8=7,10=1,11=2,13=15,15=12,16=16,17=20,19=10。
+- **⚠️ 2026-07-03 修正:"16 不在自己 bank"的判断是错的。** #16 的全部 15 个 KR mix 事件就在
+  `interaction_char003604.bank`(本地 `local_device_cache/dating_build/char003604/`),timeline 全部可播。
+  当年误判根源:该 bank 提取时 per-char tsv(`Char003604.tsv`)是空的,只能用
+  `--infer-event-paths-from-samples` 从 sample 名反推事件名 → mix 事件(引用情绪 sample)被误标成情绪名,
+  与真情绪事件同名互撞,只剩 15 个事件且 6 个 GUID 张冠李戴(如 `Kiss1` 的 GUID 实为 `mix1_3_1_KR`)。
+  用总表 `all-fmod-event-paths.tsv` 重跑后 31 个 KR 事件全部对号(15 情绪 + 15 mix + motion1_15)。
 - 校验脚本:`dating_actions.json` 键 × `dating_interaction_tables` 母表 × `dating_audio` events 三方交叉(会话内)。
 
 ### 2026-07-01 音频防串审计与本批 SFX
@@ -319,21 +329,42 @@ Char000396(dating18)=112
 2. **运行态确认 `mix*_0_1`**:多名角色剩下的都是阶段入口/默认动作类 `mixN_0_1`;当前 FMOD event path
    没有对应可播放事件。不要把它们硬 alias 到其它动作。
 3. **谨慎处理 dating18 外部化**:莎拉有前端手写特殊逻辑,新抽 prefab 与手写计数不完全一致,不要直接覆盖。
-4. **#16 奥利维耶做莎拉式 mix 动作语音**(30 事件,现成)。
+4. ✅ **#16 奥利维耶 mix 动作语音已完成(2026-07-03)**。做法(下个同类角色照抄):
+   ```
+   python3 tools/extract_dating_audio.py \
+     --bank local_device_cache/dating_build/char003604/interaction_char003604.bank \
+     --fsb  local_device_cache/dating_build/char003604/interaction_char003604.fsb \
+     --event-paths local_device_cache/bd2_current_20260624/all-fmod-event-paths.tsv \
+     --dating-id illust_dating16 --char-id char003604 \
+     --source-version 202606240959 --language KR --expect-events 31
+   python3 tools/apply_dating_interaction_voice_actions.py \
+     --dating-id illust_dating16 --char-id char003604 --gid 12
+   ```
+   要点:①`--event-paths` 直接喂总表 tsv(不用 per-char tsv,那批文件很多是空的);②不加 `--decode`
+   (mix 事件只引用已有 60 个情绪 sample,OGG 无新增);③心契角色 apply 默认 point-based,
+   `actions` 置空、语音全走 `interactionVoices`(45→59 点),避免动画路径+点路径双触发
+   (尊爵角色如 #18 才用 `actions`)。浏览器实测:2_14(纯 mix 点,修复前全哑)按 timeline 出声
+   `Surprise1@0s→Shy2@1.4s`;2_13 情绪语音正常;`motion1_15` 阶段推进语音正常;无报错。
 5. ✅ **心契点→语音 键不一致 bug 已修**(见第 6 节):`dating.html` `scheduleInteractionVoice` 加 (stage,id) 兜底,
    14 角色可修复集残留全 0,浏览器实测通过。**未改数据**。
 
-6. **【设备侧】补第三类 mix/special 互动语音**(94 个残留点,需连 S25 真机重跑抽取管线):
+6. **【设备侧】补第三类 mix/special 互动语音**(残留 78 条缺失 voice 引用/72 个点;A 类可能不需设备,B 类需连 S25):
    - 母表引用了 `Char*_Int_Special*` / `Char*_Int_Mix*` 互动语音(Voices 命名空间,tsv 有 `..._KR` 事件路径),
      但当年 `extract_dating_audio.py` 没抽出来(OGG 未解码、json 未登记 event)。
-   - 各号残留点数:3=1,5=3,6=7,8=7,10=1,11=2,13=9,15=12,16=22,17=20,19=10。
+   - 残留现状(2026-07-03 复算,#16 已本地清零):**缺 voice 引用 94→78 条**,按角色(引用条数口径):
+     3=1,5=3,6=7,8=7,10=1,11=2,13=15,15=12,17=20,19=10;另有 **6 个点缺 motion 语音**(4=1,8=2,13=2,19=1,
+     旧统计漏算)。**先照 #16 的教训用总表 tsv 重解本地已有 bank 再下"要连设备"的结论**。
+   - ⚠️ 2026-07-03 新线索:**17 号(char004202 帕莱特)母表引用的缺失语音全是 `Char004102_Int_Mix*`
+     (= dating13 提尔的 charId)**,跨角色引用——这大概率就是 17 号 audit `no-stdt-region` 异常的真因,
+     补抽时先确认是游戏数据本来如此还是母表抓取串号。
    - **A 类·在角色自己 bank(重跑补抽即可)**:据 `interaction_voice_audit.tsv` 片段确认——
      3/5/6(special)、10(mix)、11/13(special)、15(special+mix)的目标样例就在各自
      `interaction_charXXXXXX.bytes`。步骤:adb pull 该角色 interaction voice bundle → `extract_dating_audio.py`
      带完整 `voice_event_paths/CharXXXXXX.tsv`(注意 `Char003203.tsv` 当前为空,得重导)→ 补 events/OGG。
-   - **B 类·宿主 bank 待查(先反查再抽)**:8/16/19 的 mix/special 在自己 bank 的 audit 片段里=✗;
+   - **B 类·宿主 bank 待查(先反查再抽)**:8/19 的 mix/special 在自己 bank 的 audit 片段里=✗;
      17 号 audit 是 `no-stdt-region`/0 片段(异常)。需上设备用 tsv 里对应 event GUID 反查真正宿主 bank,
-     不要猜。这 4 个(8/16/17/19)在定位前不要硬接。
+     不要猜。这 3 个(8/17/19)在定位前不要硬接。(16 原也在此列,实测其 audit ✗ 是误判——
+     mix 事件本就不带自己的 sample 片段,只引用情绪 sample;8/17/19 建议先同法本地重验。)
    - 本地只有 dating1(char003303)的原始 bank,其余都要从设备拉;这是本任务的前置门槛。
    - 完成后前端无需再改:兜底逻辑会自动让新登记的 (stage,id) 语音生效。
 
@@ -360,5 +391,6 @@ Char000396(dating18)=112
 
 ## 修订说明
 
+- 2026-07-03：#16 奥利维耶 mix 动作语音 + 点→语音全部完成(TODO 4 完结)。纠正三处旧结论:①"16 的 mix 不在自己 bank"系 audit 误判(mix 事件只引用情绪 sample,无自有片段);②dating16 旧 events 因 `--infer-event-paths-from-samples` 存在 GUID 错标,已用总表 tsv 重跑修正;③旧"94 残留"分摊表 13=9/16=22 有误(实为 13=15/16=16),第三类残留(缺 voice 引用条数)94→78,另发现 6 个缺 motion 点为旧统计漏算、17 号母表跨角色引用 Char004102 的新线索(见第 6/7 节)。仅改 `data/dating_audio.json`,前端零改动。
 - 2026-07-01：将 `Visual_Novel_SFX` 对 `dating13/14/19` 的确认结果合并进第 6 节状态与音频审计表；尾部只保留本修订说明，详细流水记录见 `CODEX_CHANGES.md`。
 - 2026-07-01：补入 `dating15/16/17` 的外部热区/动作 JSON 与 `Visual_Novel_SFX` 结果；`dating18` 继续保留手写特殊逻辑。

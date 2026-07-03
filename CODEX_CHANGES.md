@@ -77,7 +77,7 @@
 | 情绪 voice bank | 19/19 有素材 |
 | 心契点→语音母表 | 14 个心契角色；尊爵/莎拉非此类 |
 | 动作 SFX | 已批量接入；`dating1` 的 SFX 仍标记 disabled 作为历史止血 |
-| mix 动作语音 | 已确认只有 `dating16`、`dating18` 是重点；`dating18` 已做，`dating16` 待做 |
+| mix 动作语音 | 已确认只有 `dating16`、`dating18` 是重点；两者均已完成(16 于 2026-07-03) |
 
 ### 3.3 SFX bank 分组
 
@@ -261,11 +261,11 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
 母表里还有一些 `Char*_Int_Mix*` / `Special*` 类语音缺口。  
 这不是 SFX，也不是普通情绪 voice，而是音频模型第③层。
 
-当前 `DATING_PIPELINE.md` 里记录的残留：
+当前残留(2026-07-03 复算,缺 voice 引用条数口径;16 已清零,旧表 13=9/16=22 分摊有误)：
 
 ```text
-3=1, 5=3, 6=7, 8=7, 10=1, 11=2, 13=9,
-15=12, 16=22, 17=20, 19=10
+3=1, 5=3, 6=7, 8=7, 10=1, 11=2, 13=15,
+15=12, 17=20, 19=10   (合计 78;另 6 个点缺 motion:4=1,8=2,13=2,19=1)
 ```
 
 原则：
@@ -274,10 +274,11 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
 - 不在自己 bank 的，先用 event GUID 反查宿主 bank；
 - 不要猜。
 
-### 6.2 dating16 的 mix 动作语音
+### 6.2 dating16 的 mix 动作语音 —— ✅ 已完成(2026-07-03)
 
-`dating16 / char003604` 有 30 个 mix 动作语音线索，应该按莎拉那条管线继续做。  
-做之前仍然先跑 charId/event path 审计。
+用总表 `all-fmod-event-paths.tsv` 重跑 `extract_dating_audio.py`(31 KR 事件)+
+`apply_dating_interaction_voice_actions.py --gid 12`(interactionVoices 45→59 点)。
+命令与要点见 `DATING_PIPELINE.md` §7 TODO 4。浏览器实测通过,仅改 `data/dating_audio.json`。
 
 ### 6.3 SFX `mix*_0_1` 缺口
 
