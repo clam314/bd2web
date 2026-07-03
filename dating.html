@@ -316,6 +316,11 @@
       z-index: 30;
       display: none;
     }
+    #error-toast.status {
+      background: rgba(20, 31, 45, 0.94);
+      color: #dceaff;
+      border: 1px solid rgba(106, 166, 255, 0.32);
+    }
   </style>
 </head>
 <body>
@@ -1148,6 +1153,7 @@
     let datingHotzones = {};
     let datingActionsPromise = null;
     let datingActions = {};
+    let toastTimer = null;
 
     class DatingAudioController {
       constructor() {
@@ -1489,12 +1495,24 @@
     });
 
     function showError(msg) {
+      clearTimeout(toastTimer);
+      toast.classList.remove("status");
       toast.textContent = msg;
       toast.style.display = "block";
-      setTimeout(() => (toast.style.display = "none"), 6000);
+      toastTimer = setTimeout(() => (toast.style.display = "none"), 6000);
+    }
+
+    function showStatus(msg, duration = 1200) {
+      clearTimeout(toastTimer);
+      toast.classList.add("status");
+      toast.textContent = msg;
+      toast.style.display = "block";
+      toastTimer = setTimeout(() => (toast.style.display = "none"), duration);
     }
 
     function clearError() {
+      clearTimeout(toastTimer);
+      toast.classList.remove("status");
       toast.textContent = "";
       toast.style.display = "none";
     }
@@ -1781,7 +1799,7 @@
         const b = document.createElement("button");
         b.className = "item body-anim";
         b.textContent = prefabActionLabel(action, idx);
-        b.title = `prefab:${key}`;
+        b.title = prefabActionTitle(action, key);
         b.onclick = () => action.cardGame === "deal" ? playCardDeal() : playPrefabAction(action, b, key);
         animList.appendChild(b);
       });
@@ -2030,6 +2048,9 @@
         }
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
         if (btn) btn.classList.add("active");
+        if (playbackAction._touchProgressText) {
+          showStatus(playbackAction._touchProgressText, playbackAction._touchCompleted ? 1400 : 900);
+        }
         if (advanceTargetStage) {
           const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
           const delay = Math.min(9000, Math.max(1200, duration * 1000 + 300));
@@ -2078,6 +2099,9 @@
         _touchProgressKey: progressKey,
         _touchCompleted: complete,
         _touchResetMs: resetMs,
+        _touchProgressText: complete
+          ? `连点完成 ${next}/${action.clickMax}`
+          : `连点 ${next}/${action.clickMax}`,
       };
     }
 
@@ -2098,6 +2122,7 @@
           interactionState = { ...interactionState };
           delete interactionState[action._touchProgressKey];
         }
+        showStatus("连点已重置", 900);
         try {
           restoringIdle = false;
           advanceTargetStage = null;
@@ -2438,7 +2463,7 @@
         const b = makeHotzoneButton(
           box,
           hotzoneLabel(item.action, labelIndex),
-          `${item.action.label || prefabActionLabel(item.action, labelIndex)} · ${item.key} · ${zone.source}`,
+          prefabActionTitle(item.action, item.key, zone),
           item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
         );
         if (item.action.longPress) {
@@ -2970,6 +2995,7 @@
 
     function hotzoneLabel(action, idx) {
       if (action.label) return action.label.split(/[：:]/)[0].replace(/^画面/, "");
+      if (action.clickMax) return `${action.clickMax}击`;
       if (action.kind === "drag") return "拖";
       if (action.kind === "gyro") return "晃";
       if (action.gauge) return "计";
@@ -2990,9 +3016,26 @@
       const kind = action.kind === "drag" ? "拖拽" : action.kind === "gyro" ? "晃动" : "触摸";
       const target = resolveActionNextStage(action);
       const next = target ? ` -> 阶段${target}` : "";
-      const gauge = action.gauge ? "计量" : "";
-      const clicks = action.clickMax ? `${action.clickMax}击` : "";
-      return `${action.label || `${kind}${idx + 1}`}${gauge}${clicks}${next}`;
+      const parts = [action.label || `${kind}${idx + 1}`];
+      if (action.gauge) parts.push("计量");
+      if (action.clickMax) parts.push(`${action.clickMax}连击`);
+      return `${parts.join(" · ")}${next}`;
+    }
+
+    function prefabActionTitle(action, key, zone) {
+      const kind = action.kind === "drag" ? "拖拽" : action.kind === "gyro" ? "晃动" : "触摸";
+      const pointId = Number(key?.split("_")?.[1]);
+      const baseLabel = action.label || `${kind}${Number.isFinite(pointId) ? pointId : 1}`;
+      const parts = [baseLabel];
+      if (action.gauge) parts.push("计量");
+      if (action.clickMax) parts.push(`${action.clickMax}连击`);
+      parts.push(key);
+      if (zone?.source) parts.push(zone.source);
+      if (action.clickMax) {
+        const reset = Number(action.clickReset) || 1;
+        parts.push(`${reset}秒内连点${action.clickMax}次`);
+      }
+      return parts.join(" · ");
     }
 
     function animationExists(name) {
