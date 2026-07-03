@@ -117,7 +117,18 @@
       "motions": [
         "motion1_18"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": -910.1,
+          "y": -1322.8,
+          "width": 100.1,
+          "height": 100.1,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "2_1_0": {
       "kind": "drag",
@@ -259,7 +270,18 @@
       "motions": [
         "motion2_22"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": 559.5,
+          "y": 773.7,
+          "width": 228.2,
+          "height": 100.4,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "3_1_0": {
       "kind": "drag",
@@ -933,6 +955,17 @@
         "motion2_1"
       ],
       "nextStage": 3,
+      "destinations": [
+        {
+          "x": -2478.1,
+          "y": -1900.0,
+          "width": 5000.0,
+          "height": 1000.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ],
       "gyro": {
         "actionType": 1,
         "moveThreshold": 27.0,
@@ -950,6 +983,17 @@
         "motion2_2"
       ],
       "nextStage": 4,
+      "destinations": [
+        {
+          "x": -2478.1,
+          "y": 900.0,
+          "width": 5000.0,
+          "height": 1000.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ],
       "gyro": {
         "actionType": 1,
         "moveThreshold": 27.0,
@@ -1137,6 +1181,17 @@
         "motion3_0"
       ],
       "nextStage": 2,
+      "destinations": [
+        {
+          "x": -2472.8,
+          "y": 310.0,
+          "width": 5000.0,
+          "height": 1000.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ],
       "gyro": {
         "actionType": 1,
         "moveThreshold": 25.0,
@@ -1333,6 +1388,17 @@
         "motion4_0"
       ],
       "nextStage": 2,
+      "destinations": [
+        {
+          "x": -2483.3,
+          "y": -1690.0,
+          "width": 5000.0,
+          "height": 1000.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ],
       "gyro": {
         "actionType": 1,
         "moveThreshold": 25.0,
@@ -6328,7 +6394,18 @@
       "motions": [
         "motion1_19"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": -140.1,
+          "y": 243.1,
+          "width": 100.0,
+          "height": 100.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "2_1_0": {
       "kind": "touch",
@@ -6471,7 +6548,18 @@
       "motions": [
         "motion2_22"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": -272.2,
+          "y": 262.0,
+          "width": 100.0,
+          "height": 100.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "3_1_0": {
       "kind": "touch",
@@ -7612,7 +7700,18 @@
       "motions": [
         "motion1_6"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": -340.6,
+          "y": -7.3,
+          "width": 150.0,
+          "height": 150.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "2_1_0": {
       "kind": "touch",
@@ -7639,7 +7738,18 @@
       "motions": [
         "motion2_3"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": 48.1,
+          "y": 1209.2,
+          "width": 150.0,
+          "height": 150.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "3_1_0": {
       "kind": "touch",
@@ -7666,7 +7776,18 @@
       "motions": [
         "motion3_3"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": 49.9,
+          "y": -53.9,
+          "width": 150.0,
+          "height": 150.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "4_1_0": {
       "kind": "touch",
@@ -7687,7 +7808,18 @@
       "motions": [
         "motion4_2"
       ],
-      "nextStage": "next"
+      "nextStage": "next",
+      "destinations": [
+        {
+          "x": 151.8,
+          "y": 1813.6,
+          "width": 150.0,
+          "height": 150.0,
+          "index": 0,
+          "source": "InteractionPointDestination",
+          "space": "skeleton"
+        }
+      ]
     },
     "5_1_0": {
       "kind": "touch",

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 from pathlib import Path
 
@@ -54,6 +55,119 @@ def load_bundle(path: Path):
     return game_objects, components, rects, monos
 
 
+def mat_mul(a, b):
+    return [[sum(a[i][k] * b[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
+
+
+def transform(m, x, y):
+    return m[0][0] * x + m[0][1] * y + m[0][2], m[1][0] * x + m[1][1] * y + m[1][2]
+
+
+def vector_xy(value, default_x=0.0, default_y=0.0):
+    value = value or {}
+    return float(value.get("x", default_x)), float(value.get("y", default_y))
+
+
+def build_rect_helpers(game_objects, components, rects, monos):
+    comp_go = {component: go for go, items in components.items() for component in items}
+
+    def go_name(go):
+        return game_objects.get(go, {}).get("m_Name") or ""
+
+    def rect_of_go(go):
+        for component in components.get(go, []):
+            if component in rects:
+                return component
+        return None
+
+    def go_of_rect(rect):
+        return comp_go.get(rect)
+
+    def parent(rect):
+        return refid(rects[rect].get("m_Father"))
+
+    def local_scale(rect):
+        return vector_xy(rects[rect].get("m_LocalScale"), 1.0, 1.0)
+
+    def local_position(rect):
+        return vector_xy(rects[rect].get("m_AnchoredPosition"))
+
+    def size(rect):
+        return vector_xy(rects[rect].get("m_SizeDelta"))
+
+    def pivot(rect):
+        return vector_xy(rects[rect].get("m_Pivot"), 0.5, 0.5)
+
+    def angle(rect):
+        value = rects[rect].get("m_LocalRotation") or {}
+        return 2 * math.atan2(float(value.get("z", 0)), float(value.get("w", 1)))
+
+    def local_matrix(rect):
+        x, y = local_position(rect)
+        sx, sy = local_scale(rect)
+        theta = angle(rect)
+        c = math.cos(theta)
+        s = math.sin(theta)
+        return [[c * sx, -s * sy, x], [s * sx, c * sy, y], [0, 0, 1]]
+
+    def chain_matrix(rect, stop_rect):
+        chain = []
+        current = rect
+        while current and current != stop_rect:
+            chain.append(current)
+            current = parent(current)
+        if current != stop_rect:
+            return None
+        matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+        for item in reversed(chain):
+            matrix = mat_mul(matrix, local_matrix(item))
+        return matrix
+
+    def bbox(rect, stop_rect):
+        matrix = chain_matrix(rect, stop_rect)
+        if matrix is None:
+            return None
+        width, height = size(rect)
+        px, py = pivot(rect)
+        corners = [
+            (-px * width, -py * height),
+            ((1 - px) * width, -py * height),
+            ((1 - px) * width, (1 - py) * height),
+            (-px * width, (1 - py) * height),
+        ]
+        points = [transform(matrix, x, y) for x, y in corners]
+        xs = [x for x, _ in points]
+        ys = [y for _, y in points]
+        return {
+            "x": round(min(xs), 1),
+            "y": round(min(ys), 1),
+            "width": round(max(xs) - min(xs), 1),
+            "height": round(max(ys) - min(ys), 1),
+        }
+
+    def ancestor_names(rect):
+        result = []
+        current = rect
+        while current:
+            result.append(go_name(go_of_rect(current)))
+            current = parent(current)
+        return result
+
+    def destination_rect(destination_path_id):
+        destination = monos.get(destination_path_id) or {}
+        go = refid(destination.get("m_GameObject"))
+        return rect_of_go(go)
+
+    skeleton_rects = {}
+    for go, data in game_objects.items():
+        name = data.get("m_Name") or ""
+        match = re.fullmatch(r"SkeletonGraphic \(illust_dating(\d+)\)", name)
+        if match:
+            skeleton_rects[f"illust_dating{match.group(1)}"] = rect_of_go(go)
+
+    return comp_go, go_name, parent, bbox, ancestor_names, destination_rect, skeleton_rects
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -71,30 +185,55 @@ def main():
     args = parser.parse_args()
 
     game_objects, components, rects, monos = load_bundle(args.bundle)
-    comp_go = {component: go for go, items in components.items() for component in items}
-
-    def go_name(go):
-        return game_objects.get(go, {}).get("m_Name") or ""
-
-    def parent(rect):
-        return refid(rects[rect].get("m_Father"))
+    comp_go, go_name, parent, bbox, ancestor_names, destination_rect, skeleton_rects = build_rect_helpers(
+        game_objects,
+        components,
+        rects,
+        monos,
+    )
 
     def go_of_rect(rect):
         return comp_go.get(rect)
-
-    def ancestor_names(rect):
-        result = []
-        current = rect
-        while current:
-            result.append(go_name(go_of_rect(current)))
-            current = parent(current)
-        return result
 
     def list_value(value):
         return [item for item in (value or []) if item]
 
     def action_kind(value):
         return {0: "touch", 1: "drag", 2: "gyro"}.get(int(value or 0), "touch")
+
+    def destination_refs(data):
+        result = []
+        for item in data.get("_destinations") or []:
+            destination = refid(item)
+            if destination and destination not in result:
+                result.append(destination)
+        single = refid(data.get("_interactionPointDestination"))
+        if single and single not in result:
+            result.append(single)
+        return result
+
+    def destination_boxes(dating_id, data):
+        skeleton_rect = skeleton_rects.get(dating_id)
+        if not skeleton_rect:
+            return []
+        result = []
+        for idx, destination in enumerate(destination_refs(data)):
+            rect = destination_rect(destination)
+            if not rect:
+                continue
+            box = bbox(rect, skeleton_rect)
+            if not box:
+                continue
+            names = ancestor_names(rect)
+            box.update(
+                {
+                    "index": idx,
+                    "source": names[0] or "InteractionPointDestination",
+                    "space": "skeleton",
+                }
+            )
+            result.append(box)
+        return result
 
     output = {}
     for mid, data in monos.items():
@@ -153,6 +292,9 @@ def main():
         stop_mix = data.get("PlayMixAnimNameWhenActionStop") or ""
         if stop_mix:
             action["stopMix"] = stop_mix
+        destinations = destination_boxes(dating_id, data)
+        if destinations:
+            action["destinations"] = destinations
         if "hidden" in name.lower():
             action["hidden"] = True
 

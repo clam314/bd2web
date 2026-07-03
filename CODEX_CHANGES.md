@@ -244,13 +244,18 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
    （begin drag，`_follow` 热区跟随骨骼），`mixN_x_2`=松手回弹（end drag）。
    铁证：同类点的 LongPressSettingData 里 `fail=mixN_x_2`（提前松手→回弹）、
    `success=mixN_x_long`。前端在越过 32-96px 阈值瞬间把 `_1+_2` 连播 → 没有"拖住"
-   阶段，观感动画错、时长错。另有 29 个拖拽点带 `_destinations`（拖到目的地才算成功，
+   阶段，观感动画错、时长错。另有一批点带 `_destinations`（拖到目的地才算成功，
    `OnDragEvent(point, bool, int)` 回调目的地索引），前端完全没实现。
 
 **提取器缺口**（`extract_dating_actions.py` 没抽的决定性字段）：
 `IsPlayRandomMixAnim`、`ContinuousClickResetTime`、`PlayMixAnimNameWhenActionStop`、
 `_destinations`。修复应从补抽这些字段开始，再改 `dating.html` 的播放状态机
 （点击递进/随机单段/拖拽两阶段），不要动热区坐标和 key 方案。
+
+2026-07-03 后续:前三项 touch/drag 语义字段已接入前端;`_destinations` 已先完成数据抽取,
+但目的地命中行为仍未接。当前 prefab 全量 37 个非空 destination ref(29 drag + 8 gyro),
+外部 JSON 排除 dating18 后新增 12 个 action 的 skeleton-space `destinations` 矩形:
+dating1/2/6/11。生成前剥离 `destinations` 后与旧动作 JSON 完全一致,说明本次只新增目的地字段。
 
 运行态确证（可选）：连 S25 用 frida hook Spine `AnimationState.SetAnimation`，
 在游戏里做一次拖拽/连点对照实际动画序列；本次设备不在线，未做。

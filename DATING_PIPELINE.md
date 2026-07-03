@@ -285,8 +285,9 @@ Char000396(dating18)=112
   拖住(`mix_1`)和回弹(`mix_2`)都是**单次播、停末帧,不循环**;按住期间保持拉扯姿势直到松手(真机行为已确认)。
   drag 的 `mix_1` 普遍只有 0.1-0.17s 且 400+ 条全身 timeline(track1 会整体压住 track0 idle)。
   ⚠️ 勿再犯:OnDragEvent 处理器 `0x780C1C0`(调用点 `0x780C408`)那条 track=1 **loop=true** 是
-  "拖到 `_destinations` 目的地后循环播 `_playMotionNames[i]`"的路径(全库仅 29 点,dating2 没有,前端未实现),
-  不是按住语义;误用会让脸部动画每 0.1-0.17s 重复一次。
+  "拖到 `_destinations` 目的地后循环播 `_playMotionNames[i]`"的路径(当前 prefab 全量 37 点:
+  29 drag + 8 gyro;外部 JSON 排除 dating18 后剩 12 点),不是按住语义;误用会让脸部动画每
+  0.1-0.17s 重复一次。
 - **跟手 = 拖拽的"生命感"来源**:真机 `OnDrag` 用 `set_position` 移动点位 GO。
   **每个互动点在 skel 里有一根同名骨骼**(SkeletonUtilityBone:drag/touch=mode1 Override 即骨骼跟 GO,
   touch_follow=mode0 Follow 即 GO 跟骨骼);`boneName` = 热区 `source` 字段去掉 `" [Override]"`,
@@ -323,8 +324,11 @@ Char000396(dating18)=112
      随机选单段。浏览器自动化抽样覆盖:非 gauge 有/无 `stopMix`、完成后额外点击、reset 后重来、
      gauge 不被拦截、randomMix 单段选择、多段无 clickMax 保持原逻辑。完成后的 `stopMix` 证据不足,
      前端仍保守跳过。
-   - ⬜ **`_destinations` 拖到目的地**(29 点,dating2 无):目的地命中后 track1 loop=true 循环播
-     `_playMotionNames[i]`(带 onComplete);需先补抽 `_destinations` 坐标再实现。
+   - 🟡 **`_destinations` 拖到目的地**:数据已补抽,前端命中行为未实现。证据来自当前
+     `common-char-datingillust_assets_all.bundle` prefab:全量 37 个非空 destination ref
+     (29 drag + 8 gyro),其中 dating18 仍按既有策略排除外部化;`data/dating_actions.json`
+     现有 12 个 action 带 skeleton-space `destinations` 矩形(dating1/2/6/11)。下一步再接
+     目的地命中判定与 `_playMotionNames[i]` loop=true 播放,不要和普通拖住语义混用。
 1. **补剩余 SFX 缺口**:dating6/11/12/13/14/15/16/17/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
    不要用 `*_end` 硬 alias。
 2. **运行态确认 `mix*_0_1`**:多名角色剩下的都是阶段入口/默认动作类 `mixN_0_1`;当前 FMOD event path
@@ -402,6 +406,8 @@ Char000396(dating18)=112
 
 ## 修订说明
 
+- 2026-07-03(二)：TODO 6 完结——第三类 mix/special 互动语音全库归零(11 角色重跑,无新 OGG,前端零改动)。根因是三层基础问题(空 tsv 推断/extract-apply 大小写不匹配/17 号 Char004102 前缀),工具修正:apply 补大小写规范、extract/apply/audit 增 `--char-alias`(char004202→char004102)。状态矩阵"点→语音"列 14 心契全 ✅。
+- 2026-07-03：`_destinations` 数据抽取阶段完成,前端行为未接。`extract_dating_actions.py` 现在从 destination MonoBehaviour 的 GameObject 反查 RectTransform,输出 skeleton-space 目的地矩形;生成前去掉 `destinations` 后与旧 `data/dating_actions.json` 完全一致,因此本次数据变化仅新增 12 个目的地字段(dating1/2/6/11,不含 dating18)。
 - 2026-07-03(二)：TODO 6 完结——第三类 mix/special 互动语音全库归零(11 角色重跑,无新 OGG,前端零改动)。根因是三层基础问题(空 tsv 推断/extract-apply 大小写不匹配/17 号 Char004102 前缀),工具修正:apply 补大小写规范、extract/apply/audit 增 `--char-alias`(char004202→char004102)。状态矩阵"点→语音"列 14 心契全 ✅。
 - 2026-07-03：touch 多段/随机抽样复核完成。样本包括 `illust_dating13 3_19_0`(非 gauge+stopMix,未完成停手播 `mix3_19_end`,完成后额外点击无新增动画)、`illust_dating10 1_18_13`(非 gauge 无 stopMix,三连后拦截第 4 下,reset 后从 `mix1_18_1` 重来)、`illust_dating4 1_1_0`(randomMix 单段随机)、`illust_dating15 1_1_0`(gauge 连点未被拦截)、`illust_dating1 1_16_0`(多段无 clickMax 保持原逻辑)。语法检查与 audio audit 通过,控制台仅 favicon 404。
 - 2026-07-03：#16 奥利维耶 mix 动作语音 + 点→语音全部完成(TODO 4 完结)。纠正三处旧结论:①"16 的 mix 不在自己 bank"系 audit 误判(mix 事件只引用情绪 sample,无自有片段);②dating16 旧 events 因 `--infer-event-paths-from-samples` 存在 GUID 错标,已用总表 tsv 重跑修正;③旧"94 残留"分摊表 13=9/16=22 有误(实为 13=15/16=16),第三类残留(缺 voice 引用条数)94→78,另发现 6 个缺 motion 点为旧统计漏算、17 号母表跨角色引用 Char004102 的新线索(见第 6/7 节)。仅改 `data/dating_audio.json`,前端零改动。
