@@ -676,6 +676,8 @@
           label: "点击药膏上药",
           mix: ["mix1_27_1"],
           requires: ["teresseSkirtOpened"],
+          hotzoneVisibleWhen: ["teresseSkirtOpened"],
+          hotzonePriority: 10,
           blockedMessage: "先拉开双腿间的裙子，再点药膏。",
           setFlag: "teresseOintmentApplied",
         },
@@ -685,6 +687,8 @@
           mix: [],
           motions: ["motion1_28"],
           requires: ["teresseOintmentApplied"],
+          hotzoneVisibleWhen: ["teresseOintmentApplied"],
+          hotzonePriority: 20,
           blockedMessage: "按游戏顺序：先拉开裙子，再点药膏，最后贴 OK 绷。",
           nextStage: "next",
         },
@@ -1069,10 +1073,11 @@
     };
     const HOTZONE_OVERRIDES = {
       illust_dating4: {
-        // The prefab's point2_28/29 follow bones sit on the reaction/effect area,
-        // while the game interaction starts from the visible tools on the tray.
-        // These boxes are measured in the same skeleton-space coordinate system
-        // from the stage-2 idle view.
+        // The prefab follow bones for tool interactions can sit on reaction/effect
+        // areas instead of the visible tray tools. These manual boxes are measured
+        // in the same skeleton-space coordinate system as the idle view.
+        "1_27_0": { x: 300, y: -880, width: 270, height: 210, shape: 0, source: "stage1 tray ointment [Manual]", space: "skeleton" },
+        "1_28_0": { x: 170, y: -1000, width: 250, height: 260, shape: 0, source: "stage1 tray bandage [Manual]", space: "skeleton" },
         "2_17_0": { x: 55, y: -820, width: 380, height: 390, shape: 0, source: "tray Glutti plug [Manual]", space: "skeleton" },
         "2_18_0": { x: -500, y: 60, width: 300, height: 300, shape: 0, source: "plug target 1 [Manual]", space: "skeleton" },
         "2_20_0": { x: -500, y: -700, width: 330, height: 330, shape: 0, source: "plug target 2 [Manual]", space: "skeleton" },
@@ -2455,6 +2460,7 @@
       if (renderCardGameHotzones()) return;
       if (!prefabActions.length) return;
       const rendered = prefabActions.map((item, idx) => {
+        if (item.action.hotzoneVisibleWhen?.some(flag => !interactionState[flag])) return null;
         const zone = prefabHotzone(currentEntry.id, item.key);
         const box = zone && hotzoneToScreenBox(zone);
         if (!box) return null;
@@ -2497,6 +2503,8 @@
     }
 
     function compareHotzoneStack(a, b) {
+      const priorityDiff = (a.item.action.hotzonePriority || 0) - (b.item.action.hotzonePriority || 0);
+      if (priorityDiff) return priorityDiff;
       const areaDiff = b.area - a.area;
       if (Math.abs(areaDiff) > 1) return areaDiff;
       const kindRank = action => action.kind === "drag" ? 0 : action.kind === "gyro" ? 1 : 2;
