@@ -580,6 +580,43 @@
         3: "鞭子",
       },
     };
+    const PREFAB_ACTION_LABEL_OVERRIDES = {
+      illust_dating6: {
+        "6_1_0": "嘴/脸部拖拽",
+        "6_2_0": "耳朵",
+        "6_3_0": "腋下",
+        "6_4_0": "肩/颈侧",
+        "6_5_0": "画面右胸",
+        "6_6_0": "右胸后续",
+        "6_7_0": "画面左胸",
+        "6_8_0": "左胸后续",
+        "6_9_0": "肚脐拖拽",
+        "6_10_0": "泳装下部拖拽",
+        "6_11_0": "画面右大腿",
+        "6_12_0": "右大腿后续",
+        "6_13_0": "画面左大腿",
+        "6_14_0": "左大腿后续",
+        "6_15_0": "膝盖",
+        "6_16_0": "膝盖后续",
+        "6_17_0": "小腿/脚踝",
+        "6_18_0": "小腿/脚踝后续",
+        "6_19_0": "脚部",
+        "6_20_0": "脚部后续",
+        "6_21_0": "右胸连锁1",
+        "6_22_0": "右胸连锁2",
+        "6_23_0": "左胸连锁1",
+        "6_24_0": "左胸连锁2",
+        "6_25_0": "肩/颈连锁1",
+        "6_26_0": "肩/颈连锁2",
+        "6_27_0": "膝盖连锁1",
+        "6_28_0": "膝盖连锁1后续",
+        "6_29_0": "膝盖连锁1后续",
+        "6_30_0": "膝盖连锁2",
+        "6_31_0": "膝盖连锁2后续",
+        "6_32_0": "膝盖连锁2后续",
+        "6_33_0": "膝盖连锁2终点",
+      },
+    };
     const STAGE_TOOL_SKINS = {
       illust_dating7: { 1: { 0: "idle1_1", 7: "idle1_1", 4: "idle1_2" }, 2: { 0: "idle1_0" } },
       illust_dating9: { 1: { 0: "default", 8: "default", 9: "default" }, 2: { 0: "default", 9: "default", 10: "default" } },
@@ -1809,7 +1846,7 @@
       prefabActions.forEach(({ key, action }, idx) => {
         const b = document.createElement("button");
         b.className = "item body-anim";
-        b.textContent = prefabActionLabel(action, idx);
+        b.textContent = prefabActionLabel(action, idx, key);
         b.title = prefabActionTitle(action, key);
         b.onclick = () => action.cardGame === "deal" ? playCardDeal() : playPrefabAction(action, b, key);
         animList.appendChild(b);
@@ -2521,7 +2558,7 @@
       rendered.forEach(({ item, zone, box, visible, labelIndex }) => {
         const b = makeHotzoneButton(
           box,
-          hotzoneLabel(item.action, labelIndex),
+          hotzoneLabel(item.action, labelIndex, item.key),
           prefabActionTitle(item.action, item.key, zone),
           item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
         );
@@ -3144,8 +3181,13 @@
       return source.includes("_follow");
     }
 
-    function hotzoneLabel(action, idx) {
-      if (action.label) return action.label.split(/[：:]/)[0].replace(/^画面/, "");
+    function prefabActionDisplayLabel(action, key) {
+      return PREFAB_ACTION_LABEL_OVERRIDES[currentEntry?.id]?.[key] || action.label || "";
+    }
+
+    function hotzoneLabel(action, idx, key = null) {
+      const label = prefabActionDisplayLabel(action, key);
+      if (label) return label.split(/[：:]/)[0].replace(/^画面/, "");
       if (action.clickMax) return `${action.clickMax}击`;
       if (action.kind === "drag") return "拖";
       if (action.kind === "gyro") return "晃";
@@ -3163,11 +3205,11 @@
       return action.nextStage;
     }
 
-    function prefabActionLabel(action, idx) {
+    function prefabActionLabel(action, idx, key = null) {
       const kind = action.kind === "drag" ? "拖拽" : action.kind === "gyro" ? "晃动" : "触摸";
       const target = resolveActionNextStage(action);
       const next = target ? ` -> 阶段${target}` : "";
-      const parts = [action.label || `${kind}${idx + 1}`];
+      const parts = [prefabActionDisplayLabel(action, key) || `${kind}${idx + 1}`];
       if (action.gauge) parts.push("计量");
       if (action.clickMax) parts.push(`${action.clickMax}连击`);
       return `${parts.join(" · ")}${next}`;
@@ -3176,7 +3218,7 @@
     function prefabActionTitle(action, key, zone) {
       const kind = action.kind === "drag" ? "拖拽" : action.kind === "gyro" ? "晃动" : "触摸";
       const pointId = Number(key?.split("_")?.[1]);
-      const baseLabel = action.label || `${kind}${Number.isFinite(pointId) ? pointId : 1}`;
+      const baseLabel = prefabActionDisplayLabel(action, key) || `${kind}${Number.isFinite(pointId) ? pointId : 1}`;
       const parts = [baseLabel];
       if (action.gauge) parts.push("计量");
       if (action.clickMax) parts.push(`${action.clickMax}连击`);
