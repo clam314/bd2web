@@ -1153,6 +1153,7 @@
     let cardGameTimers = [];
     let teresseToolMode = null;
     let hotzoneProjectionPending = false;
+    let hotzoneFollowTracking = false;
     let activeInteractionVoiceKey = null;
     let activeInteractionMotionNames = new Set();
     let datingHotzonesPromise = null;
@@ -1640,12 +1641,16 @@
         premultipliedAlpha: false,
         viewport: VIEWPORT_OVERRIDES[entry.id] || makeViewport(entry),
         frame: (p) => {
-          if (!hotzoneProjectionPending) return;
+          if (!hotzoneProjectionPending && !hotzoneFollowTracking) return;
           if (!p.viewport?.width || !p.viewport?.height) return;
           const rect = p.canvas?.getBoundingClientRect();
           if (!rect?.width || !rect?.height) return;
-          hotzoneProjectionPending = false;
-          renderHotzones(currentPrefabActions());
+          if (hotzoneProjectionPending) {
+            hotzoneProjectionPending = false;
+            renderHotzones(currentPrefabActions());
+          } else {
+            refreshHotzonePositions();
+          }
         },
         success: (p) => {
           if (loadGeneration !== datingLoadGeneration || p !== player) {
@@ -1938,6 +1943,7 @@
       if (STATEFUL_INTERACTION_IDS.has(currentEntry?.id) && stageNo === 1) {
         interactionState = {};
       }
+      if (stageNo !== currentStage) clearIndexedTouchMixProgress();
       currentStage = stageNo;
       selectedToolId = defaultStageToolId(stageNo, getStageTools(stageModel.stages.get(stageNo)));
       teresseToolMode = null;
@@ -2083,6 +2089,9 @@
         const mix = randomMixChoice(action.mix || []);
         return mix ? { ...action, mix: [mix] } : action;
       }
+      if (!action.clickMax && shouldUseIndexedTouchMix(action)) {
+        return prepareIndexedTouchMix(action, pointKey);
+      }
       if (!action.clickMax) return action;
       const progressKey = action.progressKey || `${currentEntry?.id || "entry"}:${pointKey || action.label || "action"}:progress`;
       const now = performance.now();
@@ -2114,6 +2123,38 @@
           ? `连点完成 ${next}/${action.clickMax}`
           : `连点 ${next}/${action.clickMax}`,
       };
+    }
+
+    function shouldUseIndexedTouchMix(action) {
+      const mix = action.mix || [];
+      if (action.kind !== "touch" || action.clickMax || action.randomMix || action.gauge || action.stopMix) return false;
+      if (action.nextStage || action.setFlag || (action.motions || []).length) return false;
+      if (mix.length < 2) return false;
+      return mix.some(name => /_end$/.test(name)) || new Set(mix).size < mix.length;
+    }
+
+    function prepareIndexedTouchMix(action, pointKey) {
+      const progressKey = action.progressKey || `${currentEntry?.id || "entry"}:${pointKey || action.label || "action"}:indexedMix`;
+      const previousState = interactionState[progressKey];
+      const previousCount = previousState && typeof previousState === "object" ? previousState.count || 0 : 0;
+      const next = previousCount + 1;
+      const mixIndex = Math.min(next - 1, Math.max(0, (action.mix || []).length - 1));
+      const mix = (action.mix || [])[mixIndex];
+      interactionState = { ...interactionState, [progressKey]: { count: next } };
+      return {
+        ...action,
+        mix: mix ? [mix] : [],
+        motions: [],
+        nextStage: null,
+        setFlag: null,
+      };
+    }
+
+    function clearIndexedTouchMixProgress() {
+      const keys = Object.keys(interactionState).filter(key => key.endsWith(":indexedMix"));
+      if (!keys.length) return;
+      interactionState = { ...interactionState };
+      keys.forEach(key => delete interactionState[key]);
     }
 
     function randomMixChoice(mixes) {
@@ -2461,26 +2502,31 @@
     function renderHotzones(prefabActions) {
       cancelPrefabDrag();
       hotzoneLayer.innerHTML = "";
+      hotzoneFollowTracking = false;
       activeGyroAction = null;
       activeGyroPointKey = null;
       gyroBaseline = null;
       if (!currentEntry) return;
       if (renderCardGameHotzones()) return;
       if (!prefabActions.length) return;
+      const hiddenBox = { left: -999, top: -999, width: 1, height: 1 };
       const rendered = prefabActions.map((item, idx) => {
         if (item.action.hotzoneVisibleWhen?.some(flag => !interactionState[flag])) return null;
         const zone = prefabHotzone(currentEntry.id, item.key);
         const box = zone && hotzoneToScreenBox(zone);
-        if (!box) return null;
-        return { item, zone, box, labelIndex: idx, area: box.width * box.height };
+        if (!box && !hotzoneUsesFollowBone(zone)) return null;
+        return { item, zone, box: box || hiddenBox, visible: Boolean(box), labelIndex: idx, area: box ? box.width * box.height : 0 };
       }).filter(Boolean).sort(compareHotzoneStack);
-      rendered.forEach(({ item, zone, box, labelIndex }) => {
+      hotzoneFollowTracking = rendered.some(({ zone }) => hotzoneUsesFollowBone(zone));
+      rendered.forEach(({ item, zone, box, visible, labelIndex }) => {
         const b = makeHotzoneButton(
           box,
           hotzoneLabel(item.action, labelIndex),
           prefabActionTitle(item.action, item.key, zone),
           item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
         );
+        b.dataset.key = item.key;
+        b.hidden = !visible;
         if (item.action.longPress) {
           b.addEventListener("pointerdown", event => beginLongPress(item.action, b, event, item.key));
           b.addEventListener("pointerup", event => cancelLongPress(true, event));
@@ -2534,6 +2580,25 @@
       return b;
     }
 
+    function refreshHotzonePositions() {
+      if (!currentEntry || !stageModel) return;
+      const byKey = new Map(currentPrefabActions().map(item => [item.key, item]));
+      hotzoneLayer.querySelectorAll(".hotzone[data-key]").forEach(button => {
+        const item = byKey.get(button.dataset.key);
+        const zone = item && prefabHotzone(currentEntry.id, item.key);
+        const box = zone && hotzoneToScreenBox(zone);
+        if (!box) {
+          button.hidden = true;
+          return;
+        }
+        button.hidden = false;
+        button.style.left = box.left + "%";
+        button.style.top = box.top + "%";
+        button.style.width = box.width + "%";
+        button.style.height = box.height + "%";
+      });
+    }
+
     function beginPrefabDrag(action, element, event, pointKey = null) {
       if (!player || activePrefabDrag) return;
       event.preventDefault();
@@ -2579,7 +2644,7 @@
         return;
       }
       moveDragFollow(dx, dy);
-      if (!drag.resolved && shouldResolvePrefabDrag(drag, distance)) {
+      if (!drag.resolved && shouldResolvePrefabDrag(drag, distance, event)) {
         drag.resolved = true;
         playDragSuccess(drag.action, drag.pointKey);
       }
@@ -2704,13 +2769,41 @@
       dragFollow = null;
     }
 
-    function shouldResolvePrefabDrag(drag, distance) {
+    function shouldResolvePrefabDrag(drag, distance, event) {
       const action = drag.action;
       if (!action) return false;
       const hasSuccessMotion = (action.motions || []).some(animationExists);
       const hasStageAdvance = !!resolveActionNextStage(action);
       if (!hasSuccessMotion && !hasStageAdvance) return false;
+      if (Array.isArray(action.destinations) && action.destinations.length) {
+        const hitIndex = destinationHitIndex(action, event.clientX, event.clientY);
+        if (hitIndex !== null) return hitIndex >= 0;
+      }
       return distance >= drag.successThreshold && performance.now() - drag.engagedAt >= 120;
+    }
+
+    function destinationHitIndex(action, clientX, clientY) {
+      if (!Array.isArray(action?.destinations) || !action.destinations.length) return -1;
+      const layerRect = hotzoneLayer.getBoundingClientRect();
+      if (!layerRect.width || !layerRect.height) return -1;
+      let hasProjectedDestination = false;
+      for (let i = 0; i < action.destinations.length; i++) {
+        const box = hotzoneToScreenBox(action.destinations[i]);
+        if (!box) continue;
+        hasProjectedDestination = true;
+        const left = layerRect.left + box.left / 100 * layerRect.width;
+        const top = layerRect.top + box.top / 100 * layerRect.height;
+        const width = box.width / 100 * layerRect.width;
+        const height = box.height / 100 * layerRect.height;
+        const pad = Math.max(10, Math.min(24, Math.min(width, height) * 0.2));
+        if (
+          clientX >= left - pad && clientX <= left + width + pad &&
+          clientY >= top - pad && clientY <= top + height + pad
+        ) {
+          return Number.isInteger(action.destinations[i].index) ? action.destinations[i].index : i;
+        }
+      }
+      return hasProjectedDestination ? -1 : null;
     }
 
     function clearDragOverlay(mix = 0.12) {
@@ -3007,10 +3100,13 @@
       if (!canvasRect.width || !canvasRect.height || !layerRect.width || !layerRect.height) return null;
 
       const scale = zone.space === "skeleton" ? 1 : (HOTZONE_WORLD_SCALES[currentEntry.id] || 1);
-      const worldLeft = zone.x * scale;
-      const worldRight = (zone.x + zone.width) * scale;
-      const worldBottom = zone.y * scale;
-      const worldTop = (zone.y + zone.height) * scale;
+      const followBone = hotzoneFollowBone(zone);
+      const widthWorld = zone.width * scale;
+      const heightWorld = zone.height * scale;
+      const worldLeft = followBone ? followBone.worldX - widthWorld / 2 : zone.x * scale;
+      const worldRight = followBone ? followBone.worldX + widthWorld / 2 : (zone.x + zone.width) * scale;
+      const worldBottom = followBone ? followBone.worldY - heightWorld / 2 : zone.y * scale;
+      const worldTop = followBone ? followBone.worldY + heightWorld / 2 : (zone.y + zone.height) * scale;
       const backingScaleX = canvas.width / canvasRect.width;
       const backingScaleY = canvas.height / canvasRect.height;
       const zoom = canvas.height / canvas.width > viewport.height / viewport.width
@@ -3035,6 +3131,17 @@
         width: roundPct(width),
         height: roundPct(height),
       };
+    }
+
+    function hotzoneFollowBone(zone) {
+      if (!hotzoneUsesFollowBone(zone)) return null;
+      const boneName = zone.source.replace(" [Override]", "");
+      return boneName ? player?.skeleton?.findBone(boneName) || null : null;
+    }
+
+    function hotzoneUsesFollowBone(zone) {
+      const source = zone?.source || "";
+      return source.includes("_follow");
     }
 
     function hotzoneLabel(action, idx) {

@@ -322,13 +322,28 @@ Char000396(dating18)=112
      `randomMix`/`clickReset`/`stopMix`;前端 touch 已改为单次点击只播一段 mix,`clickMax`
      在重置窗口内递进,非 gauge 到上限后拦截额外点击,停手按 `clickReset` 重置,`randomMix`
      随机选单段。浏览器自动化抽样覆盖:非 gauge 有/无 `stopMix`、完成后额外点击、reset 后重来、
-     gauge 不被拦截、randomMix 单段选择、多段无 clickMax 保持原逻辑。完成后的 `stopMix` 证据不足,
+     gauge 不被拦截、randomMix 单段选择、普通多段无 clickMax 保持原逻辑。完成后的 `stopMix` 证据不足,
      前端仍保守跳过。
-   - 🟡 **`_destinations` 拖到目的地**:数据已补抽,前端命中行为未实现。证据来自当前
+   - ✅ **无 clickMax 的 repeated/end mix 按点击索引单段播放**:原生 `SpineInteractionPoint.OnClick`
+     会先递增 `CurClickCount`,随后 `SpineInteractionActionController` 对 `PlayMixAnimNames` 取
+     `min(CurClickCount - 1, mixCount - 1)` 播单段,不是把整列 mix 排队连播。`ClickMaxCount=0`
+     的 dating6 `2_1_0`/`3_1_0`/`4_1_0`/`5_1_0` 因而每点一次推进:
+     前 4 次播 `mix*_1_1`,第 5 次起钳到 `mix*_1_end`。前端只对
+     `touch + 无 clickMax + 非 random + 非 gauge + 无 stopMix + 无 motion/nextStage/setFlag + 多 mix 且有重复或 _end`
+     启用该路径;实际切阶段时清空该索引计数,对齐原生换组重置互动点状态;当前全库命中仅这 4 个点。
+   - ✅ **`_destinations` 拖到目的地(drag)**:数据已补抽,前端 drag 命中行为已接入。证据来自当前
      `common-char-datingillust_assets_all.bundle` prefab:全量 37 个非空 destination ref
      (29 drag + 8 gyro),其中 dating18 仍按既有策略排除外部化;`data/dating_actions.json`
-     现有 12 个 action 带 skeleton-space `destinations` 矩形(dating1/2/6/11)。下一步再接
-     目的地命中判定与 `_playMotionNames[i]` loop=true 播放,不要和普通拖住语义混用。
+     现有 12 个 action 带 skeleton-space `destinations` 矩形(dating1/2/6/11)。前端现在对可投影
+     drag 目标要求指针进入目的地矩形才成功;若目标在当前网页视口下完全不可投影,保守退回旧距离阈值,
+     避免卡死阶段推进。gyro destination 和 dating6 组合链仍未做。
+   - ✅ **`*_follow` 热区按当前 Spine bone 跟随**:prefab 里的 follow 点不是静态 RectTransform,
+     而是 `SkeletonUtilityBone` 绑定到同名 Spine bone。前端现在对 `source` 含 `_follow` 的热区用
+     `skeleton.findBone(name).worldX/worldY` 作为中心,并在每帧轻量刷新已有按钮位置。屏外 follow 点会先
+     作为隐藏按钮保留,动画把 bone 带进视口后自动显示。dating6 stage6 复核:初始 33 点中 13 点可见,
+     20 点隐藏;点 `6_15_0` 后隐藏点 `6_16_0`/`6_27_0`/`6_30_0` 进入可见集,点 `6_7_0` 后
+     `6_8_0`/`6_23_0` 进入可见集,点 `6_19_0` 后 `6_20_0` 进入可见集。攻略式顺序互动由此可触发,
+     未硬编码攻略文本到状态机。
 1. **补剩余 SFX 缺口**:dating6/11/12/13/14/15/16/17/19 只剩少量 gyro/初始动作缺口,需要运行态或更精确 bank 证据,
    不要用 `*_end` 硬 alias。
 2. **运行态确认 `mix*_0_1`**:多名角色剩下的都是阶段入口/默认动作类 `mixN_0_1`;当前 FMOD event path
@@ -407,6 +422,9 @@ Char000396(dating18)=112
 ## 修订说明
 
 - 2026-07-03(二)：TODO 6 完结——第三类 mix/special 互动语音全库归零(11 角色重跑,无新 OGG,前端零改动)。根因是三层基础问题(空 tsv 推断/extract-apply 大小写不匹配/17 号 Char004102 前缀),工具修正:apply 补大小写规范、extract/apply/audit 增 `--char-alias`(char004202→char004102)。状态矩阵"点→语音"列 14 心契全 ✅。
+- 2026-07-06：`_destinations` drag 命中行为已接入前端。浏览器烟测覆盖 dating6 `1_6_0`:拖远但未进目标仍停阶段1、拖进目标推进阶段2;另确认 `4_2_0` 目的地当前视口不可投影时走旧阈值兜底,不会卡死阶段4→5。未处理 gyro destination、dating6 阶段6组合链。
+- 2026-07-06：dating6 无 clickMax 的 repeated/end mix 语义已接入。il2cpp 证据:普通 `OnClick` 递增 `CurClickCount`,动作控制器取 `PlayMixAnimNames[min(CurClickCount - 1, mixCount - 1)]` 播单段;`IsSettedContinuousClick` 需要 `ClickMaxCount >= 2`,所以 dating6 `ClickMaxCount=0` 不能套连续点击逻辑。切阶段会清空索引计数以对齐原生换组重置。全库谓词命中仅 `illust_dating6` 四个 `*_1_end` 点。
+- 2026-07-06：`*_follow` 热区跟随 Spine bone 已接入前端。证据:dating6 stage6 原先大量 follow 点被投到画面左侧空白区;修后初始屏外点保留为隐藏按钮,点击 `6_15_0` 可让 `6_16_0`/`6_27_0`/`6_30_0` 随动画进入可见集,页面无错误。这是攻略顺序互动的前置机制,未硬编码攻略组合。
 - 2026-07-03：`_destinations` 数据抽取阶段完成,前端行为未接。`extract_dating_actions.py` 现在从 destination MonoBehaviour 的 GameObject 反查 RectTransform,输出 skeleton-space 目的地矩形;生成前去掉 `destinations` 后与旧 `data/dating_actions.json` 完全一致,因此本次数据变化仅新增 12 个目的地字段(dating1/2/6/11,不含 dating18)。
 - 2026-07-03(二)：TODO 6 完结——第三类 mix/special 互动语音全库归零(11 角色重跑,无新 OGG,前端零改动)。根因是三层基础问题(空 tsv 推断/extract-apply 大小写不匹配/17 号 Char004102 前缀),工具修正:apply 补大小写规范、extract/apply/audit 增 `--char-alias`(char004202→char004102)。状态矩阵"点→语音"列 14 心契全 ✅。
 - 2026-07-03：touch 多段/随机抽样复核完成。样本包括 `illust_dating13 3_19_0`(非 gauge+stopMix,未完成停手播 `mix3_19_end`,完成后额外点击无新增动画)、`illust_dating10 1_18_13`(非 gauge 无 stopMix,三连后拦截第 4 下,reset 后从 `mix1_18_1` 重来)、`illust_dating4 1_1_0`(randomMix 单段随机)、`illust_dating15 1_1_0`(gauge 连点未被拦截)、`illust_dating1 1_16_0`(多段无 clickMax 保持原逻辑)。语法检查与 audio audit 通过,控制台仅 favicon 404。

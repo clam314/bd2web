@@ -252,10 +252,20 @@ SFX sample 名中出现其它角色编号不一定是错，例如公共池复用
 `_destinations`。修复应从补抽这些字段开始，再改 `dating.html` 的播放状态机
 （点击递进/随机单段/拖拽两阶段），不要动热区坐标和 key 方案。
 
-2026-07-03 后续:前三项 touch/drag 语义字段已接入前端;`_destinations` 已先完成数据抽取,
-但目的地命中行为仍未接。当前 prefab 全量 37 个非空 destination ref(29 drag + 8 gyro),
+2026-07-03 后续:前三项 touch/drag 语义字段已接入前端;`_destinations` 已先完成数据抽取。
+2026-07-06 追加:drag 目的地命中行为已接入,可投影目标需拖进目的地矩形才成功;当前视口下完全不可投影的目标
+保守退回旧距离阈值避免卡死。当前 prefab 全量 37 个非空 destination ref(29 drag + 8 gyro),
 外部 JSON 排除 dating18 后新增 12 个 action 的 skeleton-space `destinations` 矩形:
 dating1/2/6/11。生成前剥离 `destinations` 后与旧动作 JSON 完全一致,说明本次只新增目的地字段。
+2026-07-06 追加:dating6 无 clickMax 的 repeated/end mix 已接入点击索引播放。il2cpp 证据:
+`IsSettedContinuousClick` 要 `ClickMaxCount >= 2`,而 dating6 四个点为 0;普通点击路径用
+`PlayMixAnimNames[min(CurClickCount - 1, mixCount - 1)]` 单段播放,不是整列排队。当前全库
+谓词只命中 `illust_dating6` 的 `2_1_0`/`3_1_0`/`4_1_0`/`5_1_0`;切阶段清空索引计数以对齐原生换组重置。
+2026-07-06 追加:`*_follow` 热区已改为按当前 Spine bone world 坐标每帧轻量跟随。证据:
+dating6 stage6 初始 33 点中 13 点可见/20 点隐藏;点 `6_15_0` 后 `6_16_0`/`6_27_0`/`6_30_0`
+进入可见集,点 `6_7_0` 后 `6_8_0`/`6_23_0` 进入可见集,点 `6_19_0` 后 `6_20_0` 进入可见集。
+这修的是原生 SkeletonUtilityBone follow 机制,不是把攻略文本硬编码成状态机。
+gyro destination 仍未处理。
 
 运行态确证（可选）：连 S25 用 frida hook Spine `AnimationState.SetAnimation`，
 在游戏里做一次拖拽/连点对照实际动画序列；本次设备不在线，未做。
