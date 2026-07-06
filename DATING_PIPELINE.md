@@ -157,7 +157,7 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | 6 | 威廉明娜 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺4) | — |
 | 7 | 悠丝缇亚★ | ✅ | ✅ | ✅ | ⬜(非心契) | ✅ | — |
 | 8 | 席比雅 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
-| 9 | 奶牛泰瑞丝★ | ✅ | ✅(语义标签+攻略门禁 2026-07-06) | ✅ | ⬜(非心契) | ✅ | — |
+| 9 | 奶牛泰瑞丝★ | ✅ | ✅(骨骼窗口驱动交互链 2026-07-07) | ✅ | ⬜(非心契) | ✅ | — |
 | 10 | 安洁莉卡 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
 | 11 | 伊柯利普斯 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺2) | — |
 | 12 | 杰尼斯★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺4) | — |
@@ -424,13 +424,50 @@ Char000396(dating18)=112
 
 ## 修订说明
 
+- 2026-07-07：**#9 一阶段进二阶段前的黑色榨乳器确认链纠正。**
+  对照攻略截图/原文顺序:猜对泰瑞丝图案奶瓶后,**黑色榨乳器管线/吸杯落下**,
+  然后玩家**点击泰瑞丝胸口**进入二阶段。07-07 早版把 `1_37_0` 标成
+  "榨乳器落下·点胸口",且 prefab 原始矩形 `2489x2454` 近乎覆盖整个人,容易误判成大范围
+  道具/动画触发。前端已改: `1_36_0` 标签为"猜奶瓶7·黑色榨乳器落下",`1_37_0` 标签为
+  "黑色榨乳器吸杯接胸·进入二阶段";并在 `HOTZONE_OVERRIDES` 给 `1_37_0` 改成手工胸口确认热区
+  (`x=-125,y=-360,w=620,h=520`,`stage1 dropped milker chest confirm [Manual]`)。`dating.html`
+  恢复 dating9 的 MERGED 最小覆盖,只给 `1_36_0` 设置 `cow9MilkerDropped`,再让 `1_37_0`
+  `requires/hotzoneVisibleWhen` 该 flag 后推进 `motion1_37 -> stage2`。**注意:这里的黑色榨乳器
+  是猜对奶瓶后出现并接到胸口的剧情装置,不是 tool8 的普通"挤奶器"道具；`mix1_37_1`
+  属于 tool8 普通挤奶器链,不能用于进二阶段。**
+- 2026-07-07：**#9 dating9 交互链重做——从"手写 flag 门禁"改为"骨骼窗口驱动"(通用机制)。**
+  背景:07-06 版用持久布尔 flag(`cow9StampReady/cow9BottleRow/...`)近似门禁,导致热区叠在一起、
+  时机不对(印章一次点亮永久有效、猜瓶 7 点永久重叠在同一处、猜错不需重摆、坐下无限时窗口)。
+  **原生真相(preview 里对 skel 逐动画采样 `AttachmentTimeline`/`TranslateTimeline` 证实)**:74 个
+  交互点全部有同名骨骼(`point1_30_touch` 等),点的出现/消失/排开/交接**由动画把骨骼搬进画面(±画面内)
+  或停到 ±50000(画面外)天然驱动**。例:idle1 把 7 个猜瓶骨骼停在 x≈50567 场外,`mix1_29_1`(4.63s)在
+  t≈0.5–3.5s 把它们**排成一排**(x 从 -233 到 720)摆上桌、动画结束收走;`mix1_15_1`(2.2s)只在 t≈0–1.5s
+  让 8 个盖章点在场(→**每次盖章都要重新点印章**,07-06 猜测"一次性 flag"被证伪);榨乳器 1_37 只在
+  `mix1_36_1` 的 t≈5–5.5s 在场;坐下 2_11 只在 `mix2_10_1` 前 ~1.9s 窗口(→抬臀后 2 秒内点肚子才坐下)。
+  **改动(全在 `dating.html`)**:①`hotzoneUsesFollowBone` 从"只认 `*_follow` 源"泛化——新增
+  `BONE_FOLLOW_HOTZONE_IDS`(当前=`{illust_dating9}`),集合内角色对**所有点**用"源名(去 ` [Override]`)
+  = 骨骼名"跟骨骼世界坐标,矩形只当尺寸;②删掉 dating9 大部分手写 `PREFAB_POINT_ACTIONS` 门禁,
+  仅保留 `1_36_0 -> 1_37_0` 榨乳器确认链的最小 stateful 覆盖。播放语义(clickMax/stopMix/nextStage)
+  大多由外部 `dating_actions.json` 提供。**浏览器全链路实测通过**:
+  猜瓶一排出现/收走、印章限时、榨乳器→二阶段、抬臀后 2_11 限时窗口(2.5s 后消失)、乳牛 25 连击→2_20
+  绝顶;dating4(25 热区)、dating6 stage6(33 点/13 可见/30 follow)回归无错。
+  **每帧刷新**:复用既有 `frame` 回调里的 `refreshHotzonePositions()`(原本只为 `_follow`),现对
+  `BONE_FOLLOW_HOTZONE_IDS` 角色同样每帧重投影,骨骼一动位置就跟。
+  **遗留·泳衣带子拖拽方向(1_8/1_9)——需设备运行态证据,未改**:用户反馈"画面左带子只能往右拉"。
+  查明是**骨骼 IK 内禀**:两条带子点(`point1_8_drag`/`point1_9_drag`)各驱动单骨 IK(`BR_G1`/`BR_GR1`,
+  compress=true/stretch=false),rest 时骨骼已指向画面左(arot 180)满伸展 → 水平**左拉被钳制(带子驱动骨
+  `bone33`/`bone46` 世界坐标不动)**,只有**右拉(骨骼横扫过去,arot 180→360)和下拉/斜下**才让带子形变
+  (preview 里逐点扫 tip 世界坐标证实,左右两带对称)。同一 skel 游戏也是这套 IK,所以纯水平左拉在游戏里
+  应同样无效;带子的自然脱肩动作是**向下/斜下拉**(当前已支持)。要让"水平左拉"也响应需 frida hook 游戏
+  `OnDrag` 看 finger delta→点位 GO 的真实映射(S25 离线未做),**不要盲改 IK**(违反"方向不靠猜、要运行态
+  证据"的项目铁律)。
 - 2026-07-06：**#9 奶牛泰瑞丝(dating9, char001197) 交互还原**，对照 PTT 攻略
   (https://disp.cc/ptt/C_Chat/1edNVIad)完成。语义证据 = Spine slot 命名(泰瑞丝 skel 的
   slot 高度语义化：`paint_face/hip/belly/arm/breast`=印章8个落点、`table_bottle_fall`=打翻、
   `idle1_milk_bottle`=摆出猜图案奶瓶、`swinsuit_yes_no`=猜错摇手、`arm_L_yes`+`milking_machine_l/r`
-  =猜对比爱心+榨乳器落下、`Gauge1-5/Gauge_char`=计量条(动画自带,无需 UI)、`F_smoke`=左下奶罐故障、
+  =猜对比爱心+黑色榨乳器管线/吸杯出现、`Gauge1-5/Gauge_char`=计量条(动画自带,无需 UI)、`F_smoke`=左下奶罐故障、
   `F_leg_up_l/r`=乳牛道具抬腿) × 热区投影位置逐点比对。前端改动(全在 `dating.html`)：
-  ①`TOOL_LABEL_OVERRIDES`：tool8=挤奶器/tool9=牛奶瓶/tool10=乳牛道具;
+  ①`TOOL_LABEL_OVERRIDES`：tool8=挤奶器(普通道具)/tool9=牛奶瓶/tool10=乳牛道具;
   ②`PREFAB_ACTION_LABEL_OVERRIDES` 74 点全量语义标签;
   ③dating9 加入 `MERGED_PREFAB_ACTION_IDS`，`PREFAB_POINT_ACTIONS` 按 dating4 先例加攻略门禁
   (印章1_15→盖章1_16-23、后方奶罐1_29→猜瓶1_30-36(藏到点罐后)→猜对1_36→榨乳器1_37(热区隐藏+requires)

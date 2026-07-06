@@ -580,7 +580,7 @@
         3: "鞭子",
       },
       illust_dating9: {
-        8: "挤奶器",
+        8: "挤奶器(普通道具)",
         9: "牛奶瓶",
         10: "乳牛道具",
       },
@@ -648,7 +648,7 @@
         "1_21_0": "印章·胸(画面左)",
         "1_22_0": "印章·胸(中)",
         "1_23_0": "印章·胸(画面右)",
-        "1_24_8": "挤奶器·上方现挤",
+        "1_24_8": "挤奶器(普通道具)·上方现挤",
         "1_25_9": "牛奶瓶·喂嘴(呛到)",
         "1_26_9": "牛奶瓶·洒头/脸",
         "1_27_9": "牛奶瓶·洒胸口",
@@ -660,12 +660,12 @@
         "1_33_0": "猜奶瓶4(猜错)",
         "1_34_0": "猜奶瓶5(猜错)",
         "1_35_0": "猜奶瓶6(猜错)",
-        "1_36_0": "猜奶瓶7·猜对比爱心",
-        "1_37_0": "榨乳器落下·点胸口",
+        "1_36_0": "猜奶瓶7·黑色榨乳器落下",
+        "1_37_0": "黑色榨乳器吸杯接胸·进入二阶段",
         "1_38_0": "胸口连点·完成反应",
         "1_39_0": "牛奶打翻后",
-        "1_40_8": "挤奶器·吸管喂嘴",
-        "1_41_8": "挤奶器·喷到胸上",
+        "1_40_8": "挤奶器(普通道具)·吸管喂嘴",
+        "1_41_8": "挤奶器(普通道具)·喷到胸上",
         "2_1_0": "摸头",
         "2_2_0": "摸嘴·吐舌",
         "2_3_0": "摸脸(哭哭脸)",
@@ -898,35 +898,24 @@
         "1_35_11": { kind: "touch", mix: ["mix1_35_1"], motions: ["motion1_35"], nextStage: "next" },
         "2_1_0": { kind: "touch", mix: ["mix2_1_1"], motions: ["motion2_1"], nextStage: "next" },
       },
-      // dating9 走 MERGED：外部 JSON 提供全部点位，这里只覆盖攻略确认的顺序门禁
-      // (印章→盖章、后方奶罐→猜瓶→榨乳器→点胸进二阶段、连点完成态、抬臀→坐下、计量条集满)。
+      // dating9 走 MERGED：外部 JSON 提供全部点位，这里只覆盖攻略确认的最小顺序门禁。
+      // 关键链路：猜奶瓶7(猜对后黑色榨乳器管线落下) -> 点击胸口进入二阶段。
+      // 注意：这里的“榨乳器”是猜对后从上方落下的剧情装置，不是 tool8 的“挤奶器”。
       illust_dating9: {
-        "1_10_0": { kind: "touch", mix: ["mix1_10_1", "mix1_10_2", "mix1_10_3", "mix1_10_4", "mix1_10_5", "mix1_10_6", "mix1_10_7"], clickMax: 8, clickReset: 1.0, stopMix: "mix1_10_end", setFlag: "cow9ChestCombo" },
-        "1_14_0": { kind: "touch", mix: ["mix1_14_1", "mix1_14_2", "mix1_14_3", "mix1_14_4", "mix1_14_5", "mix1_14_6", "mix1_14_7", "mix1_14_8", "mix1_14_9"], clickMax: 10, clickReset: 1.0, stopMix: "mix1_14_end", setFlag: "cow9MilkSpilled" },
-        "1_15_0": { kind: "touch", mix: ["mix1_15_1"], setFlag: "cow9StampReady" },
-        "1_16_0": { kind: "touch", mix: ["mix1_16_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_17_0": { kind: "touch", mix: ["mix1_17_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_18_0": { kind: "touch", mix: ["mix1_18_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_19_0": { kind: "touch", mix: ["mix1_19_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_20_0": { kind: "touch", mix: ["mix1_20_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_21_0": { kind: "touch", mix: ["mix1_21_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_22_0": { kind: "touch", mix: ["mix1_22_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_23_0": { kind: "touch", mix: ["mix1_23_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
-        "1_29_0": { kind: "touch", mix: ["mix1_29_1"], setFlag: "cow9BottleRow" },
-        "1_30_0": { kind: "touch", mix: ["mix1_30_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
-        "1_31_0": { kind: "touch", mix: ["mix1_31_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
-        "1_32_0": { kind: "touch", mix: ["mix1_32_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
-        "1_33_0": { kind: "touch", mix: ["mix1_33_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
-        "1_34_0": { kind: "touch", mix: ["mix1_34_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
-        "1_35_0": { kind: "touch", mix: ["mix1_35_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
-        "1_36_0": { kind: "touch", mix: ["mix1_36_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"], setFlag: "cow9MilkerDropped" },
-        "1_37_0": { kind: "touch", mix: ["mix1_37_1"], motions: ["motion1_37"], nextStage: "next", requires: ["cow9MilkerDropped"], hotzoneVisibleWhen: ["cow9MilkerDropped"], blockedMessage: "按游戏顺序：猜对印图案的牛奶瓶，等榨乳器落下再点胸口。" },
-        "1_38_0": { kind: "touch", mix: ["mix1_10_8"], requires: ["cow9ChestCombo"], visibleWhen: ["cow9ChestCombo"] },
-        "1_39_0": { kind: "touch", mix: ["mix1_14_10"], requires: ["cow9MilkSpilled"], visibleWhen: ["cow9MilkSpilled"] },
-        "2_10_0": { kind: "touch", mix: ["mix2_10_1"], setFlag: "cow9HipRaised" },
-        "2_11_0": { kind: "touch", mix: ["mix2_11_1"], requires: ["cow9HipRaised"], blockedMessage: "先点臀部让她抬起来，再点肚子让她坐下去。" },
-        "2_16_10": { kind: "touch", mix: ["mix2_16_1", "mix2_16_2", "mix2_16_3", "mix2_16_4", "mix2_16_5", "mix2_16_6", "mix2_16_7", "mix2_16_8", "mix2_16_9", "mix2_16_10", "mix2_16_11", "mix2_16_12", "mix2_16_13", "mix2_16_14", "mix2_16_15", "mix2_16_16", "mix2_16_17", "mix2_16_18", "mix2_16_19", "mix2_16_20", "mix2_16_21", "mix2_16_22", "mix2_16_23", "mix2_16_24"], clickMax: 25, clickReset: 1.0, stopMix: "mix2_16_end", setFlag: "cow9GaugeFull" },
-        "2_20_10": { kind: "touch", mix: ["mix2_16_25"], requires: ["cow9GaugeFull"], visibleWhen: ["cow9GaugeFull"] },
+        "1_36_0": {
+          kind: "touch",
+          mix: ["mix1_36_1"],
+          setFlag: "cow9MilkerDropped",
+        },
+        "1_37_0": {
+          kind: "touch",
+          mix: [],
+          motions: ["motion1_37"],
+          nextStage: "next",
+          requires: ["cow9MilkerDropped"],
+          hotzoneVisibleWhen: ["cow9MilkerDropped"],
+          blockedMessage: "先猜对泰瑞丝图案的牛奶瓶，解锁黑色榨乳器，再点胸口触发吸杯接胸后进入二阶段。",
+        },
       },
       illust_dating10: {
         "1_26_13": { kind: "touch", mix: ["mix1_26_1"], motions: ["motion1_26"], nextStage: "next" },
@@ -1025,6 +1014,7 @@
       },
     };
     const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9"]);
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating9"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1121,7 +1111,7 @@
         "2_1_0": { x: -982.5, y: -202.8, width: 1750, height: 400, shape: 0, source: "point2_1_touch [Override]" },
       },
       illust_dating9: {
-        "1_37_0": { x: -598.7, y: -488.9, width: 1244.7, height: 1227.1, shape: 0, source: "point1_37_touch [Override]" },
+        "1_37_0": { x: -125, y: -360, width: 620, height: 520, shape: 0, source: "stage1 dropped milker chest confirm [Manual]", space: "skeleton" },
       },
       illust_dating10: {
         "1_26_13": { x: -6669.6, y: -127.7, width: 300, height: 300, shape: 0, source: "point1_26_touch_tool13_follow [Override]" },
@@ -1220,6 +1210,14 @@
       },
     };
     const HOTZONE_OVERRIDES = {
+      illust_dating9: {
+        // The prefab rect for this confirmation point spans most of the body.
+        // After the correct bottle guess, the player taps Teresse's chest to
+        // trigger the black suction-cup milker transition.
+        // Use a manual chest box here; the prefab point1_37 bone stays
+        // offscreen in the web playback after mix1_36_1.
+        "1_37_0": { x: -125, y: -360, width: 620, height: 520, shape: 0, source: "stage1 dropped milker chest confirm [Manual]", space: "skeleton" },
+      },
       illust_dating4: {
         // The prefab follow bones for tool interactions can sit on reaction/effect
         // areas instead of the visible tray tools. These manual boxes are measured
@@ -3283,13 +3281,23 @@
 
     function hotzoneFollowBone(zone) {
       if (!hotzoneUsesFollowBone(zone)) return null;
-      const boneName = zone.source.replace(" [Override]", "");
+      return hotzoneSourceBone(zone);
+    }
+
+    function hotzoneSourceBone(zone) {
+      const boneName = (zone?.source || "").replace(" [Override]", "");
       return boneName ? player?.skeleton?.findBone(boneName) || null : null;
     }
 
+    // 真机上每个交互点的位置由 skel 里同名骨骼驱动(SkeletonUtilityBone)：动画把骨骼
+    // 搬进画面=点出现、停到 ±50000=点消失，prefab 矩形只是尺寸。BONE_FOLLOW_HOTZONE_IDS
+    // 里的角色对全部点启用骨骼定位(dating9 已验证 74 点全有同名骨骼、矩形中心==骨骼
+    // setup 位)；其余角色暂只对 *_follow 源生效，逐个回归后再扩。
     function hotzoneUsesFollowBone(zone) {
       const source = zone?.source || "";
-      return source.includes("_follow");
+      if (source.includes("_follow")) return true;
+      if (!BONE_FOLLOW_HOTZONE_IDS.has(currentEntry?.id)) return false;
+      return Boolean(hotzoneSourceBone(zone));
     }
 
     function prefabActionDisplayLabel(action, key) {
