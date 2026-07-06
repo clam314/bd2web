@@ -579,6 +579,11 @@
         2: "按摩棒",
         3: "鞭子",
       },
+      illust_dating9: {
+        8: "挤奶器",
+        9: "牛奶瓶",
+        10: "乳牛道具",
+      },
     };
     const PREFAB_ACTION_LABEL_OVERRIDES = {
       illust_dating6: {
@@ -615,6 +620,85 @@
         "6_31_0": "膝盖连锁2后续",
         "6_32_0": "膝盖连锁2后续",
         "6_33_0": "膝盖连锁2终点",
+      },
+      // dating9 语义来源：Spine slot 命名（paint_*/Stamp_*/table_bottle_fall/Gauge/
+      // yes_no/arm_L_yes/machine/mouth_milk/F_milk_*/F_leg_up_* 等）× 热区投影位置，
+      // 与 PTT 攻略(disp.cc/ptt/C_Chat/1edNVIad)逐项对上。
+      illust_dating9: {
+        "1_1_0": "头顶",
+        "1_2_0": "脸颊(画面左)",
+        "1_3_0": "脸颊(画面右)",
+        "1_4_0": "头发/耳侧(画面左)",
+        "1_5_0": "脸侧(画面右)",
+        "1_6_0": "嘴唇",
+        "1_7_0": "铃铛",
+        "1_8_0": "泳衣带子拖拽(画面左)",
+        "1_9_0": "泳衣带子拖拽(画面右)",
+        "1_10_0": "胸口连点·脸红",
+        "1_11_0": "大腿(画面左)",
+        "1_12_0": "膝盖拖拽·分开双腿",
+        "1_13_0": "肚子",
+        "1_14_0": "桌左牛奶瓶·连点打翻",
+        "1_15_0": "桌上印章",
+        "1_16_0": "印章·右脸颊",
+        "1_17_0": "印章·屁股",
+        "1_18_0": "印章·肚子(画面左)",
+        "1_19_0": "印章·肚子(画面右)",
+        "1_20_0": "印章·肩/手臂",
+        "1_21_0": "印章·胸(画面左)",
+        "1_22_0": "印章·胸(中)",
+        "1_23_0": "印章·胸(画面右)",
+        "1_24_8": "挤奶器·上方现挤",
+        "1_25_9": "牛奶瓶·喂嘴(呛到)",
+        "1_26_9": "牛奶瓶·洒头/脸",
+        "1_27_9": "牛奶瓶·洒胸口",
+        "1_28_9": "牛奶瓶·洒肚子",
+        "1_29_0": "后方奶罐·摆一排猜图案",
+        "1_30_0": "猜奶瓶1(猜错)",
+        "1_31_0": "猜奶瓶2(猜错)",
+        "1_32_0": "猜奶瓶3(猜错)",
+        "1_33_0": "猜奶瓶4(猜错)",
+        "1_34_0": "猜奶瓶5(猜错)",
+        "1_35_0": "猜奶瓶6(猜错)",
+        "1_36_0": "猜奶瓶7·猜对比爱心",
+        "1_37_0": "榨乳器落下·点胸口",
+        "1_38_0": "胸口连点·完成反应",
+        "1_39_0": "牛奶打翻后",
+        "1_40_8": "挤奶器·吸管喂嘴",
+        "1_41_8": "挤奶器·喷到胸上",
+        "2_1_0": "摸头",
+        "2_2_0": "摸嘴·吐舌",
+        "2_3_0": "摸脸(哭哭脸)",
+        "2_4_0": "胸前带子拖拽(内)",
+        "2_5_0": "胸前带子拖拽(外)",
+        "2_6_0": "摸胸(画面左)",
+        "2_7_0": "摸胸(画面右)",
+        "2_8_0": "抓肚子肉",
+        "2_9_0": "泳裤带子拖拽",
+        "2_10_0": "点臀部·抬起",
+        "2_11_0": "抬起后点肚子·坐下吐舌",
+        "2_12_0": "拉膝盖(画面左)",
+        "2_13_0": "拉膝盖(画面右)",
+        "2_14_0": "右下奶罐·装满",
+        "2_15_0": "左下奶罐·故障流奶",
+        "2_16_10": "乳牛·连点25集满计量条",
+        "2_17_9": "牛奶瓶·浇头",
+        "2_18_9": "牛奶瓶·浇胸口",
+        "2_19_9": "牛奶瓶·浇胯下",
+        "2_20_10": "乳牛·集满后(绝顶)",
+        "2_21_10": "乳牛·全屏反应",
+        "2_22_0": "脸侧·哭哭比V",
+        "2_23_0": "胯部(画面左)",
+        "2_24_0": "腰腹·随机反应",
+        "2_25_10": "乳牛·抬腿(画面右)",
+        "2_26_10": "乳牛·抬双腿A",
+        "2_27_10": "乳牛·抬腿(画面左)",
+        "2_28_10": "乳牛·抬双腿B",
+        "2_29_10": "乳牛·胯下抬腿",
+        "2_30_9": "牛奶瓶·贴脸颊",
+        "2_31_9": "牛奶瓶·开盖浇胸",
+        "2_32_9": "牛奶瓶·塞胯下",
+        "2_33_0": "双手揉胸",
       },
     };
     const STAGE_TOOL_SKINS = {
@@ -814,8 +898,35 @@
         "1_35_11": { kind: "touch", mix: ["mix1_35_1"], motions: ["motion1_35"], nextStage: "next" },
         "2_1_0": { kind: "touch", mix: ["mix2_1_1"], motions: ["motion2_1"], nextStage: "next" },
       },
+      // dating9 走 MERGED：外部 JSON 提供全部点位，这里只覆盖攻略确认的顺序门禁
+      // (印章→盖章、后方奶罐→猜瓶→榨乳器→点胸进二阶段、连点完成态、抬臀→坐下、计量条集满)。
       illust_dating9: {
-        "1_37_0": { kind: "touch", mix: ["mix1_37_1"], motions: ["motion1_37"], nextStage: "next" },
+        "1_10_0": { kind: "touch", mix: ["mix1_10_1", "mix1_10_2", "mix1_10_3", "mix1_10_4", "mix1_10_5", "mix1_10_6", "mix1_10_7"], clickMax: 8, clickReset: 1.0, stopMix: "mix1_10_end", setFlag: "cow9ChestCombo" },
+        "1_14_0": { kind: "touch", mix: ["mix1_14_1", "mix1_14_2", "mix1_14_3", "mix1_14_4", "mix1_14_5", "mix1_14_6", "mix1_14_7", "mix1_14_8", "mix1_14_9"], clickMax: 10, clickReset: 1.0, stopMix: "mix1_14_end", setFlag: "cow9MilkSpilled" },
+        "1_15_0": { kind: "touch", mix: ["mix1_15_1"], setFlag: "cow9StampReady" },
+        "1_16_0": { kind: "touch", mix: ["mix1_16_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_17_0": { kind: "touch", mix: ["mix1_17_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_18_0": { kind: "touch", mix: ["mix1_18_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_19_0": { kind: "touch", mix: ["mix1_19_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_20_0": { kind: "touch", mix: ["mix1_20_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_21_0": { kind: "touch", mix: ["mix1_21_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_22_0": { kind: "touch", mix: ["mix1_22_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_23_0": { kind: "touch", mix: ["mix1_23_1"], requires: ["cow9StampReady"], hotzoneVisibleWhen: ["cow9StampReady"], blockedMessage: "先点桌上的印章，再盖到泰瑞丝身上。" },
+        "1_29_0": { kind: "touch", mix: ["mix1_29_1"], setFlag: "cow9BottleRow" },
+        "1_30_0": { kind: "touch", mix: ["mix1_30_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
+        "1_31_0": { kind: "touch", mix: ["mix1_31_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
+        "1_32_0": { kind: "touch", mix: ["mix1_32_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
+        "1_33_0": { kind: "touch", mix: ["mix1_33_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
+        "1_34_0": { kind: "touch", mix: ["mix1_34_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
+        "1_35_0": { kind: "touch", mix: ["mix1_35_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"] },
+        "1_36_0": { kind: "touch", mix: ["mix1_36_1"], requires: ["cow9BottleRow"], visibleWhen: ["cow9BottleRow"], setFlag: "cow9MilkerDropped" },
+        "1_37_0": { kind: "touch", mix: ["mix1_37_1"], motions: ["motion1_37"], nextStage: "next", requires: ["cow9MilkerDropped"], hotzoneVisibleWhen: ["cow9MilkerDropped"], blockedMessage: "按游戏顺序：猜对印图案的牛奶瓶，等榨乳器落下再点胸口。" },
+        "1_38_0": { kind: "touch", mix: ["mix1_10_8"], requires: ["cow9ChestCombo"], visibleWhen: ["cow9ChestCombo"] },
+        "1_39_0": { kind: "touch", mix: ["mix1_14_10"], requires: ["cow9MilkSpilled"], visibleWhen: ["cow9MilkSpilled"] },
+        "2_10_0": { kind: "touch", mix: ["mix2_10_1"], setFlag: "cow9HipRaised" },
+        "2_11_0": { kind: "touch", mix: ["mix2_11_1"], requires: ["cow9HipRaised"], blockedMessage: "先点臀部让她抬起来，再点肚子让她坐下去。" },
+        "2_16_10": { kind: "touch", mix: ["mix2_16_1", "mix2_16_2", "mix2_16_3", "mix2_16_4", "mix2_16_5", "mix2_16_6", "mix2_16_7", "mix2_16_8", "mix2_16_9", "mix2_16_10", "mix2_16_11", "mix2_16_12", "mix2_16_13", "mix2_16_14", "mix2_16_15", "mix2_16_16", "mix2_16_17", "mix2_16_18", "mix2_16_19", "mix2_16_20", "mix2_16_21", "mix2_16_22", "mix2_16_23", "mix2_16_24"], clickMax: 25, clickReset: 1.0, stopMix: "mix2_16_end", setFlag: "cow9GaugeFull" },
+        "2_20_10": { kind: "touch", mix: ["mix2_16_25"], requires: ["cow9GaugeFull"], visibleWhen: ["cow9GaugeFull"] },
       },
       illust_dating10: {
         "1_26_13": { kind: "touch", mix: ["mix1_26_1"], motions: ["motion1_26"], nextStage: "next" },
@@ -913,7 +1024,7 @@
         "7_13_14": { kind: "gyro", label: "左右倾斜切回二阶段桌下视角", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
       },
     };
-    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
+    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -2362,8 +2473,8 @@
     }
 
     function isPrefabActionVisible(action) {
-      if (currentEntry?.id !== "illust_dating4" || currentStage !== 2) return true;
       if (action.visibleWhen?.some(flag => !interactionState[flag])) return false;
+      if (currentEntry?.id !== "illust_dating4" || currentStage !== 2) return true;
       if (action.requiresMode) return teresseToolMode === action.requiresMode;
       return !teresseToolMode || action.selectMode || action.alwaysVisible;
     }

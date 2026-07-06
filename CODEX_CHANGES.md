@@ -274,6 +274,15 @@ gyro destination 仍未处理。
 运行态确证（可选）：连 S25 用 frida hook Spine `AnimationState.SetAnimation`，
 在游戏里做一次拖拽/连点对照实际动画序列；本次设备不在线，未做。
 
+2026-07-06 追加：**dating9 奶牛泰瑞丝交互还原**（对照 PTT 攻略 disp.cc/ptt/C_Chat/1edNVIad）。
+关键方法论（下个角色可复用）：**泰瑞丝 skel 的 slot 命名即语义**——对每个 mix 动画取
+AttachmentTimeline 中真正设为非空 attachment 的 slot（注意排除置空关键帧，且二阶段要对全
+组动画取交集当基线再做差分），`paint_*` 直接给出印章 8 个落点、`swinsuit_yes_no` vs
+`arm_L_yes`+`milking_machine` 区分猜错/猜对、`Gauge*` 证明计量条是动画自带。前端只动了
+`dating.html`：工具/点位标签 + dating9 进 MERGED + 按 dating4 先例的 requires/setFlag/
+visibleWhen 门禁 + `isPrefabActionVisible` 的 visibleWhen 泛化（dating4 已回归）。
+浏览器全链路实测通过。遗留见 `DATING_PIPELINE.md` 修订说明（猜瓶是否随机、印章是否每次重点需运行态证据）。
+
 ---
 
 ## 6. 仍需继续的工作

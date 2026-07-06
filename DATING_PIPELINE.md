@@ -157,7 +157,7 @@ event:/SFX /UISounds /BGM /Ambiences ...  ← 其它
 | 6 | 威廉明娜 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺4) | — |
 | 7 | 悠丝缇亚★ | ✅ | ✅ | ✅ | ⬜(非心契) | ✅ | — |
 | 8 | 席比雅 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
-| 9 | 奶牛泰瑞丝★ | ✅ | ✅ | ✅ | ⬜(非心契) | ✅ | — |
+| 9 | 奶牛泰瑞丝★ | ✅ | ✅(语义标签+攻略门禁 2026-07-06) | ✅ | ⬜(非心契) | ✅ | — |
 | 10 | 安洁莉卡 | ✅ | ✅ | ✅ | ✅(2026-07-03) | ✅ | — |
 | 11 | 伊柯利普斯 | ✅ | ✅ | ✅ | ✅(2026-07-03) | 🟡(缺2) | — |
 | 12 | 杰尼斯★ | ✅ | ✅ | ✅ | ⬜(非心契) | 🟡(缺4) | — |
@@ -424,6 +424,30 @@ Char000396(dating18)=112
 
 ## 修订说明
 
+- 2026-07-06：**#9 奶牛泰瑞丝(dating9, char001197) 交互还原**，对照 PTT 攻略
+  (https://disp.cc/ptt/C_Chat/1edNVIad)完成。语义证据 = Spine slot 命名(泰瑞丝 skel 的
+  slot 高度语义化：`paint_face/hip/belly/arm/breast`=印章8个落点、`table_bottle_fall`=打翻、
+  `idle1_milk_bottle`=摆出猜图案奶瓶、`swinsuit_yes_no`=猜错摇手、`arm_L_yes`+`milking_machine_l/r`
+  =猜对比爱心+榨乳器落下、`Gauge1-5/Gauge_char`=计量条(动画自带,无需 UI)、`F_smoke`=左下奶罐故障、
+  `F_leg_up_l/r`=乳牛道具抬腿) × 热区投影位置逐点比对。前端改动(全在 `dating.html`)：
+  ①`TOOL_LABEL_OVERRIDES`：tool8=挤奶器/tool9=牛奶瓶/tool10=乳牛道具;
+  ②`PREFAB_ACTION_LABEL_OVERRIDES` 74 点全量语义标签;
+  ③dating9 加入 `MERGED_PREFAB_ACTION_IDS`，`PREFAB_POINT_ACTIONS` 按 dating4 先例加攻略门禁
+  (印章1_15→盖章1_16-23、后方奶罐1_29→猜瓶1_30-36(藏到点罐后)→猜对1_36→榨乳器1_37(热区隐藏+requires)
+  →二阶段、连点完成态1_38/1_39、抬臀2_10→坐下2_11、计量条集满2_16→绝顶2_20);
+  ④`isPrefabActionVisible` 的 `visibleWhen` 检查从 dating4-only 泛化为全角色(dating4 语义不变,已回归)。
+  浏览器实测：印章/猜瓶/榨乳器进二阶段/2_11 门禁/25连击出 2_20 全链路通过,控制台无错误。
+  **门禁方向的原生证据(2026-07-06 复核追加)**：skel 里每个动画的 TranslateTimeline 会把
+  `point1_N_touch` 骨骼停放到 ±5 万(画面外)或留在画面内——**idle1 默认停放 1_16-23(印章落点)、
+  1_30-36(猜瓶)、1_37/38/39,画面内只留普通点+1_15+1_29+工具点**,与前端门禁的隐藏集合一致;
+  **mix1_29_1 恰好把 1_30-36 七个点搬进画面**(猜瓶行出现的直接原生证据)。因此复核后给
+  1_16-23 补了 `hotzoneVisibleWhen`(原生默认不可见,此前只有 requires 拦截)。
+  1_15=印章为间接推断(默认在画面内、位置在桌面印章处、动画无身体反应、攻略语义排除法),已注明。
+  另:audioDebug 下同一 SFX 日志打 2 次为**原版既有行为**(stash 原版 A/B 实测相同),与本次改动无关。
+  **遗留(需运行态证据,不要猜)**：猜奶瓶正确瓶按 prefab 固定为 1_36,游戏内是否随机未证实;
+  印章门禁做成一次性 flag,游戏内是否每次需重新点印章未证实;攻略"转到背后视角乳牛暴走→绝顶"
+  就是 mix2_16_25 动画内容(无独立阶段/gyro);1_29-1_36 热区 prefab 静态坐标重叠在同一处
+  (运行时由游戏摆放),网页按标签区分。
 - 2026-07-03(二)：TODO 6 完结——第三类 mix/special 互动语音全库归零(11 角色重跑,无新 OGG,前端零改动)。根因是三层基础问题(空 tsv 推断/extract-apply 大小写不匹配/17 号 Char004102 前缀),工具修正:apply 补大小写规范、extract/apply/audit 增 `--char-alias`(char004202→char004102)。状态矩阵"点→语音"列 14 心契全 ✅。
 - 2026-07-06：`_destinations` drag 命中行为已接入前端。浏览器烟测覆盖 dating6 `1_6_0`:拖远但未进目标仍停阶段1、拖进目标推进阶段2;另确认 `4_2_0` 目的地当前视口不可投影时走旧阈值兜底,不会卡死阶段4→5。未处理 gyro destination。
 - 2026-07-06：dating6 无 clickMax 的 repeated/end mix 语义已接入。il2cpp 证据:普通 `OnClick` 递增 `CurClickCount`,动作控制器取 `PlayMixAnimNames[min(CurClickCount - 1, mixCount - 1)]` 播单段;`IsSettedContinuousClick` 需要 `ClickMaxCount >= 2`,所以 dating6 `ClickMaxCount=0` 不能套连续点击逻辑。切阶段会清空索引计数以对齐原生换组重置。全库谓词命中仅 `illust_dating6` 四个 `*_1_end` 点。
