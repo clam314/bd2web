@@ -585,6 +585,23 @@
         10: "乳牛道具",
       },
     };
+    const DATING6_HOLD_POSE_TARGETS = {
+      "6_4_0": ["6_25_0"],
+      "6_5_0": ["6_6_0", "6_21_0"],
+      "6_7_0": ["6_8_0", "6_23_0"],
+      "6_11_0": ["6_12_0"],
+      "6_13_0": ["6_14_0"],
+      "6_15_0": ["6_16_0", "6_27_0", "6_30_0"],
+      "6_17_0": ["6_18_0"],
+      "6_19_0": ["6_20_0"],
+      "6_21_0": ["6_22_0"],
+      "6_23_0": ["6_24_0"],
+      "6_25_0": ["6_26_0"],
+      "6_27_0": ["6_28_0", "6_29_0"],
+      "6_30_0": ["6_31_0", "6_32_0"],
+      "6_31_0": ["6_33_0"],
+      "6_32_0": ["6_33_0"],
+    };
     const PREFAB_ACTION_LABEL_OVERRIDES = {
       illust_dating6: {
         "6_1_0": "嘴/脸部拖拽",
@@ -1014,7 +1031,7 @@
       },
     };
     const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9"]);
-    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating9"]);
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1288,6 +1305,8 @@
     let dragFollow = null;
     let touchStopTimer = null;
     let touchStopToken = 0;
+    let holdPoseTimer = null;
+    let holdPoseToken = 0;
     let activeGyroDrag = null;
     let activeGyroAction = null;
     let activeGyroPointKey = null;
@@ -2175,7 +2194,9 @@
         const playbackAction = prepareActionPlayback(action, pointKey);
         if (!playbackAction) return;
         cancelTouchStop();
+        cancelHoldPoseFreeze();
         const targetStage = resolveActionNextStage(playbackAction);
+        const holdPose = shouldHoldPrefabActionPose(playbackAction, pointKey);
         restoringIdle = false;
         advanceTargetStage = targetStage;
         advanceLastMotion = null;
@@ -2197,8 +2218,20 @@
           renderHotzones(currentPrefabActions());
         }
         advanceLastMotion = sequence[sequence.length - 1];
-        player.setAnimation(sequence[0], false);
-        sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
+        if (holdPose) {
+          advanceLastMotion = null;
+          const holdEntry = player.animationState.setAnimation(1, sequence[0], false);
+          if (holdEntry) holdEntry.trackEnd = Number.MAX_VALUE;
+          sequence.slice(1).forEach(anim => {
+            const entry = player.animationState.addAnimation(1, anim, false, 0);
+            if (entry) entry.trackEnd = Number.MAX_VALUE;
+          });
+          if (currentEntry) datingAudio.playAnimation(currentEntry.id, sequence[0]);
+          scheduleHoldPoseFreeze(pointKey);
+        } else {
+          player.setAnimation(sequence[0], false);
+          sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
+        }
         player.play();
         applyActionState(playbackAction);
         if (playbackAction.requiresMode && !playbackAction.stayMode) {
@@ -2343,6 +2376,35 @@
       touchStopTimer = null;
     }
 
+    function scheduleHoldPoseFreeze(pointKey) {
+      const token = ++holdPoseToken;
+      clearTimeout(holdPoseTimer);
+      const targets = DATING6_HOLD_POSE_TARGETS[pointKey] || [];
+      const startedAt = performance.now();
+      const tryFreeze = () => {
+        if (token !== holdPoseToken || !player) return;
+        refreshHotzonePositions();
+        const ready = targets.some(key => {
+          const el = hotzoneLayer.querySelector(`.hotzone[data-key="${key}"]`);
+          return el && !el.hidden;
+        });
+        if (ready || performance.now() - startedAt > 1100) {
+          holdPoseTimer = null;
+          player.pause();
+          refreshHotzonePositions();
+          return;
+        }
+        holdPoseTimer = setTimeout(tryFreeze, 50);
+      };
+      holdPoseTimer = setTimeout(tryFreeze, 150);
+    }
+
+    function cancelHoldPoseFreeze() {
+      holdPoseToken++;
+      clearTimeout(holdPoseTimer);
+      holdPoseTimer = null;
+    }
+
     function canPlayAction(action) {
       const missing = (action.requires || []).filter(flag => !interactionState[flag]);
       if (missing.length) {
@@ -2372,9 +2434,13 @@
       try {
         resetCardGame(true);
         cancelTouchStop();
+        cancelHoldPoseFreeze();
         restoringIdle = true;
         dragHolding = false;
         stopDragFollow();
+        if (currentEntry?.id === "illust_dating6") {
+          try { player.animationState.clearTrack(1); } catch (e) { clearDragOverlay(); }
+        }
         advanceTargetStage = null;
         advanceLastMotion = null;
         activeInteractionVoiceKey = null;
@@ -2787,7 +2853,6 @@
         drag.engagedAt = performance.now();
         playDragBegin(drag.action, drag.pointKey);
         startDragFollow(drag.pointKey);
-        return;
       }
       moveDragFollow(dx, dy);
       if (!drag.resolved && shouldResolvePrefabDrag(drag, distance, event)) {
@@ -2926,6 +2991,14 @@
         if (hitIndex !== null) return hitIndex >= 0;
       }
       return distance >= drag.successThreshold && performance.now() - drag.engagedAt >= 120;
+    }
+
+    function shouldHoldPrefabActionPose(action, pointKey) {
+      if (currentEntry?.id !== "illust_dating6" || currentStage !== 6) return false;
+      if (action?.kind !== "touch" || !pointKey?.startsWith("6_")) return false;
+      if (action.longPress || action.clickMax || action.randomMix || action.stopMix) return false;
+      if (action.nextStage || action.setFlag || (action.motions || []).length) return false;
+      return (action.mix || []).length === 1 && Boolean(DATING6_HOLD_POSE_TARGETS[pointKey]);
     }
 
     function destinationHitIndex(action, clientX, clientY) {
