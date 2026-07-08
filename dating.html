@@ -3217,6 +3217,7 @@
     function shouldUseTouchOverlayTrack(action, sequence) {
       if (currentEntry?.id !== "illust_dating6") return false;
       if (action?.kind !== "touch" || action.longPress || !sequence.length) return false;
+      if (!action._mixOverlayOnly) return false;
       if (resolveActionNextStage(action) || action.setFlag || (action.motions || []).length) return false;
       return true;
     }
