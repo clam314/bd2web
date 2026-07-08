@@ -82,6 +82,17 @@
       border-color: rgba(255, 214, 112, 0.46);
       background: rgba(255, 196, 76, 0.08);
     }
+    .hotzone.ellipse-zone {
+      border-radius: 999px;
+      clip-path: ellipse(50% 50% at 50% 50%);
+    }
+    .hotzone.giant-click-receiver {
+      border-style: dashed;
+      border-color: rgba(255, 214, 112, 0.52);
+      background: rgba(255, 214, 112, 0.05);
+      box-shadow: inset 0 0 0 1px rgba(255, 214, 112, 0.12);
+      color: #fff1bd;
+    }
     .hotzone::after {
       content: attr(data-label);
       position: absolute;
@@ -469,7 +480,7 @@
       illust_dating3: { 1: { touch: 17, drag: 3 }, 2: { touch: 16, drag: 3 } },
       illust_dating4: { 1: { touch: 23, drag: 5 }, 2: { touch: 26, drag: 4 } },
       illust_dating5: { 1: { touch: 12, drag: 6 }, 2: { touch: 26, drag: 7 } },
-      illust_dating6: { 1: { touch: 4, drag: 3 }, 2: { touch: 2, drag: 2 }, 3: { touch: 2, drag: 2 }, 4: { touch: 1, drag: 2 }, 5: { touch: 2 }, 6: { touch: 30, drag: 3 } },
+      illust_dating6: { 1: { touch: 4, drag: 2 }, 2: { touch: 2, drag: 1 }, 3: { touch: 2, drag: 1 }, 4: { touch: 1, drag: 1 }, 5: { touch: 2 }, 6: { touch: 30, drag: 3 } },
       illust_dating7: { 1: { touch: 28, drag: 4 }, 2: { touch: 23, drag: 8 } },
       illust_dating8: { 1: { touch: 35 }, 2: { touch: 1 }, 3: { touch: 24, drag: 2 } },
       illust_dating9: { 1: { touch: 38, drag: 3 }, 2: { touch: 30, drag: 6 } },
@@ -1311,6 +1322,10 @@
     let activeLongPress = null;
     let activePrefabDrag = null;
     let activePrefabDragListeners = null;
+    let activeHotzoneGesture = null;
+    let activeHotzoneGestureListeners = null;
+    let suppressHotzoneClickUntil = 0;
+    let suppressHotzoneClickElement = null;
     let dragHolding = false;
     let dragFollow = null;
     let touchStopTimer = null;
@@ -2238,6 +2253,14 @@
           });
           if (currentEntry) datingAudio.playAnimation(currentEntry.id, sequence[0]);
           scheduleHoldPoseFreeze(pointKey);
+        } else if (shouldUseTouchOverlayTrack(playbackAction, sequence)) {
+          advanceLastMotion = null;
+          player.animationState.data.defaultMix = 0.08;
+          player.animationState.setAnimation(1, sequence[0], false);
+          sequence.slice(1).forEach(anim => player.animationState.addAnimation(1, anim, false, 0));
+          const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
+          player.animationState.addEmptyAnimation(1, 0.12, Math.max(0, duration));
+          if (currentEntry) datingAudio.playAnimation(currentEntry.id, sequence[0]);
         } else {
           player.setAnimation(sequence[0], false);
           sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
@@ -2330,12 +2353,17 @@
       const mixIndex = Math.min(next - 1, Math.max(0, (action.mix || []).length - 1));
       const mix = (action.mix || [])[mixIndex];
       interactionState = { ...interactionState, [progressKey]: { count: next } };
+      const max = Math.max(1, (action.mix || []).length);
+      const complete = next >= max;
       return {
         ...action,
         mix: mix ? [mix] : [],
         motions: [],
         nextStage: null,
         setFlag: null,
+        _mixOverlayOnly: true,
+        _touchCompleted: complete,
+        _touchProgressText: complete ? `连点完成 ${next}/${max}` : `连点 ${next}/${max}`,
       };
     }
 
@@ -2400,7 +2428,6 @@
         });
         if (ready || performance.now() - startedAt > 1100) {
           holdPoseTimer = null;
-          player.pause();
           refreshHotzonePositions();
           return;
         }
@@ -2726,6 +2753,9 @@
     }
 
     function renderHotzones(prefabActions) {
+      cancelHotzoneGesture();
+      suppressHotzoneClickUntil = 0;
+      suppressHotzoneClickElement = null;
       cancelPrefabDrag();
       hotzoneLayer.innerHTML = "";
       hotzoneFollowTracking = false;
@@ -2739,7 +2769,10 @@
       const rendered = prefabActions.map((item, idx) => {
         if (item.action.hotzoneVisibleWhen?.some(flag => !interactionState[flag])) return null;
         const zone = prefabHotzone(currentEntry.id, item.key);
-        const box = zone && hotzoneToScreenBox(zone);
+        const rawBox = zone && hotzoneToScreenBox(zone);
+        const box = zone && isGiantClickReceiverZone(zone)
+          ? (fullCanvasHotzoneBox() || rawBox)
+          : rawBox;
         if (!box && !hotzoneUsesFollowBone(zone)) return null;
         return { item, zone, box: box || hiddenBox, visible: Boolean(box), labelIndex: idx, area: box ? box.width * box.height : 0 };
       }).filter(Boolean).sort(compareHotzoneStack);
@@ -2747,9 +2780,13 @@
       rendered.forEach(({ item, zone, box, visible, labelIndex }) => {
         const b = makeHotzoneButton(
           box,
-          hotzoneLabel(item.action, labelIndex, item.key),
+          isGiantClickReceiverZone(zone) ? "任意处" : hotzoneLabel(item.action, labelIndex, item.key),
           prefabActionTitle(item.action, item.key, zone),
-          item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
+          [
+            item.action.kind === "gyro" ? "gyro-zone" : item.action.kind === "card" ? "card-zone" : "body-zone",
+            zone?.shape === 1 ? "ellipse-zone" : "",
+            isGiantClickReceiverZone(zone) ? "giant-click-receiver" : "",
+          ].filter(Boolean).join(" "),
         );
         b.dataset.key = item.key;
         b.hidden = !visible;
@@ -2812,7 +2849,10 @@
       hotzoneLayer.querySelectorAll(".hotzone[data-key]").forEach(button => {
         const item = byKey.get(button.dataset.key);
         const zone = item && prefabHotzone(currentEntry.id, item.key);
-        const box = zone && hotzoneToScreenBox(zone);
+        const rawBox = zone && hotzoneToScreenBox(zone);
+        const box = zone && isGiantClickReceiverZone(zone)
+          ? (fullCanvasHotzoneBox() || rawBox)
+          : rawBox;
         if (!box) {
           button.hidden = true;
           return;
@@ -2825,7 +2865,163 @@
       });
     }
 
-    function beginPrefabDrag(action, element, event, pointKey = null) {
+    function beginHotzoneGestureArbitration(event) {
+      if (!shouldArbitrateHotzones() || activeHotzoneGesture || activePrefabDrag) return;
+      const candidates = hotzoneCandidatesAt(event.clientX, event.clientY);
+      const touches = candidates.filter(candidate => candidate.item.action.kind === "touch" && !candidate.item.action.longPress);
+      const drags = candidates.filter(candidate => candidate.item.action.kind === "drag");
+      if (!touches.length || !drags.length) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      const clickTarget = chooseHotzoneClickTarget(touches);
+      const dragTarget = drags.slice().sort((a, b) => a.area - b.area || a.item.pointId - b.item.pointId)[0];
+      const threshold = hotzoneGestureThreshold(dragTarget.element);
+      activeHotzoneGesture = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        threshold,
+        clickTarget,
+        dragTarget,
+      };
+      attachHotzoneGestureWindowListeners();
+    }
+
+    function shouldArbitrateHotzones() {
+      return currentEntry?.id === "illust_dating6" && currentStage >= 1 && currentStage <= 5;
+    }
+
+    function hotzoneCandidatesAt(clientX, clientY) {
+      const byKey = new Map(currentPrefabActions().map(item => [item.key, item]));
+      return Array.from(hotzoneLayer.querySelectorAll(".hotzone[data-key]"))
+        .map(element => {
+          if (element.hidden) return null;
+          const item = byKey.get(element.dataset.key);
+          if (!item) return null;
+          const rect = element.getBoundingClientRect();
+          if (
+            clientX < rect.left || clientX > rect.right ||
+            clientY < rect.top || clientY > rect.bottom
+          ) return null;
+          const zone = prefabHotzone(currentEntry?.id, item.key);
+          if (!hotzoneContainsPoint(zone, rect, clientX, clientY)) return null;
+          return { element, item, rect, area: Math.max(1, rect.width * rect.height) };
+        })
+        .filter(Boolean);
+    }
+
+    function hotzoneContainsPoint(zone, rect, clientX, clientY) {
+      if (!zone || zone.shape !== 1) return true;
+      const rx = rect.width / 2;
+      const ry = rect.height / 2;
+      if (rx <= 0 || ry <= 0) return false;
+      const nx = (clientX - (rect.left + rx)) / rx;
+      const ny = (clientY - (rect.top + ry)) / ry;
+      return nx * nx + ny * ny <= 1;
+    }
+
+    function chooseHotzoneClickTarget(touches) {
+      const sorted = touches.slice().sort((a, b) => {
+        const giantDiff = Number(isGiantClickReceiver(a)) - Number(isGiantClickReceiver(b));
+        return giantDiff || a.area - b.area || a.item.pointId - b.item.pointId;
+      });
+      return sorted[0];
+    }
+
+    function isGiantClickReceiver(candidate) {
+      const zone = prefabHotzone(currentEntry?.id, candidate.item.key);
+      if (isGiantClickReceiverZone(zone)) return true;
+      const layerRect = hotzoneLayer.getBoundingClientRect();
+      if (!layerRect.width || !layerRect.height) return false;
+      return candidate.area >= layerRect.width * layerRect.height * 0.7;
+    }
+
+    function isGiantClickReceiverZone(zone) {
+      return currentEntry?.id === "illust_dating6" && Boolean(zone && (zone.width >= 1800 || zone.height >= 1800));
+    }
+
+    function hotzoneGestureThreshold(element) {
+      const rect = element.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      return Math.max(10, Math.min(28, size * 0.08));
+    }
+
+    function attachHotzoneGestureWindowListeners() {
+      detachHotzoneGestureWindowListeners();
+      const onMove = event => moveHotzoneGesture(event);
+      const onEnd = event => endHotzoneGesture(event);
+      const onCancel = event => cancelHotzoneGesture(event);
+      const onBlur = () => cancelHotzoneGesture();
+      window.addEventListener("pointermove", onMove, true);
+      window.addEventListener("pointerup", onEnd, true);
+      window.addEventListener("pointercancel", onCancel, true);
+      window.addEventListener("blur", onBlur);
+      activeHotzoneGestureListeners = { onMove, onEnd, onCancel, onBlur };
+    }
+
+    function detachHotzoneGestureWindowListeners() {
+      const listeners = activeHotzoneGestureListeners;
+      if (!listeners) return;
+      window.removeEventListener("pointermove", listeners.onMove, true);
+      window.removeEventListener("pointerup", listeners.onEnd, true);
+      window.removeEventListener("pointercancel", listeners.onCancel, true);
+      window.removeEventListener("blur", listeners.onBlur);
+      activeHotzoneGestureListeners = null;
+    }
+
+    function moveHotzoneGesture(event) {
+      const gesture = activeHotzoneGesture;
+      if (!gesture || event.pointerId !== gesture.pointerId) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      const dx = event.clientX - gesture.startX;
+      const dy = event.clientY - gesture.startY;
+      if (Math.hypot(dx, dy) < gesture.threshold) return;
+      const { dragTarget } = gesture;
+      activeHotzoneGesture = null;
+      detachHotzoneGestureWindowListeners();
+      beginPrefabDrag(dragTarget.item.action, dragTarget.element, event, dragTarget.item.key, gesture.startX, gesture.startY);
+      movePrefabDrag(event);
+    }
+
+    function endHotzoneGesture(event) {
+      const gesture = activeHotzoneGesture;
+      if (!gesture || event.pointerId !== gesture.pointerId) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      activeHotzoneGesture = null;
+      detachHotzoneGestureWindowListeners();
+      const { clickTarget } = gesture;
+      suppressHotzoneClickUntil = performance.now() + 600;
+      suppressHotzoneClickElement = clickTarget?.element || null;
+      if (clickTarget) playPrefabAction(clickTarget.item.action, null, clickTarget.item.key);
+    }
+
+    function cancelHotzoneGesture(event) {
+      const gesture = activeHotzoneGesture;
+      if (event && gesture && event.pointerId !== gesture.pointerId) return;
+      activeHotzoneGesture = null;
+      detachHotzoneGestureWindowListeners();
+    }
+
+    function suppressHandledHotzoneClick(event) {
+      if (performance.now() > suppressHotzoneClickUntil) return;
+      if (
+        suppressHotzoneClickElement &&
+        event.target !== suppressHotzoneClickElement &&
+        !suppressHotzoneClickElement.contains(event.target)
+      ) return;
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      suppressHotzoneClickUntil = 0;
+      suppressHotzoneClickElement = null;
+    }
+
+    function beginPrefabDrag(action, element, event, pointKey = null, startX = event.clientX, startY = event.clientY) {
       if (!player || activePrefabDrag) return;
       event.preventDefault();
       event.stopPropagation();
@@ -2844,8 +3040,8 @@
         resolved: false,
         engagedAt: 0,
         pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
+        startX,
+        startY,
         threshold,
         successThreshold: Math.max(threshold * 2.4, Math.min(150, Math.max(48, size * 0.36))),
       };
@@ -3012,6 +3208,13 @@
       if (action.longPress || action.clickMax || action.randomMix || action.stopMix) return false;
       if (action.nextStage || action.setFlag || (action.motions || []).length) return false;
       return (action.mix || []).length === 1 && holdPoseTargets(pointKey).length > 0;
+    }
+
+    function shouldUseTouchOverlayTrack(action, sequence) {
+      if (currentEntry?.id !== "illust_dating6") return false;
+      if (action?.kind !== "touch" || action.longPress || !sequence.length) return false;
+      if (resolveActionNextStage(action) || action.setFlag || (action.motions || []).length) return false;
+      return true;
     }
 
     function destinationHitIndex(action, clientX, clientY) {
@@ -3480,18 +3683,23 @@
       if (!player) return 2;
       const anims = player.skeleton?.data?.animations || [];
       const anim = anims.find(a => a.name === name);
-      return anim?.duration || 2;
+      return anim ? anim.duration : 2;
     }
 
     function attachPlaybackListener(p) {
       p.animationState.addListener({
         start: (track) => {
-          if (!track.animation || track.trackIndex !== 0 || !currentEntry) return;
+          if (!track.animation || !currentEntry) return;
           if (datingAudio.debug) {
-            document.documentElement.dataset.datingAnimation = track.animation.name;
-            document.documentElement.dataset.datingAnimationHistory =
-              `${document.documentElement.dataset.datingAnimationHistory || ""}|${track.animation.name}`.slice(-500);
+            document.documentElement.dataset.datingTrackHistory =
+              `${document.documentElement.dataset.datingTrackHistory || ""}|${track.trackIndex}:${track.animation.name}`.slice(-700);
+            if (track.trackIndex === 0) {
+              document.documentElement.dataset.datingAnimation = track.animation.name;
+              document.documentElement.dataset.datingAnimationHistory =
+                `${document.documentElement.dataset.datingAnimationHistory || ""}|${track.animation.name}`.slice(-500);
+            }
           }
+          if (track.trackIndex !== 0) return;
           if (
             activeInteractionVoiceKey &&
             activeInteractionMotionNames.has(track.animation.name)
@@ -3567,6 +3775,8 @@
       showHotzones = !showHotzones;
       applyHotzoneVisibility();
     });
+    hotzoneLayer.addEventListener("pointerdown", beginHotzoneGestureArbitration, true);
+    hotzoneLayer.addEventListener("click", suppressHandledHotzoneClick, true);
     applyHotzoneVisibility();
 
     const hotzone = document.getElementById("edge-hotzone");
