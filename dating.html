@@ -2347,14 +2347,18 @@
 
     function prepareIndexedTouchMix(action, pointKey) {
       const progressKey = action.progressKey || `${currentEntry?.id || "entry"}:${pointKey || action.label || "action"}:indexedMix`;
+      const max = Math.max(1, (action.mix || []).length);
       const previousState = interactionState[progressKey];
       const previousCount = previousState && typeof previousState === "object" ? previousState.count || 0 : 0;
-      const next = previousCount + 1;
+      if (previousCount >= max) {
+        showStatus(`连点已完成 ${max}/${max}`, 700);
+        return null;
+      }
+      const next = Math.min(previousCount + 1, max);
       const mixIndex = Math.min(next - 1, Math.max(0, (action.mix || []).length - 1));
       const mix = (action.mix || [])[mixIndex];
-      interactionState = { ...interactionState, [progressKey]: { count: next } };
-      const max = Math.max(1, (action.mix || []).length);
       const complete = next >= max;
+      interactionState = { ...interactionState, [progressKey]: { count: next, complete } };
       return {
         ...action,
         mix: mix ? [mix] : [],
