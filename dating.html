@@ -585,22 +585,32 @@
         10: "乳牛道具",
       },
     };
-    const DATING6_HOLD_POSE_TARGETS = {
-      "6_4_0": ["6_25_0"],
-      "6_5_0": ["6_6_0", "6_21_0"],
-      "6_7_0": ["6_8_0", "6_23_0"],
-      "6_11_0": ["6_12_0"],
-      "6_13_0": ["6_14_0"],
-      "6_15_0": ["6_16_0", "6_27_0", "6_30_0"],
-      "6_17_0": ["6_18_0"],
-      "6_19_0": ["6_20_0"],
-      "6_21_0": ["6_22_0"],
-      "6_23_0": ["6_24_0"],
-      "6_25_0": ["6_26_0"],
-      "6_27_0": ["6_28_0", "6_29_0"],
-      "6_30_0": ["6_31_0", "6_32_0"],
-      "6_31_0": ["6_33_0"],
-      "6_32_0": ["6_33_0"],
+    const HOLD_POSE_TARGETS = {
+      illust_dating6: {
+        "6_4_0": ["6_25_0"],
+        "6_5_0": ["6_6_0", "6_21_0"],
+        "6_7_0": ["6_8_0", "6_23_0"],
+        "6_11_0": ["6_12_0"],
+        "6_13_0": ["6_14_0"],
+        "6_15_0": ["6_16_0", "6_27_0", "6_30_0"],
+        "6_17_0": ["6_18_0"],
+        "6_19_0": ["6_20_0"],
+        "6_21_0": ["6_22_0"],
+        "6_23_0": ["6_24_0"],
+        "6_25_0": ["6_26_0"],
+        "6_27_0": ["6_28_0", "6_29_0"],
+        "6_30_0": ["6_31_0", "6_32_0"],
+        "6_31_0": ["6_33_0"],
+        "6_32_0": ["6_33_0"],
+      },
+      illust_dating8: {
+        "1_11_11": ["1_33_11"],
+        "1_12_11": ["1_27_11"],
+        "1_33_11": ["1_34_11"],
+        "1_34_11": ["1_35_11"],
+        "3_8_0": ["3_10_0"],
+        "3_9_0": ["3_11_0"],
+      },
     };
     const PREFAB_ACTION_LABEL_OVERRIDES = {
       illust_dating6: {
@@ -2379,7 +2389,7 @@
     function scheduleHoldPoseFreeze(pointKey) {
       const token = ++holdPoseToken;
       clearTimeout(holdPoseTimer);
-      const targets = DATING6_HOLD_POSE_TARGETS[pointKey] || [];
+      const targets = holdPoseTargets(pointKey);
       const startedAt = performance.now();
       const tryFreeze = () => {
         if (token !== holdPoseToken || !player) return;
@@ -2403,6 +2413,10 @@
       holdPoseToken++;
       clearTimeout(holdPoseTimer);
       holdPoseTimer = null;
+    }
+
+    function holdPoseTargets(pointKey) {
+      return HOLD_POSE_TARGETS[currentEntry?.id]?.[pointKey] || [];
     }
 
     function canPlayAction(action) {
@@ -2994,11 +3008,10 @@
     }
 
     function shouldHoldPrefabActionPose(action, pointKey) {
-      if (currentEntry?.id !== "illust_dating6" || currentStage !== 6) return false;
-      if (action?.kind !== "touch" || !pointKey?.startsWith("6_")) return false;
+      if (action?.kind !== "touch" || !pointKey) return false;
       if (action.longPress || action.clickMax || action.randomMix || action.stopMix) return false;
       if (action.nextStage || action.setFlag || (action.motions || []).length) return false;
-      return (action.mix || []).length === 1 && Boolean(DATING6_HOLD_POSE_TARGETS[pointKey]);
+      return (action.mix || []).length === 1 && holdPoseTargets(pointKey).length > 0;
     }
 
     function destinationHitIndex(action, clientX, clientY) {
