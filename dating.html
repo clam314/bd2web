@@ -547,6 +547,11 @@
       illust_dating19: { 1: "idle1", 2: "idle2" },
     };
     const STAGE_LABELS = {
+      illust_dating8: {
+        1: "攻略一阶段",
+        2: "浴巾半遮确认",
+        3: "攻略二阶段",
+      },
       illust_dating18: {
         1: "一阶段·桌下",
         2: "一阶段·背后",
@@ -589,6 +594,11 @@
         1: "笔",
         2: "按摩棒",
         3: "鞭子",
+      },
+      illust_dating8: {
+        2: "按摩棒",
+        11: "精油",
+        12: "按摩贴",
       },
       illust_dating9: {
         8: "挤奶器(普通道具)",
@@ -658,6 +668,73 @@
         "6_31_0": "膝盖连锁2后续",
         "6_32_0": "膝盖连锁2后续",
         "6_33_0": "膝盖连锁2终点",
+      },
+      // dating8 语义来源：巴哈攻略(G2.php?bsn=76207&sn=1706)的“精油/按摩棒/
+      // 按摩贴”流程文字 × prefab 点位投影位置。数据里的 stage2 只是浴巾半遮
+      // 后的过渡确认，攻略的“第二阶段”对应这里的 stage3。
+      illust_dating8: {
+        "1_1_0": "手·画面左手臂",
+        "1_2_0": "手·腋下",
+        "1_3_0": "手·胸部",
+        "1_4_0": "手·腹部",
+        "1_5_0": "手·下腹/阴部",
+        "1_6_0": "手·手部",
+        "1_7_0": "手·大腿(画面左)",
+        "1_8_0": "手·大腿/小腿(画面右)",
+        "1_9_11": "精油·腋下",
+        "1_10_11": "精油·胸部",
+        "1_11_11": "精油·腹部(推进起点)",
+        "1_12_11": "精油·阴部/下腹",
+        "1_13_11": "精油·大腿(画面左)",
+        "1_14_11": "精油·大腿(画面右)",
+        "1_15_2": "按摩棒·腋下",
+        "1_16_2": "按摩棒·胸部/阴部(会拍掉)",
+        "1_17_2": "按摩棒·大腿(画面左)",
+        "1_18_2": "按摩棒·大腿(画面右)",
+        "1_19_2": "按摩棒·小腿(画面左)",
+        "1_20_2": "按摩棒·小腿(画面右)",
+        "1_21_2": "按摩棒·左大腿精油后续",
+        "1_22_2": "按摩棒·右大腿精油后续",
+        "1_23_12": "按摩贴·腋下",
+        "1_24_12": "按摩贴·侧乳",
+        "1_25_12": "按摩贴·大腿",
+        "1_26_0": "手·隐藏后续",
+        "1_27_0": "手·隐藏后续",
+        "1_27_2": "按摩棒·隐藏后续",
+        "1_27_11": "精油·推进后续",
+        "1_27_12": "按摩贴·隐藏后续",
+        "1_31_0": "手·后续(画面左)",
+        "1_32_0": "手·后续(画面右)",
+        "1_33_11": "精油·推进后续1",
+        "1_34_11": "精油·推进后续2",
+        "1_35_11": "精油·完成进二阶段",
+        "2_1_0": "浴巾半遮确认·进入攻略二阶段",
+        "3_1_0": "手·按摩手臂",
+        "3_2_0": "手·胸部",
+        "3_3_0": "手·腹部",
+        "3_4_0": "手·举腿(画面左)",
+        "3_5_0": "手·举腿(画面右)",
+        "3_6_0": "手·腹部/阴部",
+        "3_7_0": "手·双大腿",
+        "3_8_0": "手·举脚后续(画面左)",
+        "3_9_0": "手·举脚后续(画面右)",
+        "3_10_0": "手·举双脚后续1",
+        "3_11_0": "手·举双脚后续2",
+        "3_12_2": "按摩棒·腋下",
+        "3_13_2": "按摩棒·左乳",
+        "3_14_2": "按摩棒·右乳侧下",
+        "3_15_2": "按摩棒·腹部到阴部",
+        "3_16_2": "按摩棒·大腿(画面左)",
+        "3_17_2": "按摩棒·大腿(画面右)",
+        "3_18_2": "按摩棒·脚底(画面左)",
+        "3_19_2": "按摩棒·脚底(画面右)",
+        "3_20_12": "按摩贴·双乳",
+        "3_21_12": "按摩贴·腹部到阴部",
+        "3_22_12": "按摩贴·大腿内侧根部",
+        "3_23_12": "按摩贴·组合：左乳",
+        "3_24_2": "按摩棒·组合：腋下",
+        "3_25_12": "按摩贴·组合：阴部",
+        "3_26_2": "按摩棒·组合：阴部",
       },
       // dating9 语义来源：Spine slot 命名（paint_*/Stamp_*/table_bottle_fall/Gauge/
       // yes_no/arm_L_yes/machine/mouth_milk/F_milk_*/F_leg_up_* 等）× 热区投影位置，
@@ -933,8 +1010,8 @@
         "1_32_4": { kind: "touch", mix: ["mix1_32_1"], motions: ["motion1_32"], nextStage: "next" },
       },
       illust_dating8: {
-        "1_35_11": { kind: "touch", mix: ["mix1_35_1"], motions: ["motion1_35"], nextStage: "next" },
-        "2_1_0": { kind: "touch", mix: ["mix2_1_1"], motions: ["motion2_1"], nextStage: "next" },
+        "1_35_11": { kind: "touch", mix: [], motions: ["motion1_35"], nextStage: "next" },
+        "2_1_0": { kind: "touch", mix: [], motions: ["motion2_1"], nextStage: "next" },
       },
       // dating9 走 MERGED：外部 JSON 提供全部点位，这里只覆盖攻略确认的最小顺序门禁。
       // 关键链路：猜奶瓶7(猜对后黑色榨乳器管线落下) -> 点击胸口进入二阶段。
@@ -1332,6 +1409,7 @@
     let touchStopToken = 0;
     let holdPoseTimer = null;
     let holdPoseToken = 0;
+    let holdPoseFreezeState = null;
     let activeGyroDrag = null;
     let activeGyroAction = null;
     let activeGyroPointKey = null;
@@ -2245,14 +2323,17 @@
         advanceLastMotion = sequence[sequence.length - 1];
         if (holdPose) {
           advanceLastMotion = null;
+          const holdEntries = [];
           const holdEntry = player.animationState.setAnimation(1, sequence[0], false);
           if (holdEntry) holdEntry.trackEnd = Number.MAX_VALUE;
+          if (holdEntry) holdEntries.push(holdEntry);
           sequence.slice(1).forEach(anim => {
             const entry = player.animationState.addAnimation(1, anim, false, 0);
             if (entry) entry.trackEnd = Number.MAX_VALUE;
+            if (entry) holdEntries.push(entry);
           });
           if (currentEntry) datingAudio.playAnimation(currentEntry.id, sequence[0]);
-          scheduleHoldPoseFreeze(pointKey);
+          scheduleHoldPoseFreeze(pointKey, holdEntries, sequence);
         } else if (shouldUseTouchOverlayTrack(playbackAction, sequence)) {
           advanceLastMotion = null;
           player.animationState.data.defaultMix = 0.08;
@@ -2418,11 +2499,13 @@
       touchStopTimer = null;
     }
 
-    function scheduleHoldPoseFreeze(pointKey) {
+    function scheduleHoldPoseFreeze(pointKey, entries = [], sequence = []) {
       const token = ++holdPoseToken;
       clearTimeout(holdPoseTimer);
       const targets = holdPoseTargets(pointKey);
       const startedAt = performance.now();
+      const maxWait = Math.max(1100, sequence.reduce((sum, anim) => sum + animationDuration(anim), 0) * 1000 + 120);
+      holdPoseFreezeState = { token, targets: new Set(targets), entries };
       const tryFreeze = () => {
         if (token !== holdPoseToken || !player) return;
         refreshHotzonePositions();
@@ -2430,7 +2513,13 @@
           const el = hotzoneLayer.querySelector(`.hotzone[data-key="${key}"]`);
           return el && !el.hidden;
         });
-        if (ready || performance.now() - startedAt > 1100) {
+        if (ready) {
+          freezeHoldPoseEntries(holdPoseFreezeState);
+          holdPoseTimer = null;
+          refreshHotzonePositions();
+          return;
+        }
+        if (performance.now() - startedAt > maxWait) {
           holdPoseTimer = null;
           refreshHotzonePositions();
           return;
@@ -2444,10 +2533,29 @@
       holdPoseToken++;
       clearTimeout(holdPoseTimer);
       holdPoseTimer = null;
+      holdPoseFreezeState = null;
     }
 
     function holdPoseTargets(pointKey) {
       return HOLD_POSE_TARGETS[currentEntry?.id]?.[pointKey] || [];
+    }
+
+    function maybeFreezeHoldPoseAtVisibleTarget(pointKey) {
+      const state = holdPoseFreezeState;
+      if (!state || state.token !== holdPoseToken || !state.targets.has(pointKey)) return;
+      freezeHoldPoseEntries(state);
+    }
+
+    function freezeHoldPoseEntries(state) {
+      if (!state) return;
+      state.entries.forEach(entry => {
+        if (entry) entry.timeScale = 0;
+      });
+      const current = player?.animationState?.getCurrent?.(1);
+      if (current) current.timeScale = 0;
+      holdPoseFreezeState = null;
+      clearTimeout(holdPoseTimer);
+      holdPoseTimer = null;
     }
 
     function canPlayAction(action) {
@@ -2866,6 +2974,7 @@
         button.style.top = box.top + "%";
         button.style.width = box.width + "%";
         button.style.height = box.height + "%";
+        maybeFreezeHoldPoseAtVisibleTarget(button.dataset.key);
       });
     }
 
