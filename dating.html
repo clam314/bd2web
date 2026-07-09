@@ -2745,6 +2745,9 @@
         applyStageSkin(currentStage);
         try { player.skeleton?.setSlotsToSetupPose?.(); } catch (e) { /* best-effort idle cleanup */ }
         player.setAnimation(idle, true);
+        // setSlotsToSetupPose 之后立刻同步 apply 一次:playIdle 可能在本帧 apply 之后被调用
+        // (complete/queue 回调),不补 apply 的话 setup pose 会被渲染一帧(多姿势组角色=重叠闪烁)。
+        try { player.animationState.apply(player.skeleton); } catch (e) { /* best-effort */ }
         player.play();
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
         const idleBtn = [...animList.querySelectorAll(".body-anim")].find(b => b.title === idle);
@@ -3979,7 +3982,10 @@
           datingAudio.playAnimation(currentEntry.id, track.animation.name);
         },
         complete: (track) => {
-          if (!track.animation || track.trackIndex !== 0 || restoringIdle) return;
+          // 循环动画(待机)每圈都触发 complete；overlay 互动进行中 restoringIdle=false,
+          // 若不忽略会在循环边界重进 playIdle,其 setSlotsToSetupPose 在本帧 apply 之后
+          // 执行,渲染出一帧 setup pose(多姿势组角色=重叠闪烁)。
+          if (!track.animation || track.loop || track.trackIndex !== 0 || restoringIdle) return;
           // 拖住阶段:mix_1 播完停在末帧,等松手,不要自动回待机。
           if (dragHolding) return;
           const completed = track.animation.name;
