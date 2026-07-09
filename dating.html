@@ -552,6 +552,11 @@
         2: "浴巾半遮确认",
         3: "攻略二阶段",
       },
+      illust_dating10: {
+        1: "攻略一阶段",
+        2: "解锁后连点",
+        3: "攻略二阶段",
+      },
       illust_dating18: {
         1: "一阶段·桌下",
         2: "一阶段·背后",
@@ -605,6 +610,9 @@
         9: "牛奶瓶",
         10: "乳牛道具",
       },
+      illust_dating10: {
+        13: "荧光模式",
+      },
     };
     const HOLD_POSE_TARGETS = {
       illust_dating6: {
@@ -631,6 +639,15 @@
         "1_34_11": ["1_35_11"],
         "3_8_0": ["3_10_0"],
         "3_9_0": ["3_11_0"],
+      },
+      illust_dating10: {
+        "1_2_0": ["1_3_0"],
+        "1_19_13": ["1_20_13"],
+        "1_20_13": ["1_21_13"],
+        "1_21_13": ["1_26_13"],
+        "3_14_0": ["3_15_0"],
+        "3_21_13": ["3_22_13"],
+        "3_23_13": ["3_24_13", "3_25_13", "3_26_13", "3_27_13", "3_28_13", "3_29_13", "3_30_13"],
       },
     };
     const PREFAB_ACTION_LABEL_OVERRIDES = {
@@ -814,6 +831,69 @@
         "2_31_9": "牛奶瓶·开盖浇胸",
         "2_32_9": "牛奶瓶·塞胯下",
         "2_33_0": "双手揉胸",
+      },
+      // dating10 语义来源：PTT 攻略(M.1761355345.A.5C3)文字流程 ×
+      // prefab 热区坐标 × skel 中 follow 骨骼的出现链路。数据里的 stage2
+      // 是“解锁后连点进入攻略二阶段”的过渡段；攻略“第二阶段”对应 stage3。
+      illust_dating10: {
+        "1_1_0": "掀帽子",
+        "1_2_0": "掀刘海",
+        "1_3_0": "额头后续",
+        "1_4_0": "拉项圈",
+        "1_5_0": "捏脸颊/脸侧",
+        "1_6_0": "摸耳朵/脸侧",
+        "1_7_0": "右手长按横移",
+        "1_8_0": "衣服边缘往下拉",
+        "1_9_0": "胸口",
+        "1_10_0": "衣服中部拖拽",
+        "1_11_0": "腹部",
+        "1_12_0": "腿带/袜子拖拽(画面右)",
+        "1_13_0": "掀裙子",
+        "1_14_0": "腿带/袜子拖拽(画面左)",
+        "1_15_0": "胯下",
+        "1_16_13": "荧光·胸口图案",
+        "1_17_13": "荧光·右手臂图案",
+        "1_18_13": "荧光·左手臂图案",
+        "1_19_13": "荧光·左手臂后续",
+        "1_20_13": "荧光·胸口后续",
+        "1_21_13": "荧光·胸部后续",
+        "1_22_13": "荧光·腹部图案",
+        "1_23_13": "荧光·胸口图案",
+        "1_24_13": "荧光·腹部图案",
+        "1_25_13": "荧光·问号提示",
+        "1_26_13": "荧光·腹部问号确认",
+        "2_1_0": "解锁后胯下连点",
+        "2_2_0": "进入攻略二阶段",
+        "3_1_0": "抓手(画面右)",
+        "3_2_0": "抓手(画面左)",
+        "3_3_0": "摸头",
+        "3_4_0": "脸颊",
+        "3_5_0": "嘴巴/舌头",
+        "3_6_0": "衣服右侧往下拉",
+        "3_7_0": "衣服左侧往下拉",
+        "3_8_0": "衣服下缘往上掀",
+        "3_9_0": "胸口",
+        "3_10_0": "左边带子/内裤拖拽",
+        "3_11_0": "腋下衣褶(画面左)",
+        "3_12_0": "腋下衣褶(画面右)",
+        "3_13_0": "胯下",
+        "3_14_0": "膝盖",
+        "3_15_0": "左膝后续",
+        "3_16_13": "荧光·身体图案",
+        "3_17_13": "荧光·右手臂",
+        "3_18_13": "荧光·左手臂",
+        "3_19_13": "荧光·胸口",
+        "3_20_13": "荧光·腹部",
+        "3_21_13": "荧光·下方连点",
+        "3_22_13": "荧光·连点后确认",
+        "3_23_13": "荧光·拿手电筒",
+        "3_24_13": "荧光·照门",
+        "3_25_13": "荧光·照左侧",
+        "3_26_13": "荧光·照右侧",
+        "3_27_13": "荧光·照下方",
+        "3_28_13": "荧光·照上方",
+        "3_29_13": "荧光·照身体中部",
+        "3_30_13": "荧光·照下方中部",
       },
     };
     const STAGE_TOOL_SKINS = {
@@ -1033,8 +1113,18 @@
         },
       },
       illust_dating10: {
-        "1_26_13": { kind: "touch", mix: ["mix1_26_1"], motions: ["motion1_26"], nextStage: "next" },
-        "2_2_0": { kind: "touch", mix: ["mix2_2_1"], motions: ["motion2_2"], nextStage: "next" },
+        "1_15_0": { kind: "touch", mix: ["mix1_15_1"] },
+        "1_26_13": { kind: "touch", mix: [], motions: ["motion1_26"], nextStage: "next" },
+        "2_1_0": {
+          kind: "touch",
+          mix: ["mix2_1_1", "mix2_1_2", "mix2_1_3", "mix2_1_4", "mix2_1_5", "mix2_1_6", "mix2_1_7", "mix2_1_8", "mix2_1_9"],
+          clickMax: 9,
+          clickReset: 1,
+          stopMix: "mix2_1_end",
+          motions: ["motion2_2"],
+          nextStage: "next",
+        },
+        "2_2_0": { kind: "touch", mix: [], motions: ["motion2_2"], nextStage: "next", hotzoneVisibleWhen: ["dating10ManualStage2Fallback"] },
       },
       illust_dating11: {
         "1_9_0": { kind: "touch", mix: ["mix1_9_1"], motions: ["motion1_9"], nextStage: "next" },
@@ -1128,7 +1218,7 @@
         "7_13_14": { kind: "gyro", label: "左右倾斜切回二阶段桌下视角", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
       },
     };
-    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9"]);
+    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10"]);
     const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
@@ -1410,6 +1500,7 @@
     let holdPoseTimer = null;
     let holdPoseToken = 0;
     let holdPoseFreezeState = null;
+    let holdPoseTrackActive = false;
     let activeGyroDrag = null;
     let activeGyroAction = null;
     let activeGyroPointKey = null;
@@ -2168,6 +2259,7 @@
     }
 
     function selectTool(toolId) {
+      cancelHoldPoseFreeze();
       selectedToolId = toolId;
       if (toolId === 14) enableDeviceOrientation();
       applyStageSkin(currentStage);
@@ -2187,6 +2279,7 @@
         b.onclick = () => {
           if (!player) return;
           try {
+            cancelHoldPoseFreeze();
             if (b.classList.contains("active")) {
               player.animationState.setEmptyAnimation(1, 0.2);
               b.classList.remove("active");
@@ -2205,6 +2298,7 @@
     function enterStage(stageNo) {
       if (!stageModel || !stageModel.stages.has(stageNo)) return;
       resetCardGame(false);
+      cancelHoldPoseFreeze();
       cancelLongPress(false);
       cancelPrefabDrag();
       cancelGyroDrag();
@@ -2222,6 +2316,7 @@
 
     function advanceStage() {
       if (!player || !stageModel) return;
+      cancelHoldPoseFreeze();
       const stage = stageModel.stages.get(currentStage);
       const seq = stage.motions.length ? stage.motions : stage.mixes;
       const next = nextStageId();
@@ -2252,6 +2347,7 @@
     function playPoint(name, btn) {
       if (!player) return;
       try {
+        cancelHoldPoseFreeze();
         const pointKey = prefabPointKeyFromName(name);
         restoringIdle = false;
         advanceTargetStage = null;
@@ -2373,7 +2469,8 @@
       const motions = action.destinationIndexed
         ? (action.motions || []).slice(destinationIndex, destinationIndex + 1)
         : (action.motions || []);
-      return [...(action.mix || []), ...motions].filter(animationExists);
+      const completionStop = action._touchCompleted && action.stopMix && action._playCompletionStop ? [action.stopMix] : [];
+      return [...(action.mix || []), ...completionStop, ...motions].filter(animationExists);
     }
 
     function prepareActionPlayback(action, pointKey) {
@@ -2409,6 +2506,7 @@
         motions: complete ? action.motions : [],
         nextStage: complete ? action.nextStage : null,
         setFlag: complete ? action.setFlag : null,
+        _playCompletionStop: complete && Boolean(action.stopMix && (action.nextStage || action.setFlag || (action.motions || []).length)),
         _touchProgressKey: progressKey,
         _touchCompleted: complete,
         _touchResetMs: resetMs,
@@ -2466,7 +2564,7 @@
 
     function scheduleTouchStop(action, pointKey = null) {
       const stopMix = action?.stopMix;
-      const hasProgress = Boolean(action?._touchProgressKey && !action.gauge);
+      const hasProgress = Boolean(action?._touchProgressKey && !action.gauge && !action._touchCompleted);
       const canPlayStop = Boolean(stopMix && animationExists(stopMix) && !action._touchCompleted);
       if (!canPlayStop && !hasProgress) return;
       const token = ++touchStopToken;
@@ -2506,6 +2604,7 @@
       const startedAt = performance.now();
       const maxWait = Math.max(1100, sequence.reduce((sum, anim) => sum + animationDuration(anim), 0) * 1000 + 120);
       holdPoseFreezeState = { token, targets: new Set(targets), entries };
+      holdPoseTrackActive = true;
       const tryFreeze = () => {
         if (token !== holdPoseToken || !player) return;
         refreshHotzonePositions();
@@ -2521,6 +2620,7 @@
         }
         if (performance.now() - startedAt > maxWait) {
           holdPoseTimer = null;
+          clearHoldPoseTrack();
           refreshHotzonePositions();
           return;
         }
@@ -2534,6 +2634,13 @@
       clearTimeout(holdPoseTimer);
       holdPoseTimer = null;
       holdPoseFreezeState = null;
+      clearHoldPoseTrack();
+    }
+
+    function clearHoldPoseTrack() {
+      if (!holdPoseTrackActive || !player?.animationState) return;
+      try { player.animationState.clearTrack(1); } catch (e) { /* track may already be gone */ }
+      holdPoseTrackActive = false;
     }
 
     function holdPoseTargets(pointKey) {
@@ -2553,6 +2660,7 @@
       });
       const current = player?.animationState?.getCurrent?.(1);
       if (current) current.timeScale = 0;
+      holdPoseTrackActive = true;
       holdPoseFreezeState = null;
       clearTimeout(holdPoseTimer);
       holdPoseTimer = null;
@@ -3136,6 +3244,7 @@
 
     function beginPrefabDrag(action, element, event, pointKey = null, startX = event.clientX, startY = event.clientY) {
       if (!player || activePrefabDrag) return;
+      cancelHoldPoseFreeze();
       event.preventDefault();
       event.stopPropagation();
       try {
@@ -3318,7 +3427,9 @@
 
     function shouldHoldPrefabActionPose(action, pointKey) {
       if (action?.kind !== "touch" || !pointKey) return false;
-      if (action.longPress || action.clickMax || action.randomMix || action.stopMix) return false;
+      if (action.longPress || action.randomMix) return false;
+      if (action.clickMax && !action._touchCompleted) return false;
+      if (!action.clickMax && action.stopMix) return false;
       if (action.nextStage || action.setFlag || (action.motions || []).length) return false;
       return (action.mix || []).length === 1 && holdPoseTargets(pointKey).length > 0;
     }
@@ -3368,6 +3479,7 @@
       try {
         if (!canPlayAction(action)) return;
         clearError();
+        cancelHoldPoseFreeze();
         const first = (action.mix || []).filter(animationExists)[0] || null;
         restoringIdle = false;
         advanceTargetStage = null;
@@ -3445,6 +3557,7 @@
 
     function beginGyroDrag(action, element, event, pointKey = null) {
       if (!player || activeGyroDrag) return;
+      cancelHoldPoseFreeze();
       event.preventDefault();
       event.stopPropagation();
       try {
@@ -3531,6 +3644,7 @@
 
     function beginLongPress(action, element, event, pointKey = null) {
       if (!player || activeLongPress) return;
+      cancelHoldPoseFreeze();
       event.preventDefault();
       event.stopPropagation();
       try {
