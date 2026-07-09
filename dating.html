@@ -546,6 +546,12 @@
       illust_dating18: { 1: "idle1", 2: "idle2", 3: "idle3", 4: "idle4", 5: "idle5", 6: "idle6", 7: "idle7" },
       illust_dating19: { 1: "idle1", 2: "idle2" },
     };
+    const ANIMATION_START_OFFSETS = {
+      // dating11 的部分触摸 mix 前段包含旧姿势到近景姿势的过渡附件；网页全景直播会暴露成双层。
+      illust_dating11: {
+        mix1_1_1: 0.75,
+      },
+    };
     const STAGE_LABELS = {
       illust_dating8: {
         1: "攻略一阶段",
@@ -1958,6 +1964,7 @@
       clearError();
       clearTimeout(assetRetryTimer);
       assetRetryTimer = null;
+      cancelHoldPoseFreeze();
       disposePlayerSafely();
       currentStage = 1;
       interactionState = {};
@@ -2367,8 +2374,8 @@
           advanceTargetStage = targetStage;
           advanceLastMotion = sequence[sequence.length - 1] || null;
           activeInteractionMotionNames = new Set(action?.motions || []);
-          player.setAnimation(sequence[0], false);
-          sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
+          setPrimaryAnimation(sequence[0], false);
+          sequence.slice(1).forEach(anim => addPrimaryAnimation(anim, false, 0));
           if (advanceTargetStage) {
             const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
             const delay = Math.min(9000, Math.max(1200, duration * 1000 + 300));
@@ -2377,7 +2384,7 @@
             }, delay);
           }
         } else {
-          player.setAnimation(name, false);
+          setPrimaryAnimation(name, false);
         }
         player.play();
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
@@ -2403,7 +2410,8 @@
         activeInteractionMotionNames = new Set(playbackAction.motions || []);
         clearTimeout(advanceTimer);
         advanceTimer = null;
-        player.animationState.data.defaultMix = 0.2;
+        const hardCutPrimaryTrack = shouldHardCutPrimaryPrefabAction(playbackAction);
+        player.animationState.data.defaultMix = hardCutPrimaryTrack ? 0 : 0.2;
         const sequence = prefabActionSequence(playbackAction);
         if (!sequence.length) {
           showError("这个 prefab 互动没有可播放的 Spine 动画。");
@@ -2439,8 +2447,9 @@
           player.animationState.addEmptyAnimation(1, 0.12, Math.max(0, duration));
           if (currentEntry) datingAudio.playAnimation(currentEntry.id, sequence[0]);
         } else {
-          player.setAnimation(sequence[0], false);
-          sequence.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
+          if (hardCutPrimaryTrack) resetPrimaryTrackPose();
+          setPrimaryAnimation(sequence[0], false);
+          sequence.slice(1).forEach(anim => addPrimaryAnimation(anim, false, 0));
         }
         player.play();
         applyActionState(playbackAction);
@@ -2462,6 +2471,39 @@
         }
         scheduleTouchStop(playbackAction, pointKey);
       } catch (e) { showError("播放 prefab 互动失败：" + e.message); }
+    }
+
+    function shouldHardCutPrimaryPrefabAction(action) {
+      return currentEntry?.id === "illust_dating11" && action?.kind === "touch";
+    }
+
+    function resetPrimaryTrackPose() {
+      if (!player) return;
+      try { player.animationState.clearTrack(0); } catch (e) { /* best-effort cleanup */ }
+      try { player.animationState.clearTrack(1); } catch (e) { /* best-effort cleanup */ }
+      holdPoseTrackActive = false;
+      try { player.skeleton?.setSlotsToSetupPose?.(); } catch (e) { /* best-effort cleanup */ }
+    }
+
+    function animationStartOffset(name) {
+      return ANIMATION_START_OFFSETS[currentEntry?.id]?.[name] || 0;
+    }
+
+    function applyAnimationStartOffset(entry, name) {
+      const offset = animationStartOffset(name);
+      if (!entry || offset <= 0) return entry;
+      entry.trackTime = offset;
+      entry.animationLast = offset;
+      entry.nextAnimationLast = offset;
+      return entry;
+    }
+
+    function setPrimaryAnimation(name, loop) {
+      return applyAnimationStartOffset(player.animationState.setAnimation(0, name, loop), name);
+    }
+
+    function addPrimaryAnimation(name, loop, delay) {
+      return applyAnimationStartOffset(player.animationState.addAnimation(0, name, loop, delay), name);
     }
 
     function prefabActionSequence(action) {
@@ -2527,8 +2569,14 @@
     function prepareIndexedTouchMix(action, pointKey) {
       const progressKey = action.progressKey || `${currentEntry?.id || "entry"}:${pointKey || action.label || "action"}:indexedMix`;
       const max = Math.max(1, (action.mix || []).length);
+      const now = performance.now();
+      const resetMs = Math.max(100, (Number(action.clickReset) || 1) * 1000);
       const previousState = interactionState[progressKey];
-      const previousCount = previousState && typeof previousState === "object" ? previousState.count || 0 : 0;
+      const previousComplete = previousState && typeof previousState === "object" && previousState.complete;
+      const previousFresh = previousState && typeof previousState === "object" && now - (previousState.at || 0) <= resetMs;
+      const previousCount = previousState && typeof previousState === "object" && (!previousComplete || previousFresh)
+        ? previousState.count || 0
+        : 0;
       if (previousCount >= max) {
         showStatus(`连点已完成 ${max}/${max}`, 700);
         return null;
@@ -2537,7 +2585,7 @@
       const mixIndex = Math.min(next - 1, Math.max(0, (action.mix || []).length - 1));
       const mix = (action.mix || [])[mixIndex];
       const complete = next >= max;
-      interactionState = { ...interactionState, [progressKey]: { count: next, complete } };
+      interactionState = { ...interactionState, [progressKey]: { count: next, complete, at: now } };
       return {
         ...action,
         mix: mix ? [mix] : [],
@@ -2638,8 +2686,10 @@
     }
 
     function clearHoldPoseTrack() {
-      if (!holdPoseTrackActive || !player?.animationState) return;
-      try { player.animationState.clearTrack(1); } catch (e) { /* track may already be gone */ }
+      if (!holdPoseTrackActive) return;
+      if (player?.animationState) {
+        try { player.animationState.clearTrack(1); } catch (e) { /* track may already be gone */ }
+      }
       holdPoseTrackActive = false;
     }
 
@@ -2710,6 +2760,7 @@
         advanceTimer = null;
         player.animationState.data.defaultMix = 0.25;
         applyStageSkin(currentStage);
+        try { player.skeleton?.setSlotsToSetupPose?.(); } catch (e) { /* best-effort idle cleanup */ }
         player.setAnimation(idle, true);
         player.play();
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
