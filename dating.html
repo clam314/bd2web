@@ -546,12 +546,6 @@
       illust_dating18: { 1: "idle1", 2: "idle2", 3: "idle3", 4: "idle4", 5: "idle5", 6: "idle6", 7: "idle7" },
       illust_dating19: { 1: "idle1", 2: "idle2" },
     };
-    const ANIMATION_START_OFFSETS = {
-      // dating11 的部分触摸 mix 前段包含旧姿势到近景姿势的过渡附件；网页全景直播会暴露成双层。
-      illust_dating11: {
-        mix1_1_1: 0.75,
-      },
-    };
     const STAGE_LABELS = {
       illust_dating8: {
         1: "攻略一阶段",
@@ -2410,8 +2404,7 @@
         activeInteractionMotionNames = new Set(playbackAction.motions || []);
         clearTimeout(advanceTimer);
         advanceTimer = null;
-        const hardCutPrimaryTrack = shouldHardCutPrimaryPrefabAction(playbackAction);
-        player.animationState.data.defaultMix = hardCutPrimaryTrack ? 0 : 0.2;
+        player.animationState.data.defaultMix = 0.2;
         const sequence = prefabActionSequence(playbackAction);
         if (!sequence.length) {
           showError("这个 prefab 互动没有可播放的 Spine 动画。");
@@ -2441,13 +2434,15 @@
         } else if (shouldUseTouchOverlayTrack(playbackAction, sequence)) {
           advanceLastMotion = null;
           player.animationState.data.defaultMix = 0.08;
-          player.animationState.setAnimation(1, sequence[0], false);
-          sequence.slice(1).forEach(anim => player.animationState.addAnimation(1, anim, false, 0));
-          const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
-          player.animationState.addEmptyAnimation(1, 0.12, Math.max(0, duration));
-          if (currentEntry) datingAudio.playAnimation(currentEntry.id, sequence[0]);
+          const overlayEntries = [player.animationState.setAnimation(1, sequence[0], false)];
+          sequence.slice(1).forEach(anim => overlayEntries.push(player.animationState.addAnimation(1, anim, false, 0)));
+          overlayEntries.forEach(entry => { if (entry) entry.listener = overlayAudioListener; });
+          if (!targetStage) {
+            // 无阶段推进时淡出回待机；有推进时保持末帧，等 enterStage -> playIdle 接管 track 1。
+            const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
+            player.animationState.addEmptyAnimation(1, 0.12, Math.max(0, duration));
+          }
         } else {
-          if (hardCutPrimaryTrack) resetPrimaryTrackPose();
           setPrimaryAnimation(sequence[0], false);
           sequence.slice(1).forEach(anim => addPrimaryAnimation(anim, false, 0));
         }
@@ -2473,37 +2468,25 @@
       } catch (e) { showError("播放 prefab 互动失败：" + e.message); }
     }
 
-    function shouldHardCutPrimaryPrefabAction(action) {
-      return currentEntry?.id === "illust_dating11" && action?.kind === "touch";
-    }
-
-    function resetPrimaryTrackPose() {
-      if (!player) return;
-      try { player.animationState.clearTrack(0); } catch (e) { /* best-effort cleanup */ }
-      try { player.animationState.clearTrack(1); } catch (e) { /* best-effort cleanup */ }
-      holdPoseTrackActive = false;
-      try { player.skeleton?.setSlotsToSetupPose?.(); } catch (e) { /* best-effort cleanup */ }
-    }
-
-    function animationStartOffset(name) {
-      return ANIMATION_START_OFFSETS[currentEntry?.id]?.[name] || 0;
-    }
-
-    function applyAnimationStartOffset(entry, name) {
-      const offset = animationStartOffset(name);
-      if (!entry || offset <= 0) return entry;
-      entry.trackTime = offset;
-      entry.animationLast = offset;
-      entry.nextAnimationLast = offset;
-      return entry;
-    }
+    // overlay 轨(track 1)上的互动动画不经过全局 start 监听(只处理 track 0 的 SFX/动作语音)，
+    // 用 TrackEntry 自带 listener 补齐；entry 回池时 listener 会被 runtime 清掉，不会泄漏。
+    const overlayAudioListener = {
+      start: (entry) => {
+        const name = entry?.animation?.name;
+        if (!name || !currentEntry) return;
+        if (activeInteractionVoiceKey && activeInteractionMotionNames.has(name)) {
+          datingAudio.playInteractionVoice(currentEntry.id, activeInteractionVoiceKey, "motion");
+        }
+        datingAudio.playAnimation(currentEntry.id, name);
+      },
+    };
 
     function setPrimaryAnimation(name, loop) {
-      return applyAnimationStartOffset(player.animationState.setAnimation(0, name, loop), name);
+      return player.animationState.setAnimation(0, name, loop);
     }
 
     function addPrimaryAnimation(name, loop, delay) {
-      return applyAnimationStartOffset(player.animationState.addAnimation(0, name, loop, delay), name);
+      return player.animationState.addAnimation(0, name, loop, delay);
     }
 
     function prefabActionSequence(action) {
@@ -2749,7 +2732,7 @@
         restoringIdle = true;
         dragHolding = false;
         stopDragFollow();
-        if (currentEntry?.id === "illust_dating6") {
+        if (currentEntry?.id === "illust_dating6" || currentEntry?.id === "illust_dating11") {
           try { player.animationState.clearTrack(1); } catch (e) { clearDragOverlay(); }
         }
         advanceTargetStage = null;
@@ -3486,8 +3469,16 @@
     }
 
     function shouldUseTouchOverlayTrack(action, sequence) {
+      if (!sequence.length || action?.longPress) return false;
+      if (currentEntry?.id === "illust_dating11") {
+        // dating11 的 skel 是多姿势组(ID1-ID4)共存：idle 每帧把非当前组的附件 key 成 null，
+        // mix/motion 只 key 自己那组。若把 mix 直接播在 track 0，AnimationState 会把
+        // idle 曾 key、mix 未 key 的 slot 回退到 setup pose(ID3 组全可见) => 双层人物。
+        // 真机逆向确认互动动画全部在 track 1 叠播、idle 常驻 track 0(见 playDragBegin 注释)。
+        return true;
+      }
       if (currentEntry?.id !== "illust_dating6") return false;
-      if (action?.kind !== "touch" || action.longPress || !sequence.length) return false;
+      if (action?.kind !== "touch") return false;
       if (!action._mixOverlayOnly) return false;
       if (resolveActionNextStage(action) || action.setFlag || (action.motions || []).length) return false;
       return true;
