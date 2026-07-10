@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-03T22:02:37+00:00",
- "source": "Brown-Dust-2-Asset@c22400c07bfd",
- "commit": "c22400c07bfd",
+ "generatedAt": "2026-07-10T21:59:22+00:00",
+ "source": "Brown-Dust-2-Asset@07d8d7d538cd",
+ "commit": "07d8d7d538cd",
  "characters": [
   {
    "id": "0001",
@@ -824,7 +824,10 @@
       "skeleton": "spine/char/char003392/char003392.skel",
       "atlas": "spine/char/char003392/char003392.atlas"
      },
-     "cutscene": null,
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char003392/cutscene_char003392.skel",
+      "atlas": "spine/cutscenes/cutscene_char003392/cutscene_char003392.atlas"
+     },
      "bg": null
     }
    ]
@@ -1729,7 +1732,10 @@
       "skeleton": "spine/char/char060804/char060804.skel",
       "atlas": "spine/char/char060804/char060804.atlas"
      },
-     "cutscene": null,
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char060804/cutscene_char060804.skel",
+      "atlas": "spine/cutscenes/cutscene_char060804/cutscene_char060804.atlas"
+     },
      "bg": null
     }
    ]
@@ -2256,7 +2262,10 @@
       "skeleton": "spine/char/char067104/char067104.skel",
       "atlas": "spine/char/char067104/char067104.atlas"
      },
-     "cutscene": null,
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char067104/cutscene_char067104.skel",
+      "atlas": "spine/cutscenes/cutscene_char067104/cutscene_char067104.atlas"
+     },
      "bg": null
     }
    ]

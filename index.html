@@ -250,7 +250,7 @@
     // 素材根目录：本地/家庭主机直接用 upstream/ 克隆；
     // 跑在 GitHub Pages（*.github.io）上时自动切到 CDN（钉死上游 commit，
     // 上游更新后改这一个常量即可——或由 Actions 定时工作流自动改）。
-    const UPSTREAM_COMMIT = "c22400c07bfd";
+    const UPSTREAM_COMMIT = "07d8d7d538cd";
     const params = new URLSearchParams(location.search);
     const useCdn = location.hostname.endsWith("github.io")   // Pages 上自动走 CDN
       || params.has("cdn");                                  // 本地加 ?cdn=1 可模拟
