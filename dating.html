@@ -1219,6 +1219,11 @@
       },
     };
     const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10"]);
+    // 多姿势组 skel(idle 每帧 key 隐藏非当前组附件,mix/motion 只 key 自己组)：互动动画一律播
+    // track 1、idle 常驻 track 0,否则 track 0 切换的交叉淡入窗口会把未 key 的 slot 回退到
+    // setup pose => 双层人物一闪(dating6"两双手"/dating11 ID3 整组)。与真机
+    // SetSpineAnimationExternal(track=1) 行为一致,见 playDragBegin 注释。
+    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11"]);
     const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
@@ -2307,6 +2312,7 @@
         interactionState = {};
       }
       if (stageNo !== currentStage) clearIndexedTouchMixProgress();
+      hotzonesSuppressed = false;
       currentStage = stageNo;
       selectedToolId = defaultStageToolId(stageNo, getStageTools(stageModel.stages.get(stageNo)));
       teresseToolMode = null;
@@ -2329,9 +2335,14 @@
         restoringIdle = false;
         advanceTargetStage = next || null;
         advanceLastMotion = seq[seq.length - 1] || null;
-        player.animationState.data.defaultMix = 0.25;
-        player.setAnimation(seq[0], false);
-        seq.slice(1).forEach(name => player.animationState.addAnimation(0, name, false, 0));
+        if (OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id)) {
+          advanceLastMotion = null;
+          playOverlaySequence(seq.filter(animationExists), next || null);
+        } else {
+          player.animationState.data.defaultMix = 0.25;
+          player.setAnimation(seq[0], false);
+          seq.slice(1).forEach(name => player.animationState.addAnimation(0, name, false, 0));
+        }
         player.play();
         animList.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
         clearTimeout(advanceTimer);
@@ -2433,15 +2444,7 @@
           scheduleHoldPoseFreeze(pointKey, holdEntries, sequence);
         } else if (shouldUseTouchOverlayTrack(playbackAction, sequence)) {
           advanceLastMotion = null;
-          player.animationState.data.defaultMix = 0.08;
-          const overlayEntries = [player.animationState.setAnimation(1, sequence[0], false)];
-          sequence.slice(1).forEach(anim => overlayEntries.push(player.animationState.addAnimation(1, anim, false, 0)));
-          overlayEntries.forEach(entry => { if (entry) entry.listener = overlayAudioListener; });
-          if (!targetStage) {
-            // 无阶段推进时淡出回待机；有推进时保持末帧，等 enterStage -> playIdle 接管 track 1。
-            const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
-            player.animationState.addEmptyAnimation(1, 0.12, Math.max(0, duration));
-          }
+          playOverlaySequence(sequence, targetStage);
         } else {
           setPrimaryAnimation(sequence[0], false);
           sequence.slice(1).forEach(anim => addPrimaryAnimation(anim, false, 0));
@@ -2480,6 +2483,46 @@
         datingAudio.playAnimation(currentEntry.id, name);
       },
     };
+
+    // 末条动画播完立即推进阶段(advanceTimer 只兜底)；setTimeout 跳出 spine 事件回调,
+    // 因为 enterStage -> playIdle 会 clearTrack(1) 清掉正在派发事件的 entry。
+    function overlayAdvanceListener(targetStage) {
+      return {
+        start: overlayAudioListener.start,
+        complete: () => {
+          if (!targetStage || advanceTargetStage !== targetStage) return;
+          setTimeout(() => {
+            if (advanceTargetStage === targetStage) enterStage(targetStage);
+          }, 0);
+        },
+      };
+    }
+
+    // 互动序列统一叠播在 track 1(idle 常驻 track 0)。时长≈0 的单帧姿势(连点链中间步)
+    // 保持末帧不清,等下一步/链收尾/重置;有阶段推进的也保持末帧,交给 enterStage 清 track 1。
+    function playOverlaySequence(sequence, targetStage) {
+      player.animationState.data.defaultMix = 0.08;
+      const entries = [player.animationState.setAnimation(1, sequence[0], false)];
+      sequence.slice(1).forEach(anim => entries.push(player.animationState.addAnimation(1, anim, false, 0)));
+      entries.forEach(entry => { if (entry) entry.listener = overlayAudioListener; });
+      const last = entries[entries.length - 1];
+      if (targetStage) {
+        if (last) last.listener = overlayAdvanceListener(targetStage);
+        suppressHotzonesForTransition();
+        return;
+      }
+      const duration = sequence.reduce((sum, anim) => sum + animationDuration(anim), 0);
+      if (duration > 0.05) {
+        player.animationState.addEmptyAnimation(1, 0.12, Math.max(0, duration));
+      }
+    }
+
+    // 阶段推进演出期间隐藏热区：过渡 motion 会把跟随骨骼甩满屏,旧阶段热区跟着乱飞。
+    let hotzonesSuppressed = false;
+    function suppressHotzonesForTransition() {
+      hotzonesSuppressed = true;
+      hotzoneLayer.querySelectorAll(".hotzone").forEach(el => { el.hidden = true; });
+    }
 
     function setPrimaryAnimation(name, loop) {
       return player.animationState.setAnimation(0, name, loop);
@@ -2577,6 +2620,8 @@
         setFlag: null,
         _mixOverlayOnly: true,
         _touchCompleted: complete,
+        _touchProgressKey: progressKey,
+        _touchResetMs: resetMs,
         _touchProgressText: complete ? `连点完成 ${next}/${max}` : `连点 ${next}/${max}`,
       };
     }
@@ -2606,8 +2651,10 @@
         if (hasProgress) {
           interactionState = { ...interactionState };
           delete interactionState[action._touchProgressKey];
+          showStatus("连点已重置", 900);
+          // overlay 角色的连点链姿势保持在 track 1 上，链超时重置时淡出回待机。
+          if (!canPlayStop && OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id)) clearDragOverlay();
         }
-        if (hasProgress) showStatus("连点已重置", 900);
         if (!canPlayStop) return;
         try {
           restoringIdle = false;
@@ -2615,8 +2662,13 @@
           advanceLastMotion = stopMix;
           activeInteractionVoiceKey = pointKey;
           activeInteractionMotionNames = new Set();
-          player.animationState.data.defaultMix = 0.12;
-          player.setAnimation(stopMix, false);
+          if (OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id)) {
+            advanceLastMotion = null;
+            playOverlaySequence([stopMix], null);
+          } else {
+            player.animationState.data.defaultMix = 0.12;
+            player.setAnimation(stopMix, false);
+          }
           player.play();
         } catch (e) { showError("播放触摸收尾失败：" + e.message); }
       }, resetMs);
@@ -2732,8 +2784,12 @@
         restoringIdle = true;
         dragHolding = false;
         stopDragFollow();
-        if (currentEntry?.id === "illust_dating6" || currentEntry?.id === "illust_dating11") {
+        if (OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id)) {
           try { player.animationState.clearTrack(1); } catch (e) { clearDragOverlay(); }
+        }
+        if (hotzonesSuppressed) {
+          hotzonesSuppressed = false;
+          renderHotzones(currentPrefabActions());
         }
         advanceTargetStage = null;
         advanceLastMotion = null;
@@ -3020,6 +3076,7 @@
       activeGyroPointKey = null;
       gyroBaseline = null;
       if (!currentEntry) return;
+      if (hotzonesSuppressed) return;
       if (renderCardGameHotzones()) return;
       if (!prefabActions.length) return;
       const hiddenBox = { left: -999, top: -999, width: 1, height: 1 };
@@ -3473,18 +3530,7 @@
 
     function shouldUseTouchOverlayTrack(action, sequence) {
       if (!sequence.length || action?.longPress) return false;
-      if (currentEntry?.id === "illust_dating11") {
-        // dating11 的 skel 是多姿势组(ID1-ID4)共存：idle 每帧把非当前组的附件 key 成 null，
-        // mix/motion 只 key 自己那组。若把 mix 直接播在 track 0，AnimationState 会把
-        // idle 曾 key、mix 未 key 的 slot 回退到 setup pose(ID3 组全可见) => 双层人物。
-        // 真机逆向确认互动动画全部在 track 1 叠播、idle 常驻 track 0(见 playDragBegin 注释)。
-        return true;
-      }
-      if (currentEntry?.id !== "illust_dating6") return false;
-      if (action?.kind !== "touch") return false;
-      if (!action._mixOverlayOnly) return false;
-      if (resolveActionNextStage(action) || action.setFlag || (action.motions || []).length) return false;
-      return true;
+      return OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id);
     }
 
     function destinationHitIndex(action, clientX, clientY) {
@@ -3558,9 +3604,22 @@
         const targetStage = resolveActionNextStage(action);
         advanceTargetStage = targetStage;
         advanceLastMotion = motions.length ? motions[motions.length - 1] : null;
-        clearDragOverlay(0.08);
-        player.animationState.data.defaultMix = 0.12;
-        if (motions.length) {
+        if (motions.length && OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id)) {
+          // 多姿势组角色的成功 motion 也走 track 1：直接替换 track 1 上的拖拽 hold mix，
+          // 避免 track 0 交叉淡入把 setup 附件闪出来(两双手)。
+          advanceLastMotion = null;
+          playOverlaySequence(motions, targetStage);
+          player.play();
+          if (targetStage) {
+            const duration = motions.reduce((sum, anim) => sum + animationDuration(anim), 0);
+            const delay = Math.min(9000, Math.max(1200, duration * 1000 + 300));
+            advanceTimer = setTimeout(() => {
+              if (advanceTargetStage === targetStage) enterStage(targetStage);
+            }, delay);
+          }
+        } else if (motions.length) {
+          clearDragOverlay(0.08);
+          player.animationState.data.defaultMix = 0.12;
           player.setAnimation(motions[0], false);
           motions.slice(1).forEach(anim => player.animationState.addAnimation(0, anim, false, 0));
           player.play();
@@ -3572,10 +3631,12 @@
             }, delay);
           }
         } else if (targetStage) {
+          if (!OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id)) clearDragOverlay(0.08);
           advanceTimer = setTimeout(() => {
             if (advanceTargetStage === targetStage) enterStage(targetStage);
           }, 600);
         } else {
+          if (!OVERLAY_TRACK_INTERACTION_IDS.has(currentEntry?.id)) clearDragOverlay(0.08);
           playIdle();
         }
       } catch (e) { showError("播放拖拽成功失败：" + e.message); }
