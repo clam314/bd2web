@@ -1224,7 +1224,10 @@
     // setup pose => 双层人物一闪(dating6"两双手"/dating11 ID3 整组)。与真机
     // SetSpineAnimationExternal(track=1) 行为一致,见 playDragBegin 注释。
     const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11"]);
-    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9"]);
+    // dating11 已审计:全部 point 热区有同名骨骼(仅 InteractionZone 无,保持静态)。攻略链靠
+    // 骨骼进出画面揭示隐藏点:mix1_3_1 揭示 1_5(0.03~1.67s)、mix1_5_1 揭示 1_9(0.03~2s,
+    // 点中 1_9 才进二阶段),静态坐标永远停在 ±12000 停车位,不跟骨骼就永远点不到。
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1328,7 +1331,8 @@
         "2_2_0": { x: -6767.6, y: -242.1, width: 500, height: 500, shape: 0, source: "point2_2_touch_follow [Override]" },
       },
       illust_dating11: {
-        "1_9_0": { x: -149.2, y: -4963.4, width: 160, height: 160, shape: 0, source: "point1_9_touch [Override]" },
+        // 1_9_0 不再覆盖：外部 dating_hotzones.json 的 400×400 才是 prefab 真值，
+        // 位置由骨骼 point1_9_touch 跟随驱动(BONE_FOLLOW_HOTZONE_IDS)。
         "2_1_14": { x: -591.2, y: -928, width: 1200, height: 800, shape: 1, source: "InteractionZone" },
         "2_2_14": { x: -591.2, y: -77.2, width: 1200, height: 800, shape: 1, source: "InteractionZone" },
         "3_22_14": { x: -89.1, y: -276, width: 200, height: 800, shape: 1, source: "InteractionZone" },
