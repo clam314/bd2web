@@ -567,6 +567,10 @@
         2: "二阶段·毯子踢开",
         3: "三阶段·手/蛋糕/狗狗",
       },
+      illust_dating14: {
+        1: "一阶段·触手/符咒换装",
+        2: "二阶段·组合/符咒特写",
+      },
       illust_dating18: {
         1: "一阶段·桌下",
         2: "一阶段·背后",
@@ -630,6 +634,12 @@
       illust_dating13: {
         15: "蛋糕",
         16: "狗狗",
+      },
+      // 19/20 是同一套互动的 Spine skin 开关，不是两件道具。
+      // skin2_on 显示触手，skin1_off 隐藏触手；已在本地播放器逐项对比确认。
+      illust_dating14: {
+        19: "触手显示",
+        20: "触手隐藏",
       },
     };
     const HOLD_POSE_TARGETS = {
@@ -958,6 +968,58 @@
         "3_19_0": "左手连点",
         "3_20_0": "娃娃·脚夹住",
         "3_21_0": "娃娃连点",
+      },
+      // 语义来源：巴哈攻略 C.php?bsn=76207&snA=8714 × prefab 热区投影位置。
+      // 组合动作的后续点由同名 point 骨骼在动画中搬入画面，未确认的后续点保留原编号。
+      illust_dating14: {
+        "1_1_19": "画面左胸",
+        "1_1_20": "画面左胸",
+        "1_2_19": "画面右胸",
+        "1_2_20": "画面右胸",
+        "1_3_19": "画面左大腿",
+        "1_3_20": "画面左大腿",
+        "1_4_19": "画面右大腿",
+        "1_4_20": "画面右大腿",
+        "1_5_19": "左上触手",
+        "1_5_20": "左上触手",
+        "1_6_19": "右上触手",
+        "1_6_20": "右上触手",
+        "1_7_19": "左中触手",
+        "1_7_20": "左中触手",
+        "1_8_19": "右中触手",
+        "1_8_20": "右中触手",
+        "1_20_19": "头部·随机表情",
+        "1_20_20": "头部·随机表情",
+        "1_21_19": "符咒50%·惊扰",
+        "1_21_20": "符咒50%·惊扰",
+        "1_22_19": "符咒100%·换装进二阶段",
+        "1_22_20": "符咒100%·换装进二阶段",
+        "2_1_19": "画面左胸",
+        "2_1_20": "画面左胸",
+        "2_2_19": "画面右胸",
+        "2_2_20": "画面右胸",
+        "2_3_19": "腹部",
+        "2_3_20": "腹部",
+        "2_4_19": "符咒0%·纹路浮现",
+        "2_4_20": "符咒0%·纹路浮现",
+        "2_7_19": "右脚底板·搔痒",
+        "2_7_20": "右脚底板·搔痒",
+        "2_8_19": "左上触手",
+        "2_8_20": "左上触手",
+        "2_9_19": "右上触手",
+        "2_9_20": "右上触手",
+        "2_10_19": "左中触手",
+        "2_10_20": "左中触手",
+        "2_11_19": "右中触手·多舔",
+        "2_11_20": "右中触手·多舔",
+        "2_36_19": "符咒30%·惊扰",
+        "2_36_20": "符咒30%·惊扰",
+        "2_37_19": "符咒70%·即将",
+        "2_37_20": "符咒70%·即将",
+        "2_38_19": "符咒100%·钻头特写",
+        "2_38_20": "符咒100%·钻头特写",
+        "2_40_19": "头部·表情",
+        "2_40_20": "头部·表情",
       },
     };
     const STAGE_TOOL_SKINS = {
@@ -1300,11 +1362,13 @@
     // track 1、idle 常驻 track 0,否则 track 0 切换的交叉淡入窗口会把未 key 的 slot 回退到
     // setup pose => 双层人物一闪(dating6"两双手"/dating11 ID3 整组)。与真机
     // SetSpineAnimationExternal(track=1) 行为一致,见 playDragBegin 注释。
-    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12", "illust_dating13"]);
+    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14"]);
     // dating11 已审计:全部 point 热区有同名骨骼(仅 InteractionZone 无,保持静态)。攻略链靠
     // 骨骼进出画面揭示隐藏点:mix1_3_1 揭示 1_5(0.03~1.67s)、mix1_5_1 揭示 1_9(0.03~2s,
     // 点中 1_9 才进二阶段),静态坐标永远停在 ±12000 停车位,不跟骨骼就永远点不到。
-    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12", "illust_dating13"]);
+    // dating14：外部 JSON 的 128 个 source 与 skel 内同名骨骼 128/128 精确匹配；组合后续点
+    // 的静态 prefab 坐标停在 x≈-11400，必须随动画骨骼搬入画面才能点击。
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1419,10 +1483,8 @@
       // 位置全部由同名骨骼跟随驱动(BONE_FOLLOW_HOTZONE_IDS)。
       // dating13 不再覆盖：外部 dating_hotzones.json 是 prefab 真值,
       // 位置全部由同名骨骼跟随驱动(BONE_FOLLOW_HOTZONE_IDS)。
-      illust_dating14: {
-        "1_22_19": { x: -103, y: -126.8, width: 150, height: 150, shape: 0, source: "point1_23_touch_gauge_tool19 [Override]" },
-        "1_22_20": { x: -103, y: -126.8, width: 150, height: 150, shape: 0, source: "point1_22_touch_gauge_tool20 [Override]" },
-      },
+      // dating14 不再覆盖：旧手写框只有两个符咒点且尺寸也不是当前 prefab 真值；
+      // 128 个外部热区全部由同名骨骼跟随驱动(BONE_FOLLOW_HOTZONE_IDS)。
       illust_dating15: {
         "1_10_0": { x: -469.2, y: -300.5, width: 1000, height: 650, shape: 0, source: "point1_10_touch [Override]" },
         "2_20_0": { x: -469.2, y: -300.5, width: 1000, height: 650, shape: 0, source: "point2_20_touch [Override]" },
