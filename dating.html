@@ -571,6 +571,10 @@
         1: "一阶段·触手/符咒换装",
         2: "二阶段·组合/符咒特写",
       },
+      illust_dating17: {
+        1: "一阶段·坐姿",
+        2: "二阶段·近距离",
+      },
       illust_dating18: {
         1: "一阶段·桌下",
         2: "一阶段·背后",
@@ -640,6 +644,10 @@
       illust_dating14: {
         19: "触手显示",
         20: "触手隐藏",
+      },
+      illust_dating17: {
+        23: "画笔",
+        24: "画笔",
       },
     };
     const HOLD_POSE_TARGETS = {
@@ -1021,6 +1029,19 @@
         "2_40_19": "头部·表情",
         "2_40_20": "头部·表情",
       },
+      // 语义来源：巴哈攻略 C.php?bsn=76207&snA=9954 × 本地骨骼揭示链实测。
+      // 1_4→1_5、2_2→2_3、2_18→2_19/2_20 都是在前一动作播放时才进入可点击区。
+      illust_dating17: {
+        "1_4_0": "胸部·第一次",
+        "1_5_0": "胸部·第二次",
+        "1_6_0": "抚摸",
+        "1_7_0": "连续抚摸·快速连点",
+        "2_2_0": "腋下·第一次",
+        "2_3_0": "腋下·第二次",
+        "2_18_0": "膝盖",
+        "2_19_0": "脚底",
+        "2_20_0": "脚趾·快速连点",
+      },
     };
     const STAGE_TOOL_SKINS = {
       illust_dating7: { 1: { 0: "idle1_1", 7: "idle1_1", 4: "idle1_2" }, 2: { 0: "idle1_0" } },
@@ -1362,13 +1383,15 @@
     // track 1、idle 常驻 track 0,否则 track 0 切换的交叉淡入窗口会把未 key 的 slot 回退到
     // setup pose => 双层人物一闪(dating6"两双手"/dating11 ID3 整组)。与真机
     // SetSpineAnimationExternal(track=1) 行为一致,见 playDragBegin 注释。
-    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14"]);
+    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14", "illust_dating17"]);
     // dating11 已审计:全部 point 热区有同名骨骼(仅 InteractionZone 无,保持静态)。攻略链靠
     // 骨骼进出画面揭示隐藏点:mix1_3_1 揭示 1_5(0.03~1.67s)、mix1_5_1 揭示 1_9(0.03~2s,
     // 点中 1_9 才进二阶段),静态坐标永远停在 ±12000 停车位,不跟骨骼就永远点不到。
     // dating14：外部 JSON 的 128 个 source 与 skel 内同名骨骼 128/128 精确匹配；组合后续点
     // 的静态 prefab 坐标停在 x≈-11400，必须随动画骨骼搬入画面才能点击。
-    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14"]);
+    // dating17：外部 JSON 的 62 个 source 与 skel 内同名骨骼 62/62 精确匹配；攻略中的
+    // 胸部二段、腋下二段、膝盖到脚底/脚趾都靠 mix 把后续点从 ±12000 停车位搬入画面。
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14", "illust_dating17"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1494,9 +1517,8 @@
         "1_15_21": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_16_touch_tool21 [Override]" },
         "1_15_22": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_17_touch_tool22 [Override]" },
       },
-      illust_dating17: {
-        "1_26_0": { x: -4751.3, y: 141.2, width: 160, height: 160, shape: 0, source: "point1_26_touch [Override]" },
-      },
+      // dating17 不再覆盖：外部 dating_hotzones.json 是当前 prefab 真值（含 400×400
+      // 的阶段切换点），62 个点全部由同名骨骼跟随驱动。
       illust_dating18: {
         "1_1_0": { x: -15.7, y: 113.3, width: 62.5, height: 62.5, shape: 0, source: "point1_1_touch [Override]" },
         "1_2_0": { x: -91.1, y: 48.5, width: 62.5, height: 62.5, shape: 1, source: "point1_2_drag [Override]" },
