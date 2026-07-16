@@ -562,6 +562,11 @@
         2: "变身过渡",
         3: "攻略二型态",
       },
+      illust_dating13: {
+        1: "一阶段·盖毯打盹",
+        2: "二阶段·毯子踢开",
+        3: "三阶段·手/蛋糕/狗狗",
+      },
       illust_dating18: {
         1: "一阶段·桌下",
         2: "一阶段·背后",
@@ -621,6 +626,10 @@
       illust_dating12: {
         17: "冰块",
         18: "嘴巴",
+      },
+      illust_dating13: {
+        15: "蛋糕",
+        16: "狗狗",
       },
     };
     const HOLD_POSE_TARGETS = {
@@ -922,6 +931,34 @@
         "3_21_0": "冰层连点(掉冰柱)",
         "3_22_0": "冰层再点(冰柱落下)",
       },
+      // dating13 语义来源：disp.cc/ptt/C_Chat/1fLTAE1j + 巴哈 C.php?bsn=76207&snA=8444
+      // × 骨骼揭示链分析(mix1_5_1→1_6、mix1_6_1→1_7…；mix3_16_1→3_17、mix3_17_9→3_18;
+      //   mix3_3_1→3_4/5/6；mix3_19_2→3_20、mix3_20_1→3_21/23、mix3_21_4→3_22)。
+      illust_dating13: {
+        "1_4_0": "掀毯子",
+        "1_5_0": "柴火1(拿起)",
+        "1_6_0": "丢进火炉1",
+        "1_7_0": "柴火2(拿起)",
+        "1_8_0": "丢进火炉2",
+        "1_9_0": "柴火3(拿起)",
+        "1_10_0": "丢进火炉3(热到踢毯)",
+        "2_4_0": "长按兔子玩偶(震动)",
+        "2_5_0": "震动后·连点",
+        "2_6_0": "震动后·画面左胸",
+        "2_7_0": "震动后·画面右胸",
+        "2_8_0": "震动后·拖拽",
+        "2_9_0": "俄罗斯娃娃(醒来进三阶)",
+        "3_3_0": "肚子(出三种捏法)",
+        "3_4_0": "捏肚·位置1",
+        "3_5_0": "捏肚·位置2",
+        "3_6_0": "捏肚·位置3",
+        "3_16_0": "胯下扣子",
+        "3_17_0": "扣子连点(3下解开/9下哭)",
+        "3_18_0": "哭·后续",
+        "3_19_0": "左手连点",
+        "3_20_0": "娃娃·脚夹住",
+        "3_21_0": "娃娃连点",
+      },
     };
     const STAGE_TOOL_SKINS = {
       illust_dating7: { 1: { 0: "idle1_1", 7: "idle1_1", 4: "idle1_2" }, 2: { 0: "idle1_0" } },
@@ -1172,8 +1209,14 @@
         "2_1_0": { kind: "touch", mix: ["mix2_1_1"], motions: ["motion2_1"], nextStage: "next" },
       },
       illust_dating13: {
-        "1_10_0": { kind: "touch", mix: ["mix1_10_1"], motions: ["motion1_10"], nextStage: "next" },
-        "2_9_0": { kind: "touch", mix: ["mix2_9_1"], motions: ["motion2_9"], nextStage: "next" },
+        // 二阶段 2_5~2_8 是 prefab 程序隐藏点(点名带 _1hidden_,骨骼在 idle2 下不停车,
+        // 靠游戏逻辑开窗)：攻略"长按兔子玩偶(2_4)震动后腿打开一段时间,可摸胸"。网页近似:
+        // 兔子玩偶拖拽成功 setFlag 后解锁(不做限时窗口,同 dating4 flag 先例)。
+        "2_4_0": { kind: "drag", mix: ["mix2_4_1", "mix2_4_2"], setFlag: "teel13BunnyBuzzed" },
+        "2_5_0": { kind: "touch", mix: ["mix2_5_1"], stopMix: "mix2_5_end", visibleWhen: ["teel13BunnyBuzzed"] },
+        "2_6_0": { kind: "touch", mix: ["mix2_6_1"], visibleWhen: ["teel13BunnyBuzzed"] },
+        "2_7_0": { kind: "touch", mix: ["mix2_7_1"], visibleWhen: ["teel13BunnyBuzzed"] },
+        "2_8_0": { kind: "drag", mix: ["mix2_8_1", "mix2_8_2"], visibleWhen: ["teel13BunnyBuzzed"] },
       },
       illust_dating14: {
         "1_22_19": { kind: "touch", mix: ["mix1_23_1"], motions: ["motion1_23"], nextStage: "next", gauge: true },
@@ -1252,16 +1295,16 @@
         "7_13_14": { kind: "gyro", label: "左右倾斜切回二阶段桌下视角", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
       },
     };
-    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10", "illust_dating12"]);
+    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10", "illust_dating12", "illust_dating13"]);
     // 多姿势组 skel(idle 每帧 key 隐藏非当前组附件,mix/motion 只 key 自己组)：互动动画一律播
     // track 1、idle 常驻 track 0,否则 track 0 切换的交叉淡入窗口会把未 key 的 slot 回退到
     // setup pose => 双层人物一闪(dating6"两双手"/dating11 ID3 整组)。与真机
     // SetSpineAnimationExternal(track=1) 行为一致,见 playDragBegin 注释。
-    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12"]);
+    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12", "illust_dating13"]);
     // dating11 已审计:全部 point 热区有同名骨骼(仅 InteractionZone 无,保持静态)。攻略链靠
     // 骨骼进出画面揭示隐藏点:mix1_3_1 揭示 1_5(0.03~1.67s)、mix1_5_1 揭示 1_9(0.03~2s,
     // 点中 1_9 才进二阶段),静态坐标永远停在 ±12000 停车位,不跟骨骼就永远点不到。
-    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12"]);
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12", "illust_dating13"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1374,10 +1417,8 @@
       },
       // dating12 不再覆盖：外部 dating_hotzones.json 是 prefab 真值,
       // 位置全部由同名骨骼跟随驱动(BONE_FOLLOW_HOTZONE_IDS)。
-      illust_dating13: {
-        "1_10_0": { x: -5434.4, y: 410.3, width: 400.7, height: 400.7, shape: 0, source: "point1_10_touch [Override]" },
-        "2_9_0": { x: 100.2, y: 148.5, width: 250.5, height: 250.5, shape: 0, source: "point2_9_touch [Override]" },
-      },
+      // dating13 不再覆盖：外部 dating_hotzones.json 是 prefab 真值,
+      // 位置全部由同名骨骼跟随驱动(BONE_FOLLOW_HOTZONE_IDS)。
       illust_dating14: {
         "1_22_19": { x: -103, y: -126.8, width: 150, height: 150, shape: 0, source: "point1_23_touch_gauge_tool19 [Override]" },
         "1_22_20": { x: -103, y: -126.8, width: 150, height: 150, shape: 0, source: "point1_22_touch_gauge_tool20 [Override]" },
@@ -3647,6 +3688,9 @@
       try {
         dragHolding = false;
         stopDragFollow();
+        // 拖拽成功也应用 setFlag(dating13 兔子玩偶震动解锁隐藏点)；只对带 setFlag 的 action 生效,
+        // 不给普通拖拽增加整层热区重建。
+        if (action.setFlag) applyActionState(action);
         const motions = (action.motions || []).filter(animationExists);
         const targetStage = resolveActionNextStage(action);
         advanceTargetStage = targetStage;
@@ -3693,6 +3737,8 @@
       if (!player || !action) return;
       try {
         dragHolding = false;
+        // 无 motion/推进的普通拖拽松手也应用 setFlag(dating13 兔子玩偶:震动结束才解锁隐藏点)。
+        if (action.setFlag) applyActionState(action);
         const releases = (action.mix || []).slice(1).filter(animationExists);
         if (!releases.length) {
           clearDragOverlay();

@@ -572,3 +572,15 @@ apply 之后改了骨架状态。
 - ⚠️ 测热区的坑再次确认:面板被遮挡时 canvas rect=0、投影全 null、playIdle 的重投影挂在
   rAF 上不执行——**先截图把面板带到前台**,必要时手动 `renderHotzones(currentPrefabActions())`
   + 同步逐帧 `st.update/apply` 驱动,别把遮挡伪象当回归(本次 dating11 "1_4 消失"就是伪象)。
+
+### ✅ dating13 提尔交互还原(2026-07-16,同日套餐;新增"第二种隐藏机制"认知)
+
+用户报"柴火扔不进火堆"。同 dating12 三件套(BONE_FOLLOW + OVERLAY + MERGED)一次修完,
+链条详见 `DATING_PIPELINE.md` 2026-07-16 #13 条目。**通用新知**:
+1. 隐藏点有两种机制——①骨骼停车(动画搬运揭示,加集合即自动还原);②prefab 程序隐藏
+   (点名带 `_1hidden_`、extractor 标 `hidden:true`,骨骼不停车,游戏逻辑开窗)。第②种要用
+   flag 门禁近似:dating13 兔子玩偶 `2_4_0` drag `setFlag` + `2_5~2_8` `visibleWhen`。
+2. 普通拖拽(无 motion/无推进)原来任何路径都不应用 setFlag——`playDragSuccess`/
+   `playDragRelease` 已补 `if (action.setFlag) applyActionState(action)`(其余 action 零影响)。
+3. 柴火类"顺序道具"就是骨骼停车链:柴1 常驻,丢入点/下一根由上一步 mix 搬进画面,烧完三根
+   的丢入点本身带 motion+nextStage。
