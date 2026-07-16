@@ -301,6 +301,14 @@ def main():
         gauge = data.get("_gaugeSettingData") or {}
         if gauge.get("IsOn"):
             action["gauge"] = True
+            gauge_range = gauge.get("InteractableMinMaxRange") or {}
+            action["gaugeRange"] = [
+                int(gauge_range.get("x") or 0),
+                int(gauge_range.get("y") or 0),
+            ]
+            gauge_scores = [int(score) for score in (gauge.get("Scores") or [])]
+            if gauge_scores:
+                action["gaugeScores"] = gauge_scores
 
         long_press = data.get("_longPressSettingData") or {}
         if long_press.get("ActionType"):

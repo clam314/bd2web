@@ -269,6 +269,32 @@
       text-align: center;
       font-size: 12px;
     }
+    .gauge-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+    }
+    .gauge-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .gauge-fill {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #c56cff, #ff6aa8);
+      transition: width 0.18s ease;
+    }
+    .gauge-value {
+      min-width: 38px;
+      color: #ffd6ea;
+      font-size: 12px;
+      text-align: right;
+    }
     .view-row {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -571,6 +597,10 @@
         1: "一阶段·触手/符咒换装",
         2: "二阶段·组合/符咒特写",
       },
+      illust_dating16: {
+        1: "一阶段·魔法棒挑战",
+        2: "二阶段·兴奋度互动",
+      },
       illust_dating17: {
         1: "一阶段·坐姿",
         2: "二阶段·近距离",
@@ -645,9 +675,21 @@
         19: "触手显示",
         20: "触手隐藏",
       },
+      // 攻略图与本地 skin 对比：21 为不透明彩色棒，22 为半透明棒；演出相同。
+      illust_dating16: {
+        21: "彩色魔法棒",
+        22: "半透明魔法棒",
+      },
       illust_dating17: {
         23: "画笔",
         24: "画笔",
+      },
+    };
+    // dating16 stage2 的全局兴奋度真值来自当前 prefab
+    // SpineInteractionGroupData._GaugeSettingData：0..100 起始0，每秒回落1，10..99区间生效。
+    const INTERACTION_GAUGE_CONFIGS = {
+      illust_dating16: {
+        2: { min: 0, max: 100, start: 0, decayPerSecond: 1, decayMin: 10, decayMax: 99 },
       },
     };
     const HOLD_POSE_TARGETS = {
@@ -1029,6 +1071,61 @@
         "2_40_19": "头部·表情",
         "2_40_20": "头部·表情",
       },
+      // 语义来源：巴哈攻略 C.php?bsn=76207&snA=9527 × prefab 点位 × 本地热区投影。
+      // stage2 只标攻略与三段同位点能共同确认的项目；其余计量点保留编号，避免猜测。
+      illust_dating16: {
+        "1_1_0": "头部·魔法棒小范围移动",
+        "1_1_21": "头部·魔法棒小范围移动",
+        "1_1_22": "头部·魔法棒小范围移动",
+        "1_2_0": "脸部·拖动拉起亲吻",
+        "1_2_21": "脸部·拖动拉起亲吻",
+        "1_2_22": "脸部·拖动拉起亲吻",
+        "1_3_0": "画面左手·拖动",
+        "1_3_21": "画面左手·拖动",
+        "1_3_22": "画面左手·拖动",
+        "1_4_0": "画面右手·拖动",
+        "1_4_21": "画面右手·拖动",
+        "1_4_22": "画面右手·拖动",
+        "1_5_0": "下方身体·向上弹",
+        "1_5_21": "下方身体·向上弹",
+        "1_5_22": "下方身体·向上弹",
+        "1_6_0": "画面左大腿·向右弹",
+        "1_6_21": "画面左大腿·向右弹",
+        "1_6_22": "画面左大腿·向右弹",
+        "1_7_0": "画面右大腿·向左弹",
+        "1_7_21": "画面右大腿·向左弹",
+        "1_7_22": "画面右大腿·向左弹",
+        "1_8_0": "魔法棒·快速连点",
+        "1_8_21": "魔法棒·快速连点",
+        "1_8_22": "魔法棒·快速连点",
+        "1_9_0": "画面左胸",
+        "1_9_21": "画面左胸",
+        "1_9_22": "画面左胸",
+        "1_10_0": "画面右胸",
+        "1_10_21": "画面右胸",
+        "1_10_22": "画面右胸",
+        "1_11_0": "左胸→右胸·夹紧后续",
+        "1_11_21": "左胸→右胸·夹紧后续",
+        "1_11_22": "左胸→右胸·夹紧后续",
+        "1_12_0": "右胸→左胸·托高后续",
+        "1_12_21": "右胸→左胸·托高后续",
+        "1_12_22": "右胸→左胸·托高后续",
+        "1_13_0": "画面左耳",
+        "1_13_21": "画面左耳",
+        "1_13_22": "画面左耳",
+        "1_14_0": "画面右耳",
+        "1_14_21": "画面右耳",
+        "1_14_22": "画面右耳",
+        "1_15_0": "魔法爆发·进入二阶段",
+        "1_15_21": "彩色魔法棒爆发·进入二阶段",
+        "1_15_22": "半透明魔法棒爆发·进入二阶段",
+        "2_1_0": "脸部·0–49%普通摸",
+        "2_12_0": "脸部·50–99%舌吻",
+        "2_16_0": "脸部·100%深吻",
+        "2_5_0": "股间·0–49%",
+        "2_14_0": "股间·50–99%",
+        "2_18_0": "股间·100%",
+      },
       // 语义来源：巴哈攻略 C.php?bsn=76207&snA=9954 × 本地骨骼揭示链实测。
       // 1_4→1_5、2_2→2_3、2_18→2_19/2_20 都是在前一动作播放时才进入可点击区。
       illust_dating17: {
@@ -1310,9 +1407,14 @@
         "2_20_0": { kind: "touch", mix: ["mix2_20_1"], motions: ["motion2_20"], nextStage: "next", gauge: true },
       },
       illust_dating16: {
-        "1_15_0": { kind: "touch", mix: ["mix1_15_1"], motions: ["motion1_15"], nextStage: "next" },
-        "1_15_21": { kind: "touch", mix: ["mix1_16_1"], motions: ["motion1_16"], nextStage: "next" },
-        "1_15_22": { kind: "touch", mix: ["mix1_17_1"], motions: ["motion1_17"], nextStage: "next" },
+        // 十连点完成后必须播 mix1_8_end：该收尾会把跟随骨骼上的爆发点移进画面。
+        // 用 flag 既让通用连点逻辑播放 completion stop，也避免爆发点提前出现在动作列表里。
+        "1_8_0": { kind: "touch", mix: ["mix1_8_1", "mix1_8_2", "mix1_8_3", "mix1_8_4", "mix1_8_5", "mix1_8_6", "mix1_8_7", "mix1_8_8", "mix1_8_9", "mix1_8_10"], clickMax: 10, clickReset: 1, stopMix: "mix1_8_end", setFlag: "dating16WandBurst" },
+        "1_8_21": { kind: "touch", mix: ["mix1_8_1", "mix1_8_2", "mix1_8_3", "mix1_8_4", "mix1_8_5", "mix1_8_6", "mix1_8_7", "mix1_8_8", "mix1_8_9", "mix1_8_10"], clickMax: 10, clickReset: 1, stopMix: "mix1_8_end", setFlag: "dating16WandBurst" },
+        "1_8_22": { kind: "touch", mix: ["mix1_8_1", "mix1_8_2", "mix1_8_3", "mix1_8_4", "mix1_8_5", "mix1_8_6", "mix1_8_7", "mix1_8_8", "mix1_8_9", "mix1_8_10"], clickMax: 10, clickReset: 1, stopMix: "mix1_8_end", setFlag: "dating16WandBurst" },
+        "1_15_0": { kind: "touch", mix: ["mix1_15_1"], motions: ["motion1_15"], nextStage: "next", visibleWhen: ["dating16WandBurst"] },
+        "1_15_21": { kind: "touch", mix: ["mix1_16_1"], motions: ["motion1_16"], nextStage: "next", visibleWhen: ["dating16WandBurst"] },
+        "1_15_22": { kind: "touch", mix: ["mix1_17_1"], motions: ["motion1_17"], nextStage: "next", visibleWhen: ["dating16WandBurst"] },
       },
       illust_dating17: {
         "1_26_0": { kind: "touch", mix: ["mix1_26_1"], motions: ["motion1_26"], nextStage: "next" },
@@ -1378,12 +1480,12 @@
         "7_13_14": { kind: "gyro", label: "左右倾斜切回二阶段桌下视角", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
       },
     };
-    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10", "illust_dating12", "illust_dating13"]);
+    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10", "illust_dating12", "illust_dating13", "illust_dating16"]);
     // 多姿势组 skel(idle 每帧 key 隐藏非当前组附件,mix/motion 只 key 自己组)：互动动画一律播
     // track 1、idle 常驻 track 0,否则 track 0 切换的交叉淡入窗口会把未 key 的 slot 回退到
     // setup pose => 双层人物一闪(dating6"两双手"/dating11 ID3 整组)。与真机
     // SetSpineAnimationExternal(track=1) 行为一致,见 playDragBegin 注释。
-    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14", "illust_dating17"]);
+    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14", "illust_dating16", "illust_dating17"]);
     // dating11 已审计:全部 point 热区有同名骨骼(仅 InteractionZone 无,保持静态)。攻略链靠
     // 骨骼进出画面揭示隐藏点:mix1_3_1 揭示 1_5(0.03~1.67s)、mix1_5_1 揭示 1_9(0.03~2s,
     // 点中 1_9 才进二阶段),静态坐标永远停在 ±12000 停车位,不跟骨骼就永远点不到。
@@ -1391,7 +1493,9 @@
     // 的静态 prefab 坐标停在 x≈-11400，必须随动画骨骼搬入画面才能点击。
     // dating17：外部 JSON 的 62 个 source 与 skel 内同名骨骼 62/62 精确匹配；攻略中的
     // 胸部二段、腋下二段、膝盖到脚底/脚趾都靠 mix 把后续点从 ±12000 停车位搬入画面。
-    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14", "illust_dating17"]);
+    // dating16：119 个 source 与 skel 骨骼 119/119 精确匹配；胸部组合、魔法棒爆发与
+    // 兴奋度分段点都靠同名骨骼进出视口。
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12", "illust_dating13", "illust_dating14", "illust_dating16", "illust_dating17"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1512,11 +1616,8 @@
         "1_10_0": { x: -469.2, y: -300.5, width: 1000, height: 650, shape: 0, source: "point1_10_touch [Override]" },
         "2_20_0": { x: -469.2, y: -300.5, width: 1000, height: 650, shape: 0, source: "point2_20_touch [Override]" },
       },
-      illust_dating16: {
-        "1_15_0": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_15_touch [Override]" },
-        "1_15_21": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_16_touch_tool21 [Override]" },
-        "1_15_22": { x: -6975.1, y: -821.1, width: 820, height: 820, shape: 0, source: "point1_17_touch_tool22 [Override]" },
-      },
+      // dating16 不再覆盖：外部 dating_hotzones.json 是当前 prefab 的 2000×2000
+      // 阶段切换框真值，119 个点全部由同名骨骼跟随驱动。
       // dating17 不再覆盖：外部 dating_hotzones.json 是当前 prefab 真值（含 400×400
       // 的阶段切换点），62 个点全部由同名骨骼跟随驱动。
       illust_dating18: {
@@ -1686,6 +1787,8 @@
     let datingActionsPromise = null;
     let datingActions = {};
     let toastTimer = null;
+    let interactionGaugeScore = null;
+    let interactionGaugeTimer = null;
 
     class DatingAudioController {
       constructor() {
@@ -2049,6 +2152,89 @@
       toast.style.display = "none";
     }
 
+    function interactionGaugeConfig(stageNo = currentStage) {
+      return currentEntry && INTERACTION_GAUGE_CONFIGS[currentEntry.id]?.[stageNo] || null;
+    }
+
+    function stopInteractionGauge() {
+      clearInterval(interactionGaugeTimer);
+      interactionGaugeTimer = null;
+      interactionGaugeScore = null;
+    }
+
+    function startInteractionGauge(stageNo) {
+      clearInterval(interactionGaugeTimer);
+      interactionGaugeTimer = null;
+      const config = interactionGaugeConfig(stageNo);
+      interactionGaugeScore = config ? config.start : null;
+      if (!config?.decayPerSecond) return;
+      interactionGaugeTimer = setInterval(() => {
+        if (currentStage !== stageNo || interactionGaugeScore === null) return;
+        if (interactionGaugeScore < config.decayMin || interactionGaugeScore > config.decayMax) return;
+        setInteractionGaugeScore(interactionGaugeScore - config.decayPerSecond);
+      }, 1000);
+    }
+
+    function gaugeBand(score) {
+      if (score >= 100) return 2;
+      return score >= 50 ? 1 : 0;
+    }
+
+    function setInteractionGaugeScore(value) {
+      const config = interactionGaugeConfig();
+      if (!config) return;
+      const previousBand = gaugeBand(interactionGaugeScore ?? config.start);
+      interactionGaugeScore = Math.max(config.min, Math.min(config.max, Math.round(value)));
+      updateInteractionGaugeMeter();
+      if (gaugeBand(interactionGaugeScore) !== previousBand) {
+        refreshGaugeActionButtons();
+        renderHotzones(currentPrefabActions());
+      }
+    }
+
+    function applyInteractionGauge(action) {
+      if (!action?.gauge || interactionGaugeScore === null) return;
+      const delta = Number(action._gaugeScoreDelta) || 0;
+      const previous = interactionGaugeScore;
+      setInteractionGaugeScore(previous + delta);
+      action._touchProgressText = delta
+        ? `兴奋度 ${previous}% → ${interactionGaugeScore}%`
+        : `兴奋度 ${interactionGaugeScore}%`;
+    }
+
+    function isGaugeActionInRange(action) {
+      if (!action?.gaugeRange || interactionGaugeScore === null) return true;
+      const [min, max] = action.gaugeRange;
+      return interactionGaugeScore >= min && interactionGaugeScore <= max;
+    }
+
+    function renderInteractionGauge() {
+      if (!interactionGaugeConfig() || interactionGaugeScore === null) return;
+      const label = document.createElement("div");
+      label.className = "sub-label";
+      label.textContent = "兴奋度";
+      animList.appendChild(label);
+      const row = document.createElement("div");
+      row.className = "gauge-row";
+      row.innerHTML = '<div class="gauge-track"><div id="interaction-gauge-fill" class="gauge-fill"></div></div><span id="interaction-gauge-value" class="gauge-value"></span>';
+      animList.appendChild(row);
+      updateInteractionGaugeMeter();
+    }
+
+    function updateInteractionGaugeMeter() {
+      const fill = document.getElementById("interaction-gauge-fill");
+      const value = document.getElementById("interaction-gauge-value");
+      if (fill) fill.style.width = `${interactionGaugeScore || 0}%`;
+      if (value) value.textContent = `${interactionGaugeScore || 0}%`;
+    }
+
+    function refreshGaugeActionButtons() {
+      const visible = new Set(currentPrefabActions().map(item => item.key));
+      animList.querySelectorAll(".body-anim[data-prefab-key]").forEach(button => {
+        button.hidden = !visible.has(button.dataset.prefabKey);
+      });
+    }
+
     function loadDatingHotzones() {
       if (!datingHotzonesPromise) {
         datingHotzonesPromise = fetch("./data/dating_hotzones.json")
@@ -2128,6 +2314,7 @@
       disposePlayerSafely();
       currentStage = 1;
       interactionState = {};
+      stopInteractionGauge();
       currentModel = null;
       stageModel = null;
       selectedToolId = 0;
@@ -2194,6 +2381,7 @@
           if (Number.isInteger(requestedStage) && stageModel.stages.has(requestedStage)) {
             currentStage = requestedStage;
           }
+          startInteractionGauge(currentStage);
           renderStageControls();
           attachPlaybackListener(p);
         },
@@ -2292,6 +2480,7 @@
       });
       animList.appendChild(stageRow);
 
+      renderInteractionGauge();
       renderViewControls();
       renderToolControls(tools);
 
@@ -2303,7 +2492,7 @@
       idleBtn.onclick = () => playIdle();
       animList.appendChild(idleBtn);
 
-      const prefabActions = currentPrefabActions();
+      const prefabActions = currentPrefabActions({ includeGaugeOutOfRange: true });
       const prefabHandlesAdvance = prefabActions.some(item => item.action.nextStage);
       if (stage.motions.length && !prefabHandlesAdvance) {
         const next = nextStageId();
@@ -2320,7 +2509,11 @@
       interactLabel.textContent = "互动";
       animList.appendChild(interactLabel);
 
-      const points = stage.points.filter(name => !name.includes("_hidden") && isPointVisibleForTool(name));
+      // dating16 的 stage2 point 受全局兴奋度范围控制；只展示带 prefab 计量元数据的按钮，
+      // 避免原始 point 按钮绕过分数更新与范围门禁。
+      const points = currentEntry?.id === "illust_dating16"
+        ? []
+        : stage.points.filter(name => !name.includes("_hidden") && isPointVisibleForTool(name));
       if (!points.length && !prefabActions.length) {
         renderInteractionSummary(currentStage);
       }
@@ -2335,6 +2528,8 @@
       prefabActions.forEach(({ key, action }, idx) => {
         const b = document.createElement("button");
         b.className = "item body-anim";
+        b.dataset.prefabKey = key;
+        b.hidden = !isPrefabActionVisible(action);
         b.textContent = prefabActionLabel(action, idx, key);
         b.title = prefabActionTitle(action, key);
         b.onclick = () => action.cardGame === "deal" ? playCardDeal() : playPrefabAction(action, b, key);
@@ -2475,6 +2670,7 @@
       if (stageNo !== currentStage) clearIndexedTouchMixProgress();
       hotzonesSuppressed = false;
       currentStage = stageNo;
+      startInteractionGauge(stageNo);
       selectedToolId = defaultStageToolId(stageNo, getStageTools(stageModel.stages.get(stageNo)));
       teresseToolMode = null;
       clearTimeout(advanceTimer);
@@ -2611,6 +2807,7 @@
           sequence.slice(1).forEach(anim => addPrimaryAnimation(anim, false, 0));
         }
         player.play();
+        applyInteractionGauge(playbackAction);
         applyActionState(playbackAction);
         if (playbackAction.requiresMode && !playbackAction.stayMode) {
           teresseToolMode = null;
@@ -2728,6 +2925,10 @@
       const mix = action.randomMix
         ? randomMixChoice(action.mix || [])
         : (action.mix || [])[Math.min(next - 1, Math.max(0, (action.mix || []).length - 1))];
+      const gaugeScores = action.gaugeScores || [];
+      const gaugeScoreDelta = action.gauge
+        ? Number(gaugeScores[Math.min(next - 1, Math.max(0, gaugeScores.length - 1))]) || 0
+        : 0;
       interactionState = { ...interactionState, [progressKey]: { count: next, at: now } };
       return {
         ...action,
@@ -2739,6 +2940,7 @@
         _touchProgressKey: progressKey,
         _touchCompleted: complete,
         _touchResetMs: resetMs,
+        _gaugeScoreDelta: gaugeScoreDelta,
         _touchProgressText: complete
           ? `连点完成 ${next}/${action.clickMax}`
           : `连点 ${next}/${action.clickMax}`,
@@ -2913,6 +3115,12 @@
     }
 
     function canPlayAction(action) {
+      if (!isGaugeActionInRange(action)) {
+        const [min, max] = action.gaugeRange;
+        const range = min === max ? `${min}%` : `${min}–${max}%`;
+        showError(`这个互动只在兴奋度 ${range} 时可用。`);
+        return false;
+      }
       const missing = (action.requires || []).filter(flag => !interactionState[flag]);
       if (missing.length) {
         showError(action.blockedMessage || "还没有满足这个互动的前置步骤。");
@@ -3047,7 +3255,7 @@
       return prefabActionsFor(currentEntry.id)?.[key] || null;
     }
 
-    function currentPrefabActions() {
+    function currentPrefabActions({ includeGaugeOutOfRange = false } = {}) {
       const actions = currentEntry ? prefabActionsFor(currentEntry.id) : null;
       if (!actions) return [];
       return Object.entries(actions)
@@ -3058,12 +3266,13 @@
         .filter(item => item.stageNo === currentStage)
         .filter(item => selectedToolId === null || item.toolId === selectedToolId)
         .filter(item => !item.action.hidden)
-        .filter(item => isPrefabActionVisible(item.action))
+        .filter(item => isPrefabActionVisible(item.action, { ignoreGaugeRange: includeGaugeOutOfRange }))
         .sort((a, b) => a.pointId - b.pointId);
     }
 
-    function isPrefabActionVisible(action) {
+    function isPrefabActionVisible(action, { ignoreGaugeRange = false } = {}) {
       if (action.visibleWhen?.some(flag => !interactionState[flag])) return false;
+      if (!ignoreGaugeRange && !isGaugeActionInRange(action)) return false;
       if (currentEntry?.id !== "illust_dating4" || currentStage !== 2) return true;
       if (action.requiresMode) return teresseToolMode === action.requiresMode;
       return !teresseToolMode || action.selectMode || action.alwaysVisible;
@@ -4107,10 +4316,10 @@
     function hotzoneLabel(action, idx, key = null) {
       const label = prefabActionDisplayLabel(action, key);
       if (label) return label.split(/[：:]/)[0].replace(/^画面/, "");
+      if (action.gauge) return "计";
       if (action.clickMax) return `${action.clickMax}击`;
       if (action.kind === "drag") return "拖";
       if (action.kind === "gyro") return "晃";
-      if (action.gauge) return "计";
       return String(idx + 1);
     }
 
@@ -4130,7 +4339,7 @@
       const next = target ? ` -> 阶段${target}` : "";
       const parts = [prefabActionDisplayLabel(action, key) || `${kind}${idx + 1}`];
       if (action.gauge) parts.push("计量");
-      if (action.clickMax) parts.push(`${action.clickMax}连击`);
+      if (action.clickMax && !action.gauge) parts.push(`${action.clickMax}连击`);
       return `${parts.join(" · ")}${next}`;
     }
 
@@ -4140,10 +4349,10 @@
       const baseLabel = prefabActionDisplayLabel(action, key) || `${kind}${Number.isFinite(pointId) ? pointId : 1}`;
       const parts = [baseLabel];
       if (action.gauge) parts.push("计量");
-      if (action.clickMax) parts.push(`${action.clickMax}连击`);
+      if (action.clickMax && !action.gauge) parts.push(`${action.clickMax}连击`);
       parts.push(key);
       if (zone?.source) parts.push(zone.source);
-      if (action.clickMax) {
+      if (action.clickMax && !action.gauge) {
         const reset = Number(action.clickReset) || 1;
         parts.push(`${reset}秒内连点${action.clickMax}次`);
       }

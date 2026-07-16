@@ -550,3 +550,21 @@ Char000396(dating18)=112
 - 2026-07-03：#16 奥利维耶 mix 动作语音 + 点→语音全部完成(TODO 4 完结)。纠正三处旧结论:①"16 的 mix 不在自己 bank"系 audit 误判(mix 事件只引用情绪 sample,无自有片段);②dating16 旧 events 因 `--infer-event-paths-from-samples` 存在 GUID 错标,已用总表 tsv 重跑修正;③旧"94 残留"分摊表 13=9/16=22 有误(实为 13=15/16=16),第三类残留(缺 voice 引用条数)94→78,另发现 6 个缺 motion 点为旧统计漏算、17 号母表跨角色引用 Char004102 的新线索(见第 6/7 节)。仅改 `data/dating_audio.json`,前端零改动。
 - 2026-07-01：将 `Visual_Novel_SFX` 对 `dating13/14/19` 的确认结果合并进第 6 节状态与音频审计表；尾部只保留本修订说明，详细流水记录见 `CODEX_CHANGES.md`。
 - 2026-07-01：补入 `dating15/16/17` 的外部热区/动作 JSON 与 `Visual_Novel_SFX` 结果；`dating18` 继续保留手写特殊逻辑。
+## 2026-07-16 · 传奇退役（奥利维耶，illust_dating16）互动核对与修复
+
+用户口头称为 dating17，但 `data/dating_charid_map.json` 的项目映射中，传奇退役·奥利维耶是
+`illust_dating16`；本次始终按角色名核对，未改动奇迹紫罗兰 `illust_dating17`。
+
+- 参考攻略：<https://forum.gamer.com.tw/C.php?bsn=76207&snA=9527>。攻略只用于确认动作语义和操作顺序，
+  完整性与数值以当前游戏 bundle 的 prefab/Spine 为准。
+- 热区：`dating_hotzones.json` 的 119 个 source 在 `illust_dating16.skel` 中 119/119 找到同名骨骼。
+  胸部组合、魔法棒爆发及二阶段分段点必须逐帧跟随骨骼，不能使用静态 RectTransform 坐标。
+- 一阶段：左右胸组合的后续点由前一动作揭示；魔法棒需在 1 秒窗口内完成 10 连点，然后播放
+  `mix1_8_end`，该收尾才会把爆发热区移入画面。爆发完成后进入二阶段。
+- 二阶段：从当前 prefab 的 `_GaugeSettingData` 提取出每个点的 `InteractableMinMaxRange` 和 `Scores`。
+  全局兴奋度范围 0–100、初始 0；50–99 与 100 有不同互动；自动下降量为每秒 1，仅在 10–99
+  区间生效（10 会降到 9，随后停止）。这些字段由 `tools/extract_dating_actions.py` 持久化为
+  `gaugeRange` / `gaugeScores`，不再把数据里的 `clickMax: 2` 错标为普通“2 连击”。
+- 两种魔法棒演出相同，攻略和贴图共同确认差别为彩色不透明与半透明，前端仅用名称区分。
+- 浏览器回归必须换新 origin 或清除缓存；`?v=` 只绕过 HTML 缓存，不能保证
+  `data/dating_actions.json` 更新。新端口验证初始 0% 时只显示 0–49 范围动作，50–99/100 动作隐藏。
