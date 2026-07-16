@@ -557,6 +557,11 @@
         2: "解锁后连点",
         3: "攻略二阶段",
       },
+      illust_dating12: {
+        1: "攻略一阶段",
+        2: "变身过渡",
+        3: "攻略二型态",
+      },
       illust_dating18: {
         1: "一阶段·桌下",
         2: "一阶段·背后",
@@ -612,6 +617,10 @@
       },
       illust_dating10: {
         13: "荧光模式",
+      },
+      illust_dating12: {
+        17: "冰块",
+        18: "嘴巴",
       },
     };
     const HOLD_POSE_TARGETS = {
@@ -895,6 +904,24 @@
         "3_29_13": "荧光·照身体中部",
         "3_30_13": "荧光·照下方中部",
       },
+      // dating12 语义来源：巴哈攻略(C.php?bsn=76207&snA=8291)流程文字 × 骨骼揭示链分析
+      // (mix1_22_1 搬入 1_23、mix1_23_10 搬入 1_24、mix1_24/25/27/29_1 依次搬入 4 个节奏圈、
+      //  mix3_21_9→3_22→3_23 掉冰柱→3_24~3_32 冰柱、mix3_32_1 搬入 3_43)。
+      illust_dating12: {
+        "1_19_17": "冰块·画面左膝窝(夹住)",
+        "1_20_17": "冰块·画面右膝窝(夹住)",
+        "1_21_17": "冰块·嘴巴(叼住)",
+        "1_22_0": "摸头(出计量表)",
+        "1_23_0": "计量表连点",
+        "1_24_0": "破表确认",
+        "1_25_0": "节奏圈1",
+        "1_27_0": "节奏圈2",
+        "1_29_0": "节奏圈3",
+        "1_35_0": "节奏圈4(变身)",
+        "2_1_0": "点击变身·进二型态",
+        "3_21_0": "冰层连点(掉冰柱)",
+        "3_22_0": "冰层再点(冰柱落下)",
+      },
     };
     const STAGE_TOOL_SKINS = {
       illust_dating7: { 1: { 0: "idle1_1", 7: "idle1_1", 4: "idle1_2" }, 2: { 0: "idle1_0" } },
@@ -1134,6 +1161,13 @@
         "4_24_14": { kind: "gyro", mix: ["mix4_0_1"], motions: ["motion4_0"], nextStage: 2 },
       },
       illust_dating12: {
+        // 节奏圈机制(巴哈攻略 C.php?bsn=76207&snA=8291)：摸头 1_22 出计量表 1_23,连点破表出 1_24,
+        // 之后 4 个缩圈依次现身。每圈成功/失败两点同位叠置(成功 mix1_25/27/29_1=2.67s 揭示下一圈,
+        // 失败 mix=0.67s 原地重来)。网页无法复刻游戏的缩圈时机判定 => 隐藏失败点,点中即成功。
+        "1_26_0": { kind: "touch", mix: ["mix1_26_1"], hidden: true },
+        "1_28_0": { kind: "touch", mix: ["mix1_28_1"], hidden: true },
+        "1_30_0": { kind: "touch", mix: ["mix1_30_1"], hidden: true },
+        "1_31_0": { kind: "touch", mix: ["mix1_31_1"], hidden: true },
         "1_35_0": { kind: "touch", mix: ["mix1_35_1"], motions: ["motion1_35"], nextStage: "next" },
         "2_1_0": { kind: "touch", mix: ["mix2_1_1"], motions: ["motion2_1"], nextStage: "next" },
       },
@@ -1218,16 +1252,16 @@
         "7_13_14": { kind: "gyro", label: "左右倾斜切回二阶段桌下视角", mix: ["mix7_13_1"], motions: ["motion7_13", "motion7_13"], nextStage: 6, destinationIndexed: true, gyro: { actionType: 1, moveThreshold: 18, sensitivity: 1500 } },
       },
     };
-    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10"]);
+    const MERGED_PREFAB_ACTION_IDS = new Set(["illust_dating4", "illust_dating5", "illust_dating9", "illust_dating10", "illust_dating12"]);
     // 多姿势组 skel(idle 每帧 key 隐藏非当前组附件,mix/motion 只 key 自己组)：互动动画一律播
     // track 1、idle 常驻 track 0,否则 track 0 切换的交叉淡入窗口会把未 key 的 slot 回退到
     // setup pose => 双层人物一闪(dating6"两双手"/dating11 ID3 整组)。与真机
     // SetSpineAnimationExternal(track=1) 行为一致,见 playDragBegin 注释。
-    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11"]);
+    const OVERLAY_TRACK_INTERACTION_IDS = new Set(["illust_dating6", "illust_dating11", "illust_dating12"]);
     // dating11 已审计:全部 point 热区有同名骨骼(仅 InteractionZone 无,保持静态)。攻略链靠
     // 骨骼进出画面揭示隐藏点:mix1_3_1 揭示 1_5(0.03~1.67s)、mix1_5_1 揭示 1_9(0.03~2s,
     // 点中 1_9 才进二阶段),静态坐标永远停在 ±12000 停车位,不跟骨骼就永远点不到。
-    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11"]);
+    const BONE_FOLLOW_HOTZONE_IDS = new Set(["illust_dating6", "illust_dating9", "illust_dating11", "illust_dating12"]);
     const STATEFUL_INTERACTION_IDS = new Set(["illust_dating4", "illust_dating5"]);
     const PREFAB_HOTZONES = {
       illust_dating1: {
@@ -1338,10 +1372,8 @@
         "3_22_14": { x: -89.1, y: -276, width: 200, height: 800, shape: 1, source: "InteractionZone" },
         "4_24_14": { x: -173.3, y: -736, width: 360, height: 1000, shape: 1, source: "InteractionZone" },
       },
-      illust_dating12: {
-        "1_35_0": { x: 741.7, y: 34.5, width: 135, height: 135, shape: 0, source: "point1_35_touch [Override]" },
-        "2_1_0": { x: -196.1, y: -393.4, width: 450, height: 400, shape: 0, source: "point2_1_touch [Override]" },
-      },
+      // dating12 不再覆盖：外部 dating_hotzones.json 是 prefab 真值,
+      // 位置全部由同名骨骼跟随驱动(BONE_FOLLOW_HOTZONE_IDS)。
       illust_dating13: {
         "1_10_0": { x: -5434.4, y: 410.3, width: 400.7, height: 400.7, shape: 0, source: "point1_10_touch [Override]" },
         "2_9_0": { x: 100.2, y: 148.5, width: 250.5, height: 250.5, shape: 0, source: "point2_9_touch [Override]" },
@@ -2804,6 +2836,7 @@
         player.animationState.data.defaultMix = 0.25;
         applyStageSkin(currentStage);
         try { player.skeleton?.setSlotsToSetupPose?.(); } catch (e) { /* best-effort idle cleanup */ }
+        resetFollowPointBones();
         player.setAnimation(idle, true);
         // setSlotsToSetupPose 之后立刻同步 apply 一次:playIdle 可能在本帧 apply 之后被调用
         // (complete/queue 回调),不补 apply 的话 setup pose 会被渲染一帧(多姿势组角色=重叠闪烁)。
@@ -2814,6 +2847,16 @@
         if (idleBtn) idleBtn.classList.add("active");
         scheduleHotzoneRender();
       } catch (e) { showError("播放待机失败：" + e.message); }
+    }
+
+    // clearTrack(1) 掐掉进行中的互动 mix 时(换阶段/待机按钮/链超时)，被动画搬到停车位的
+    // point* 跟随骨骼不再被任何轨道 key 回来，会永久冻在错误位置(dating12 的 23s 隐藏演出
+    // mix3_32_1 开场就把其它触摸点全部停车)。回待机时统一把 point* 骨骼复位到 setup。
+    function resetFollowPointBones() {
+      if (!BONE_FOLLOW_HOTZONE_IDS.has(currentEntry?.id)) return;
+      (player?.skeleton?.bones || []).forEach(bone => {
+        if (bone.data.name.startsWith("point")) bone.setToSetupPose();
+      });
     }
 
     function scheduleHotzoneRender() {
