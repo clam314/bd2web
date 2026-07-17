@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-10T21:59:22+00:00",
- "source": "Brown-Dust-2-Asset@07d8d7d538cd",
- "commit": "07d8d7d538cd",
+ "generatedAt": "2026-07-17T21:51:00+00:00",
+ "source": "Brown-Dust-2-Asset@82a2b2ddfa94",
+ "commit": "82a2b2ddfa94",
  "characters": [
   {
    "id": "0001",
@@ -1873,7 +1873,10 @@
       "skeleton": "spine/char/char061306/char061306.skel",
       "atlas": "spine/char/char061306/char061306.atlas"
      },
-     "cutscene": null,
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char061306/cutscene_char061306.skel",
+      "atlas": "spine/cutscenes/cutscene_char061306/cutscene_char061306.atlas"
+     },
      "bg": null
     }
    ]
