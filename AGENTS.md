@@ -7,13 +7,20 @@
 
 先读这份，再读 [README.md](README.md) 和 [OPTIMIZATION.md](OPTIMIZATION.md)。
 
+> **⚠️ 2026-07-17 文件改名（读到下文任何 `dating.html` / `index.html(角色册)` 字样按此换算）**：
+> 有缘之客改成主页，`dating.html` → `index.html`；原角色图鉴 `index.html` → `characters.html`。
+> 只是 `git mv` 两次交换文件名，代码内容没变（除了导航链接、默认选中项、sync.yml 的 sed 目标）。
+> 本文档里大量历史记录（尤其 dating 相关章节）写于改名之前，提到的 `dating.html` 就是**现在的
+> `index.html`**；提到"index.html(主角色册)"就是**现在的 `characters.html`**。新增内容一律用新文件名。
+
 ---
 
 ## 项目结构
 
 ```
 bd2web/
-├── index.html              单页应用，全部 UI/逻辑在这里（无构建步骤）
+├── index.html              主页 = 有缘之客互动展示（原 dating.html，2026-07-17 改名为主页）
+├── characters.html         角色图鉴 = 全角色 Spine 立绘/技能动画展示（原 index.html）
 ├── vendor/                 spine-player 4.1.56 已本地化（断网可用）
 ├── data/
 │   ├── roster.json         角色清单（gen_roster.py 自动生成，勿手改）
@@ -37,13 +44,13 @@ bd2web/
 
 ---
 
-## 两种部署形态（同一份代码）
+## 两种部署形态（同一份代码，指 characters.html 角色图鉴）
 
 代码顶部 `ASSET_BASE` 自动检测运行环境：
 
 | 部署 | 素材来源 | 背景图 |
 |---|---|---|
-| **GitHub Pages** | jsDelivr 引 `myssal/Brown-Dust-2-Asset@<UPSTREAM_COMMIT>`（commit 钉死在 index.html）；**启动时多镜像探测**，见下 | **目前没有**（bg/ 在 .gitignore） |
+| **GitHub Pages** | jsDelivr 引 `myssal/Brown-Dust-2-Asset@<UPSTREAM_COMMIT>`（commit 钉死在 characters.html）；**启动时多镜像探测**，见下 | **目前没有**（bg/ 在 .gitignore） |
 | **家庭主机 / 本地** | `./upstream/`（sync.sh sparse clone 到 ~2.8GB） | `./bg/`（extract_bgs.py 从 APK 备份生成） |
 
 本地开发：`python3 -m http.server 8080`，访问 `http://localhost:8080/?v=N` 避开缓存。
@@ -51,7 +58,7 @@ bd2web/
 
 **CDN 多镜像探测（2026-06-17 加，解决国内「CORS 报错」）**：`cdn.jsdelivr.net` 在国内常被 DNS 污染——
 请求落到错误服务器、返回无 CORS 头的页面，浏览器报 `blocked by CORS policy`（看着像 CORS bug，其实是被墙）。
-index.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cdn / gcore / testingcf / cdn 官方兜底），
+characters.html 顶部 `CDN_HOSTS` 列了 5 个 jsDelivr 同源镜像（fastly / b-cdn / gcore / testingcf / cdn 官方兜底），
 `resolveAssetBase()` 启动时并行 fetch 一个小文件探测（校验返回内容防污染假响应），用 `Promise.any` 取第一个真可达的
 写进 `ASSET_BASE`。全挂则提示「可能被墙，建议家庭主机部署」。要换/加镜像改 `CDN_HOSTS` 即可。
 
@@ -87,7 +94,7 @@ C# 脚本程序集，无法重建 Timeline 驱动）。
 | 效果 | 实现 | 数据来源 |
 |---|---|---|
 | 立绘形态 | 整套动作锁定到待机包围盒的固定取景（见下「立绘取景锁定」）；动作=待机(idle)/互动(motion) | spine 包围盒 |
-| 技能动画形态 | **gamekee 风格**：列出 cutscene spine 的主动作（`cut_*`/`[A-Z]_cut`/`loop*`，正则 `CUT_MAIN`）各自一个按钮「动作1/2/3/4」，点击 `setAnimation(name, loop=true)` 循环播单个动画 + 显示对应背景。**不串接、不叠层、不还原演出**（见 index.html `renderEntries` cutscene 分支 + `playSeq`） | cutscene spine 自带的主动作 |
+| 技能动画形态 | **gamekee 风格**：列出 cutscene spine 的主动作（`cut_*`/`[A-Z]_cut`/`loop*`，正则 `CUT_MAIN`）各自一个按钮「动作1/2/3/4」，点击 `setAnimation(name, loop=true)` 循环播单个动画 + 显示对应背景。**不串接、不叠层、不还原演出**（见 characters.html `renderEntries` cutscene 分支 + `playSeq`） | cutscene spine 自带的主动作 |
 | 背景 | cutscene 选动作时显示 `costume.bg[entryIdx]`（bg/ 里的 `<id>_<N>.png`），spine-player `backgroundImage` 铺在 viewport 内 | roster `costume.bg` |
 | 取景 | 立绘和技能动画**都全屏自适应**（padding 5%，spine 默认按动画包围盒 fit，角色居中铺满）。不再 letterbox 锁 1600:720 | spine 默认取景 |
 | Spine 特效叠加（立绘） | 立绘 motion 偶有光效部件，按前缀配对叠 track 2+（`overlayTarget`/`scheduleOverlaysFor`）；**cutscene 不用** | skel 动画命名 |
@@ -113,7 +120,7 @@ schedule 串接 / 多 skel 叠播 / 相机跟随 / 变身光罩。
 - **根因**：spine-player 的自动取景 (`calculateAnimationViewport`, vendor 约 14123 行) 是对**整段动画 100 帧采样取包围盒并集**。
   互动动画里有特效/锚点骨骼会甩到 ±4000 骨骼单位外（实测奇迹玫瑰：motion 框 **w=8144 h=8216**，待机才 **w=377 h=1073**），
   并集框暴涨 21 倍 → 人物只占画面约 4.6%。待机/对话包围盒稳定所以一直正常。
-- **修法**（[index.html](index.html) success 回调里 `part === "idle"` 分支）：立绘加载后用 `p.calculateAnimationViewport(rest, box)`
+- **修法**（[characters.html](characters.html) success 回调里 `part === "idle"` 分支）：立绘加载后用 `p.calculateAnimationViewport(rest, box)`
   算出**待机(idle)/静止动画**的包围盒，写进 `p.config.viewport` 的 x/y/w/h。spine-player 一旦 viewport 设了 x/y/w/h
   就对**所有**动画都用这个固定框 (setViewport, 约 14087 行)，于是待机/对话/互动同比例同机位 = 游戏里立绘的固定机位。
 - **作用域**：只动立绘形态。技能动画形态本就用固定 1600 窗口 (`cutsceneViewport`)，串联用 `animationState.addAnimation`
@@ -150,7 +157,7 @@ schedule 串接 / 多 skel 叠播 / 相机跟随 / 变身光罩。
 - **复现**：本地 `python3 -m http.server 8081`，开 `http://localhost:8081/?v=N` → 黎维塔 → 奇迹玫瑰 → 技能动画 → 动作1 → 看 t≈3.5s。**当前**（commit `e75b372`）能看到主角，但缺件 + 飘浮鬼影 + 镜头偏远（因为主+副共用一个统一并集 viewport 强求对齐导致 cut_A 阶段也用大框）。
 - **真正的修复方向**（待做，下一轮要按这个来）：
   1. `roster.json` 里 `cutscene` 改成或扩展为 `cutscene.layers: [{skeleton, atlas, role}, ...]`，按 z-order 由低到高列。role 取值 `back / main / fx / front`（或更通用的数字 index）
-  2. [index.html](index.html) `loadPart` 按 layers 顺序在 #stage 下挂 N 个绝对定位 div + 创建 N 个 `spine.SpinePlayer`，自然 z-order 由 DOM 顺序决定（用 `.cut-layer` class，`pointer-events:none`）
+  2. [characters.html](characters.html) `loadPart` 按 layers 顺序在 #stage 下挂 N 个绝对定位 div + 创建 N 个 `spine.SpinePlayer`，自然 z-order 由 DOM 顺序决定（用 `.cut-layer` class，`pointer-events:none`）
   3. 每个 player **只用 track 0**（不在同 skeleton 上叠 Spine track，避免 attachment 冲突）
   4. `SKILL_SCHEDULES` 每条 schedule track 改成 `{layerIdx, clips: [...]}`，每个 player 内部只播自己 layer 的一条 spine 轨
   5. 各 layer player 的 viewport 设为**完全相同的固定框**——主 skel 的 cut_A + cut_B 包围盒并集（不掺副 skel 那种巨大特效 bbox，否则 cut_A 阶段人物太小）。两个副 skel 的世界坐标系与主同（Unity 同 RectTransform 父级），共用主算出来的框即可对齐
@@ -177,12 +184,12 @@ schedule 串接 / 多 skel 叠播 / 相机跟随 / 变身光罩。
 2. **贴图 alpha 模式**：gamekee 是 pma，myssal 是直通。播放器在 success 回调里读 atlas 的 pma 标记自动适配，**别再写死** `premultipliedAlpha`。
 3. **Spine 版本**：素材 4.1.x，运行时必须 4.1（vendor/ 已本地化 4.1.56）。不能升 4.2。
 4. **测试环境陷阱**：用 mcp__Claude_in_Chrome 自动化时，标签页被遮挡 → 浏览器节流 → rAF 不跑 → 黑屏。这不是 bug！可以 `window.dispatchEvent(new Event('resize'))` 或 `player.drawFrame(false)` 强制画一帧。诊断脚本要短，避免 setTimeout/setInterval 把 CDP 卡死。**真实效果用户自己浏览器里看**才准。
-5. **本地 http.server 缓存**：浏览器会缓存 index.html 和 roster.json。验证时用 `?v=<timestamp>` 绕过，否则会一直看到旧逻辑。
+5. **本地 http.server 缓存**：浏览器会缓存 index.html/characters.html 和 roster.json。验证时用 `?v=<timestamp>` 绕过，否则会一直看到旧逻辑。
 6. **Pages CDN 缓存 ~10 分钟**：部署后用户看到旧页面正常。抽屉底部有"页面版本"时间戳（document.lastModified），无痕窗口最可靠。
 7. **不要死磕失败的命令**：用户明确要求遇到网络/环境失败最多重试一次，然后改后台或换路，省额度（[memory:dont-grind-on-failures](~/.claude/projects/-Users-woods-bd2web/memory/dont-grind-on-failures.md)）。
 8. **CharInfo(Dropped).json 有语法错误**：上游 CharInfo 有缺逗号的行，gen_roster.py 已用正则容错，**别直接 json.loads**。
 9. **APK bundle Unity 版本被抹**：UnityPy 解析必须设 `UnityPy.config.FALLBACK_UNITY_VERSION = "2021.3.40f1"`。
-10. **bg/ 在仓库根，不是 upstream/ 下**：index.html 里 bg 用 `"./" + bg` 而不是 `ASSET_BASE + bg`。
+10. **bg/ 在仓库根，不是 upstream/ 下**：characters.html 里 bg 用 `"./" + bg` 而不是 `ASSET_BASE + bg`。
 11. **背景是可选的、缺失不致命**（2026-06-17 修）：Pages 没部署 bg/、本地未解包时 `./bg/xxx.png` 会 404。
     背景**不再作为播放器必需资源**（曾经 `config.backgroundImage` 是必需资源，404 会让整套技能动画报
     「Assets could not be loaded」）。现在在 success 里异步加载（`p.applyBg` / `p._bgLoaded` / `p._bgWant`），
@@ -343,8 +350,8 @@ getter(如 `GetSpineInteractionPointTables`)在 onEnter 取 `args[0]`(=this) 即
   钉 commit SHA 保证缓存稳定。本地 `useCdn=false` 仍回退 `./upstream/`。
 - **更新素材流程**:重抽(`extract_dating_spine.py <bundle> <临时目录>`)→ push 到 bd2web-assets →
   把新 commit SHA 写进 dating.html 的 `ASSET_COMMIT`。新约会角色(dating20…)同理。
-- 注:`index.html`(主角色册)仍走 myssal,sync.yml 只 pin index.html 的 `UPSTREAM_COMMIT`,
-  与 dating.html 互不影响。
+- 注:`characters.html`(主角色册)仍走 myssal,sync.yml 只 pin characters.html 的 `UPSTREAM_COMMIT`,
+  与有缘之客页面互不影响。
 
 ---
 
@@ -584,3 +591,21 @@ apply 之后改了骨架状态。
    `playDragRelease` 已补 `if (action.setFlag) applyActionState(action)`(其余 action 零影响)。
 3. 柴火类"顺序道具"就是骨骼停车链:柴1 常驻,丢入点/下一根由上一步 mix 搬进画面,烧完三根
    的丢入点本身带 motion+nextStage。
+
+### ✅ 有缘之客改为主页(2026-07-17)
+
+用户要求默认打开有缘之客而不是角色图鉴,且默认展示最新收录角色(当时是 dating19)。
+纯改名 + 两处逻辑:
+1. `git mv index.html characters.html && git mv dating.html index.html`(两步 `git mv` 让
+   git 各自识别成 rename,保留历史;文件内容本身没改,只交换了文件名)。
+2. 两个文件互相的导航链接同步:characters.html 的"有缘之客"链接从 `./dating.html` 改
+   `./`;新 index.html 的"角色动画"链接从 `./index.html` 改 `./characters.html`,"有缘之客"
+   自链接也改 `./`(不再硬编码文件名,避免下次改名又要改一遍)。
+3. 默认选中项从"数组第一个"(`list.querySelector(".item")` = dating1)改成"数组最后一个"
+   (`items[items.length - 1]`) = 恒等于 DATING 数组里编号最大的角色,不用每次出新角色手动
+   改硬编码数字。`?dating=` 显式参数优先级不变。
+4. `sync.yml` 的 `UPSTREAM_COMMIT` sed 目标从 `index.html` 改 `characters.html`(它是
+   角色图鉴那份走 myssal CDN 的文件,和有缘之客的 `ASSET_COMMIT` 是两码事,历来互不影响)。
+5. **本文档里改名前写的历史记录不重写**——大量小节仍写"dating.html"/"index.html(角色册)",
+   见本文档最上方的换算说明;只更新了描述"当前代码结构/部署"的段落（项目结构树、两种部署形态表、
+   已知坑列表等）为新文件名,避免以后读着对不上。

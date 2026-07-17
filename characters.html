@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BD2 角色动画 Spine 播放器</title>
+
+  <!-- Spine 官方 Web Player（本地化，零外网依赖；素材为 4.1.x 导出需用 4.1 运行时） -->
+  <link rel="stylesheet" href="./vendor/spine-player-4.1.56.css" />
+  <script src="./vendor/spine-player-4.1.56.js"></script>
+
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: rgba(22, 25, 33, 0.92);
+      --text: #e6e8ee;
+      --muted: #8b90a0;
+      --accent: #6aa6ff;
+      --line: rgba(255, 255, 255, 0.07);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+      overflow: hidden;
+    }
+    body.idle { cursor: none; }
+
+    /* ── 全屏舞台 ── */
+    /* 默认（立绘形态）铺满浏览器；cutscene 形态下用 JS 锁成游戏窗口 1600:720 比例
+       并居中（aspect-ratio 用 JS 算尺寸而不是 CSS，以兼容老浏览器），多余区域留黑边。
+       这样人物取景 + 背景图与游戏完全对齐，不会因浏览器宽高比走样。 */
+    #stage { position: fixed; inset: 0; background-color: #000; background-size: cover; background-position: center; overflow: hidden; }
+    #stage .spine-player { background: transparent !important; }
+    /* 真实运镜：每帧 RAF 直接写 transform（translate），#stage 自己 overflow:hidden
+       把溢出剪掉，letterbox 黑边不会被运镜越界覆盖。RAF 高频写不要 transition，否则会糊。*/
+    #stage > * { width: 100%; height: 100%; transform-origin: 50% 50%; }
+
+    /* 技能动画的游戏化后期：两套调色对应游戏 Timeline 上的 PostProcessVolume 与
+       PostProcessVolume 2 切换（ACES 近似 + 对比/饱和/提亮，参数取自游戏 APK）。
+       默认 "main"；当 Timeline 切到备用 vol 时 .cutscene-fx-alt 生效。 */
+    body.cutscene-fx #stage { filter: brightness(1.06) contrast(1.16) saturate(1.28); }
+    body.cutscene-fx.cutscene-fx-alt #stage { filter: brightness(0.92) contrast(1.05) saturate(0.85); }
+    /* 暗角层，仅 cutscene 显示；定位跟舞台一致，靠 JS 同步 inset */
+    #vignette {
+      position: fixed; z-index: 5; pointer-events: none; display: none;
+      background: radial-gradient(ellipse 75% 70% at 50% 42%, transparent 55%, rgba(0,0,0,0.55) 100%);
+    }
+    body.cutscene-fx #vignette { display: block; }
+
+
+    /* ── 左侧滑出抽屉 ── */
+    #drawer {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 300px;
+      background: var(--panel);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-right: 1px solid var(--line);
+      transform: translateX(-100%);
+      transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      z-index: 20;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    #drawer.open { transform: translateX(0); }
+
+    #edge-hotzone {
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      width: 16px;
+      z-index: 19;
+    }
+
+    #handle {
+      position: fixed;
+      top: 50%; left: 0;
+      transform: translateY(-50%);
+      width: 4px; height: 72px;
+      border-radius: 0 4px 4px 0;
+      background: rgba(255, 255, 255, 0.28);
+      z-index: 18;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+    body.mouse-active #handle { opacity: 1; }
+    #drawer.open ~ #handle { opacity: 0; }
+
+    #drawer header {
+      padding: 14px 14px 10px;
+      flex-shrink: 0;
+    }
+    .nav-link {
+      display: block;
+      margin-bottom: 10px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .nav-link:hover { border-color: var(--accent); color: var(--accent); }
+    #search {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    #search:focus { border-color: var(--accent); }
+    #search::placeholder { color: var(--muted); }
+
+    #drawer .scroll {
+      overflow-y: auto;
+      flex: 1;
+      padding: 0 12px 18px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,.15) transparent;
+    }
+
+    .item {
+      display: block; width: 100%; text-align: left;
+      padding: 8px 12px; margin-bottom: 3px;
+      background: transparent; color: var(--text);
+      border: none; border-radius: 8px;
+      cursor: pointer; font-size: 14px;
+      transition: background 0.15s;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .item:hover { background: rgba(255, 255, 255, 0.07); }
+    .item.active { background: var(--accent); color: #0b1220; font-weight: 600; }
+
+    .char.hidden { display: none; }
+    .char > .item { font-weight: 600; }
+    .char > .item::before {
+      content: "▸"; display: inline-block;
+      margin-right: 8px; color: var(--muted);
+      transition: transform 0.2s;
+    }
+    .char.expanded > .item::before { transform: rotate(90deg); }
+    .char.expanded > .item { color: var(--accent); }
+
+    .sub {
+      display: none;
+      margin-left: 10px;
+      border-left: 1px solid var(--line);
+      padding-left: 8px;
+    }
+    .char.expanded .sub { display: block; }
+
+    .sub-label {
+      font-size: 11px; color: var(--muted);
+      letter-spacing: 1.5px; text-transform: uppercase;
+      margin: 10px 0 4px 12px;
+    }
+    .sub .item { font-size: 13px; padding: 6px 12px; }
+    .sub .item.disabled { color: var(--muted); cursor: default; }
+
+    /* 表情：可折叠分组 + 紧凑编号网格（角色表情可达 50+，平铺会撑爆菜单）*/
+    .face-head {
+      display: block; width: 100%; text-align: left;
+      background: transparent; border: none; cursor: pointer;
+      color: var(--muted); font-size: 11px;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      padding: 10px 12px 4px;
+    }
+    .face-head::before {
+      content: "▸"; display: inline-block;
+      margin-right: 6px; transition: transform 0.2s;
+    }
+    .face-group.open .face-head::before { transform: rotate(90deg); }
+    .face-head:hover { color: var(--text); }
+    .face-head span { text-transform: none; letter-spacing: 0; }
+    .face-body { display: none; }
+    .face-group.open .face-body { display: block; }
+    .face-grid {
+      display: flex; flex-wrap: wrap; gap: 4px;
+      padding: 2px 12px 6px;
+    }
+    .face-chip {
+      min-width: 34px; padding: 5px 6px;
+      text-align: center; font-size: 12px;
+      border: 1px solid var(--line); border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text); cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .face-chip:hover { border-color: var(--accent); color: var(--accent); }
+    .face-chip.active {
+      background: var(--accent); color: #0b1220;
+      font-weight: 600; border-color: var(--accent);
+    }
+
+    /* 形态切换：立绘 / 技能动画 并排 */
+    .mode-btn {
+      display: inline-block;
+      width: calc(50% - 2px);
+      text-align: center;
+      border: 1px solid var(--line);
+    }
+    .mode-btn:only-of-type { width: 100%; }
+
+    #drawer footer {
+      flex-shrink: 0;
+      padding: 10px 16px 13px;
+      font-size: 11px; color: var(--muted);
+      border-top: 1px solid var(--line);
+      line-height: 1.7;
+    }
+
+    #error-toast {
+      position: fixed; left: 50%; bottom: 32px;
+      transform: translateX(-50%);
+      background: #3a1d22; color: #ff9d9d;
+      padding: 10px 18px; border-radius: 10px;
+      font-size: 13px; z-index: 30;
+      display: none;
+      max-width: 80vw;
+    }
+  </style>
+</head>
+<body>
+  <div id="stage"></div>
+  <div id="vignette"></div>
+
+  <div id="edge-hotzone"></div>
+  <nav id="drawer">
+    <header>
+      <a class="nav-link" href="./">有缘之客</a>
+      <input id="search" type="text" placeholder="搜索角色…" autocomplete="off" />
+    </header>
+    <div class="scroll" id="char-tree"></div>
+    <footer id="footer">双击画面切换全屏 · 鼠标移到左缘呼出菜单</footer>
+  </nav>
+  <div id="handle"></div>
+  <div id="error-toast"></div>
+
+  <script>
+    // 素材根目录：本地/家庭主机直接用 upstream/ 克隆；
+    // 跑在 GitHub Pages（*.github.io）上时自动切到 CDN（钉死上游 commit，
+    // 上游更新后改这一个常量即可——或由 Actions 定时工作流自动改）。
+    const UPSTREAM_COMMIT = "07d8d7d538cd";
+    const params = new URLSearchParams(location.search);
+    const useCdn = location.hostname.endsWith("github.io")   // Pages 上自动走 CDN
+      || params.has("cdn");                                  // 本地加 ?cdn=1 可模拟
+    const customAssetBases = params.get("asset_base")
+      ?.split(",")
+      .map(v => v.trim())
+      .filter(Boolean)
+      .map(normalizeAssetBase) || [];
+
+    // 国内坑：cdn.jsdelivr.net 常被 DNS 污染——请求落到错误的服务器，返回的页面没有
+    // CORS 头，浏览器就报「blocked by CORS policy」（看着像 CORS 错，其实是被墙）。
+    // 同一份文件 jsDelivr 有多个镜像域名（都带正确 CORS），这里启动时并行探测，
+    // 用第一个真正可达的。探测会校验返回内容，防止污染服务器的假响应蒙混过关。
+    const CDN_HOSTS = [
+      "fastly.jsdelivr.net",     // Fastly 骨干，国内通常比 cdn.jsdelivr.net 好
+      "jsdelivr.b-cdn.net",      // BunnyCDN 镜像
+      "gcore.jsdelivr.net",      // Gcore，亚洲节点多
+      "testingcf.jsdelivr.net",  // Cloudflare 镜像
+      "cdn.jsdelivr.net",        // 官方主域（最常被污染，放最后兜底）
+    ];
+    const cdnBase = h => `https://${h}/gh/myssal/Brown-Dust-2-Asset@${UPSTREAM_COMMIT}/`;
+
+    let ASSET_BASE = "./upstream/";   // 本地 / 家庭主机默认；Pages 由 resolveAssetBase() 改写
+    let cdnHostUsed = "本地";
+
+    function normalizeAssetBase(base) {
+      return base.endsWith("/") ? base : base + "/";
+    }
+
+    function assetUrl(path) {
+      return ASSET_BASE + path;
+    }
+
+    // 探测可达镜像：fetch 跨域且无 CORS 头时会 reject（被墙的污染响应正好如此），
+    // 所以「fetch 成功 + 内容含已知标记」才算真可达。Promise.any 取第一个成功的。
+    async function resolveAssetBase() {
+      if (customAssetBases.length) {
+        ASSET_BASE = customAssetBases[0];
+        cdnHostUsed = "自定义";
+        return;
+      }
+      if (!useCdn) return;
+      const probe = "spine/char/char000101/char000101.atlas";
+      const tryHost = async (h) => {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 4000);
+        try {
+          const r = await fetch(cdnBase(h) + probe, { signal: ctrl.signal });
+          if (!r.ok) throw new Error("status " + r.status);
+          const txt = await r.text();
+          if (!txt.includes("char000101")) throw new Error("bad content"); // 防污染假响应
+          return h;
+        } finally { clearTimeout(timer); }
+      };
+      try {
+        const h = await Promise.any(CDN_HOSTS.map(tryHost));
+        ASSET_BASE = cdnBase(h);
+        cdnHostUsed = h;
+      } catch (e) {
+        // 全部镜像都不可达：仍给个默认值（让后续加载照常报错），并提示用户
+        ASSET_BASE = cdnBase("cdn.jsdelivr.net");
+        cdnHostUsed = "（全部 CDN 镜像不可达，可能整段被墙——建议用家庭主机部署）";
+        showError("素材 CDN 全部不可达，可能被墙：" + cdnHostUsed);
+      }
+    }
+
+    const stage = document.getElementById("stage");
+    const vignette = document.getElementById("vignette");
+    const drawer = document.getElementById("drawer");
+    const tree = document.getElementById("char-tree");
+    const toast = document.getElementById("error-toast");
+    const search = document.getElementById("search");
+
+    let player = null;
+    let activeCostumeBtn = null;
+    let currentCostume = null;
+    let currentPart = null;      // "idle"（立绘）| "cutscene"（技能动画）
+    let currentAnimBox = null;
+
+    // 立绘模型常见动画的友好名（未知的保留原名）
+    const IDLE_LABELS = { idle: "待机", idle_talk: "对话", motion: "互动" };
+
+    function showError(msg) {
+      toast.textContent = msg;
+      toast.style.display = "block";
+      setTimeout(() => (toast.style.display = "none"), 6000);
+    }
+
+    function selectCostume(costume, btn, animBox) {
+      if (activeCostumeBtn) activeCostumeBtn.classList.remove("active");
+      activeCostumeBtn = btn;
+      btn.classList.add("active");
+      currentCostume = costume;
+      currentAnimBox = animBox;
+      loadPart(costume.idle ? "idle" : "cutscene");
+    }
+
+    // 形态切换行：立绘（待机模型）/ 技能动画（cutscene），与 gamekee 的服装拆解一致
+    function renderModeRow(animBox) {
+      animBox.innerHTML = "";
+      const costume = currentCostume;
+      [["idle", "立绘"], ["cutscene", "技能动画"]].forEach(([part, label]) => {
+        if (!costume[part]) return;
+        const b = document.createElement("button");
+        b.className = "item mode-btn" + (part === currentPart ? " active" : "");
+        b.textContent = label;
+        b.onclick = () => { if (part !== currentPart) loadPart(part); };
+        animBox.appendChild(b);
+      });
+      const hint = document.createElement("div");
+      hint.className = "sub-label";
+      hint.textContent = "动作";
+      animBox.appendChild(hint);
+      const box = document.createElement("div");
+      box.className = "entry-box";
+      box.innerHTML = '<button class="item disabled">加载中…</button>';
+      animBox.appendChild(box);
+      return box;
+    }
+
+    const CUTSCENE_ASPECT = 16 / 9;
+
+    // 舞台布局：立绘铺满浏览器；技能动画固定 16:9 并居中。
+    function layoutStage() {
+      if (currentPart === "cutscene") {
+        const aspect = CUTSCENE_ASPECT;
+        let w = window.innerWidth;
+        let h = w / aspect;
+        if (h > window.innerHeight) {
+          h = window.innerHeight;
+          w = h * aspect;
+        }
+        const left = (window.innerWidth - w) / 2;
+        const top = (window.innerHeight - h) / 2;
+        for (const el of [stage, vignette]) {
+          el.style.left = left + "px";
+          el.style.right = (window.innerWidth - left - w) + "px";
+          el.style.top = top + "px";
+          el.style.bottom = (window.innerHeight - top - h) + "px";
+        }
+      } else {
+        for (const el of [stage, vignette])
+          el.style.left = el.style.right = el.style.top = el.style.bottom = "0";
+      }
+    }
+    window.addEventListener("resize", layoutStage);
+
+    function median(nums) {
+      const a = nums.filter(Number.isFinite).sort((x, y) => x - y);
+      if (!a.length) return 0;
+      return a[Math.floor(a.length / 2)];
+    }
+
+    function sampleAnimationBox(p, animation, time) {
+      const offset = { x: 0, y: 0, set(x, y) { this.x = x; this.y = y; } };
+      const size = { x: 0, y: 0, set(x, y) { this.x = x; this.y = y; } };
+      p.skeleton.setToSetupPose();
+      animation.apply(p.skeleton, time, time, false, [], 1, 0, 0);
+      p.skeleton.updateWorldTransform();
+      p.skeleton.getBounds(offset, size);
+      if (![offset.x, offset.y, size.x, size.y].every(Number.isFinite) || size.x <= 0 || size.y <= 0)
+        return null;
+      return { x: offset.x, y: offset.y, width: size.x, height: size.y };
+    }
+
+    function buildCutsceneViewports(p, entries) {
+      try {
+        const boxesByName = {};
+        entries.map(seq => seq[0]).forEach(name => {
+          const anim = p.skeleton.data.findAnimation(name);
+          if (!anim) return;
+          const boxes = boxesByName[name] = [];
+          [0.2, 0.5, 0.8].forEach(r => {
+            const b = sampleAnimationBox(p, anim, anim.duration * r);
+            if (b) boxes.push(b);
+          });
+        });
+        const allBoxes = Object.values(boxesByName).flat();
+        if (!allBoxes.length) return;
+
+        // 用较小的一批主体样本决定统一缩放，避开远端特效/临时骨骼。
+        allBoxes.sort((a, b) => (a.width * a.height) - (b.width * b.height));
+        const keep = allBoxes.slice(0, Math.max(1, Math.ceil(allBoxes.length * 0.5)));
+        let w = median(keep.map(b => b.width)) * 1.2;
+        let h = median(keep.map(b => b.height)) * 1.2;
+        const aspect = CUTSCENE_ASPECT;
+        if (w / h < aspect) w = h * aspect;
+        else h = w / aspect;
+
+        p._cutsceneViewports = {};
+        Object.entries(boxesByName).forEach(([name, boxes]) => {
+          if (!boxes.length) return;
+          const cx = median(boxes.map(b => b.x + b.width / 2));
+          const top = median(boxes.map(b => b.y + b.height));
+          p._cutsceneViewports[name] = {
+            x: cx - w / 2,
+            y: top + h * 0.08 - h,
+            width: w,
+            height: h,
+            padLeft: 0,
+            padRight: 0,
+            padTop: 0,
+            padBottom: 0,
+          };
+        });
+        p.config.viewport.transitionTime = 0;
+        p.skeleton.setToSetupPose();
+      } catch(_) {}
+    }
+
+    function applyCutsceneViewport(p, name) {
+      const vp = p?._cutsceneViewports?.[name];
+      if (!vp) return;
+      Object.assign(p.config.viewport, vp);
+      p.previousViewport = null;
+    }
+
+    function loadPart(part) {
+      const costume = currentCostume, animBox = currentAnimBox;
+      const src = costume[part];
+      if (!src) return;
+      currentPart = part;
+      if (player) { player.dispose(); player = null; }
+      stage.innerHTML = "";
+      stage.style.backgroundImage = "";   // 清旧背景（立绘无背景；新 cutscene 在 playSeq 重设）
+      renderModeRow(animBox);
+
+      // 立绘和技能动画都全屏自适应取景（spine 默认按动画包围盒 fit，角色居中铺满）。
+      const isCutscene = part === "cutscene";
+      document.body.classList.toggle("cutscene-fx", isCutscene);
+      layoutStage();
+
+      const config = {
+        atlasUrl: assetUrl(src.atlas),
+        showControls: false,
+        showLoading: false,
+        alpha: true,
+        premultipliedAlpha: false,   // 占位，success 里按 atlas pma 标记修正
+        viewport: { padLeft: "5%", padRight: "5%", padTop: "5%", padBottom: "5%" },
+        success: (p) => {
+          try {
+            const atlas = Object.entries(p.assetManager.assets).find(([k]) => k.endsWith(".atlas"))[1];
+            p.config.premultipliedAlpha = atlas.pages.some(pg => pg.pma);
+          } catch(_) {}
+
+          if (part === "idle") {
+            // 立绘形态锁定取景（详见 AGENTS.md「立绘取景锁定」段）
+            try {
+              const anims = p.skeleton.data.animations;
+              const rest = anims.find(a => /idle/i.test(a.name) && !a.name.startsWith("_"))
+                        || anims.find(a => !a.name.startsWith("_"));
+              if (rest) {
+                const box = {};
+                p.calculateAnimationViewport(rest, box);
+                Object.assign(p.config.viewport, { x: box.x, y: box.y, width: box.width, height: box.height });
+              }
+            } catch(_) {}
+          }
+          // 技能动画在 renderEntries 里按主动作稳定样本锁定一次取景，动作切换不再自动缩放。
+          // 背景改用 #stage 的 CSS background（全屏 cover，spine canvas 透明叠前面），
+          // 不再用 spine 的 backgroundImage（那个只在 viewport 框内画，竖框会留左右黑边）。
+          renderEntries(p, animBox);
+        },
+        error: (_p, reason) => showError("加载失败：" + reason),
+      };
+      if (src.skeleton.endsWith(".skel")) config.skelUrl = assetUrl(src.skeleton);
+      else config.jsonUrl = assetUrl(src.skeleton);
+
+      player = new spine.SpinePlayer("stage", config);
+      window._dbgPlayer = player;
+    }
+
+    // 动画的播放逻辑还原游戏内的结构：
+    //  - 身体动画（轨道0）：idle/loop/motion 类循环播放；其它一次性动作播完
+    //    自动衔接回循环待机，而不是僵住
+    //  - _face* 是表情（轨道1），叠加在身体动画上同时播，可点击开/关
+    //  - 立绘形态的动作用友好名（待机/对话/互动），技能动画形态编号为 动作1、动作2…
+    function renderEntries(p, animBox) {
+      const entryBox = renderModeRow(animBox);
+      const names = p.skeleton.data.animations.map(a => a.name);
+      const faces = names.filter(n => n.startsWith("_"));
+      const allBodies = names.filter(n => !n.startsWith("_"));
+      const isLoopName = n => /idle|loop/i.test(n);
+
+      // 把身体动画分成「主 cut」和「叠加特效（overlay）」两组。
+      // 游戏里 Timeline 有粒子轨；导出到 spine 时，制作者通常把光效/血花/武器轨迹/召唤物
+      // 也做成 spine 动画（与主 cut 同一骨骼，不同插槽），需要在另一条轨道上**同时叠加播放**。
+      // 之前所有非下划线开头的都被当成独立动作，导致：
+      //   1) overlay 被串进主链当下一段播放（顺序错）
+      //   2) overlay 显示成独立的"动作 N"按钮（数量错）
+      //   3) 主链播放时 overlay 不出现（特效缺失）
+      // 主 cut 的命名很规整：cut_1、cut_A、A_cut、A_cut2、loop、loop_2、idle、motion …
+      // 用严格正则白名单识别；剩下的按前缀（数字、Letter_、cut_X_）配对到主 cut。
+      const MAIN_RE = /^(cut_\d+|cut_[A-Z]|[A-Z]_cut\d*|loop\d*|idle\w*|motion)$/;
+      const mainsSet = new Set(allBodies.filter(n => MAIN_RE.test(n)));
+      const overlayTarget = (n) => {
+        if (mainsSet.has(n)) return null;
+        if (isLoopName(n)) return null;        // 独立 loop/idle 保留在主列表
+        // cut_3_dragon_head → cut_3 ；cut_1_idle_01 也会命中但 isLoopName 已挡掉
+        let m = n.match(/^(cut_[A-Za-z0-9]+)_/);
+        if (m && mainsSet.has(m[1])) return m[1];
+        // 1_mask_effect_start → cut_1
+        m = n.match(/^(\d+)_/);
+        if (m && mainsSet.has("cut_" + m[1])) return "cut_" + m[1];
+        // A_weapon_effect → A_cut；B_fx_1 → B_cut（取同字母的第一个主 cut）
+        m = n.match(/^([A-Z])_/);
+        if (m) {
+          const target = allBodies.find(b => mainsSet.has(b) && b.startsWith(m[1] + "_cut"));
+          if (target) return target;
+        }
+        // 部件化角色（如 char003803 黎维塔奇迹玫瑰）把每个身体部件做成独立的小写前缀动画：
+        //   a_arm1_1_clothes_1 / a_arm1_1_hand_1 / a_arm1_1_ribbon_1 / a_arm1_1_fx_1 / a_arm1_1badge
+        // 对应主 cut 的字母变体（a → cut_A 或 A_cut）。只播主 cut 看不到衣服/丝带/手部。
+        // 配到主 cut 后，下方按 base 分组会把每个 base（如 a_arm1_1_clothes 的 _1/_2）串到一条轨道，
+        // 多组并行叠播。多 pose（a_arm1_1 / a_arm1_2 / a_arm2_1 / a_arm2_2）目前同时上轨——
+        // 不完全准（游戏 Timeline 里它们是顺序触发），但至少能看到衣服/丝带不再缺。
+        m = n.match(/^([a-z])_/);
+        if (m) {
+          const L = m[1].toUpperCase();
+          if (mainsSet.has("cut_" + L)) return "cut_" + L;
+          if (mainsSet.has(L + "_cut")) return L + "_cut";
+          const target = allBodies.find(b => mainsSet.has(b) && b.startsWith(L + "_cut"));
+          if (target) return target;
+        }
+        return null;
+      };
+
+      // 把 overlay 按"base"（去掉 _start/_end/_数字 尾巴）分组：
+      //   同 base 内顺序串播在同一条轨道（如 1_mask_effect_start → _end）
+      //   不同 base 并行在相邻轨道（如龙的 body/breath/head 各自一条）
+      const overlaysByMain = {};   // main → [ [seqOnTrack2], [seqOnTrack3], ... ]
+      const overlayNames = new Set();
+      allBodies.forEach(n => {
+        const main = overlayTarget(n);
+        if (!main) return;
+        overlayNames.add(n);
+        const base = n.replace(/_(start|end|\d+)$/i, "");
+        const groups = overlaysByMain[main] || (overlaysByMain[main] = []);
+        let g = groups.find(grp => grp._base === base);
+        if (!g) { g = []; g._base = base; groups.push(g); }
+        g.push(n);
+      });
+
+      // 主链只在「非 overlay」上面跑（保留 cut_1 → cut_2 → cut_3 → loop 的串接）
+      const bodies = allBodies.filter(n => !overlayNames.has(n));
+      const baseLoop = bodies.find(isLoopName);
+
+      // 一次性动作播完后串联哪些动画（按骨骼内作者排序＝播放顺序）：
+      //  1) 有同名配对（cut_1 → cut_1_idle / xxx_loop）就只接它
+      //  2) 否则把后续片段依次排队（cut_1 → cut_2 → cut_3 → …），直到第一个循环为止
+      //  3) 后面没有循环则回默认循环
+      const chainQueue = (name) => {
+        for (const suf of ["_idle", "_loop"]) {
+          if (bodies.includes(name + suf)) return [name + suf];
+        }
+        const queue = [];
+        for (let j = bodies.indexOf(name) + 1; j < bodies.length; j++) {
+          const n = bodies[j];
+          if (n.endsWith("_ef")) continue; // 特效片段是叠加用的，不串进主序列
+          if (isLoopName(n)) break;        // 碰到循环就停，下面统一加最后一个 loop
+          queue.push(n);
+        }
+        // 链尾循环：用 bodies 里**最后一个** loop（如 loop_2 优先于 loop）。
+        // 原因：某些角色（如 char003803）的 loop 是"翻腾过渡帧"（横躺、上半身藏在镜头外），
+        // loop_2 才是稳定的 hero 终态（站立、面朝镜头、衣服展开）。游戏 Timeline 里末段播 loop_2，
+        // 我们没接 Timeline 就直接用最后一个 loop 当链尾，对绝大多数角色都更接近游戏感。
+        const loops = bodies.filter(isLoopName);
+        if (loops.length) queue.push(loops[loops.length - 1]);
+        else if (baseLoop && baseLoop !== name) queue.push(baseLoop);
+        return queue;
+      };
+
+      // 把整条链整合成一个条目：中间片段（cut_2、cut_3）和同名配对的收尾
+      // 循环（cut_1_idle）折叠进链头，不再单独列出；通用循环（loop 等）保留。
+      const entries = [];
+      const consumed = new Set();
+      bodies.forEach(name => {
+        if (consumed.has(name)) return;
+        if (isLoopName(name)) { entries.push([name]); return; }
+        const seq = [name, ...chainQueue(name)];
+        seq.slice(1).forEach(n => {
+          const paired = n === name + "_idle" || n === name + "_loop";
+          if (!isLoopName(n) || paired) consumed.add(n); // 通用循环不折叠
+        });
+        entries.push(seq);
+      });
+
+      // 技能动画（cutscene）：gamekee 风格——列出真正的"技能动作"各自单独循环播，不串接、
+      // 不还原游戏 Timeline 演出（相机/粒子/后处理网页做不了，详见 AGENTS.md 历史教训）。
+      // 只取主 cut 动作：cut_A/cut_B/cut_1…（黎维塔等）、A_cut/B_cut（卢班希亚等）。
+      // **排除 loop/loop_2**——它们是 hero 待机循环和横躺翻腾过渡帧（不是技能动作），
+      // 且包围盒超宽（loop 3895/loop_2 4172），单独全屏自适应会把角色缩成一小团。
+      // 也排除特效/部件（_fx/_ef/_effect/smile）。
+      if (currentPart === "cutscene") {
+        const CUT_MAIN = /^(cut_[A-Za-z0-9]+|[A-Za-z]_cut\d*)$/;
+        const mains = allBodies.filter(n => CUT_MAIN.test(n) && !/_fx$|_ef$|_effect|smile/i.test(n));
+        entries.length = 0;
+        (mains.length ? mains : allBodies.filter(n => !isLoopName(n))).forEach(n => entries.push([n]));
+      }
+
+      // 当前服装的 cutscene 背景列表（按动作 1/2 对应 bg[0]/bg[1]，缺则共用）
+      const bgs = (currentPart === "cutscene" && Array.isArray(currentCostume.bg))
+        ? currentCostume.bg : [];
+      if (currentPart === "cutscene") buildCutsceneViewports(p, entries);
+
+      // overlay 调度（立绘 motion 偶有光效部件叠加；cutscene 已简化为单动作循环播不用）。
+      let overlaysStarted = false;
+      const scheduleOverlaysFor = (_mainName) => {
+        if (!player || overlaysStarted || currentPart === "cutscene") return;
+        let track = 2;
+        for (const groups of Object.values(overlaysByMain)) {
+          if (!groups) continue;
+          for (const group of groups) {
+            try { player.animationState.setAnimation(track, group[0], true); } catch (e) {}
+            track++;
+          }
+        }
+        overlaysStarted = true;
+      };
+      const resetOverlays = () => { overlaysStarted = false; };
+      let showcaseActive = false;
+      let showcaseBtn = null;
+      let showcaseIdleName = null;
+      let showcaseMotionName = null;
+
+      const stopShowcase = () => {
+        showcaseActive = false;
+        if (showcaseBtn) showcaseBtn.classList.remove("active");
+      };
+
+      const queueShowcase = (idleName, motionName) => {
+        if (!player || !showcaseActive) return;
+        resetOverlays();
+        player.animationState.data.defaultMix = 0.3;
+        player.setAnimation(idleName, false);
+        player.animationState.addAnimation(0, motionName, false, 0);
+        player.animationState.addAnimation(0, idleName, false, 0);
+        player.play();
+      };
+
+      const playShowcase = (btn, idleName, motionName) => {
+        if (!player) return;
+        try {
+          showcaseActive = true;
+          showcaseBtn = btn;
+          showcaseIdleName = idleName;
+          showcaseMotionName = motionName;
+          entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+          btn.classList.add("active");
+          queueShowcase(idleName, motionName);
+        } catch (e) { showError("切换展示失败：" + e.message); }
+      };
+
+      const playSeq = (seq, btn, entryIdx) => {
+        if (!player) return;
+        try {
+          stopShowcase();
+          if (currentPart === "cutscene") {
+            // 单次播放、停在末帧（完整定格姿态）+ 显示对应背景。
+            // 不循环：黎维塔等变身系角色 cut_B 前段是"变身瞬间"（身体散开/无衣，游戏靠粒子
+            // 光盖住，我们没有就露馅）——循环会反复闪回这个缺件段。单次播完停末帧最干净。
+            applyCutsceneViewport(player, seq[0]);
+            player.setAnimation(seq[0], false);
+            // 背景：#stage CSS background 全屏 cover（spine canvas 透明叠前面）
+            const bgUrl = bgs.length ? "./" + (bgs[entryIdx] || bgs[0]) : "";
+            stage.style.backgroundImage = bgUrl ? `url("${bgUrl}")` : "";
+            player.play();
+            entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+            btn.classList.add("active");
+            return;
+          }
+          // 立绘：待机/互动循环；其它一次性动作播完串回 idle 循环。
+          resetOverlays();
+          player.animationState.data.defaultMix = 0.3;
+          const isMotion = seq[0] === "motion";
+          player.setAnimation(seq[0], isMotion || (seq.length === 1 && isLoopName(seq[0])));
+          if (!isMotion) {
+            seq.slice(1).forEach((n, i) => {
+              player.animationState.addAnimation(0, n, i === seq.length - 2 && isLoopName(n), 0);
+            });
+          }
+          player.play();
+          entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+          btn.classList.add("active");
+        } catch (e) { showError("切换动作失败：" + e.message); }
+      };
+
+      entryBox.innerHTML = ""; // 清掉「加载中…」占位
+      entries.forEach((seq, idx) => {
+        const b = document.createElement("button");
+        b.className = "item body-anim";
+        // 立绘动作用友好名，技能动画按编号；悬停提示原始动画名
+        b.textContent = currentPart === "cutscene"
+          ? `动作${idx + 1}` + (seq.length > 1 ? `（${seq.length}段连播）` : "")
+          : (IDLE_LABELS[seq[0]] || seq[0]);
+        b.title = seq.join(" → ");
+        b.dataset.seq = seq.join("|");
+        b.onclick = () => playSeq(seq, b, idx);
+        entryBox.appendChild(b);
+      });
+
+      if (currentPart === "idle" && bodies.includes("motion")) {
+        const idleName = bodies.includes("idle") ? "idle" : baseLoop;
+        if (idleName) {
+          const b = document.createElement("button");
+          b.className = "item body-anim showcase-anim";
+          b.textContent = "展示";
+          b.title = `${idleName} → motion → ${idleName}`;
+          b.dataset.showcase = "1";
+          b.onclick = () => playShowcase(b, idleName, "motion");
+          entryBox.appendChild(b);
+        }
+      }
+
+      // 表情只属于立绘模型（叠加在轨道1）。数量可能很多（有的角色 _face0.._face26 +
+      // 各自的 _talk 说话版＝50 多个），平铺会把菜单撑爆。所以：可折叠分组 + 紧凑编号网格，
+      // _faceN 归「表情」、_faceN_talk 归「说话版」，芯片只显示编号（hover 看原名）。
+      if (currentPart === "idle" && faces.length) {
+        const baseFaces = faces.filter(n => !n.endsWith("_talk"));
+        const talkFaces = faces.filter(n => n.endsWith("_talk"));
+
+        // 切表情：点已选的＝关闭（轨道1清空），否则换上（同一时刻只亮一个）
+        const applyFace = (name, chip) => {
+          if (!player) return;
+          try {
+            const wasActive = chip.classList.contains("active");
+            group.querySelectorAll(".face-chip").forEach(x => x.classList.remove("active"));
+            if (wasActive) player.animationState.setEmptyAnimation(1, 0.2);
+            else { player.animationState.setAnimation(1, name, true); chip.classList.add("active"); }
+            player.play();
+          } catch (e) { showError("切换表情失败：" + e.message); }
+        };
+
+        const group = document.createElement("div");
+        // 表情多（>10）默认折叠，少则展开
+        group.className = "face-group" + (faces.length <= 10 ? " open" : "");
+        const head = document.createElement("button");
+        head.className = "face-head";
+        head.innerHTML = `表情 <span>（${faces.length} 个 · 叠加可关）</span>`;
+        head.onclick = () => group.classList.toggle("open");
+        group.appendChild(head);
+
+        const body = document.createElement("div");
+        body.className = "face-body";
+        const addGrid = (list, label) => {
+          if (!list.length) return;
+          const lb = document.createElement("div");
+          lb.className = "sub-label"; lb.textContent = label;
+          body.appendChild(lb);
+          const grid = document.createElement("div");
+          grid.className = "face-grid";
+          list.forEach(name => {
+            const c = document.createElement("button");
+            c.className = "face-chip"; c.dataset.face = name;
+            c.textContent = name.replace(/^_face/, "").replace(/_talk$/, "") || name;
+            c.title = name;
+            c.onclick = () => applyFace(name, c);
+            grid.appendChild(c);
+          });
+          body.appendChild(grid);
+        };
+        addGrid(baseFaces, "表情");
+        addGrid(talkFaces, "说话版");
+        group.appendChild(body);
+        entryBox.appendChild(group);
+      }
+
+      // 轨道0 当前播放片段 → 高亮对应按钮；立绘 motion 起播时调度 overlay 光效。
+      p.animationState.addListener({
+        start: (entry) => {
+          if (entry.trackIndex !== 0 || !entry.animation) return;
+          const nm = entry.animation.name;
+          scheduleOverlaysFor(nm);
+
+          if (showcaseActive && showcaseBtn) {
+            entryBox.querySelectorAll(".body-anim").forEach(x => x.classList.remove("active"));
+            showcaseBtn.classList.add("active");
+            return;
+          }
+          const btns = [...entryBox.querySelectorAll(".body-anim")];
+          const heads = btns.filter(x => (x.dataset.seq || "").split("|")[0] === nm);
+          btns.forEach(x => x.classList.toggle("active",
+            heads.length ? heads.includes(x) : (x.dataset.seq || "").split("|").includes(nm)));
+        },
+        complete: (entry) => {
+          if (!showcaseActive || entry.trackIndex !== 0 || !entry.animation) return;
+          if (entry.next) return;
+          if (showcaseIdleName && showcaseMotionName && entry.animation.name === showcaseIdleName)
+            setTimeout(() => queueShowcase(showcaseIdleName, showcaseMotionName), 0);
+        },
+      });
+
+      // 默认播放：立绘优先展示循环；没有互动展示时回退待机。技能动画＝第一个动作。
+      const defIdx = currentPart === "idle"
+        ? Math.max(0, entries.findIndex(seq => seq[0] === "idle"))
+        : 0;
+      const defaultShowcase = currentPart === "idle" && entryBox.querySelector(".showcase-anim");
+      if (defaultShowcase) defaultShowcase.click();
+      else if (entries[defIdx]) playSeq(entries[defIdx], entryBox.querySelectorAll(".body-anim")[defIdx], defIdx);
+    }
+
+    function buildTree(roster) {
+      tree.innerHTML = "";
+      roster.characters.forEach(char => {
+        const wrap = document.createElement("div");
+        wrap.className = "char";
+        const costumeSearch = char.costumes.map(c => c.label).join(" ");
+        wrap.dataset.search = (char.name + " " + (char.aka || "") + " " + char.id + " " + costumeSearch).toLowerCase();
+
+        const head = document.createElement("button");
+        head.className = "item";
+        head.textContent = char.name;
+        head.title = "ID " + char.id;
+        head.onclick = () => wrap.classList.toggle("expanded");
+        wrap.appendChild(head);
+
+        const sub = document.createElement("div");
+        sub.className = "sub";
+
+        const costumeLabel = document.createElement("div");
+        costumeLabel.className = "sub-label";
+        costumeLabel.textContent = "服装";
+        sub.appendChild(costumeLabel);
+
+        const animBox = document.createElement("div");
+
+        const costumeBox = document.createElement("div");
+        char.costumes.forEach(c => {
+          const b = document.createElement("button");
+          b.className = "item";
+          b.textContent = c.label;
+          b.onclick = () => selectCostume(c, b, animBox);
+          costumeBox.appendChild(b);
+        });
+        sub.appendChild(costumeBox);
+        sub.appendChild(animBox);
+
+        wrap.appendChild(sub);
+        tree.appendChild(wrap);
+      });
+    }
+
+    function shuffle(list) {
+      const a = list.slice();
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    async function idleTextureExists(costume) {
+      try {
+        const png = costume.idle.atlas.replace(/\.atlas$/, ".png");
+        const r = await fetch(assetUrl(png), { method: "HEAD", cache: "force-cache" });
+        return r.ok;
+      } catch (_) {
+        return false;
+      }
+    }
+
+    async function pickInitialCostume(roster) {
+      const chars = roster.characters
+        .map((char, charIdx) => ({
+          charIdx,
+          costumes: char.costumes
+            .map((costume, costumeIdx) => ({ costume, costumeIdx }))
+            .filter(x => x.costume.idle),
+        }))
+        .filter(x => x.costumes.length);
+      if (!chars.length) return null;
+      for (const charPick of shuffle(chars)) {
+        for (const costumePick of shuffle(charPick.costumes)) {
+          if (await idleTextureExists(costumePick.costume))
+            return { charIdx: charPick.charIdx, costumeIdx: costumePick.costumeIdx };
+        }
+      }
+      const charPick = shuffle(chars)[0];
+      const costumePick = shuffle(charPick.costumes)[0];
+      return { charIdx: charPick.charIdx, costumeIdx: costumePick.costumeIdx };
+    }
+
+    // ── 搜索过滤 ──
+    search.addEventListener("input", () => {
+      const q = search.value.trim().toLowerCase();
+      tree.querySelectorAll(".char").forEach(el => {
+        el.classList.toggle("hidden", q && !el.dataset.search.includes(q));
+      });
+    });
+
+    // ── 启动：并行加载 roster + 探测可达 CDN（Pages 上必须先定好 ASSET_BASE 再加载素材）──
+    Promise.all([
+      fetch("./data/roster.json?v=" + Date.now())
+        .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); }),
+      resolveAssetBase(),
+    ])
+      .then(async ([roster]) => {
+        buildTree(roster);
+        const n = roster.characters.length;
+        // document.lastModified 来自服务器 Last-Modified 头＝页面部署时间，
+        // 用于一眼区分「看到的是新版还是缓存的旧版」
+        const built = new Date(document.lastModified).toLocaleString("zh-CN", { hour12: false });
+        document.getElementById("footer").innerHTML =
+          `${n} 个角色 · ${roster.source}<br>页面版本：${built} · 素材源：${cdnHostUsed}<br>双击画面切换全屏 · 鼠标移到左缘呼出菜单`;
+        // 默认随机加载一个角色的一套立绘服装。
+        const pick = await pickInitialCostume(roster);
+        const charEl = pick ? tree.querySelectorAll(".char")[pick.charIdx] : tree.querySelector(".char");
+        if (charEl) {
+          charEl.classList.add("expanded");
+          const costumeBtn = charEl.querySelectorAll(".sub .item")[pick ? pick.costumeIdx : 0];
+          if (costumeBtn) costumeBtn.click();
+        }
+      })
+      .catch(e => showError("roster.json 加载失败（先运行 tools/sync.sh）：" + e.message));
+
+    // ── 抽屉交互 ──
+    const hotzone = document.getElementById("edge-hotzone");
+    hotzone.addEventListener("mouseenter", () => drawer.classList.add("open"));
+    drawer.addEventListener("mouseleave", () => drawer.classList.remove("open"));
+
+    // ── 鼠标静止后隐藏光标与把手 ──
+    let idleTimer = null;
+    document.addEventListener("mousemove", () => {
+      document.body.classList.add("mouse-active");
+      document.body.classList.remove("idle");
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => {
+        document.body.classList.remove("mouse-active");
+        if (!drawer.classList.contains("open")) document.body.classList.add("idle");
+      }, 2500);
+    });
+
+    // ── 双击全屏 ──
+    stage.addEventListener("dblclick", () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else document.documentElement.requestFullscreen();
+    });
+  </script>
+</body>
+</html>

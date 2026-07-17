@@ -12,7 +12,7 @@
 7. 做基础引用/文件校验。
 
 热区 JSON 是证据产物。传 `--update-hotzones-data` 时会合并进
-`data/dating_hotzones.json`，前端会优先读取该外部文件；`dating.html`
+`data/dating_hotzones.json`，前端会优先读取该外部文件；`index.html`(原 dating.html)
 里的旧 `PREFAB_HOTZONES` 只作为兜底。
 
 action JSON 同理。传 `--update-actions-data` 时会合并进

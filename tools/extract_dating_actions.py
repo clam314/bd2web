@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """从心契 prefab 导出网页可用的互动 action 数据。
 
-输出结构与 `dating.html` 中 `PREFAB_POINT_ACTIONS` 兼容。它不负责热区坐标；
+输出结构与 `index.html`(原 dating.html)中 `PREFAB_POINT_ACTIONS` 兼容。它不负责热区坐标；
 坐标由 `extract_dating_hotzones.py` 生成。两者用同一个 key：
 `<groupId>_<interactionId>_<toolId>`。
 """
