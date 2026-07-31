@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-07-24T22:02:41+00:00",
- "source": "Brown-Dust-2-Asset@82a2b2ddfa94",
- "commit": "82a2b2ddfa94",
+ "generatedAt": "2026-07-31T22:02:31+00:00",
+ "source": "Brown-Dust-2-Asset@77d171420026",
+ "commit": "77d171420026",
  "characters": [
   {
    "id": "0001",
@@ -535,6 +535,15 @@
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char001006/cutscene_char001006.skel",
       "atlas": "spine/cutscenes/cutscene_char001006/cutscene_char001006.atlas"
+     },
+     "bg": null
+    },
+    {
+     "label": "服装 92",
+     "idle": null,
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char001092/cutscene_char001092.skel",
+      "atlas": "spine/cutscenes/cutscene_char001092/cutscene_char001092.atlas"
      },
      "bg": null
     }
@@ -2026,6 +2035,15 @@
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char065103/cutscene_char065103.skel",
       "atlas": "spine/cutscenes/cutscene_char065103/cutscene_char065103.atlas"
+     },
+     "bg": null
+    },
+    {
+     "label": "服装 93",
+     "idle": null,
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char065193/cutscene_char065193.skel",
+      "atlas": "spine/cutscenes/cutscene_char065193/cutscene_char065193.atlas"
      },
      "bg": null
     }
