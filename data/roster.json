@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-08-07T21:35:56+00:00",
- "source": "Brown-Dust-2-Asset@77d171420026",
- "commit": "77d171420026",
+ "generatedAt": "2026-08-14T21:22:01+00:00",
+ "source": "Brown-Dust-2-Asset@41fd326c4b41",
+ "commit": "41fd326c4b41",
  "characters": [
   {
    "id": "0001",
@@ -540,7 +540,10 @@
     },
     {
      "label": "服装 92",
-     "idle": null,
+     "idle": {
+      "skeleton": "spine/char/char001092/char001092.skel",
+      "atlas": "spine/char/char001092/char001092.atlas"
+     },
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char001092/cutscene_char001092.skel",
       "atlas": "spine/cutscenes/cutscene_char001092/cutscene_char001092.atlas"
@@ -1782,6 +1785,18 @@
      "bg": null
     },
     {
+     "label": "服装 03",
+     "idle": {
+      "skeleton": "spine/char/char061003/char061003.skel",
+      "atlas": "spine/char/char061003/char061003.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char061003/cutscene_char061003.skel",
+      "atlas": "spine/cutscenes/cutscene_char061003/cutscene_char061003.atlas"
+     },
+     "bg": null
+    },
+    {
      "label": "服装 92",
      "idle": {
       "skeleton": "spine/char/char061092/char061092.skel",
@@ -1885,6 +1900,18 @@
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char061306/cutscene_char061306.skel",
       "atlas": "spine/cutscenes/cutscene_char061306/cutscene_char061306.atlas"
+     },
+     "bg": null
+    },
+    {
+     "label": "服装 92",
+     "idle": {
+      "skeleton": "spine/char/char061392/char061392.skel",
+      "atlas": "spine/char/char061392/char061392.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char061392/cutscene_char061392.skel",
+      "atlas": "spine/cutscenes/cutscene_char061392/cutscene_char061392.atlas"
      },
      "bg": null
     }
@@ -2040,7 +2067,10 @@
     },
     {
      "label": "服装 93",
-     "idle": null,
+     "idle": {
+      "skeleton": "spine/char/char065193/char065193.skel",
+      "atlas": "spine/char/char065193/char065193.atlas"
+     },
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char065193/cutscene_char065193.skel",
       "atlas": "spine/cutscenes/cutscene_char065193/cutscene_char065193.atlas"
@@ -2180,6 +2210,18 @@
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char066906/cutscene_char066906.skel",
       "atlas": "spine/cutscenes/cutscene_char066906/cutscene_char066906.atlas"
+     },
+     "bg": null
+    },
+    {
+     "label": "服装 07",
+     "idle": {
+      "skeleton": "spine/char/char066907/char066907.skel",
+      "atlas": "spine/char/char066907/char066907.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char066907/cutscene_char066907.skel",
+      "atlas": "spine/cutscenes/cutscene_char066907/cutscene_char066907.atlas"
      },
      "bg": null
     }
