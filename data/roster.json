@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-09-04T22:45:44+00:00",
- "source": "Brown-Dust-2-Asset@c18238ce6294",
- "commit": "c18238ce6294",
+ "generatedAt": "2026-09-11T22:57:15+00:00",
+ "source": "Brown-Dust-2-Asset@f8732e9eeeff",
+ "commit": "f8732e9eeeff",
  "characters": [
   {
    "id": "0001",
@@ -1530,6 +1530,72 @@
       "bg/021001_2.png",
       "bg/021001_4.png"
      ]
+    }
+   ]
+  },
+  {
+   "id": "0211",
+   "name": "Char 0211",
+   "aka": "",
+   "costumes": [
+    {
+     "label": "服装 01",
+     "idle": {
+      "skeleton": "spine/char/char021101/char021101.skel",
+      "atlas": "spine/char/char021101/char021101.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char021101/cutscene_char021101.skel",
+      "atlas": "spine/cutscenes/cutscene_char021101/cutscene_char021101.atlas"
+     },
+     "bg": null
+    }
+   ]
+  },
+  {
+   "id": "0212",
+   "name": "Char 0212",
+   "aka": "",
+   "costumes": [
+    {
+     "label": "服装 01",
+     "idle": {
+      "skeleton": "spine/char/char021201/char021201.skel",
+      "atlas": "spine/char/char021201/char021201.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char021201/cutscene_char021201.skel",
+      "atlas": "spine/cutscenes/cutscene_char021201/cutscene_char021201.atlas"
+     },
+     "bg": null
+    },
+    {
+     "label": "服装 91",
+     "idle": {
+      "skeleton": "spine/char/char021291/char021291.skel",
+      "atlas": "spine/char/char021291/char021291.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char021291/cutscene_char021291.skel",
+      "atlas": "spine/cutscenes/cutscene_char021291/cutscene_char021291.atlas"
+     },
+     "bg": null
+    }
+   ]
+  },
+  {
+   "id": "0213",
+   "name": "Char 0213",
+   "aka": "",
+   "costumes": [
+    {
+     "label": "服装 01",
+     "idle": {
+      "skeleton": "spine/char/char021301/char021301.skel",
+      "atlas": "spine/char/char021301/char021301.atlas"
+     },
+     "cutscene": null,
+     "bg": null
     }
    ]
   },
