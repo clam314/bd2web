@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-11-07T00:35:55+00:00",
- "source": "Brown-Dust-2-Asset@3a9f34769eb8",
- "commit": "3a9f34769eb8",
+ "generatedAt": "2026-11-14T01:15:41+00:00",
+ "source": "Brown-Dust-2-Asset@424622b8c4fd",
+ "commit": "424622b8c4fd",
  "characters": [
   {
    "id": "0001",
@@ -647,6 +647,18 @@
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char001207/cutscene_char001207.skel",
       "atlas": "spine/cutscenes/cutscene_char001207/cutscene_char001207.atlas"
+     },
+     "bg": null
+    },
+    {
+     "label": "服装 97",
+     "idle": {
+      "skeleton": "spine/char/char001297/char001297.skel",
+      "atlas": "spine/char/char001297/char001297.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char001297/cutscene_char001297.skel",
+      "atlas": "spine/cutscenes/cutscene_char001297/cutscene_char001297.atlas"
      },
      "bg": null
     }
@@ -2781,6 +2793,25 @@
      "cutscene": {
       "skeleton": "spine/cutscenes/cutscene_char067902/cutscene_char067902.skel",
       "atlas": "spine/cutscenes/cutscene_char067902/cutscene_char067902.atlas"
+     },
+     "bg": null
+    }
+   ]
+  },
+  {
+   "id": "0680",
+   "name": "Char 0680",
+   "aka": "",
+   "costumes": [
+    {
+     "label": "服装 01",
+     "idle": {
+      "skeleton": "spine/char/char068001/char068001.skel",
+      "atlas": "spine/char/char068001/char068001.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char068001/cutscene_char068001.skel",
+      "atlas": "spine/cutscenes/cutscene_char068001/cutscene_char068001.atlas"
      },
      "bg": null
     }
