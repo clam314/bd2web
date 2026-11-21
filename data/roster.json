@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-11-14T01:15:41+00:00",
- "source": "Brown-Dust-2-Asset@424622b8c4fd",
- "commit": "424622b8c4fd",
+ "generatedAt": "2026-11-21T01:57:23+00:00",
+ "source": "Brown-Dust-2-Asset@1f7de92e96f0",
+ "commit": "1f7de92e96f0",
  "characters": [
   {
    "id": "0001",
@@ -2492,6 +2492,18 @@
      "bg": [
       "bg/067202_1.png"
      ]
+    },
+    {
+     "label": "服装 03",
+     "idle": {
+      "skeleton": "spine/char/char067203/char067203.skel",
+      "atlas": "spine/char/char067203/char067203.atlas"
+     },
+     "cutscene": {
+      "skeleton": "spine/cutscenes/cutscene_char067203/cutscene_char067203.skel",
+      "atlas": "spine/cutscenes/cutscene_char067203/cutscene_char067203.atlas"
+     },
+     "bg": null
     }
    ]
   },
